@@ -1,8 +1,7 @@
 import { KakaoAPI } from "../kakao-api";
 import * as BSON from "bson";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChatroomType } from "../chat/chatroom-type";
-import { JsonUtil } from "../util/json-util";
+import { ChatDataStruct } from "../talk/struct/chatdata-struct";
 
 /*
  * Created on Fri Oct 18 2019
@@ -96,57 +95,4 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
             }
         }
     }
-}
-
-export class ChatDataStruct {
-
-    constructor(
-        public Id: number = 0,
-        public Type: ChatroomType = ChatroomType.GROUP,
-        public MemberCount: number = 0,
-        public PushAlert: boolean = false,
-        public Metadata: ChatDataMetaStruct | null = null
-    ) {
-
-    }
-
-    static fromChatDataJson(rawData: any) {
-        let data = new ChatDataStruct();
-
-        data.Id = JsonUtil.readLong(rawData['c']);
-        data.Type = rawData['t'];
-        data.MemberCount = rawData['a'];
-        data.PushAlert = rawData['p'];
-
-        if (rawData['m']) {
-            data.Metadata = ChatDataMetaStruct.fromChatMetaJson(rawData['m']);
-        }
-
-        return data;
-    }
-
-}
-
-export class ChatDataMetaStruct {
-
-    constructor(
-        public ImageURL: string = '',
-        public FullImageURL: string = '',
-        public Name: string = '',
-        public Favorite: boolean = false
-    ) {
-
-    }
-
-    static fromChatMetaJson(rawData: any) {
-        let data = new ChatDataMetaStruct();
-
-        data.ImageURL = rawData['imageUrl'];
-        data.FullImageURL = rawData['fullImageUrl'];
-        data.Name = rawData['name'];
-        data.Favorite = rawData['favorite'];
-
-        return data;
-    }
-
 }

@@ -1,6 +1,6 @@
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
-import { MessageType } from "./packet-message";
+import { MessageType } from "../talk/chat/message-type";
 
 /*
  * Created on Thu Oct 31 2019
