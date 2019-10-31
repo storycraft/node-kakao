@@ -105,6 +105,28 @@ export class KakaoAPI {
         return `${KakaoAPI.AccountInternalURL}/${KakaoAPI.Agent}/${KakaoAPI.AccountPath}/${type}`;
     }
 
+
+
+    static getEmoticonHeader(screenWidth: number = 1080, screenHeight: number = 1920) {
+        return {
+            'RESOLUTION': `${screenWidth}x${screenHeight}`,
+        };
+    }
+
+    static getEmoticonURL(lang: string = 'kr') {
+        return `http://item-${lang}.talk.kakao.co.kr/dw`;
+    }
+
+    static getEmoticonTitleURL(id: string, lang: string = 'kr') {
+        return `${KakaoAPI.getEmoticonURL(lang)}/${id}.title.png`;
+    }
+
+    static getEmoticonFilePackURL(id: string, lang: string = 'kr') {
+        return `${KakaoAPI.getEmoticonURL(lang)}/${id}.file_pack.zip`;
+    }
+
+    
+
     static getAuthHeader(verifyCodeExtra: string, contentLength: number) {
         return {
             'Content-Type': 'application/x-www-form-urlencoded',
