@@ -33,5 +33,3 @@ export class PacketInvoiceRes extends LocoBsonResponsePacket {
     }
 
 }
-
-//INVOICE -> {"status":0,"k":"dctTq/oXqraYFdBe/6toK5LBB7LAgEKjUbcuxm1/i_6dnih14avyif.jpg","s":12612,"mt":"","c":{"low":-257791270,"high":4244966,"unsigned":false},"t":2,"h":"210.103.250.106","p":5228,"vh":"203.217.229.59","vh6":"2404:4600:4:35:203:217A:229:59","ex":"{}"}

@@ -21,19 +21,15 @@ export class ChatDataStruct implements StructBase {
     }
 
     fromJson(rawData: any) {
-        let data = new ChatDataStruct();
-
-        data.Id = JsonUtil.readLong(rawData['c']);
-        data.Type = rawData['t'];
-        data.MemberCount = rawData['a'];
-        data.PushAlert = rawData['p'];
-        data.Metadata = null;
+        this.Id = JsonUtil.readLong(rawData['c']);
+        this.Type = rawData['t'];
+        this.MemberCount = rawData['a'];
+        this.PushAlert = rawData['p'];
+        this.Metadata = null;
 
         if (rawData['m']) {
-            data.Metadata = new ChatDataMetaStruct().fromJson(rawData['m']);
+            this.Metadata = new ChatDataMetaStruct().fromJson(rawData['m']);
         }
-
-        return data;
     }
 
     toJson() {

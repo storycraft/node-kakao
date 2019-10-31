@@ -43,8 +43,12 @@ export class TalkClient {
             throw new Error('Already logon to loco');
         }
 
-        this.loginAccessData = new LoginAccessDataStruct();
-        this.loginAccessData.fromJson(await KakaoAPI.requestLogin(xvc, email, password, deviceUUID, this.Name, true));
+        try {
+            this.loginAccessData = new LoginAccessDataStruct();
+            this.loginAccessData.fromJson(JSON.parse(await KakaoAPI.requestLogin(xvc, email, password, deviceUUID, this.Name, true)));
+        } catch(e) {
+            throw new Error(`Received wrong response: ${e}`);
+        }
 
         let statusCode = this.loginAccessData.Status;
         if (statusCode !== 0) {

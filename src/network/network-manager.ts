@@ -85,11 +85,11 @@ export class NetworkManager implements LocoPacketHandler {
     }
 
     onRequest(packet: LocoRequestPacket): void {
-        
+        console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
     onResponse(packet: LocoResponsePacket): void {
-        
+        console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
     }
     
 }
