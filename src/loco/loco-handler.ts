@@ -1,4 +1,4 @@
-import { LocoPacketBase } from "../packet/loco-packet-base";
+import { LocoResponsePacket } from "../packet/loco-packet-base";
 
 /*
  * Created on Wed Oct 30 2019
@@ -8,6 +8,6 @@ import { LocoPacketBase } from "../packet/loco-packet-base";
 
 export interface LocoHandler {
 
-    handle(packet: LocoPacketBase): void;
+    handle(packet: LocoResponsePacket): void;
 
 }

@@ -7,7 +7,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoCheckInReq extends LocoBsonRequestPacket {
+export class PacketCheckInReq extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: number = 0,
@@ -40,7 +40,7 @@ export class LocoCheckInReq extends LocoBsonRequestPacket {
     
 }
 
-export class LocoCheckInRes extends LocoBsonResponsePacket {
+export class PacketCheckInRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,

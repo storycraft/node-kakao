@@ -1,9 +1,11 @@
 import { LocoRequestPacket, LocoResponsePacket } from "./loco-packet-base";
-import { LocoGetConfReq, LocoGetConfRes } from "./loco-get-conf";
-import { LocoCheckInReq, LocoCheckInRes } from "./loco-check-in";
-import { LocoLoginReq, LocoLoginRes } from "./loco-login";
-import { LocoMessageRes, LocoMessageWriteReq } from "./loco-message";
-import { LocoMessageReadRes } from "./loco-message-read";
+import { PacketGetConfReq, PacketGetConfRes } from "./packet-get-conf";
+import { PacketCheckInReq, PacketCheckInRes } from "./packet-check-in";
+import { PacketLoginReq, PacketLoginRes } from "./packet-login";
+import { PacketMessageRes, PacketMessageWriteReq } from "./packet-message";
+import { PacketMessageReadRes } from "./packet-message-read";
+import { PacketKickoutRes } from "./packet-kickout";
+import { PacketInvoiceRes } from "./packet-invoice";
 
 /*
  * Created on Wed Oct 30 2019
@@ -24,20 +26,26 @@ export class LocoPacketList {
     protected static initReqMap() {
         LocoPacketList.reqeustPacketMap = new Map();
 
-        LocoPacketList.reqeustPacketMap.set('GETCONF', () => new LocoGetConfReq());
-        LocoPacketList.reqeustPacketMap.set('CHECKIN', () => new LocoCheckInReq());
-        LocoPacketList.reqeustPacketMap.set('LOGINLIST', () => new LocoLoginReq());
-        LocoPacketList.reqeustPacketMap.set('WRITE', () => new LocoMessageWriteReq());
+        LocoPacketList.reqeustPacketMap.set('GETCONF', () => new PacketGetConfReq());
+        LocoPacketList.reqeustPacketMap.set('CHECKIN', () => new PacketCheckInReq());
+        LocoPacketList.reqeustPacketMap.set('LOGINLIST', () => new PacketLoginReq());
+        LocoPacketList.reqeustPacketMap.set('WRITE', () => new PacketMessageWriteReq());
     }
 
     protected static initResMap() {
         LocoPacketList.responsePacketMap = new Map();
 
-        LocoPacketList.responsePacketMap.set('GETCONF', (status) => new LocoGetConfRes(status));
-        LocoPacketList.responsePacketMap.set('CHECKIN', (status) => new LocoCheckInRes(status));
-        LocoPacketList.responsePacketMap.set('LOGINLIST', (status) => new LocoLoginRes(status));
-        LocoPacketList.responsePacketMap.set('MSG', (status) => new LocoMessageRes(status));
-        LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new LocoMessageReadRes(status));
+        LocoPacketList.responsePacketMap.set('GETCONF', (status) => new PacketGetConfRes(status));
+        LocoPacketList.responsePacketMap.set('CHECKIN', (status) => new PacketCheckInRes(status));
+
+        LocoPacketList.responsePacketMap.set('LOGINLIST', (status) => new PacketLoginRes(status));
+
+        LocoPacketList.responsePacketMap.set('MSG', (status) => new PacketMessageRes(status));
+        LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new PacketMessageReadRes(status));
+
+        LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
+        
+        LocoPacketList.responsePacketMap.set('KICKOUT', (status) => new PacketKickoutRes(status));
     }
 
     static hasReqPacket(name: string): boolean {

@@ -10,7 +10,7 @@ import { HostData } from "../loco/loco-manager";
  */
 
 
-export class LocoGetConfReq extends LocoBsonRequestPacket {
+export class PacketGetConfReq extends LocoBsonRequestPacket {
 
     constructor(
         public NetworkMccMnc: string = '',
@@ -33,12 +33,13 @@ export class LocoGetConfReq extends LocoBsonRequestPacket {
     }
 }
 
-export class LocoGetConfRes extends LocoBsonResponsePacket {
+export class PacketGetConfRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
         public HostList: string[] = [],
         public PortList: number[] = [],
+        public Revision: number = 0
     ) {
         super(status);
     }
@@ -60,6 +61,10 @@ export class LocoGetConfRes extends LocoBsonResponsePacket {
 
         for (let port of portList) {
             this.PortList.push(port);
+        }
+
+        if (body['revision']) {
+            this.Revision = body['revision'];
         }
     }
 }

@@ -10,7 +10,7 @@ import { JsonUtil } from "../util/json-util";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoLoginReq extends LocoBsonRequestPacket {
+export class PacketLoginReq extends LocoBsonRequestPacket {
 
     constructor(
         public DeviceUUID: string = '',
@@ -65,7 +65,7 @@ export class LocoLoginReq extends LocoBsonRequestPacket {
     }
 }
 
-export class LocoLoginRes extends LocoBsonResponsePacket {
+export class PacketLoginRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,

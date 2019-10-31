@@ -4,11 +4,9 @@ import { KakaoAPI } from "../kakao-api";
 import { LocoSecureSocket } from "../network/loco-secure-socket";
 import { LocoTLSSocket } from "../network/loco-tls-socket";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
-import { LocoGetConfReq, LocoGetConfRes } from "../packet/loco-get-conf";
-import { LocoCheckInReq, LocoCheckInRes } from "../packet/loco-check-in";
-import { LocoLoginReq } from "../packet/loco-login";
-import { EventEmitter } from "events";
-import { on, listeners } from "cluster";
+import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
+import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
+import { PacketLoginReq } from "../packet/packet-login";
 
 /*
  * Created on Thu Oct 24 2019
@@ -16,7 +14,7 @@ import { on, listeners } from "cluster";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoManager extends EventEmitter {
+export class LocoManager {
 
     private locoSocket: LocoSocket<Socket> | null;
     private expireTime: number;
@@ -25,8 +23,6 @@ export class LocoManager extends EventEmitter {
     private locoLogon: boolean;
 
     constructor() {
-        super();
-
         this.locoSocket = null;
 
         this.expireTime = 0;
@@ -107,7 +103,7 @@ export class LocoManager extends EventEmitter {
         return new Promise((resolve) => {
             this.locoSocket!.once('packet', resolve);
 
-            this.locoSocket!.sendPacket(new LocoLoginReq(deviceUUID, accessToken));
+            this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken));
         });
     }
 
@@ -126,12 +122,12 @@ export class LocoManager extends EventEmitter {
                     throw new Error('Received wrong packet');
                 }
 
-                let checkIn = packet as LocoCheckInRes;
+                let checkIn = packet as PacketCheckInRes;
 
                 resolve(new CheckinData(new HostData(checkIn.Host, checkIn.Port), checkIn.CacheExpire));
             });
 
-            socket.sendPacket(new LocoCheckInReq(userId));
+            socket.sendPacket(new PacketCheckInReq(userId));
         });
     }
 
@@ -150,7 +146,7 @@ export class LocoManager extends EventEmitter {
                     throw new Error('Received wrong packet');
                 }
 
-                let getConfRes = packet as LocoGetConfRes;
+                let getConfRes = packet as PacketGetConfRes;
 
                 if (getConfRes.HostList.length < 1 && getConfRes.PortList.length < 1) {
                     reject(new Error(`No server avaliable`));
@@ -159,13 +155,12 @@ export class LocoManager extends EventEmitter {
                 resolve(new BookingData(new HostData(getConfRes.HostList[0], getConfRes.PortList[0])));
             });
 
-            socket.sendPacket(new LocoGetConfReq());
+            socket.sendPacket(new PacketGetConfReq());
         });
     }
 
     protected onPacket(packet: LocoResponsePacket) {
-        this.emit('packet', packet);
-        this.emit(packet.PacketName, packet);
+        
     }
 
     async sendPacket(packet: LocoRequestPacket): Promise<boolean> {
@@ -185,18 +180,6 @@ export class LocoManager extends EventEmitter {
 
         this.locoConnected = false;
         this.locoLogon = false;
-    }
-
-    on(event: 'packet', listener: (packet: LocoResponsePacket) => void): this;
-
-    on(event: string, listener: (...args: any[]) => void): this {
-        return super.on(event, listener);
-    }
-
-    once(event: 'packet', listener: (packet: LocoResponsePacket) => void): this;
-
-    once(event: string, listener: (...args: any[]) => void): this {
-        return super.once(event, listener);
     }
 
 }

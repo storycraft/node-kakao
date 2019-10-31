@@ -6,7 +6,7 @@ import { JsonUtil } from "../util/json-util";
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
-export class LocoMessageWriteReq extends LocoBsonRequestPacket {
+export class PacketMessageWriteReq extends LocoBsonRequestPacket {
 
     constructor(
         public MessageId: number = 0,
@@ -40,7 +40,7 @@ export class LocoMessageWriteReq extends LocoBsonRequestPacket {
     }
 }
 
-export class LocoMessageRes extends LocoBsonResponsePacket {
+export class PacketMessageRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
