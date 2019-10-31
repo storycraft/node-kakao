@@ -5,6 +5,7 @@
  */
 
 export enum MessageType {
+    
     Feed = 0,
     Text = 1,
     Photo = 2,
@@ -32,4 +33,5 @@ export enum MessageType {
     PlusFriendViral = 83,
     Template = 90,
     ApiTemplate = 91,
+
 }

@@ -7,6 +7,7 @@ import { PacketMessageReadRes } from "./packet-message-read";
 import { PacketKickoutRes } from "./packet-kickout";
 import { PacketInvoiceRes } from "./packet-invoice";
 import { PacketNewMemberRes } from "./packet-new-member";
+import { PacketLeftRes, PacketLeaveReq } from "./packet-leave";
 
 /*
  * Created on Wed Oct 30 2019
@@ -31,6 +32,7 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('CHECKIN', () => new PacketCheckInReq());
         LocoPacketList.reqeustPacketMap.set('LOGINLIST', () => new PacketLoginReq());
         LocoPacketList.reqeustPacketMap.set('WRITE', () => new PacketMessageWriteReq());
+        LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }
 
     protected static initResMap() {
@@ -45,6 +47,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new PacketMessageReadRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
+        LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));
 
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 

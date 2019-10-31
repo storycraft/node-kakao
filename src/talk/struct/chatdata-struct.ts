@@ -27,12 +27,28 @@ export class ChatDataStruct implements StructBase {
         data.Type = rawData['t'];
         data.MemberCount = rawData['a'];
         data.PushAlert = rawData['p'];
+        data.Metadata = null;
 
         if (rawData['m']) {
             data.Metadata = new ChatDataMetaStruct().fromJson(rawData['m']);
         }
 
         return data;
+    }
+
+    toJson() {
+        let obj: any = {
+            'c': this.Id,
+            't': this.Type,
+            'a': this.MemberCount,
+            'p': this.PushAlert
+        };
+
+        if (this.Metadata) {
+            obj['m'] = this.Metadata.toJson();
+        }
+
+        return obj;
     }
 
 }
@@ -57,6 +73,15 @@ export class ChatDataMetaStruct implements StructBase {
         data.Favorite = rawData['favorite'];
 
         return data;
+    }
+
+    toJson() {
+        return {
+            'imageUrl': this.ImageURL,
+            'fullImageUrl': this.FullImageURL,
+            'name': this.Name,
+            'favorite': this.Favorite
+        };
     }
 
 }

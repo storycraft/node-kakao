@@ -42,4 +42,18 @@ export class ChatlogStruct implements StructBase {
         this.SendTime = rawJson['sendAt'];
     }
 
+    toJson() {
+        return {
+            'logId': JsonUtil.writeLong(this.LogId),
+            'prevId': JsonUtil.writeLong(this.PrevLogId),
+            'authorId': JsonUtil.writeLong(this.SenderId),
+            'chatId': JsonUtil.writeLong(this.ChannelId),
+            'msgId': JsonUtil.writeLong(this.MessageId),
+            't': this.Type,
+            'message': this.Text,
+            'attachment': this.RawAttachment,
+            'sendAt': this.SendTime
+        };
+    }
+
 }

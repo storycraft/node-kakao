@@ -6,7 +6,7 @@ import { LocoTLSSocket } from "../network/loco-tls-socket";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
 import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
-import { PacketLoginReq } from "../packet/packet-login";
+import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketHandler } from "./loco-packet-handler";
 
 /*
@@ -104,7 +104,7 @@ export class LocoManager {
         return true;
     }
 
-    async loginToLoco(deviceUUID: string, accessToken: string) {
+    async loginToLoco(deviceUUID: string, accessToken: string): Promise<PacketLoginRes> {
         if (!this.locoConnected) {
             throw new Error('Not connected to LOCO');
         }
@@ -114,7 +114,13 @@ export class LocoManager {
         }
 
         return new Promise((resolve) => {
-            this.locoSocket!.once('packet', resolve);
+            this.locoSocket!.once('packet', (packet: LocoResponsePacket) => {
+                if (packet.PacketName !== 'LOGINLIST') {
+                    throw new Error('Received wrong packet');
+                }
+
+                resolve(packet as PacketLoginRes);
+            });
 
             this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken));
         });
@@ -176,6 +182,10 @@ export class LocoManager {
         if (this.Handler) {
             this.Handler.onResponse(packet);
         }
+
+        if (packet.PacketName == 'KICKOUT') {
+            this.disconnect();
+        }
     }
 
     protected onPacketSend(packet: LocoRequestPacket) {
@@ -195,11 +205,9 @@ export class LocoManager {
     }
 
     disconnect() {
-        if (!this.locoConnected) {
-            throw new Error('Not connected to LOCO');
+        if (this.locoConnected) {
+            this.LocoSocket!.disconnect();
         }
-
-        this.LocoSocket!.disconnect();
 
         this.locoConnected = false;
         this.locoLogon = false;

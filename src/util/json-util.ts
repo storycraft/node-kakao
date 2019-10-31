@@ -14,4 +14,16 @@ export class JsonUtil {
         return value;
     }
 
+    static writeLong(value: number): any {
+        if ((value >> 32) <= 0) {
+            return value;
+        }
+
+        return {
+            'unsigned': false,
+            'high': value >> 32,
+            'low': value & 0xffffffff
+        };
+    }
+
 }
