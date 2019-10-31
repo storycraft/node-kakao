@@ -117,15 +117,19 @@ export class KakaoAPI {
         return `http://item-${lang}.talk.kakao.co.kr/dw`;
     }
 
-    static getEmoticonTitleURL(id: string, lang: string = 'kr') {
-        return `${KakaoAPI.getEmoticonURL(lang)}/${id}.title.png`;
+    static getEmoticonTitleURL(id: string, type: string = 'png', lang: string = 'kr') {
+        return `${KakaoAPI.getEmoticonURL(lang)}/${id}.title.${type}`;
     }
 
     static getEmoticonFilePackURL(id: string, lang: string = 'kr') {
         return `${KakaoAPI.getEmoticonURL(lang)}/${id}.file_pack.zip`;
     }
 
-    
+    static getEmoticonThumbnailPackURL(id: string, lang: string = 'kr') {
+        return `${KakaoAPI.getEmoticonURL(lang)}/${id}.thum_pack.zip`;
+    }
+
+
 
     static getAuthHeader(verifyCodeExtra: string, contentLength: number) {
         return {
