@@ -117,16 +117,82 @@ export class KakaoAPI {
         return `http://item-${lang}.talk.kakao.co.kr/dw`;
     }
 
+    static getEmoticonImageURL(path: string, lang: string = 'kr') {
+        return `${KakaoAPI.getEmoticonURL(lang)}/${path}`;
+    }
+
     static getEmoticonTitleURL(id: string, type: string = 'png', lang: string = 'kr') {
         return `${KakaoAPI.getEmoticonURL(lang)}/${id}.title.${type}`;
     }
 
-    static getEmoticonFilePackURL(id: string, lang: string = 'kr') {
+    static getEmoticonPackURL(id: string, lang: string = 'kr') {
         return `${KakaoAPI.getEmoticonURL(lang)}/${id}.file_pack.zip`;
     }
 
     static getEmoticonThumbnailPackURL(id: string, lang: string = 'kr') {
         return `${KakaoAPI.getEmoticonURL(lang)}/${id}.thum_pack.zip`;
+    }
+
+
+    static getEmoticonImage(path: string, lang: string = 'kr') {
+        return request({
+            url: KakaoAPI.getEmoticonImageURL(path, lang),
+            headers: KakaoAPI.getEmoticonHeader(),
+            method: 'GET'
+        });
+    }
+
+    static getEmoticonPack(id: string, lang: string = 'kr') {
+        return request({
+            url: KakaoAPI.getEmoticonPackURL(id, lang),
+            headers: KakaoAPI.getEmoticonHeader(),
+            method: 'GET'
+        });
+    }
+
+    static getEmoticonThumbnailPack(id: string, lang: string = 'kr') {
+        return request({
+            url: KakaoAPI.getEmoticonThumbnailPackURL(id, lang),
+            headers: KakaoAPI.getEmoticonHeader(),
+            method: 'GET'
+        });
+    }
+
+
+    static get ProfileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-p.talk.kakao.com`;
+    }
+
+    static get PhotoUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-m.talk.kakao.com`;
+    }
+
+    static get VideoUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-v.talk.kakao.com`;
+    }
+
+    static get AudioUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-a.talk.kakao.com`;
+    }
+
+    static get LongTextUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-c.talk.kakao.com`;
+    }
+
+    static get ChatroomProfileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up-gp.talk.kakao.com`;
+    }
+
+    static get FileProfileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://up.talk.kakao.com/file/upload`;
+    }
+
+    static getProfileUploadQuery(userId: number, attachmentType: string = 'image') {
+        return `user_id=${userId}&attachment_type=${attachmentType}`;
+    }
+
+    static getUploadQuery(userId: number, attachmentType: string) {
+        return `user_id=${userId}&attachment_type=${attachmentType}`;
     }
 
 
