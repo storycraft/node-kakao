@@ -6,6 +6,7 @@ import { PacketMessageRes, PacketMessageWriteReq } from "./packet-message";
 import { PacketMessageReadRes } from "./packet-message-read";
 import { PacketKickoutRes } from "./packet-kickout";
 import { PacketInvoiceRes } from "./packet-invoice";
+import { PacketNewMemberRes } from "./packet-new-member";
 
 /*
  * Created on Wed Oct 30 2019
@@ -43,8 +44,10 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('MSG', (status) => new PacketMessageRes(status));
         LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new PacketMessageReadRes(status));
 
+        LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
+
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
-        
+
         LocoPacketList.responsePacketMap.set('KICKOUT', (status) => new PacketKickoutRes(status));
     }
 
