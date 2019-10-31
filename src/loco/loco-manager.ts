@@ -7,6 +7,7 @@ import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-bas
 import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
 import { PacketLoginReq } from "../packet/packet-login";
+import { LocoPacketHandler } from "./loco-packet-handler";
 
 /*
  * Created on Thu Oct 24 2019
@@ -19,16 +20,28 @@ export class LocoManager {
     private locoSocket: LocoSocket<Socket> | null;
     private expireTime: number;
 
+    private handler: LocoPacketHandler | null;
+
     private locoConnected: boolean;
     private locoLogon: boolean;
 
-    constructor() {
+    constructor(handler: LocoPacketHandler | null = null) {
         this.locoSocket = null;
 
         this.expireTime = 0;
+        
+        this.handler = handler;
 
         this.locoConnected = false;
         this.locoLogon = false;
+    }
+
+    get Handler() {
+        return this.handler;
+    }
+
+    set Handler(handler) {
+        this.handler = handler;
     }
 
     get LocoSocket() {
@@ -160,13 +173,23 @@ export class LocoManager {
     }
 
     protected onPacket(packet: LocoResponsePacket) {
-        
+        if (this.Handler) {
+            this.Handler.onResponse(packet);
+        }
+    }
+
+    protected onPacketSend(packet: LocoRequestPacket) {
+        if (this.Handler) {
+            this.Handler.onRequest(packet);
+        }
     }
 
     async sendPacket(packet: LocoRequestPacket): Promise<boolean> {
         if (!this.LocoConnected) {
             return false;
         }
+
+        this.onPacketSend(packet);
 
         return this.LocoSocket!.sendPacket(packet);
     }

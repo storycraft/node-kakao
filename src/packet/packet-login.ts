@@ -91,7 +91,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
             let chatDataList: any[] = body['chatDatas'];
 
             for (let rawChatData of chatDataList) {
-                this.ChatDataList.push(ChatDataStruct.fromChatDataJson(rawChatData));
+                this.ChatDataList.push(new ChatDataStruct().fromJson(rawChatData));
             }
         }
     }
