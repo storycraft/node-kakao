@@ -144,7 +144,6 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
 
     packetReceived(packet: LocoResponsePacket) {
         this.emit('packet', packet);
-        this.emit(packet.PacketName, packet);
 
         if (!this.keepAlive) {
             this.disconnect();

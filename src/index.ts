@@ -30,6 +30,8 @@ export * from './packet/packet-login';
 export * from './packet/packet-leave';
 export * from './packet/packet-new-member';
 export * from './packet/packet-message';
+export * from './packet/packet-chat-member';
+export * from './packet/packet-chatinfo';
 export * from './packet/packet-message-read';
 export * from './packet/packet-kickout';
 
@@ -42,6 +44,7 @@ export * from './talk/chat/message-type';
 
 export * from './talk/struct/struct-base';
 export * from './talk/struct/chatdata-struct';
+export * from './talk/struct/chatinfo-struct';
 export * from './talk/struct/chatlog-struct';
 
 export * from './talk-client';

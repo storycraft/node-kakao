@@ -1,4 +1,7 @@
 import { MessageType } from "./message-type";
+import { Long } from "bson";
+import { ChatChannel } from "../room/chat-channel";
+import { ChatUser } from "../user/chat-user";
 
 /*
  * Created on Fri Nov 01 2019
@@ -7,6 +10,51 @@ import { MessageType } from "./message-type";
  */
 
 export abstract class Chat {
+
+    private prevLogId: Long;
+    private logId: Long;
+
+    private channel: ChatChannel;
+    private sender: ChatUser;
+
+    private messageId: number;
+
+    private sendTime: number;
+
+    constructor(channel: ChatChannel, sender: ChatUser, messageId: number, logId: Long, prevLogId: Long, sendTime: number) {
+        this.channel = channel;
+        this.sender = sender;
+
+        this.logId = logId;
+        this.prevLogId = prevLogId;
+
+        this.messageId = messageId;
+        this.sendTime = sendTime;
+    }
+
+    get Channel() {
+        return this.channel;
+    }
+
+    get Sender() {
+        return this.sender;
+    }
+
+    get PrevLogId() {
+        return this.prevLogId;
+    }
+
+    get LogId() {
+        return this.logId;
+    }
+
+    get MessageId() {
+        return this.messageId;
+    }
+    
+    get SendTime() {
+        return this.sendTime;
+    }
 
     abstract get Type(): MessageType;
     

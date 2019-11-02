@@ -4,9 +4,9 @@ import { LocoManager } from "./loco/loco-manager";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct } from "./talk/struct/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
-import { UserManager } from "./talk/manage/user-manager";
-import { ChannelManager } from "./talk/manage/channel-manager";
+import { SessionManager } from "./talk/manage/session-manager";
 import { ClientChatUser } from "./talk/user/chat-user";
+import { EventEmitter } from "events";
 
 /*
  * Created on Fri Nov 01 2019
@@ -14,46 +14,34 @@ import { ClientChatUser } from "./talk/user/chat-user";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class TalkClient {
+export class TalkClient extends EventEmitter {
 
     private name: string;
 
     private networkManager: NetworkManager;
 
-    private clientChatUser: ClientChatUser | null;
-
-    private userManager: UserManager;
-    private channelManager: ChannelManager;
+    private sessionManager: SessionManager | null;
 
     constructor(name: string) {
+        super();
+        
         this.name = name;
 
         this.networkManager = new NetworkManager(this);
 
-        this.userManager = new UserManager(this);
-        this.channelManager = new ChannelManager();
-
-        this.clientChatUser = null;
+        this.sessionManager = null;
     }
 
     get Name() {
         return this.name;
     }
 
-    get ClientChatUser() {
-        return this.clientChatUser;
-    }
-
     get NetworkManager() {
         return this.networkManager;
     }
 
-    get UserManager() {
-        return this.userManager;
-    }
-
-    get ChannelManager() {
-        return this.channelManager;
+    get SessionManager() {
+        return this.sessionManager;
     }
 
     get LocoLogon() {
@@ -82,13 +70,15 @@ export class TalkClient {
                 throw new Error(`Access login ERR ${statusCode}`);
             }
 
-            this.clientChatUser = new ClientChatUser(loginAccessData);
+            let clientChatUser = new ClientChatUser(loginAccessData);
+            this.sessionManager = new SessionManager(clientChatUser);
+
             accessToken = loginAccessData.AccessToken;
         } catch(e) {
             throw new Error(`Received wrong response: ${e}`);
         }
         
-        await this.networkManager.locoLogin(deviceUUID, this.clientChatUser.UserId, accessToken);
+        await this.networkManager.locoLogin(deviceUUID, this.sessionManager.ClientUser.UserId, accessToken);
     }
 
     async logout() {
@@ -97,7 +87,7 @@ export class TalkClient {
         }
 
         await this.networkManager.logout();
-        this.clientChatUser = null;
+        this.sessionManager = null;
     }
 
 }

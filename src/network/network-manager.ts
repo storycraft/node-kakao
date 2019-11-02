@@ -1,7 +1,16 @@
-import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket } from "..";
+import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long } from "..";
 import { LocoManager, BookingData, CheckinData } from "../loco/loco-manager";
 import { LoginAccessDataStruct } from "../talk/struct/login-access-data-struct";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bson-packet";
+import { EventEmitter } from "events";
+import { PacketMessageRes } from "../packet/packet-message";
+import { PacketLoginRes } from "../packet/packet-login";
+import { SessionManager } from "../talk/manage/session-manager";
+import { ChatChannel } from "../talk/room/chat-channel";
+import { PacketChatInfoReq, PacketChatInfoRes } from "../packet/packet-chatinfo";
+import { PacketKickoutRes } from "../packet/packet-kickout";
+import { PacketChatMemberRes } from "../packet/packet-chat-member";
+import { PacketNewMemberRes } from "../packet/packet-new-member";
 
 /*
  * Created on Fri Nov 01 2019
@@ -9,20 +18,27 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bs
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class NetworkManager implements LocoPacketHandler {
+export class NetworkManager {
     
     private cachedBookingData: BookingData | null;
     private cachedCheckinData: CheckinData | null;
     private latestCheckinReq: number;
 
+    private handler: LocoPacketHandler;
+
     private locoManager: LocoManager;
 
     constructor(private client: TalkClient) {
-        this.locoManager = new LocoManager(this);
+        this.handler = this.createPacketHandler();
+        this.locoManager = new LocoManager(this.handler);
 
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
         this.latestCheckinReq = -1;
+    }
+
+    protected createPacketHandler() {
+        return new TalkPacketHandler(this);
     }
 
     get Client() {
@@ -83,12 +99,112 @@ export class NetworkManager implements LocoPacketHandler {
         return this.locoManager.sendPacket(packet);
     }
 
+    requestChannelInfo(channelId: Long) {
+        this.sendPacket(new PacketChatInfoReq(channelId));
+    }
+    
+}
+
+export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
+
+    private networkManager: NetworkManager;
+
+    private logonPassed: boolean;
+
+    constructor(networkManager: NetworkManager) {
+        super();
+
+        this.networkManager = networkManager;
+        this.logonPassed = false;
+
+        this.on('LOGINLIST', this.onLoginPacket.bind(this));
+        this.on('MSG', this.onMessagePacket.bind(this));
+        this.on('CHATINFO', this.onChatInfo.bind(this));
+        this.on('MEMBER', this.onDetailMember.bind(this));
+        this.on('NEWMEM', this.onNewMember.bind(this));
+        this.on('KICKOUT', this.onKicked.bind(this));
+    }
+
+    get NetworkManager() {
+        return this.networkManager;
+    }
+
+    get Client() {
+        return this.networkManager.Client;
+    }
+
+    get SessionManager(): SessionManager {
+        return this.Client.SessionManager!;
+    }
+
     onRequest(packet: LocoRequestPacket): void {
         console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
     onResponse(packet: LocoResponsePacket): void {
         console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
+        this.emit(packet.PacketName, packet);
+    }
+
+    onLoginPacket(packet: PacketLoginRes) {
+        if (this.logonPassed) {
+            throw new Error(`Received another login packet?!?`);
+        }
+        this.logonPassed = true;
+
+        this.SessionManager.initSession(packet.ChatDataList);
+    }
+
+    onMessagePacket(packet: PacketMessageRes) {
+        let chanId = packet.ChannelId;
+
+        if (!this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let channel = this.SessionManager.getChannelById(chanId);
+
+        let now = Date.now();
+        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
+            this.NetworkManager.requestChannelInfo(channel.ChannelId);
+            channel.LastInfoUpdate = now;
+        }
+    }
+
+    onChatInfo(packet: PacketChatInfoRes) {
+        let chanId = packet.ChatInfo.ChannelId;
+        if (!this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let channel = this.SessionManager.getChannelById(chanId);
+
+        channel.ChannelInfo.update(packet.ChatInfo);
+    }
+
+    onNewMember(packet: PacketNewMemberRes) {
+        let chanId = packet.Chatlog.ChannelId;
+        if (!this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let channel = this.SessionManager.getChannelById(chanId);
+        let channelInfo = channel.ChannelInfo;
+
+        channelInfo.UserList
+    }
+
+    onDetailMember(packet: PacketChatMemberRes) {
+
+    }
+
+    onKicked(packet: PacketKickoutRes) {
+        let reason = packet.Reason;
+
+        // do something
     }
     
 }
