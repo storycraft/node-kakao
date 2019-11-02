@@ -27,9 +27,9 @@ export class MemberStruct implements StructBase {
     fromJson(rawData: any): void {
         this.UserId = JsonUtil.readLong(rawData['userId']);
         this.NickName = rawData['nickName'];
-        this.ProfileImageUrl = rawData['profileImageUrl'] || '';
-        this.OriginalProfileImageUrl = rawData['originalProfileImageUrl'] || '';
-        this.FullProfileImageUrl = rawData['fullProfileImageUrl'] || '';
+        this.ProfileImageUrl = rawData['pi'] || '';
+        this.OriginalProfileImageUrl = rawData['opi'] || '';
+        this.FullProfileImageUrl = rawData['fpi'] || '';
         this.Type = rawData['type'];
         this.AccountId = rawData['accountId'];
         this.LinkedService = rawData['linkedService'] || '';
