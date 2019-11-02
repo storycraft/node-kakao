@@ -5,7 +5,7 @@ import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct } from "./talk/struct/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
 import { SessionManager } from "./talk/manage/session-manager";
-import { ClientChatUser } from "./talk/user/chat-user";
+import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/room/chat-channel";
 
@@ -92,7 +92,9 @@ export class TalkClient extends EventEmitter {
     }
 
     on(event: 'message' | string, listener: () => void): this;
-    on(event: 'join_channel' | string, listener: (joinCHannel: ChatChannel) => void): this;
+    on(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    on(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    on(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
     on(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;
 
     on(event: string, listener: (...args: any[]) => void) {
@@ -100,7 +102,9 @@ export class TalkClient extends EventEmitter {
     }
 
     once(event: 'message' | string, listener: () => void): this;
-    once(event: 'join_channel' | string, listener: (joinCHannel: ChatChannel) => void): this;
+    once(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    once(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    once(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
     once(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;
 
     once(event: string, listener: (...args: any[]) => void) {

@@ -226,9 +226,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             //INVALID CHANNEL
             return;
         }
-
-        let newChan = new ChatChannel(chanId);
-        let channel = this.SessionManager.addChannel(newChan);
+        
+        let newChan = this.SessionManager.addChannel(chanId);
 
         let now = Date.now();
         if (newChan.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
@@ -243,7 +242,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
     onKicked(packet: PacketKickoutRes) {
         let reason = packet.Reason;
-
+        
         // do something
     }
     

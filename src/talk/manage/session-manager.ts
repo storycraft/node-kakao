@@ -6,6 +6,7 @@ import { TalkClient } from "../../talk-client";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { Chat, TextChat, PhotoChat } from "../chat/chat";
 import { MessageType } from "../chat/message-type";
+import { ChatroomType } from "../chat/chatroom-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -52,20 +53,38 @@ export class SessionManager {
         return this.channelMap.get(id.toString())!;
     }
 
-    addChannel(channel: ChatChannel) {
-        if (this.hasChannel(channel.ChannelId)) {
-            throw new Error(`Invalid channel. Channel already exists`);
-        }
+    addChannel(id: Long, chatroomType: ChatroomType = ChatroomType.GROUP): ChatChannel {
+        let channel = this.addChannelInternal(id, chatroomType);
+
         this.client.emit('join_channel', channel);
 
-        this.channelMap.set(channel.ChannelId.toString(), channel);
+        return channel;
     }
 
-    removeChannelLeft(id: Long) {
+    protected addChannelInternal(id: Long, chatroomType: ChatroomType): ChatChannel {
+        if (this.hasChannel(id)) {
+            throw new Error(`Invalid channel. Channel already exists`);
+        }
+
+        let channel = new ChatChannel(this.Client, id, chatroomType);
+
+        this.channelMap.set(id.toString(), channel);
+
+        return channel;
+    }
+
+    removeChannelLeft(id: Long): ChatChannel {
+        let channel = this.removeChannelLeftInternal(id);
+
+        this.client.emit('left_channel', channel);
+
+        return channel;
+    }
+
+    protected removeChannelLeftInternal(id: Long): ChatChannel {
         let channel = this.getChannelById(id);
 
         this.channelMap.delete(id.toString());
-        this.client.emit('left_channel', channel);
 
         return channel;
     }
@@ -97,9 +116,7 @@ export class SessionManager {
         this.channelMap.clear();
 
         for (let chatData of initDataList) {
-            let chan = new ChatChannel(chatData.ChannelId, chatData.Type);
-
-            this.addChannel(chan);
+            this.addChannelInternal(chatData.ChannelId, chatData.Type);
         }
     }
 

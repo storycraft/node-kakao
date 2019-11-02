@@ -4,6 +4,7 @@ import { ChatroomType } from "../chat/chatroom-type";
 import { ChatInfoStruct, ChatInfoMeta } from "../struct/chatinfo-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
+import { TalkClient } from "../..";
 
 /*
  * Created on Fri Nov 01 2019
@@ -15,6 +16,8 @@ export class ChatChannel extends EventEmitter {
 
     static readonly INFO_UPDATE_INTERVAL: number = 1800000;
 
+    private client: TalkClient;
+
     private channelId: Long;
 
     private lastInfoUpdate: number;
@@ -23,8 +26,9 @@ export class ChatChannel extends EventEmitter {
 
     private channelInfo: ChannelInfo;
 
-    constructor(channelId: Long, roomType?: ChatroomType) {
+    constructor(client: TalkClient, channelId: Long, roomType?: ChatroomType) {
         super();
+        this.client = client;
 
         this.channelId = channelId;
 
@@ -32,6 +36,10 @@ export class ChatChannel extends EventEmitter {
 
         this.channelInfo = new ChannelInfo(this, roomType || ChatroomType.GROUP);
         this.lastChat = null;
+    }
+    
+    get Client() {
+        return this.client;
     }
 
     get LastChat() {
@@ -70,6 +78,7 @@ export class ChatChannel extends EventEmitter {
         this.lastChat = chat;
 
         this.emit('message', chat);
+        this.client.emit('message', chat);
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;
@@ -161,6 +170,15 @@ export class ChannelInfo {
     }
 
     addUserJoined(userId: Long, joinMessage: string): ChatUser {
+        let newUser = this.addUserInternal(userId);
+
+        this.channel.emit('join', newUser, joinMessage);
+        this.channel.Client.emit('user_join', this.channel, newUser);
+        
+        return newUser;
+    }
+
+    protected addUserInternal(userId: Long) {
         if (this.hasUser(userId)) {
             throw new Error('This user is already joined');
         }
@@ -168,16 +186,23 @@ export class ChannelInfo {
         let newUser = new ChatUser(userId);
 
         this.userMap.set(userId.toString(), newUser);
-        this.Channel.emit('join', newUser, joinMessage);
-        
+
         return newUser;
     }
 
     removeUserLeft(id: Long): ChatUser {
+        let user = this.removeUserLeftInternal(id);
+
+        this.Channel.emit('left', user);
+        this.channel.Client.emit('user_left', this.channel, user);
+
+        return user;
+    }
+
+    protected removeUserLeftInternal(id: Long): ChatUser {
         let user = this.getUser(id);
 
         this.userMap.delete(id.toString());
-        this.Channel.emit('left', user);
 
         return user;
     }
