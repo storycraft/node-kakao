@@ -45,3 +45,6 @@ export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chatlog-struct';
 
 export * from './talk-client';
+
+import { Long } from 'bson';
+export { Long };

@@ -1,6 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
+import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -32,7 +33,7 @@ export class PacketChatInfoRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: number = 0
+        public ChatInfo: ChatInfoStruct = new ChatInfoStruct()
     ) {
         super(status);
     }
@@ -42,7 +43,11 @@ export class PacketChatInfoRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawJson: any) {
-        console.log(rawJson);
+        this.ChatInfo = new ChatInfoStruct();
+
+        if (rawJson['chatInfo']) {
+            this.ChatInfo.fromJson(rawJson['chatInfo']);
+        }
     }
 
 }

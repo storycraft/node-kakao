@@ -38,7 +38,8 @@ export class ChatDataStruct implements StructBase {
             'c': this.ChannelId,
             't': this.Type,
             'a': this.MemberCount,
-            'p': this.PushAlert
+            'p': this.PushAlert,
+            'm': null
         };
 
         if (this.Metadata) {
