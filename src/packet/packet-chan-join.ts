@@ -13,7 +13,7 @@ export class PacketChanJoinRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public Chatlog: ChatlogStruct = new ChatlogStruct()
         ) {
         super(status);

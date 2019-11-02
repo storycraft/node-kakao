@@ -18,18 +18,22 @@ export abstract class Chat {
     private channel: ChatChannel;
     private sender: ChatUser;
 
-    private messageId: number;
+    private messageId: Long;
+
+    private text: string;
 
     private attachmentList: ChatAttachment[];
 
     private sendTime: number;
 
-    constructor(channel: ChatChannel, sender: ChatUser, messageId: number, logId: Long, prevLogId: Long, sendTime: number, rawAttachment: string = '{}') {
+    constructor(channel: ChatChannel, sender: ChatUser, messageId: Long, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string = '{}') {
         this.channel = channel;
         this.sender = sender;
 
         this.logId = logId;
         this.prevLogId = prevLogId;
+
+        this.text = text;
 
         this.messageId = messageId;
         this.sendTime = sendTime;
@@ -56,6 +60,10 @@ export abstract class Chat {
 
     get MessageId() {
         return this.messageId;
+    }
+
+    get Text() {
+        return this.text;
     }
     
     get SendTime() {

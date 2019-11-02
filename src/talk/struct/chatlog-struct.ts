@@ -12,15 +12,15 @@ import { Long } from "bson";
 export class ChatlogStruct implements StructBase {
 
     constructor(
-        public LogId: Long = Long.fromNumber(0),
-        public PrevLogId: Long = Long.fromNumber(0),
-        public SenderId: Long = Long.fromNumber(0),
-        public ChannelId: Long = Long.fromNumber(0),
+        public LogId: Long = Long.ZERO,
+        public PrevLogId: Long = Long.ZERO,
+        public SenderId: Long = Long.ZERO,
+        public ChannelId: Long = Long.ZERO,
         public Type: MessageType = MessageType.Text,
         public Text: string = '',
         public SendTime: number = -1,
         public RawAttachment: string = '',
-        public MessageId: number = 0,
+        public MessageId: Long = Long.ZERO,
     ) {
 
     }
@@ -32,9 +32,9 @@ export class ChatlogStruct implements StructBase {
         this.SenderId = JsonUtil.readLong(rawJson['authorId']);
         this.ChannelId = JsonUtil.readLong(rawJson['chatId']);
 
-        this.MessageId = rawJson['msgId'];
+        this.MessageId = JsonUtil.readLong(rawJson['msgId']);
         
-        this.Type = rawJson['t'];
+        this.Type = rawJson['type'];
 
         this.Text = rawJson['message'];
 

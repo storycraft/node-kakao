@@ -12,7 +12,7 @@ import { Long } from "bson";
 export class MemberStruct implements StructBase {
 
     constructor(
-        public UserId: Long = Long.fromNumber(0),
+        public UserId: Long = Long.ZERO,
         public NickName: string = '',
         public ProfileImageUrl: string = '',
         public OriginalProfileImageUrl: string = '',
@@ -28,9 +28,9 @@ export class MemberStruct implements StructBase {
     fromJson(rawData: any): void {
         this.UserId = JsonUtil.readLong(rawData['userId']);
         this.NickName = rawData['nickName'];
-        this.ProfileImageUrl = rawData['pi'] || '';
-        this.OriginalProfileImageUrl = rawData['opi'] || '';
-        this.FullProfileImageUrl = rawData['fpi'] || '';
+        this.ProfileImageUrl = rawData['pi'];
+        this.OriginalProfileImageUrl = rawData['opi'];
+        this.FullProfileImageUrl = rawData['fpi'];
         this.Type = rawData['type'];
         this.AccountId = rawData['accountId'];
         this.LinkedService = rawData['linkedService'] || '';

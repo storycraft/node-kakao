@@ -16,7 +16,7 @@ import { type } from "os";
 export class ChatInfoStruct implements StructBase {
 
     constructor(
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public Type: ChatroomType = ChatroomType.GROUP,
         public ActiveMemberCount: number = 0,
         public NewMessageCount: number = 0,
@@ -130,8 +130,8 @@ export class ChatInfoMeta implements StructBase {
 
     constructor(
         public Type: number = 0,
-        public Revision: Long = Long.fromNumber(0),
-        public AuthorId: Long = Long.fromNumber(0),
+        public Revision: Long = Long.ZERO,
+        public AuthorId: Long = Long.ZERO,
         public Content: string = '',
         public UpdatedAt: number = -1
     ) {

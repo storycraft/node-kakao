@@ -12,7 +12,7 @@ import { Long } from "bson";
 export class PacketChatMemberReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public UserIdLIst: Long[] = []
     ) {
         super();
@@ -35,7 +35,7 @@ export class PacketChatMemberRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public MemberList: MemberStruct[] = []
     ) {
         super(status);

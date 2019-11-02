@@ -85,9 +85,9 @@ export class UserInfo {
 
         this.accountId = memberStruct.AccountId;
         this.nickname = memberStruct.NickName;
-        this.profileImageURL = memberStruct.ProfileImageUrl;
-        this.fullProfileImageURL = memberStruct.FullProfileImageUrl;
-        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl;
+        this.profileImageURL = memberStruct.ProfileImageUrl || '';
+        this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
+        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
     }
 
 }

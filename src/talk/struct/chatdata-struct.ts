@@ -12,7 +12,7 @@ import { Long } from "bson";
 export class ChatDataStruct implements StructBase {
 
     constructor(
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public Type: ChatroomType = ChatroomType.GROUP,
         public MemberCount: number = 0,
         public PushAlert: boolean = false,

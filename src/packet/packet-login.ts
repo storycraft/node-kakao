@@ -24,8 +24,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         public RevisionData: null | Buffer = null, // idk
         public ChatIds: Long[] = [],
         public MaxIds: Long[] = [],
-        public LastTokenId: Long = Long.fromNumber(0),
-        public LastChatId: Long = Long.fromNumber(0),
+        public LastTokenId: Long = Long.ZERO,
+        public LastChatId: Long = Long.ZERO,
         public Lbk: number = 0, // ?
         public Bg: boolean = false // background checking (maybe)
     ) {
@@ -70,7 +70,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public UserId: Long = Long.fromNumber(0),
+        public UserId: Long = Long.ZERO,
         public Revision: number = 0,
         public RevisionDetail: string = '',
         public ChatDataList: ChatDataStruct[] = []

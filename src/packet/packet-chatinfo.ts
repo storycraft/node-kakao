@@ -12,7 +12,7 @@ import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
 export class PacketChatInfoReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
     ) {
         super();
     }

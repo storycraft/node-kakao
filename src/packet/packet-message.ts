@@ -12,8 +12,8 @@ import { Long } from "bson";
 export class PacketMessageWriteReq extends LocoBsonRequestPacket {
 
     constructor(
-        public MessageId: number = 0,
-        public ChannelId: Long = Long.fromNumber(0),
+        public MessageId: Long = Long.ZERO,
+        public ChannelId: Long = Long.ZERO,
         public Text: string = '',
         public Type: MessageType = MessageType.Text,
         public NoSeen: boolean = false,

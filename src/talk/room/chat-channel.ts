@@ -64,12 +64,12 @@ export class ChatChannel extends EventEmitter {
         return this.channelInfo;
     }
 
-    getNextMessageId() {
+    getNextMessageId(): Long {
         if (this.lastChat) {
-            return this.lastChat.MessageId + 1;
+            return this.lastChat.MessageId.add(Long.ONE);
         }
 
-        return 0;
+        return Long.ZERO;
     }
 
     chatReceived(chat: Chat) {

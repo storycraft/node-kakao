@@ -13,7 +13,7 @@ export class PacketInvoiceRes extends LocoBsonResponsePacket {
     
     constructor(
         status: number,
-        public ChannelId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.ZERO,
         public Type: MessageType = MessageType.Text,
         public Extra: string = ''
 

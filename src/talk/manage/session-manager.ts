@@ -105,15 +105,15 @@ export class SessionManager {
 
         switch(chatLog.Type) {
             case MessageType.Text:
-                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
                 break;
 
             case MessageType.Photo:
-                chat = new PhotoChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                chat = new PhotoChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
                 break;
 
             default:
-                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
                 break;
         }
 

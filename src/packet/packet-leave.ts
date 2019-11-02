@@ -11,7 +11,7 @@ import { Long } from "bson";
 export class PacketLeaveReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: Long = Long.fromNumber(0)  
+        public ChannelId: Long = Long.ZERO  
     ) {
         super();
     }
@@ -32,8 +32,8 @@ export class PacketLeftRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: Long = Long.fromNumber(0),
-        public LastTokenId: Long = Long.fromNumber(0)  
+        public ChannelId: Long = Long.ZERO,
+        public LastTokenId: Long = Long.ZERO  
     ) {
         super(status);
     }
