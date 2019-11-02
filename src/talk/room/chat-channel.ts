@@ -5,6 +5,8 @@ import { ChatInfoStruct, ChatInfoMeta } from "../struct/chatinfo-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { TalkClient } from "../..";
+import { PacketMessageWriteReq } from "../../packet/packet-message";
+import { MessageType } from "../chat/message-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -79,6 +81,15 @@ export class ChatChannel extends EventEmitter {
 
         this.emit('message', chat);
         this.client.emit('message', chat);
+    }
+
+    async sendText(text: string) {
+        if (text === '')
+            return;
+
+        let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text);
+
+        await this.client.NetworkManager.sendPacket(packet);
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;

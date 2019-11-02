@@ -11,7 +11,6 @@ import { PacketChatInfoReq, PacketChatInfoRes } from "../packet/packet-chatinfo"
 import { PacketKickoutRes } from "../packet/packet-kickout";
 import { PacketChatMemberRes } from "../packet/packet-chat-member";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
-import { ChatUser } from "../talk/user/chat-user";
 import { PacketLeftRes } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
 
@@ -242,7 +241,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
     onKicked(packet: PacketKickoutRes) {
         let reason = packet.Reason;
-        
+
         // do something
     }
     

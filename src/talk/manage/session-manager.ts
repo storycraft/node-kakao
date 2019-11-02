@@ -1,6 +1,6 @@
 import { ChatChannel } from "../room/chat-channel";
 import { ChatDataStruct } from "../struct/chatdata-struct";
-import { ClientChatUser } from "../user/chat-user";
+import { ClientChatUser, ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { TalkClient } from "../../talk-client";
 import { ChatlogStruct } from "../struct/chatlog-struct";
@@ -53,6 +53,14 @@ export class SessionManager {
         return this.channelMap.get(id.toString())!;
     }
 
+    getUserFrom(chatChannel: ChatChannel, id: Long): ChatUser {
+        if (id.equals(this.clientUser.UserId)) {
+            return this.clientUser;
+        }
+
+        return chatChannel.ChannelInfo.getUser(id);
+    }
+
     addChannel(id: Long, chatroomType: ChatroomType = ChatroomType.GROUP): ChatChannel {
         let channel = this.addChannelInternal(id, chatroomType);
 
@@ -91,7 +99,7 @@ export class SessionManager {
 
     chatFromChatlog(chatLog: ChatlogStruct) {
         let channel = this.getChannelById(chatLog.ChannelId);
-        let sender = channel.ChannelInfo.getUser(chatLog.SenderId);
+        let sender = this.getUserFrom(channel, chatLog.SenderId);
 
         let chat: Chat;
 
