@@ -13,6 +13,7 @@ import { PacketChatMemberRes } from "../packet/packet-chat-member";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { ChatUser } from "../talk/user/chat-user";
 import { PacketLeftRes } from "../packet/packet-leave";
+import { PacketChanJoinRes } from "../packet/packet-chan-join";
 
 /*
  * Created on Fri Nov 01 2019
@@ -124,6 +125,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('CHATINFO', this.onChatInfo.bind(this));
         this.on('MEMBER', this.onDetailMember.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
+        this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('KICKOUT', this.onKicked.bind(this));
     }
@@ -211,6 +213,23 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let channel = this.SessionManager.getChannelById(chanId);
 
         this.SessionManager.removeChannelLeft(chanId);
+    }
+
+    onChannelJoin(packet: PacketChanJoinRes) {
+        let chanId = packet.Chatlog.ChannelId;
+        if (this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let newChan = new ChatChannel(chanId);
+        let channel = this.SessionManager.addChannel(newChan);
+
+        let now = Date.now();
+        if (newChan.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
+            this.NetworkManager.requestChannelInfo(newChan.ChannelId);
+            newChan.LastInfoUpdate = now;
+        }
     }
 
     onDetailMember(packet: PacketChatMemberRes) {

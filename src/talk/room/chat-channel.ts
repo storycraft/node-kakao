@@ -17,28 +17,21 @@ export class ChatChannel extends EventEmitter {
     private channelId: Long;
 
     private lastInfoUpdate: number;
-    
-    private roomType: ChatroomType;
 
     private channelInfo: ChannelInfo;
 
-    constructor(channelId: Long, roomType: ChatroomType) {
+    constructor(channelId: Long, roomType?: ChatroomType) {
         super();
 
         this.channelId = channelId;
-        this.roomType = roomType;
 
         this.lastInfoUpdate = -1;
 
-        this.channelInfo = new ChannelInfo(this);
+        this.channelInfo = new ChannelInfo(this, roomType || ChatroomType.GROUP);
     }
 
     get ChannelId() {
         return this.channelId;
-    }
-
-    get RoomType() {
-        return this.roomType;
     }
 
     get LastInfoUpdate() {
@@ -75,6 +68,8 @@ export class ChannelInfo {
 
     private channel: ChatChannel;
 
+    private roomType: ChatroomType;
+
     private infoLoaded: boolean;
 
     private lastInfoUpdated: number;
@@ -85,12 +80,15 @@ export class ChannelInfo {
 
     private userMap: Map<string, ChatUser>;
 
-    constructor(channel: ChatChannel) {
+    constructor(channel: ChatChannel, roomType: ChatroomType) {
         this.channel = channel;
         this.infoLoaded = false;
+        
+        this.roomType = type;
 
         this.lastInfoUpdated = -1;
         this.userMap = new Map();
+
 
         this.chatmetaList = [];
         this.isDirectChan = false;
@@ -100,8 +98,16 @@ export class ChannelInfo {
         return this.channel;
     }
 
+    get RoomType() {
+        return this.roomType;
+    }
+
     get InfoLoaded() {
         return this.infoLoaded;
+    }
+
+    get IsDirectChan() {
+        return this.isDirectChan;
     }
 
     get LastInfoUpdated() {
@@ -179,6 +185,8 @@ export class ChannelInfo {
 
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
+
+        chatinfoStruct.Type;
     }
 
 }

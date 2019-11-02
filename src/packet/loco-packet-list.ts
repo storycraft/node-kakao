@@ -10,6 +10,7 @@ import { PacketNewMemberRes } from "./packet-new-member";
 import { PacketLeftRes, PacketLeaveReq } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
 import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
+import { PacketChanJoinRes } from "./packet-chan-join";
 
 /*
  * Created on Wed Oct 30 2019
@@ -56,6 +57,7 @@ export class LocoPacketList {
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
         LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));
+        LocoPacketList.responsePacketMap.set('SYNCJOIN', (status) => new PacketChanJoinRes(status));
 
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 
