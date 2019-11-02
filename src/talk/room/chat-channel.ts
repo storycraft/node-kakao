@@ -30,7 +30,7 @@ export class ChatChannel extends EventEmitter {
 
         this.lastInfoUpdate = -1;
 
-        this.channelInfo = new ChannelInfo();
+        this.channelInfo = new ChannelInfo(this);
     }
 
     get ChannelId() {
@@ -53,9 +53,27 @@ export class ChatChannel extends EventEmitter {
         return this.channelInfo;
     }
 
+    on(event: 'message' | string, listener: () => void): this;
+    on(event: 'join' | string, listener: (newUser: ChatUser, joinMessage: string) => void): this;
+    on(event: 'left' | string, listener: (leftUser: ChatUser) => void): this;
+
+    on(event: string, listener: (...args: any[]) => void) {
+        return super.on(event, listener);
+    }
+
+    once(event: 'message' | string, listener: () => void): this;
+    once(event: 'join' | string, listener: (newUser: ChatUser, joinMessage: string) => void): this;
+    once(event: 'left' | string, listener: (leftUser: ChatUser) => void): this;
+
+    once(event: string, listener: (...args: any[]) => void) {
+        return super.once(event, listener);
+    }
+
 }
 
 export class ChannelInfo {
+
+    private channel: ChatChannel;
 
     private infoLoaded: boolean;
 
@@ -67,7 +85,8 @@ export class ChannelInfo {
 
     private userMap: Map<string, ChatUser>;
 
-    constructor() {
+    constructor(channel: ChatChannel) {
+        this.channel = channel;
         this.infoLoaded = false;
 
         this.lastInfoUpdated = -1;
@@ -75,6 +94,10 @@ export class ChannelInfo {
 
         this.chatmetaList = [];
         this.isDirectChan = false;
+    }
+
+    get Channel() {
+        return this.channel;
     }
 
     get InfoLoaded() {
@@ -105,27 +128,33 @@ export class ChannelInfo {
         return this.userMap.get(id.toString())!;
     }
 
-    addUserJoined(newUser: ChatUser) {
-        if (this.hasUser(newUser.UserId)) {
+    addUserJoined(userId: Long, joinMessage: string): ChatUser {
+        if (this.hasUser(userId)) {
             throw new Error('This user is already joined');
         }
 
-        this.userMap.set(newUser.UserId.toString(), newUser);
+        let newUser = new ChatUser(userId);
+
+        this.userMap.set(userId.toString(), newUser);
+        this.Channel.emit('join', newUser, joinMessage);
+        
+        return newUser;
     }
 
-    removeUserLeft(id: Long) {
-        if (!this.hasUser(id)) {
-            throw new Error('This user is not joined');
-        }
+    removeUserLeft(id: Long): ChatUser {
+        let user = this.getUser(id);
 
         this.userMap.delete(id.toString());
+        this.Channel.emit('left', user);
+
+        return user;
     }
 
     update(chatinfoStruct: ChatInfoStruct) {
         if (!this.infoLoaded) {
             this.infoLoaded = true;
         }
-        
+
         this.lastInfoUpdated = Date.now();
 
         let checkedList: Long[] = [];
@@ -133,8 +162,7 @@ export class ChannelInfo {
         for (let memberStruct of chatinfoStruct.MemberList) {
             let user: ChatUser;
             if (!this.hasUser(memberStruct.UserId)) {
-                user = new ChatUser(memberStruct.UserId);
-                this.addUserJoined(user);
+                user = this.addUserJoined(memberStruct.UserId, '');
             } else {
                 user = this.getUser(memberStruct.UserId);
             }

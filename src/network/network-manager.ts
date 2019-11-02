@@ -11,6 +11,8 @@ import { PacketChatInfoReq, PacketChatInfoRes } from "../packet/packet-chatinfo"
 import { PacketKickoutRes } from "../packet/packet-kickout";
 import { PacketChatMemberRes } from "../packet/packet-chat-member";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
+import { ChatUser } from "../talk/user/chat-user";
+import { PacketLeftRes } from "../packet/packet-leave";
 
 /*
  * Created on Fri Nov 01 2019
@@ -122,6 +124,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('CHATINFO', this.onChatInfo.bind(this));
         this.on('MEMBER', this.onDetailMember.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
+        this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('KICKOUT', this.onKicked.bind(this));
     }
 
@@ -194,7 +197,20 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let channel = this.SessionManager.getChannelById(chanId);
         let channelInfo = channel.ChannelInfo;
 
-        channelInfo.UserList
+        let chatlog = packet.Chatlog;
+
+        channelInfo.addUserJoined(chatlog.SenderId, chatlog.Text);
+    }
+
+    onChannelLeft(packet: PacketLeftRes) {
+        let chanId = packet.ChannelId;
+        if (!this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+        let channel = this.SessionManager.getChannelById(chanId);
+
+        this.SessionManager.removeChannelLeft(chanId);
     }
 
     onDetailMember(packet: PacketChatMemberRes) {

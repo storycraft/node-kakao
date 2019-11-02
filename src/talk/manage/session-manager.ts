@@ -2,6 +2,7 @@ import { ChatChannel } from "../room/chat-channel";
 import { ChatDataStruct } from "../struct/chatdata-struct";
 import { ClientChatUser } from "../user/chat-user";
 import { Long } from "bson";
+import { TalkClient } from "../../talk-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -11,14 +12,21 @@ import { Long } from "bson";
 
 export class SessionManager {
 
+    private client: TalkClient;
+
     private clientUser: ClientChatUser;
 
     private channelMap: Map<string, ChatChannel>;
 
-    constructor(clientUser: ClientChatUser) {
+    constructor(client: TalkClient, clientUser: ClientChatUser) {
+        this.client = client;
         this.clientUser = clientUser;
 
         this.channelMap = new Map();
+    }
+
+    get Client() {
+        return this.client;
     }
 
     get ClientUser() {
@@ -45,8 +53,18 @@ export class SessionManager {
         if (this.hasChannel(channel.ChannelId)) {
             throw new Error(`Invalid channel. Channel already exists`);
         }
+        this.client.emit('join_channel', channel);
 
         this.channelMap.set(channel.ChannelId.toString(), channel);
+    }
+
+    removeChannelLeft(id: Long) {
+        let channel = this.getChannelById(id);
+
+        this.channelMap.delete(id.toString());
+        this.client.emit('left_channel', channel);
+
+        return channel;
     }
     
     initSession(initDataList: ChatDataStruct[]) {

@@ -7,6 +7,7 @@ import { KakaoAPI } from "./kakao-api";
 import { SessionManager } from "./talk/manage/session-manager";
 import { ClientChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
+import { ChatChannel } from "./talk/room/chat-channel";
 
 /*
  * Created on Fri Nov 01 2019
@@ -71,14 +72,14 @@ export class TalkClient extends EventEmitter {
             }
 
             let clientChatUser = new ClientChatUser(loginAccessData);
-            this.sessionManager = new SessionManager(clientChatUser);
+            this.sessionManager = new SessionManager(this, clientChatUser);
 
             accessToken = loginAccessData.AccessToken;
         } catch(e) {
             throw new Error(`Received wrong response: ${e}`);
         }
         
-        await this.networkManager.locoLogin(deviceUUID, this.sessionManager.ClientUser.UserId, accessToken);
+        await this.networkManager.locoLogin(deviceUUID, this.sessionManager.ClientUser.UserId.toNumber(), accessToken);
     }
 
     async logout() {
@@ -88,6 +89,22 @@ export class TalkClient extends EventEmitter {
 
         await this.networkManager.logout();
         this.sessionManager = null;
+    }
+
+    on(event: 'message' | string, listener: () => void): this;
+    on(event: 'join_channel' | string, listener: (joinCHannel: ChatChannel) => void): this;
+    on(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;
+
+    on(event: string, listener: (...args: any[]) => void) {
+        return super.on(event, listener);
+    }
+
+    once(event: 'message' | string, listener: () => void): this;
+    once(event: 'join_channel' | string, listener: (joinCHannel: ChatChannel) => void): this;
+    once(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;
+
+    once(event: string, listener: (...args: any[]) => void) {
+        return super.once(event, listener);
     }
 
 }
