@@ -13,6 +13,7 @@ import { PacketChatMemberRes } from "../packet/packet-chat-member";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketLeftRes } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
+import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -101,22 +102,28 @@ export class NetworkManager {
         return this.locoManager.sendPacket(packet);
     }
 
-    async requestChannelInfo(channelId: Long) {
+    async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
         if (!this.Logon) {
             throw new Error('Not logon to loco');
         }
 
         this.sendPacket(new PacketChatInfoReq(channelId));
 
-        await new Promise((resolve, reject) => {
+        return await new Promise<ChatInfoStruct>((resolve, reject) => {
             this.handler.once('CHATINFO', (packet: PacketChatInfoRes) => {
                 if (packet.ChatInfo.ChannelId.equals(channelId)) {
-                    resolve();
+                    resolve(packet.ChatInfo);
                 } else {
                     reject(new Error('Received wrong info packet'));
                 }
             });
         });
+    }
+    
+    async updateChannelInfo(channel: ChatChannel) {
+        channel.LastInfoUpdate = Date.now();
+        let info = await this.requestChannelInfo(channel.ChannelId);
+        channel.ChannelInfo.update(info);
     }
     
 }
@@ -135,7 +142,6 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         this.on('LOGINLIST', this.onLoginPacket.bind(this));
         this.on('MSG', this.onMessagePacket.bind(this));
-        this.on('CHATINFO', this.onChatInfo.bind(this));
         this.on('MEMBER', this.onDetailMember.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
@@ -182,28 +188,14 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel = this.SessionManager.getChannelById(chanId);
 
-        let now = Date.now();
-        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
-            await this.NetworkManager.requestChannelInfo(channel.ChannelId);
-            channel.LastInfoUpdate = now;
+        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
+            await this.NetworkManager.updateChannelInfo(channel);
         }
 
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
 
         channel.chatReceived(chat);
-    }
-
-    onChatInfo(packet: PacketChatInfoRes) {
-        let chanId = packet.ChatInfo.ChannelId;
-        if (!this.SessionManager.hasChannel(chanId)) {
-            //INVALID CHANNEL
-            return;
-        }
-
-        let channel = this.SessionManager.getChannelById(chanId);
-
-        channel.ChannelInfo.update(packet.ChatInfo);
     }
 
     onNewMember(packet: PacketNewMemberRes) {
@@ -240,12 +232,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
         
         let newChan = this.SessionManager.addChannel(chanId);
-
-        let now = Date.now();
-        if (newChan.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
-            await this.NetworkManager.requestChannelInfo(newChan.ChannelId);
-            newChan.LastInfoUpdate = now;
-        }
+        await this.NetworkManager.updateChannelInfo(newChan);
     }
 
     onDetailMember(packet: PacketChatMemberRes) {
