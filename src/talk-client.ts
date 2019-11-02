@@ -8,6 +8,7 @@ import { SessionManager } from "./talk/manage/session-manager";
 import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/room/chat-channel";
+import { Chat } from "./talk/chat/chat";
 
 /*
  * Created on Fri Nov 01 2019
@@ -91,7 +92,7 @@ export class TalkClient extends EventEmitter {
         this.sessionManager = null;
     }
 
-    on(event: 'message' | string, listener: () => void): this;
+    on(event: 'message' | string, listener: (chat: Chat) => void): this;
     on(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     on(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     on(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
@@ -101,7 +102,7 @@ export class TalkClient extends EventEmitter {
         return super.on(event, listener);
     }
 
-    once(event: 'message' | string, listener: () => void): this;
+    once(event: 'message' | string, listener: (chat: Chat) => void): this;
     once(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     once(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     once(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
