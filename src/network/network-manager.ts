@@ -26,7 +26,7 @@ export class NetworkManager {
     private cachedCheckinData: CheckinData | null;
     private latestCheckinReq: number;
 
-    private handler: LocoPacketHandler;
+    private handler: TalkPacketHandler;
 
     private locoManager: LocoManager;
 
@@ -101,8 +101,22 @@ export class NetworkManager {
         return this.locoManager.sendPacket(packet);
     }
 
-    requestChannelInfo(channelId: Long) {
+    async requestChannelInfo(channelId: Long) {
+        if (!this.Logon) {
+            throw new Error('Not logon to loco');
+        }
+
         this.sendPacket(new PacketChatInfoReq(channelId));
+
+        await new Promise((resolve, reject) => {
+            this.handler.once('CHATINFO', (packet: PacketChatInfoRes) => {
+                if (packet.ChatInfo.ChannelId.equals(channelId)) {
+                    resolve();
+                } else {
+                    reject(new Error('Received wrong info packet'));
+                }
+            });
+        });
     }
     
 }
@@ -158,7 +172,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.SessionManager.initSession(packet.ChatDataList);
     }
 
-    onMessagePacket(packet: PacketMessageRes) {
+    async onMessagePacket(packet: PacketMessageRes) {
         let chanId = packet.ChannelId;
 
         if (!this.SessionManager.hasChannel(chanId)) {
@@ -170,7 +184,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let now = Date.now();
         if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
-            this.NetworkManager.requestChannelInfo(channel.ChannelId);
+            await this.NetworkManager.requestChannelInfo(channel.ChannelId);
             channel.LastInfoUpdate = now;
         }
 
@@ -218,7 +232,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.SessionManager.removeChannelLeft(chanId);
     }
 
-    onChannelJoin(packet: PacketChanJoinRes) {
+    async onChannelJoin(packet: PacketChanJoinRes) {
         let chanId = packet.Chatlog.ChannelId;
         if (this.SessionManager.hasChannel(chanId)) {
             //INVALID CHANNEL
@@ -229,7 +243,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let now = Date.now();
         if (newChan.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= now) {
-            this.NetworkManager.requestChannelInfo(newChan.ChannelId);
+            await this.NetworkManager.requestChannelInfo(newChan.ChannelId);
             newChan.LastInfoUpdate = now;
         }
     }

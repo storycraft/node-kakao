@@ -120,6 +120,7 @@ export class LocoManager {
                     throw new Error('Received wrong packet');
                 }
 
+                this.locoLogon = true;
                 resolve(packet as PacketLoginRes);
             });
 
