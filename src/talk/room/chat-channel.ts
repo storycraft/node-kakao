@@ -3,6 +3,7 @@ import { Long } from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
 import { ChatInfoStruct, ChatInfoMeta } from "../struct/chatinfo-struct";
 import { EventEmitter } from "events";
+import { Chat } from "../chat/chat";
 
 /*
  * Created on Fri Nov 01 2019
@@ -18,6 +19,8 @@ export class ChatChannel extends EventEmitter {
 
     private lastInfoUpdate: number;
 
+    private lastChat: Chat |null;
+
     private channelInfo: ChannelInfo;
 
     constructor(channelId: Long, roomType?: ChatroomType) {
@@ -28,6 +31,11 @@ export class ChatChannel extends EventEmitter {
         this.lastInfoUpdate = -1;
 
         this.channelInfo = new ChannelInfo(this, roomType || ChatroomType.GROUP);
+        this.lastChat = null;
+    }
+
+    get LastChat() {
+        return this.lastChat;
     }
 
     get ChannelId() {
@@ -46,7 +54,25 @@ export class ChatChannel extends EventEmitter {
         return this.channelInfo;
     }
 
-    on(event: 'message' | string, listener: () => void): this;
+    getNextMessageId() {
+        if (this.lastChat) {
+            return this.lastChat.MessageId + 1;
+        }
+
+        return 0;
+    }
+
+    chatReceived(chat: Chat) {
+        if (chat.Channel !== this) {
+            throw new Error('Pointed to wrong channel');
+        }
+
+        this.lastChat = chat;
+
+        this.emit('message', chat);
+    }
+
+    on(event: 'message' | string, listener: (chat: Chat) => void): this;
     on(event: 'join' | string, listener: (newUser: ChatUser, joinMessage: string) => void): this;
     on(event: 'left' | string, listener: (leftUser: ChatUser) => void): this;
 
@@ -84,7 +110,7 @@ export class ChannelInfo {
         this.channel = channel;
         this.infoLoaded = false;
         
-        this.roomType = type;
+        this.roomType = roomType;
 
         this.lastInfoUpdated = -1;
         this.userMap = new Map();

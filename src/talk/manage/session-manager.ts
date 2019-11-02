@@ -3,6 +3,9 @@ import { ChatDataStruct } from "../struct/chatdata-struct";
 import { ClientChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { TalkClient } from "../../talk-client";
+import { ChatlogStruct } from "../struct/chatlog-struct";
+import { Chat, TextChat, PhotoChat } from "../chat/chat";
+import { MessageType } from "../chat/message-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -65,6 +68,29 @@ export class SessionManager {
         this.client.emit('left_channel', channel);
 
         return channel;
+    }
+
+    chatFromChatlog(chatLog: ChatlogStruct) {
+        let channel = this.getChannelById(chatLog.ChannelId);
+        let sender = channel.ChannelInfo.getUser(chatLog.SenderId);
+
+        let chat: Chat;
+
+        switch(chatLog.Type) {
+            case MessageType.Text:
+                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                break;
+
+            case MessageType.Photo:
+                chat = new PhotoChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                break;
+
+            default:
+                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.RawAttachment);
+                break;
+        }
+
+        return chat;
     }
     
     initSession(initDataList: ChatDataStruct[]) {

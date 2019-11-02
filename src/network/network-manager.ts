@@ -175,6 +175,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             this.NetworkManager.requestChannelInfo(channel.ChannelId);
             channel.LastInfoUpdate = now;
         }
+
+        let chatLog = packet.Chatlog;
+        let chat = this.SessionManager.chatFromChatlog(chatLog);
+
+        channel.chatReceived(chat);
     }
 
     onChatInfo(packet: PacketChatInfoRes) {
