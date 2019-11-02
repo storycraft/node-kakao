@@ -1,6 +1,7 @@
 import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket } from "..";
 import { LocoManager, BookingData, CheckinData } from "../loco/loco-manager";
 import { LoginAccessDataStruct } from "../talk/struct/login-access-data-struct";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bson-packet";
 
 /*
  * Created on Fri Nov 01 2019
@@ -14,8 +15,6 @@ export class NetworkManager implements LocoPacketHandler {
     private cachedCheckinData: CheckinData | null;
     private latestCheckinReq: number;
 
-    private accessData: LoginAccessDataStruct;
-
     private locoManager: LocoManager;
 
     constructor(private client: TalkClient) {
@@ -24,8 +23,6 @@ export class NetworkManager implements LocoPacketHandler {
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
         this.latestCheckinReq = -1;
-
-        this.accessData = new LoginAccessDataStruct();
     }
 
     get Client() {
@@ -52,26 +49,24 @@ export class NetworkManager implements LocoPacketHandler {
         return this.cachedBookingData;
     }
 
-    protected async getCachedCheckin(forceRecache: boolean = false): Promise<CheckinData> {
+    protected async getCachedCheckin(userId: number, forceRecache: boolean = false): Promise<CheckinData> {
         if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.latestCheckinReq < Date.now() || forceRecache) {
-            this.cachedCheckinData = await this.locoManager.getCheckinData((await this.getCachedBooking()).CheckinHost, this.accessData.UserId);
+            this.cachedCheckinData = await this.locoManager.getCheckinData((await this.getCachedBooking()).CheckinHost, userId);
             this.latestCheckinReq = Date.now();
         }
 
         return this.cachedCheckinData;
     }
 
-    async locoLogin(deviceUUID: string, accessData: LoginAccessDataStruct) {
+    async locoLogin(deviceUUID: string, userId: number, accessToken: string) {
         if (this.Logon) {
             throw new Error('Already logon to loco');
         }
-
-        this.accessData = accessData;
         
-        let checkinData = await this.getCachedCheckin();
+        let checkinData = await this.getCachedCheckin(userId);
 
         await this.locoManager.connectToLoco(checkinData.LocoHost, checkinData.expireTime);
-        await this.locoManager.loginToLoco(deviceUUID, accessData.AccessToken);
+        await this.locoManager.loginToLoco(deviceUUID, accessToken);
     }
 
     async logout() {
@@ -82,6 +77,10 @@ export class NetworkManager implements LocoPacketHandler {
         if (this.locoManager.LocoConnected) {
             this.locoManager.disconnect();
         }
+    }
+
+    async sendPacket(packet: LocoRequestPacket) {
+        return this.locoManager.sendPacket(packet);
     }
 
     onRequest(packet: LocoRequestPacket): void {

@@ -1,7 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { JsonUtil } from "../util/json-util";
 import { MessageType } from "../talk/chat/message-type";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { JsonUtil } from "../util/json-util";
 
 /*
  * Created on Tue Oct 29 2019
@@ -27,7 +27,7 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
     
     toBodyJson() {
         let obj: any = {
-            'chatId': this.ChannelId,
+            'chatId': JsonUtil.writeLong(this.ChannelId),
             'msgId': this.MessageId,
             'msg': this.Text,
             'type': this.Type,

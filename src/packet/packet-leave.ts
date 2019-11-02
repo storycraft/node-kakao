@@ -21,7 +21,7 @@ export class PacketLeaveReq extends LocoBsonRequestPacket {
 
     toBodyJson() {
         return {
-            'chatId': JsonUtil.writeLong(this.ChannelId)
+            'chatId': JsonUtil.readLong(this.ChannelId)
         };
     }
     

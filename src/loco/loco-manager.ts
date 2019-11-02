@@ -8,6 +8,7 @@ import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
 import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketHandler } from "./loco-packet-handler";
+import { LocoPacketList } from "../packet/loco-packet-list";
 
 /*
  * Created on Thu Oct 24 2019
@@ -197,6 +198,10 @@ export class LocoManager {
     async sendPacket(packet: LocoRequestPacket): Promise<boolean> {
         if (!this.LocoConnected) {
             return false;
+        }
+
+        if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
+            throw new Error(`Invalid packet ${packet.PacketName}`);
         }
 
         this.onPacketSend(packet);

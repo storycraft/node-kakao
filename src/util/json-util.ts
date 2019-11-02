@@ -1,3 +1,5 @@
+import { Long } from "bson";
+
 /*
  * Created on Wed Oct 30 2019
  *
@@ -8,22 +10,14 @@ export class JsonUtil {
 
     static readLong(value: any): number {
         if (value.unsigned !== undefined) {
-            return (value.high << 32) | value.low;
+            return (value as Long).toNumber();
         }
 
         return value;
     }
 
     static writeLong(value: number): any {
-        if ((value >> 32) <= 0) {
-            return value;
-        }
-
-        return {
-            'unsigned': false,
-            'high': value >> 32,
-            'low': value & 0xffffffff
-        };
+        return Long.fromNumber(value);
     }
 
 }

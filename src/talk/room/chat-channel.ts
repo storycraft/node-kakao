@@ -1,3 +1,5 @@
+import { ChatUser } from "../user/chat-user";
+
 /*
  * Created on Fri Nov 01 2019
  *
@@ -5,6 +7,10 @@
  */
 
 export class ChatChannel {
+
+    async getUserNickname(user: ChatUser): Promise<string> {
+        return '';
+    }
 
 }
 

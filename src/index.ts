@@ -44,6 +44,4 @@ export * from './talk/struct/struct-base';
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chatlog-struct';
 
-export * from './util/json-util';
-
 export * from './talk-client';

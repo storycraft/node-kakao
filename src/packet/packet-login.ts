@@ -1,7 +1,7 @@
 import { KakaoAPI } from "../kakao-api";
-import * as BSON from "bson";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatDataStruct } from "../talk/struct/chatdata-struct";
+import { JsonUtil } from "../util/json-util";
 
 /*
  * Created on Fri Oct 18 2019
@@ -37,6 +37,17 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
+        let chatList = [];
+        let maxIdList = [];
+
+        for (let chatId of this.ChatIds) {
+            chatList.push(JsonUtil.writeLong(chatId));
+        }
+
+        for (let maxId of this.MaxIds) {
+            maxIdList.push(JsonUtil.writeLong(maxId));
+        }
+
         let obj: any = {
             'appVer': this.Appver,
             'prtVer': '1',
@@ -49,15 +60,15 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'MCCMNC': this.NetworkMccMnc,
             'revision': this.Revision,
             'rp': null,
-            'chatIds': this.ChatIds,
-            'maxIds': this.MaxIds,
-            'lastTokenId': BSON.Long.fromNumber(this.LastTokenId),
+            'chatIds': chatList,
+            'maxIds': maxIdList,
+            'lastTokenId': JsonUtil.writeLong(this.LastTokenId),
             'lbk': this.Lbk,
             'bg': this.Bg
         };
 
         if (this.LastChatId !== 0) {
-            obj.lastChatId = this.LastChatId;
+            obj['lastChatId'] = JsonUtil.writeLong(this.LastChatId);
         }
 
         return obj;
@@ -82,7 +93,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(body: any) {
-        this.UserId = body['userId'];
+        this.UserId = JsonUtil.readLong(body['userId']);
         this.Revision = body['revision'];
         this.RevisionDetail = body['revisionInfo'];
         this.ChatDataList = [];

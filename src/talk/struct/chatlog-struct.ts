@@ -31,7 +31,7 @@ export class ChatlogStruct implements StructBase {
         this.SenderId = JsonUtil.readLong(rawJson['authorId']);
         this.ChannelId = JsonUtil.readLong(rawJson['chatId']);
 
-        this.MessageId = JsonUtil.readLong(rawJson['msgId']);
+        this.MessageId = rawJson['msgId'];
         
         this.Type = rawJson['t'];
 
@@ -48,7 +48,7 @@ export class ChatlogStruct implements StructBase {
             'prevId': JsonUtil.writeLong(this.PrevLogId),
             'authorId': JsonUtil.writeLong(this.SenderId),
             'chatId': JsonUtil.writeLong(this.ChannelId),
-            'msgId': JsonUtil.writeLong(this.MessageId),
+            'msgId': this.MessageId,
             't': this.Type,
             'message': this.Text,
             'attachment': this.RawAttachment,
