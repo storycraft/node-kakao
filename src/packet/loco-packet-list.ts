@@ -9,6 +9,7 @@ import { PacketInvoiceRes } from "./packet-invoice";
 import { PacketNewMemberRes } from "./packet-new-member";
 import { PacketLeftRes, PacketLeaveReq } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
+import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 
 /*
  * Created on Wed Oct 30 2019
@@ -32,8 +33,11 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('GETCONF', () => new PacketGetConfReq());
         LocoPacketList.reqeustPacketMap.set('CHECKIN', () => new PacketCheckInReq());
         LocoPacketList.reqeustPacketMap.set('LOGINLIST', () => new PacketLoginReq());
+
         LocoPacketList.reqeustPacketMap.set('WRITE', () => new PacketMessageWriteReq());
         LocoPacketList.reqeustPacketMap.set('MEMBER', () => new PacketChatMemberReq());
+        LocoPacketList.reqeustPacketMap.set('CHATINFO', () => new PacketChatInfoReq());
+
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }
 
@@ -48,6 +52,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('MSG', (status) => new PacketMessageRes(status));
         LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new PacketMessageReadRes(status));
         LocoPacketList.responsePacketMap.set('MEMBER', (status) => new PacketChatMemberRes(status));
+        LocoPacketList.responsePacketMap.set('CHATINFO', (status) => new PacketChatInfoRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
         LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));

@@ -1,6 +1,7 @@
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { MessageType } from "../talk/chat/message-type";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 31 2019
@@ -12,7 +13,7 @@ export class PacketInvoiceRes extends LocoBsonResponsePacket {
     
     constructor(
         status: number,
-        public ChannelId: number = 0,
+        public ChannelId: Long = Long.fromNumber(0),
         public Type: MessageType = MessageType.Text,
         public Extra: string = ''
 

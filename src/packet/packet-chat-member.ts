@@ -1,6 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Sat Nov 02 2019
@@ -11,8 +12,8 @@ import { JsonUtil } from "../util/json-util";
 export class PacketChatMemberReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: number = 0,
-        public UserIdLIst: number[] = []
+        public ChannelId: Long = Long.fromNumber(0),
+        public UserIdLIst: Long[] = []
     ) {
         super();
     }
@@ -22,15 +23,9 @@ export class PacketChatMemberReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
-        let idList: any[] = [];
-
-        for (let id of this.UserIdLIst) {
-            idList.push(JsonUtil.writeLong(id));
-        }
-
         return {
-            'chatId': JsonUtil.writeLong(this.ChannelId),
-            'memberIds': idList
+            'chatId': this.ChannelId,
+            'memberIds': this.UserIdLIst
         };
     }
 
@@ -40,7 +35,7 @@ export class PacketChatMemberRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: number = 0,
+        public ChannelId: Long = Long.fromNumber(0),
         public MemberList: MemberStruct[] = []
     ) {
         super(status);

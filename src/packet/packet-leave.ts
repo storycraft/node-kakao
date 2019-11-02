@@ -1,5 +1,6 @@
 import { LocoBsonResponsePacket, LocoBsonRequestPacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 31 2019
@@ -10,7 +11,7 @@ import { JsonUtil } from "../util/json-util";
 export class PacketLeaveReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: number = 0     
+        public ChannelId: Long = Long.fromNumber(0)  
     ) {
         super();
     }
@@ -31,8 +32,8 @@ export class PacketLeftRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: number = 0,
-        public LastTokenId: number = 0        
+        public ChannelId: Long = Long.fromNumber(0),
+        public LastTokenId: Long = Long.fromNumber(0)  
     ) {
         super(status);
     }

@@ -1,6 +1,7 @@
 import { StructBase } from "./struct-base";
 import { MessageType } from "../chat/message-type";
 import { JsonUtil } from "../../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 31 2019
@@ -11,10 +12,10 @@ import { JsonUtil } from "../../util/json-util";
 export class ChatlogStruct implements StructBase {
 
     constructor(
-        public LogId: number = 0,
-        public PrevLogId: number = 0,
-        public SenderId: number = 0,
-        public ChannelId: number = 0,
+        public LogId: Long = Long.fromNumber(0),
+        public PrevLogId: Long = Long.fromNumber(0),
+        public SenderId: Long = Long.fromNumber(0),
+        public ChannelId: Long = Long.fromNumber(0),
         public Type: MessageType = MessageType.Text,
         public Text: string = '',
         public SendTime: number = -1,
@@ -44,10 +45,10 @@ export class ChatlogStruct implements StructBase {
 
     toJson() {
         return {
-            'logId': JsonUtil.writeLong(this.LogId),
-            'prevId': JsonUtil.writeLong(this.PrevLogId),
-            'authorId': JsonUtil.writeLong(this.SenderId),
-            'chatId': JsonUtil.writeLong(this.ChannelId),
+            'logId': this.LogId,
+            'prevId': this.PrevLogId,
+            'authorId': this.SenderId,
+            'chatId': this.ChannelId,
             'msgId': this.MessageId,
             't': this.Type,
             'message': this.Text,

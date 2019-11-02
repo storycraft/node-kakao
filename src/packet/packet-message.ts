@@ -2,6 +2,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 import { MessageType } from "../talk/chat/message-type";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Tue Oct 29 2019
@@ -12,7 +13,7 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
 
     constructor(
         public MessageId: number = 0,
-        public ChannelId: number = 0,
+        public ChannelId: Long = Long.fromNumber(0),
         public Text: string = '',
         public Type: MessageType = MessageType.Text,
         public NoSeen: boolean = false,
@@ -27,7 +28,7 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
     
     toBodyJson() {
         let obj: any = {
-            'chatId': JsonUtil.writeLong(this.ChannelId),
+            'chatId': this.ChannelId,
             'msgId': this.MessageId,
             'msg': this.Text,
             'type': this.Type,
@@ -46,7 +47,7 @@ export class PacketMessageRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: number = -1,
+        public ChannelId: Long = Long.fromNumber(-1),
         public SenderNickname: string = '',
         public Chatlog: ChatlogStruct = new ChatlogStruct(),
         public NoSeen: boolean = false,

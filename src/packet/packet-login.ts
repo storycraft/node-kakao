@@ -2,6 +2,7 @@ import { KakaoAPI } from "../kakao-api";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatDataStruct } from "../talk/struct/chatdata-struct";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Fri Oct 18 2019
@@ -21,10 +22,10 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         public Language: string = 'ko',
         public Revision: number = 0, //Always 0 since I didnt implement revision data and dunno what
         public RevisionData: null | Buffer = null, // idk
-        public ChatIds: number[] = [],
-        public MaxIds: number[] = [],
-        public LastTokenId: number = 0,
-        public LastChatId: number = 0,
+        public ChatIds: Long[] = [],
+        public MaxIds: Long[] = [],
+        public LastTokenId: Long = Long.fromNumber(0),
+        public LastChatId: Long = Long.fromNumber(0),
         public Lbk: number = 0, // ?
         public Bg: boolean = false // background checking (maybe)
     ) {
@@ -37,16 +38,6 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
-        let chatList = [];
-        let maxIdList = [];
-
-        for (let chatId of this.ChatIds) {
-            chatList.push(JsonUtil.writeLong(chatId));
-        }
-
-        for (let maxId of this.MaxIds) {
-            maxIdList.push(JsonUtil.writeLong(maxId));
-        }
 
         let obj: any = {
             'appVer': this.Appver,
@@ -60,15 +51,15 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'MCCMNC': this.NetworkMccMnc,
             'revision': this.Revision,
             'rp': null,
-            'chatIds': chatList,
-            'maxIds': maxIdList,
-            'lastTokenId': JsonUtil.writeLong(this.LastTokenId),
+            'chatIds': this.ChatIds,
+            'maxIds': this.MaxIds,
+            'lastTokenId': this.LastTokenId,
             'lbk': this.Lbk,
             'bg': this.Bg
         };
 
-        if (this.LastChatId !== 0) {
-            obj['lastChatId'] = JsonUtil.writeLong(this.LastChatId);
+        if (this.LastChatId.toNumber() !== 0) {
+            obj['lastChatId'] = this.LastChatId;
         }
 
         return obj;
@@ -79,7 +70,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public UserId: number = 0,
+        public UserId: Long = Long.fromNumber(0),
         public Revision: number = 0,
         public RevisionDetail: string = '',
         public ChatDataList: ChatDataStruct[] = []

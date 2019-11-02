@@ -8,15 +8,11 @@ import { Long } from "bson";
 
 export class JsonUtil {
 
-    static readLong(value: any): number {
+    static readLong(value: any): Long {
         if (value.unsigned !== undefined) {
-            return (value as Long).toNumber();
+            return (value as Long);
         }
 
-        return value;
-    }
-
-    static writeLong(value: number): any {
         return Long.fromNumber(value);
     }
 

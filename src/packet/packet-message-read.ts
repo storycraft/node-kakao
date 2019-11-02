@@ -1,5 +1,6 @@
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Wed Oct 30 2019
@@ -11,9 +12,9 @@ export class PacketMessageReadRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: number = -1,
-        public ReaderId: number = -1,
-        public Watermark: number = 0
+        public ChannelId: Long = Long.fromNumber(-1),
+        public ReaderId: Long = Long.fromNumber(-1),
+        public Watermark: Long = Long.fromNumber(-1),
     ) {
         super(status);
     }

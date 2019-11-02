@@ -1,6 +1,7 @@
 import { ChatroomType } from "../chat/chatroom-type";
 import { StructBase } from "./struct-base";
 import { JsonUtil } from "../../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 31 2019
@@ -11,7 +12,7 @@ import { JsonUtil } from "../../util/json-util";
 export class ChatDataStruct implements StructBase {
 
     constructor(
-        public ChannelId: number = 0,
+        public ChannelId: Long = Long.fromNumber(0),
         public Type: ChatroomType = ChatroomType.GROUP,
         public MemberCount: number = 0,
         public PushAlert: boolean = false,
@@ -34,7 +35,7 @@ export class ChatDataStruct implements StructBase {
 
     toJson() {
         let obj: any = {
-            'c': JsonUtil.writeLong(this.ChannelId),
+            'c': this.ChannelId,
             't': this.Type,
             'a': this.MemberCount,
             'p': this.PushAlert

@@ -1,6 +1,7 @@
 import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { JsonUtil } from "../../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Sat Nov 02 2019
@@ -11,7 +12,7 @@ import { JsonUtil } from "../../util/json-util";
 export class MemberStruct implements StructBase {
 
     constructor(
-        public UserId: number = 0,
+        public UserId: Long = Long.fromNumber(0),
         public NickName: string = '',
         public ProfileImageUrl: string = '',
         public OriginalProfileImageUrl: string = '',
@@ -38,11 +39,11 @@ export class MemberStruct implements StructBase {
     
     toJson() {
         let obj: any = {
-            'userId': JsonUtil.writeLong(this.UserId),
+            'userId': this.UserId,
             'nickName': this.NickName,
-            'profileImageUrl': this.ProfileImageUrl,
-            'originalProfileImageUrl': this.OriginalProfileImageUrl,
-            'fullProfileImageUrl': this.FullProfileImageUrl,
+            'pi': this.ProfileImageUrl,
+            'opi': this.OriginalProfileImageUrl,
+            'fpi': this.FullProfileImageUrl,
             'type': this.Type,
             'accountId': this.AccountId
         };
