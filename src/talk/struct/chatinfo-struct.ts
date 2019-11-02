@@ -151,7 +151,7 @@ export class ChatInfoMeta implements StructBase {
     fromJson(rawJson: any) {
         this.Type = rawJson['type'];
         this.Revision = JsonUtil.readLong(rawJson['revision']);
-        this.AuthorId = JsonUtil.readLong(rawJson['autohrId']);
+        this.AuthorId = JsonUtil.readLong(rawJson['authorId']);
         this.Content = rawJson['content'];
         this.UpdatedAt = rawJson['updatedAt'];
     }
