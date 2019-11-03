@@ -41,11 +41,19 @@ export * from './secure/crypto-manager';
 
 export * from './talk/chat/chatroom-type';
 export * from './talk/chat/message-type';
+export * from './talk/user/user-type';
 
 export * from './talk/struct/struct-base';
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chatinfo-struct';
 export * from './talk/struct/chatlog-struct';
+
+export * from './talk/chat/chat';
+export * from './talk/chat/chat-attachment';
+export * from './talk/room/chat-channel';
+
+export * from './talk/user/chat-user';
+
 
 export * from './talk-client';
 

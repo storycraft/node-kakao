@@ -78,6 +78,10 @@ export class UserInfo {
         return this.lastInfoCache;
     }
 
+    updateNickname(nickname: string) {
+        this.nickname = nickname;
+    }
+
     update(memberStruct: MemberStruct) {
         if (!this.infoLoaded) {
             this.infoLoaded = true;
@@ -100,6 +104,22 @@ export class ClientChatUser extends ChatUser {
         super(Long.fromNumber(clientAccessData.UserId));
 
         this.clientAccessData = clientAccessData;
+    }
+
+    get KakaoStoryURL() {
+        return this.clientAccessData.StoryURL;
+    }
+
+    get LogonTime() {
+        return this.clientAccessData.LogonServerTime;
+    }
+
+    get MainDeviceName() {
+        return this.clientAccessData.MainDevice;
+    }
+
+    get MainDeviceAppVer() {
+        return this.clientAccessData.MainDeviceAppVersion;
     }
 
 }

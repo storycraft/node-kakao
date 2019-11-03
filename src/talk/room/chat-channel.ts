@@ -169,10 +169,14 @@ export class ChannelInfo {
     }
 
     hasUser(id: Long) {
-        return this.userMap.has(id.toString());
+        return this.userMap.has(id.toString()) || this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id);
     }
 
     getUser(id: Long): ChatUser {
+        if (this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id)) {
+            return this.channel.Client.SessionManager.ClientUser;
+        }
+
         if (!this.hasUser(id)) {
             throw new Error('Invalid user');
         }
@@ -190,7 +194,7 @@ export class ChannelInfo {
     }
 
     protected addUserInternal(userId: Long) {
-        if (this.hasUser(userId)) {
+        if (this.hasUser(userId) || this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(userId)) {
             throw new Error('This user is already joined');
         }
 
@@ -211,6 +215,10 @@ export class ChannelInfo {
     }
 
     protected removeUserLeftInternal(id: Long): ChatUser {
+        if (this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id)) {
+            throw new Error('Client user cannot be removed');
+        }
+
         let user = this.getUser(id);
 
         this.userMap.delete(id.toString());

@@ -1,5 +1,5 @@
 import { LocoPacketHandler } from "./loco/loco-packet-handler";
-import { LocoRequestPacket, LocoResponsePacket } from ".";
+import { LocoRequestPacket, LocoResponsePacket, Long } from ".";
 import { LocoManager } from "./loco/loco-manager";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct } from "./talk/struct/login-access-data-struct";
@@ -93,6 +93,7 @@ export class TalkClient extends EventEmitter {
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;
+    on(event: 'message_read' | string, listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
     on(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     on(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     on(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
@@ -103,6 +104,7 @@ export class TalkClient extends EventEmitter {
     }
 
     once(event: 'message' | string, listener: (chat: Chat) => void): this;
+    once(event: 'message_read' | string, listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
     once(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     once(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     once(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;

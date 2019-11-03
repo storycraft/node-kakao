@@ -14,6 +14,7 @@ import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketLeftRes } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
 import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
+import { PacketMessageReadRes } from "../packet/packet-message-read";
 
 /*
  * Created on Fri Nov 01 2019
@@ -144,6 +145,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('MSG', this.onMessagePacket.bind(this));
         this.on('MEMBER', this.onDetailMember.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
+        this.on('DECUNREAD', this.onMessageRead.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('KICKOUT', this.onKicked.bind(this));
@@ -166,6 +168,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
     
     onResponse(packet: LocoResponsePacket): void {
+        console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }
 
@@ -195,8 +198,27 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
 
+        if (chat.Sender.UserInfo.Nickname !== packet.SenderNickname) {
+            chat.Sender.UserInfo.updateNickname(packet.SenderNickname);
+        }
+
         channel.chatReceived(chat);
     }
+
+    onMessageRead(packet: PacketMessageReadRes) {
+        let chanId = packet.ChannelId;
+        if (!this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let channel = this.SessionManager.getChannelById(chanId);
+        let reader = channel.ChannelInfo.getUser(packet.ReaderId);
+
+        let watermark = packet.Watermark;
+
+        this.Client.emit('message_read', channel, reader, watermark);
+    } 
 
     onNewMember(packet: PacketNewMemberRes) {
         let chanId = packet.Chatlog.ChannelId;

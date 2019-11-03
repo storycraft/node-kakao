@@ -3,6 +3,8 @@ import { Long } from "bson";
 import { ChatChannel } from "../room/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatlogStruct } from "../struct/chatlog-struct";
+import { ChatAttachment, PhotoAttachment } from "../..";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment } from "./chat-attachment";
 
 /*
  * Created on Fri Nov 01 2019
@@ -96,95 +98,6 @@ export abstract class Chat {
     
 }
 
-export class ChatAttachment {
-    
-    readAttachment(rawJson: any) {
-
-    }
-
-}
-
-export class PhotoAttachment extends ChatAttachment {
-    
-    private keyPath: string;
-
-    private width: number;
-    private height: number;
-
-    private imageURL: string;
-    private thumbnailURL: string;
-
-    private thumbnailWidth: number;
-    private thumbnailHeight: number;
-
-    private size: number;
-
-    constructor() {
-        super();
-
-        this.keyPath = '';
-
-        this.width = 0;
-        this.height = 0;
-
-        this.imageURL = '';
-        this.thumbnailURL = '';
-
-        this.thumbnailWidth = 0;
-        this.thumbnailHeight = 0;
-        
-        this.size = 0;
-    }
-
-    get KeyPath() {
-        return this.keyPath;
-    }
-
-    get Width() {
-        return this.width;
-    }
-
-    get Height() {
-        return this.height;
-    }
-
-    get ImageURL() {
-        return this.imageURL;
-    }
-
-    get ThumbnailWidth() {
-        return this.thumbnailWidth;
-    }
-
-    get ThumbnailHeight() {
-        return this.thumbnailHeight;
-    }
-
-    get ThumbnailURL() {
-        return this.thumbnailURL;
-    }
-
-    get Size() {
-        return this.size;
-    }
-
-    readAttachment(rawJson: any) {
-        this.keyPath = rawJson['k'];
-
-        this.width = rawJson['w'];
-        this.height = rawJson['h'];
-
-        this.imageURL = rawJson['url'];
-        this.thumbnailURL = rawJson['thumbnailUrl'];
-        
-        this.thumbnailWidth = rawJson['thumbnailWidth'];
-        this.thumbnailHeight = rawJson['thumbnailHeight'];
-        
-        this.size = rawJson['s'];
-    }
-
-}
-
 export class TextChat extends Chat {
     
     get Type() {
@@ -197,7 +110,15 @@ export class TextChat extends Chat {
 
 }
 
-export class PhotoChat extends Chat {
+export abstract class PhotoChat extends Chat {
+
+    get AttachmentList(): PhotoAttachment[] {
+        return super.AttachmentList as PhotoAttachment[];
+    }
+
+}
+
+export class SinglePhotoChat extends PhotoChat {
 
     get Type() {
         return MessageType.Photo;
@@ -213,6 +134,67 @@ export class PhotoChat extends Chat {
 
 }
 
+export class MultiPhotoChat extends PhotoChat {
+
+    get Type() {
+        return MessageType.MultiPhoto;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let keyPathList: string[] = attachmentJson['kl'];
+
+        for (let i = 0; i < keyPathList.length; i++) {
+            let photoAttachment = new PhotoAttachment(
+                attachmentJson['kl'][i],
+                attachmentJson['wl'][i],
+                attachmentJson['hl'][i],
+                attachmentJson['imageUrls'][i],
+                attachmentJson['thumbnailUrls'][i],
+                attachmentJson['thumbnailWidths'][i],
+                attachmentJson['thumbnailHeights'][i],
+                attachmentJson['sl'][i]
+            );
+
+            attachmentList.push(photoAttachment);
+        }
+    }
+
+}
+
+export abstract class EmoticonChat extends Chat {
+
+}
+
+export class StaticEmoticonChat extends EmoticonChat {
+    
+    get Type() {
+        return MessageType.Sticker;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new EmoticonAttachment();
+        attachment.readAttachment(attachmentJson);
+
+        attachmentList.push(attachment);
+    }
+
+}
+
+export class AnimatedEmoticonChat extends EmoticonChat {
+    
+    get Type() {
+        return MessageType.StickerAni;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new EmoticonAttachment();
+        attachment.readAttachment(attachmentJson);
+
+        attachmentList.push(attachment);
+    }
+
+}
+
 export class VideoChat extends Chat {
     
     get Type() {
@@ -220,7 +202,10 @@ export class VideoChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new VideoAttachment();
+        attachment.readAttachment(attachmentJson);
 
+        attachmentList.push(attachment);
     }
 
 }
@@ -232,19 +217,10 @@ export class LongTextChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
-    }
+        let textAttachment = new LongTextAttachment();
+        textAttachment.readAttachment(LongTextAttachment);
 
-}
-
-export class EmoticonChat extends Chat {
-    
-    get Type() {
-        return MessageType.DitemEmoticon;
-    }
-
-    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
+        attachmentList.push(textAttachment);
     }
 
 }
