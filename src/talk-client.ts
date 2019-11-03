@@ -9,6 +9,7 @@ import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/room/chat-channel";
 import { Chat } from "./talk/chat/chat";
+import { ClientSettingsStruct } from "./talk/struct/client-settings-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -72,7 +73,14 @@ export class TalkClient extends EventEmitter {
                 throw new Error(`Access login ERR ${statusCode}`);
             }
 
-            let clientChatUser = new ClientChatUser(loginAccessData);
+            let settings = new ClientSettingsStruct();
+            settings.fromJson(JSON.parse(await KakaoAPI.requestAccountSettings(loginAccessData.AccessToken, deviceUUID, 0)));
+
+            if (settings.Status !== 0) {
+                throw new Error(`Settings request ERR ${settings.Status}`);
+            }
+
+            let clientChatUser = new ClientChatUser(loginAccessData, settings);
             this.sessionManager = new SessionManager(this, clientChatUser);
 
             accessToken = loginAccessData.AccessToken;

@@ -287,7 +287,7 @@ export class ChannelInfo {
             } else {
                 user = this.getUser(memberStruct.UserId);
             }
-            user.UserInfo.update(memberStruct);
+            user.UserInfo.updateFromChatInfo(memberStruct);
 
             checkedList.push(user.UserId);
         }

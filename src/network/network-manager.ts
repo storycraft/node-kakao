@@ -17,6 +17,7 @@ import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChatUser } from "../talk/user/chat-user";
+import { ChatroomType } from "../talk/chat/chatroom-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -229,14 +230,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             await this.NetworkManager.updateChannelInfo(channel);
         }
 
-        let clientChannelUser = channel.ChannelInfo.ChannelClientUser;
-
-        if (!clientChannelUser.UserInfo.InfoLoaded) {
-            await this.NetworkManager.updateMemberInfo(channel, clientChannelUser);
-        }
-
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
+
+        if (!chat.Sender.UserInfo.InfoLoaded && !((channel.ChannelInfo.RoomType == ChatroomType.GROUP || channel.ChannelInfo.RoomType == ChatroomType.SELFCHAT) && chat.Sender.isClientUser())) {
+            await this.NetworkManager.updateMemberInfo(channel, chat.Sender);
+        }
 
         if (chat.Sender.UserInfo.Nickname !== packet.SenderNickname) {
             chat.Sender.UserInfo.updateNickname(packet.SenderNickname);
@@ -258,13 +257,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             await this.NetworkManager.updateChannelInfo(channel);
         }
 
-        let clientChannelUser = channel.ChannelInfo.ChannelClientUser;
-
-        if (!clientChannelUser.UserInfo.InfoLoaded) {
-            await this.NetworkManager.updateMemberInfo(channel, clientChannelUser);
-        }
-
         let reader = channel.ChannelInfo.getUser(packet.ReaderId);
+
+        if (!reader.UserInfo.InfoLoaded && !((channel.ChannelInfo.RoomType == ChatroomType.GROUP || channel.ChannelInfo.RoomType == ChatroomType.SELFCHAT) && reader.isClientUser())) {
+            await this.NetworkManager.updateMemberInfo(channel, reader);
+        }
 
         let watermark = packet.Watermark;
 

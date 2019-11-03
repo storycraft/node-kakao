@@ -1,6 +1,7 @@
 import { LoginAccessDataStruct } from "../struct/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
+import { ClientSettingsStruct } from "../struct/client-settings-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -11,9 +12,9 @@ import { MemberStruct } from "../struct/member-struct";
 export class ChatUser {
     
     private userId: Long;
-    private userInfo: UserInfo;
+    private userInfo: UserInfoBase;
 
-    constructor(userId: Long, userInfo: UserInfo = new UserInfo()) {
+    constructor(userId: Long, userInfo: UserInfoBase = new UserInfo()) {
         this.userId = userId;
 
         this.userInfo = userInfo;
@@ -33,7 +34,30 @@ export class ChatUser {
 
 }
 
-export class UserInfo {
+export interface UserInfoBase {
+
+    readonly AccountId: number;
+
+    readonly Nickname: string;
+
+    readonly ProfileImageURL: string;
+
+    readonly FullProfileImageURL: string;
+
+    readonly OriginalProfileImageURL: string;
+
+    readonly InfoLoaded: boolean;
+
+    readonly LastInfoCache: number;
+
+    updateNickname(nickname: string): void;
+
+    update(memberStruct: MemberStruct): void;
+
+    updateFromChatInfo(memberStruct: MemberStruct): void;
+}
+
+export class UserInfo implements UserInfoBase {
 
     private infoLoaded: boolean;
 
@@ -56,6 +80,10 @@ export class UserInfo {
         this.originalProfileImageURL = '';
 
         this.lastInfoCache = -1;
+    }
+
+    get AccountId() {
+        return this.accountId;
     }
 
     get Nickname() {
@@ -91,6 +119,10 @@ export class UserInfo {
             this.infoLoaded = true;
         }
 
+        this.updateFromChatInfo(memberStruct);
+    }
+
+    updateFromChatInfo(memberStruct: MemberStruct) {
         this.accountId = memberStruct.AccountId;
         this.nickname = memberStruct.NickName;
         this.profileImageURL = memberStruct.ProfileImageUrl || '';
@@ -102,28 +134,28 @@ export class UserInfo {
 
 export class ClientChatUser extends ChatUser {
 
-    private clientAccessData: LoginAccessDataStruct;
+    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct) {
+        super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
+    }
 
-    constructor(clientAccessData: LoginAccessDataStruct) {
-        super(Long.fromNumber(clientAccessData.UserId));
-
-        this.clientAccessData = clientAccessData;
+    get UserInfo() {
+        return super.UserInfo as ClientUserInfo;
     }
 
     get KakaoStoryURL() {
-        return this.clientAccessData.StoryURL;
+        return this.UserInfo.KakaoStoryURL;
     }
 
     get LogonTime() {
-        return this.clientAccessData.LogonServerTime;
+        return this.UserInfo.LogonTime;
     }
 
     get MainDeviceName() {
-        return this.clientAccessData.MainDevice;
+        return this.UserInfo.MainDeviceName;
     }
 
     get MainDeviceAppVer() {
-        return this.clientAccessData.MainDeviceAppVersion;
+        return this.UserInfo.MainDeviceAppVer;
     }
 
     isClientUser() {
@@ -148,6 +180,86 @@ export class ClientChannelUser extends ChatUser {
 
     isClientUser() {
         return true;
+    }
+
+}
+
+export class ClientUserInfo implements UserInfoBase {
+
+    private clientAccessData: LoginAccessDataStruct;
+    private settings: ClientSettingsStruct;
+
+    private nickname: string;
+
+    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct) {
+        this.clientAccessData = clientAccessData;
+        this.settings = settings;
+
+        this.nickname = '';
+    }
+
+    get AccountId() {
+        return this.clientAccessData.AccountId;
+    }
+
+    get Nickname() {
+        return this.nickname;
+    }
+
+    get ProfileImageURL() {
+        return this.settings.ProfileImageURL;
+    }
+
+    get FullProfileImageURL() {
+        return this.settings.FullProfileImageURL;
+    }
+
+    get OriginalProfileImageURL() {
+        return this.settings.OriginalProfileImageURL;
+    }
+
+    get BackgroundImageURL() {
+        return this.settings.BackgroundImageURL;
+    }
+
+    get OriginalBackgroundImageURL() {
+        return this.settings.OriginalBackgroundImageURL;
+    }
+
+    get InfoLoaded() {
+        return true;
+    }
+
+    get LastInfoCache() {
+        return Date.now();
+    }
+
+    get KakaoStoryURL() {
+        return this.clientAccessData.StoryURL;
+    }
+
+    get LogonTime() {
+        return this.clientAccessData.LogonServerTime;
+    }
+
+    get MainDeviceName() {
+        return this.clientAccessData.MainDevice;
+    }
+
+    get MainDeviceAppVer() {
+        return this.clientAccessData.MainDeviceAppVersion;
+    }
+
+    updateNickname(nickname: string) {
+        this.nickname = nickname;
+    }
+
+    update(memberStruct: MemberStruct) {
+
+    }
+
+    updateFromChatInfo(memberStruct: MemberStruct) {
+
     }
 
 }
