@@ -1,3 +1,5 @@
+import { KakaoAPI } from "../../kakao-api";
+
 /*
  * Created on Sun Nov 03 2019
  *
@@ -146,6 +148,10 @@ export class EmoticonAttachment extends ChatAttachment {
         return this.path;
     }
 
+    getEmoticonURL(region: string = 'kr') {
+        return KakaoAPI.getEmoticonImageURL(this.path, region);
+    }
+
     get Type() {
         return this.type;
     }
@@ -168,6 +174,8 @@ export class EmoticonAttachment extends ChatAttachment {
 
 }
 
+
+//unused
 export class LongTextAttachment extends ChatAttachment {
 
     constructor(
@@ -200,6 +208,127 @@ export class LongTextAttachment extends ChatAttachment {
         this.keyPath = rawJson['k'];
         this.size = rawJson['s'];
         this.sd = rawJson['sd'];
+    }
+
+}
+
+export class SharpAttachment extends ChatAttachment {
+
+    constructor(
+        private question: string = '',
+        private imageURL: string = '',
+        private imageWidth: number = 0,
+        private imageHeight: number = 0,
+        private redirectURL: string = '',
+        private contentType: string = '',
+        private contentList: SharpContent[] = []
+    ) {
+        super();
+    }
+
+    get Question() {
+        return this.question;
+    }
+
+    get ImageURL() {
+        return this.imageURL;
+    }
+
+    get ImageWidth() {
+        return this.imageWidth;
+    }
+
+    get ImageHeight() {
+        return this.imageHeight;
+    }
+
+    get RedirectURL() {
+        return this.redirectURL;
+    }
+
+    get ContentType() {
+        return this.contentType;
+    }
+
+    get ContentList() {
+        return this.contentList;
+    }
+
+    readAttachment(rawJson: any): void {
+        this.question = rawJson['Q'];
+
+        this.contentType = rawJson['V'];
+
+        this.imageURL = rawJson['I'] || '';
+        this.imageWidth = rawJson['W'] || 0;
+        this.imageHeight = rawJson['H'] || 0;
+
+        this.redirectURL = rawJson['L'];
+
+        this.contentList = [];
+
+        if (rawJson['R']) {
+            let list: any[] = rawJson['R'];
+
+            for (let rawContent of list) {
+                let content = new SharpContent();
+
+                content.readRawContent(rawContent);
+
+                list.push(content);
+            }
+        }
+    }
+
+}
+
+export class SharpContent {
+
+    constructor(
+        private description: string = '',
+        private type: string = '',
+        private imageURL: string = '',
+        private imageWidth: number = 0,
+        private imageHeight: number = 0,
+        private redirectURL: string = '',
+    ) {
+
+    }
+
+    get Description() {
+        return this.description;
+    }
+
+    get Type() {
+        return this.type;
+    }
+
+    get ImageURL() {
+        return this.imageURL;
+    }
+
+    get ImageWidth() {
+        return this.imageWidth;
+    }
+
+    get ImageHeight() {
+        return this.imageHeight;
+    }
+
+    get RedirectURL() {
+        return this.redirectURL;
+    }
+
+    readRawContent(rawData: any) {
+        this.description = rawData['D'];
+
+        this.type = rawData['T'];
+
+        this.imageURL = rawData['I'] || '';
+        this.imageWidth = rawData['W'] || 0;
+        this.imageHeight = rawData['H'] || 0;
+
+        this.redirectURL = rawData['L'];
     }
 
 }

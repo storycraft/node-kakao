@@ -4,7 +4,7 @@ import { ChatChannel } from "../room/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { ChatAttachment, PhotoAttachment } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment } from "./chat-attachment";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment } from "./chat-attachment";
 
 /*
  * Created on Fri Nov 01 2019
@@ -95,6 +95,10 @@ export abstract class Chat {
     }
 
     protected abstract readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void;
+
+    async replyText(text: string) {
+        await this.Channel.sendText(text);
+    }
     
 }
 
@@ -210,6 +214,8 @@ export class VideoChat extends Chat {
 
 }
 
+
+//Unused
 export class LongTextChat extends Chat {
     
     get Type() {
@@ -232,7 +238,11 @@ export class SharpSearchChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
+        let sharpAttachment = new SharpAttachment();
+
+        sharpAttachment.readAttachment(attachmentJson);
+
+        attachmentList.push(sharpAttachment);
     }
 
 }

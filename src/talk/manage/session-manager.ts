@@ -4,7 +4,7 @@ import { ClientChatUser, ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { TalkClient } from "../../talk-client";
 import { ChatlogStruct } from "../struct/chatlog-struct";
-import { Chat, TextChat, PhotoChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, StaticEmoticonChat, VideoChat, LongTextChat } from "../chat/chat";
+import { Chat, TextChat, PhotoChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, StaticEmoticonChat, VideoChat, LongTextChat, SharpSearchChat } from "../chat/chat";
 import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
 
@@ -101,10 +101,7 @@ export class SessionManager {
 
         switch(chatLog.Type) {
             case MessageType.Text:
-                if (chatLog.RawAttachment === '' || chatLog.RawAttachment === '{}')
-                    chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
-                else
-                    chat = new LongTextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
+                chat = new TextChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
                 break;
 
             case MessageType.Photo:
@@ -125,6 +122,10 @@ export class SessionManager {
 
             case MessageType.StickerAni:
                 chat = new AnimatedEmoticonChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
+                break;
+
+            case MessageType.Search:
+                chat = new SharpSearchChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
                 break;
 
             default:

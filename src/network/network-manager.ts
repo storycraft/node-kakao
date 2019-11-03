@@ -205,7 +205,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.chatReceived(chat);
     }
 
-    onMessageRead(packet: PacketMessageReadRes) {
+    async onMessageRead(packet: PacketMessageReadRes) {
         let chanId = packet.ChannelId;
         if (!this.SessionManager.hasChannel(chanId)) {
             //INVALID CHANNEL
@@ -213,6 +213,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
 
         let channel = this.SessionManager.getChannelById(chanId);
+
+        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
+            await this.NetworkManager.updateChannelInfo(channel);
+        }
+
         let reader = channel.ChannelInfo.getUser(packet.ReaderId);
 
         let watermark = packet.Watermark;
@@ -241,9 +246,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             //INVALID CHANNEL
             return;
         }
-        let channel = this.SessionManager.getChannelById(chanId);
 
-        this.SessionManager.removeChannelLeft(chanId);
+        let channel = this.SessionManager.removeChannelLeft(chanId);
     }
 
     async onChannelJoin(packet: PacketChanJoinRes) {
