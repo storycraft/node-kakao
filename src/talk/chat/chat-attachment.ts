@@ -275,7 +275,7 @@ export class SharpAttachment extends ChatAttachment {
 
                 content.readRawContent(rawContent);
 
-                list.push(content);
+                this.contentList.push(content);
             }
         }
     }

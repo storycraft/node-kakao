@@ -4,7 +4,7 @@ import { ClientChatUser, ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { TalkClient } from "../../talk-client";
 import { ChatlogStruct } from "../struct/chatlog-struct";
-import { Chat, TextChat, PhotoChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, StaticEmoticonChat, VideoChat, LongTextChat, SharpSearchChat } from "../chat/chat";
+import { Chat, TextChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, StaticEmoticonChat, VideoChat, SharpSearchChat } from "../chat/chat";
 import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
 

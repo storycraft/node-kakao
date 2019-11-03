@@ -164,10 +164,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     onRequest(packet: LocoRequestPacket): void {
-        
+        //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
     onResponse(packet: LocoResponsePacket): void {
+        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }
 
@@ -217,7 +218,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             await this.NetworkManager.updateChannelInfo(channel);
         }
 
-        let reader = channel.ChannelInfo.getUser(packet.ReaderId);1
+        let reader = channel.ChannelInfo.getUser(packet.ReaderId);
 
         let watermark = packet.Watermark;
 
