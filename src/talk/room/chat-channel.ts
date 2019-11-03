@@ -120,6 +120,13 @@ export class ChannelInfo {
 
     private lastInfoUpdated: number;
 
+    private roomImageURL: string;
+    private roomFullImageURL: string;
+
+    private name: string;
+    
+    private isFavorite: boolean;
+
     private isDirectChan: boolean;
 
     private chatmetaList: ChatInfoMeta[];
@@ -135,6 +142,11 @@ export class ChannelInfo {
         this.lastInfoUpdated = -1;
         this.userMap = new Map();
 
+        this.roomImageURL = '';
+        this.roomFullImageURL = '';
+
+        this.name = '';
+        this.isFavorite = false;
 
         this.chatmetaList = [];
         this.isDirectChan = false;
@@ -142,6 +154,22 @@ export class ChannelInfo {
 
     get Channel() {
         return this.channel;
+    }
+
+    get Name() {
+        return this.name;
+    }
+
+    get RoomImageURL() {
+        return this.roomImageURL;
+    }
+
+    get RoomFullImageURL() {
+        return this.roomFullImageURL;
+    }
+
+    get IsFavorite() {
+        return this.isFavorite;
     }
 
     get RoomType() {
@@ -256,7 +284,14 @@ export class ChannelInfo {
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
 
-        chatinfoStruct.Type;
+        this.name = chatinfoStruct.Meta.Name;
+
+        this.roomImageURL = chatinfoStruct.Meta.ImageURL;
+        this.roomFullImageURL = chatinfoStruct.Meta.FullImageURL;
+
+        this.isFavorite = chatinfoStruct.Meta.Favorite;
+
+        this.roomType = chatinfoStruct.Type;
     }
 
 }

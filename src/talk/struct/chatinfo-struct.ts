@@ -25,7 +25,7 @@ export class ChatInfoStruct implements StructBase {
         public LastLogId: Long = Long.fromNumber(-1),
         public LastSeenLogId: Long = Long.fromNumber(-1),
         public LastChatLog: ChatlogStruct | null = null,
-        public Meta: null = null, //idk what is this
+        public Meta: ChatMeta = new ChatMeta(), //idk what is this
         public MemberList: MemberStruct[] = [],
         public PushAlert: boolean = false,
         public ChatMetaList: ChatInfoMeta[] = [],
@@ -50,7 +50,11 @@ export class ChatInfoStruct implements StructBase {
             this.LastChatLog.fromJson(rawJson['lastChatLog']);
         }
 
-        this.Meta = rawJson['meta'];
+        this.Meta = new ChatMeta();
+
+        if (rawJson['meta']) {
+            this.Meta.fromJson(rawJson['meta']);
+        }
 
         this.MemberList = [];
 
@@ -102,9 +106,7 @@ export class ChatInfoStruct implements StructBase {
             obj['lastChatLog'] = this.LastChatLog.toJson();
         }
 
-        if (this.Meta) {
-
-        }
+        obj['meta'] = this.Meta;
 
         let displayMemList: any[] = [];
 
@@ -124,6 +126,34 @@ export class ChatInfoStruct implements StructBase {
         return obj;
     }
 
+}
+
+export class ChatMeta implements StructBase {
+
+    constructor(
+        public FullImageURL: string = '',
+        public ImageURL: string = '',
+        public Name: string = '',
+        public Favorite: boolean = false
+    ) {
+        
+    }
+
+    toJson() {
+        return {
+            'imageUrl': this.ImageURL,
+            'fullImageUrl': this.FullImageURL,
+            'name': this.Name,
+            'favorite': this.Favorite
+        }
+    }
+
+    fromJson(rawJson: any) {
+        this.ImageURL = rawJson['imageUrl'];
+        this.FullImageURL = rawJson['fullImageUrl'];
+        this.Name = rawJson['name'];
+        this.Favorite = rawJson['favorite'];
+    }
 }
 
 export class ChatInfoMeta implements StructBase {
