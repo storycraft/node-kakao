@@ -20,8 +20,6 @@ You need to extract it somehow.
 ```javascript
 let client = new TalkClient('TEST_CLIENT');
 
-await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id', 'xvc value');
-
 client.on('message', (chat: Chat) => {
     if (chat instanceof SharpSearchChat) {
         let attachment = chat.AttachmentList[0] as SharpAttachment;
@@ -55,4 +53,6 @@ client.on('left_channel', (channel: ChatChannel) => {
 client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Long) => {
     console.log(reader.UserInfo.Nickname + ' 이 ' + channel.ChannelId + ' 방의 글을 읽었습니다. 워터마크: ' + watermark);
 });
+
+await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id', 'xvc value');
 ```
