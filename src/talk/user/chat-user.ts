@@ -255,7 +255,7 @@ export class ClientUserInfo implements UserInfoBase {
     }
 
     update(memberStruct: MemberStruct) {
-
+        
     }
 
     updateFromChatInfo(memberStruct: MemberStruct) {

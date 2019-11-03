@@ -233,7 +233,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
 
-        if (!chat.Sender.UserInfo.InfoLoaded && !((channel.ChannelInfo.RoomType == ChatroomType.GROUP || channel.ChannelInfo.RoomType == ChatroomType.SELFCHAT) && chat.Sender.isClientUser())) {
+        if (!chat.Sender.UserInfo.InfoLoaded) {
             await this.NetworkManager.updateMemberInfo(channel, chat.Sender);
         }
 
@@ -259,7 +259,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let reader = channel.ChannelInfo.getUser(packet.ReaderId);
 
-        if (!reader.UserInfo.InfoLoaded && !((channel.ChannelInfo.RoomType == ChatroomType.GROUP || channel.ChannelInfo.RoomType == ChatroomType.SELFCHAT) && reader.isClientUser())) {
+        if (!reader.UserInfo.InfoLoaded) {
             await this.NetworkManager.updateMemberInfo(channel, reader);
         }
 
