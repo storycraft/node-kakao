@@ -94,7 +94,7 @@ export class TalkClient extends EventEmitter {
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;
     on(event: 'message_read' | string, listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    on(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    on(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser, joinMessage: string) => void): this;
     on(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     on(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
     on(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;
@@ -105,7 +105,7 @@ export class TalkClient extends EventEmitter {
 
     once(event: 'message' | string, listener: (chat: Chat) => void): this;
     once(event: 'message_read' | string, listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    once(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
+    once(event: 'user_join' | string, listener: (channel: ChatChannel, user: ChatUser, joinMessage: string) => void): this;
     once(event: 'user_left' | string, listener: (channel: ChatChannel, user: ChatUser) => void): this;
     once(event: 'join_channel' | string, listener: (joinChannel: ChatChannel) => void): this;
     once(event: 'left_channel' | string, listener: (leftChannel: ChatChannel) => void): this;

@@ -100,7 +100,7 @@ export class ChatChannel extends EventEmitter {
         return super.on(event, listener);
     }
 
-    once(event: 'message' | string, listener: () => void): this;
+    once(event: 'message' | string, listener: (chat: Chat) => void): this;
     once(event: 'join' | string, listener: (newUser: ChatUser, joinMessage: string) => void): this;
     once(event: 'left' | string, listener: (leftUser: ChatUser) => void): this;
 
@@ -188,7 +188,7 @@ export class ChannelInfo {
         let newUser = this.addUserInternal(userId);
 
         this.channel.emit('join', newUser, joinMessage);
-        this.channel.Client.emit('user_join', this.channel, newUser);
+        this.channel.Client.emit('user_join', this.channel, newUser, joinMessage);
         
         return newUser;
     }
