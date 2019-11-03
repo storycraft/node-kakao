@@ -18,6 +18,7 @@ import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChatUser } from "../talk/user/chat-user";
 import { ChatroomType } from "../talk/chat/chatroom-type";
+import { PacketGetMemberReq, PacketGetMemberRes } from "../packet/packet-get-member";
 
 /*
  * Created on Fri Nov 01 2019
@@ -107,10 +108,6 @@ export class NetworkManager {
     }
 
     async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
-        if (!this.Logon) {
-            throw new Error('Not logon to loco');
-        }
-
         this.sendPacket(new PacketChatInfoReq(channelId));
 
         return await new Promise<ChatInfoStruct>((resolve, reject) => {
@@ -124,42 +121,29 @@ export class NetworkManager {
         });
     }
 
-    async requestMemberInfo(channelId: Long, memberIdList: Long[]): Promise<MemberStruct[]> {
-        if (!this.Logon) {
-            throw new Error('Not logon to loco');
-        }
-
-        this.sendPacket(new PacketChatMemberReq(channelId, memberIdList));
+    async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
+        this.sendPacket(new PacketGetMemberReq(channelId));
 
         return await new Promise<MemberStruct[]>((resolve, reject) => {
-            this.handler.once('MEMBER', (packet: PacketChatMemberRes) => {
-                if (packet.ChannelId.equals(channelId)) {
-                    resolve(packet.MemberList);
-                } else {
-                    reject(new Error('Received wrong member packet'));
-                }
+            this.handler.once('GETMEM', (packet: PacketGetMemberRes) => {
+                resolve(packet.MemberList);
             });
         });
     }
     
     async updateChannelInfo(channel: ChatChannel) {
         channel.LastInfoUpdate = Date.now();
+
+        await this.updateMemberInfo(channel);
+
         let info = await this.requestChannelInfo(channel.ChannelId);
         channel.ChannelInfo.update(info);
     }
 
-    async updateMemberInfo(channel: ChatChannel, ...userList: ChatUser[]) {
-        let idList: Long[] = [];
-
-        for (let user of userList) {
-            idList.push(user.UserId);
-        }
-
-        let infoList = await this.requestMemberInfo(channel.ChannelId, idList);
+    async updateMemberInfo(channel: ChatChannel) {
+        let infoList = await this.requestMemberInfo(channel.ChannelId);
         
-        for (let info of infoList) {
-            channel.ChannelInfo.getUser(info.UserId).UserInfo.update(info);
-        }
+        channel.ChannelInfo.updateMemberList(infoList);
     }
     
 }
@@ -207,13 +191,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.emit(packet.PacketName, packet);
     }
 
-    onLoginPacket(packet: PacketLoginRes) {
+    async onLoginPacket(packet: PacketLoginRes) {
         if (this.logonPassed) {
             throw new Error(`Received another login packet?!?`);
         }
         this.logonPassed = true;
 
-        this.SessionManager.initSession(packet.ChatDataList);
+        await this.SessionManager.initSession(packet.ChatDataList);
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
@@ -232,10 +216,6 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
-
-        if (!chat.Sender.UserInfo.InfoLoaded) {
-            await this.NetworkManager.updateMemberInfo(channel, chat.Sender);
-        }
 
         if (chat.Sender.UserInfo.Nickname !== packet.SenderNickname) {
             chat.Sender.UserInfo.updateNickname(packet.SenderNickname);
@@ -259,16 +239,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let reader = channel.ChannelInfo.getUser(packet.ReaderId);
 
-        if (!reader.UserInfo.InfoLoaded) {
-            await this.NetworkManager.updateMemberInfo(channel, reader);
-        }
-
         let watermark = packet.Watermark;
 
         this.Client.emit('message_read', channel, reader, watermark);
     } 
 
-    onNewMember(packet: PacketNewMemberRes) {
+    async onNewMember(packet: PacketNewMemberRes) {
         let chanId = packet.Chatlog.ChannelId;
         if (!this.SessionManager.hasChannel(chanId)) {
             //INVALID CHANNEL
@@ -276,11 +252,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
 
         let channel = this.SessionManager.getChannelById(chanId);
+
         let channelInfo = channel.ChannelInfo;
 
         let chatlog = packet.Chatlog;
 
         channelInfo.addUserJoined(chatlog.SenderId, chatlog.Text);
+
+        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
+            await this.NetworkManager.updateChannelInfo(channel);
+        }
     }
 
     onChannelLeft(packet: PacketLeftRes) {

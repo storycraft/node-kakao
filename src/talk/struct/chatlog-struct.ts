@@ -38,7 +38,7 @@ export class ChatlogStruct implements StructBase {
 
         this.Text = rawJson['message'];
 
-        this.RawAttachment = rawJson['attachment'];
+        this.RawAttachment = rawJson['attachment'] || '{}';
 
         this.SendTime = rawJson['sendAt'];
     }

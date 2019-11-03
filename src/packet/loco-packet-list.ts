@@ -2,7 +2,7 @@ import { LocoRequestPacket, LocoResponsePacket } from "./loco-packet-base";
 import { PacketGetConfReq, PacketGetConfRes } from "./packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "./packet-check-in";
 import { PacketLoginReq, PacketLoginRes } from "./packet-login";
-import { PacketMessageRes, PacketMessageWriteReq } from "./packet-message";
+import { PacketMessageRes, PacketMessageWriteReq, PacketMessageWriteRes } from "./packet-message";
 import { PacketMessageReadRes } from "./packet-message-read";
 import { PacketKickoutRes } from "./packet-kickout";
 import { PacketInvoiceRes } from "./packet-invoice";
@@ -11,6 +11,7 @@ import { PacketLeftRes, PacketLeaveReq } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
 import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 import { PacketChanJoinRes } from "./packet-chan-join";
+import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 
 /*
  * Created on Wed Oct 30 2019
@@ -39,6 +40,8 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('MEMBER', () => new PacketChatMemberReq());
         LocoPacketList.reqeustPacketMap.set('CHATINFO', () => new PacketChatInfoReq());
 
+        LocoPacketList.reqeustPacketMap.set('GETMEM', () => new PacketGetMemberReq());
+
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }
 
@@ -51,9 +54,12 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('LOGINLIST', (status) => new PacketLoginRes(status));
 
         LocoPacketList.responsePacketMap.set('MSG', (status) => new PacketMessageRes(status));
+        LocoPacketList.responsePacketMap.set('WRITE', (status) => new PacketMessageWriteRes(status));
         LocoPacketList.responsePacketMap.set('DECUNREAD', (status) => new PacketMessageReadRes(status));
         LocoPacketList.responsePacketMap.set('MEMBER', (status) => new PacketChatMemberRes(status));
         LocoPacketList.responsePacketMap.set('CHATINFO', (status) => new PacketChatInfoRes(status));
+
+        LocoPacketList.responsePacketMap.set('GETMEM', (status) => new PacketGetMemberRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
         LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));

@@ -7,6 +7,7 @@ import { Chat } from "../chat/chat";
 import { TalkClient } from "../..";
 import { PacketMessageWriteReq } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
+import { MemberStruct } from "../struct/member-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -121,6 +122,7 @@ export class ChannelInfo {
     private roomType: ChatroomType;
 
     private infoLoaded: boolean;
+    private memberListLoaded: boolean;
 
     private lastInfoUpdated: number;
 
@@ -141,6 +143,7 @@ export class ChannelInfo {
     constructor(channel: ChatChannel, roomType: ChatroomType) {
         this.channel = channel;
         this.infoLoaded = false;
+        this.memberListLoaded = false;
         
         this.roomType = roomType;
 
@@ -208,12 +211,12 @@ export class ChannelInfo {
     }
 
     hasUser(id: Long) {
-        return this.userMap.has(id.toString()) || this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id);
+        return this.userMap.has(id.toString()) || this.clientChannelUser.UserId.equals(id);
     }
 
     getUser(id: Long): ChatUser {
-        if (this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id)) {
-            return this.ChannelClientUser;
+        if (this.clientChannelUser.UserId.equals(id)) {
+            return this.clientChannelUser;
         }
 
         if (!this.hasUser(id)) {
@@ -266,41 +269,13 @@ export class ChannelInfo {
     }
 
     update(chatinfoStruct: ChatInfoStruct) {
-        let infoUpdate = this.infoLoaded;
-        
         if (!this.infoLoaded) {
             this.infoLoaded = true;
         }
 
         this.lastInfoUpdated = Date.now();
 
-        let checkedList: Long[] = [];
-
-        for (let memberStruct of chatinfoStruct.MemberList) {
-            let user: ChatUser;
-            if (!this.hasUser(memberStruct.UserId)) {
-                if (infoUpdate) {
-                    user = this.addUserJoined(memberStruct.UserId, '');
-                } else {
-                    user = this.addUserInternal(memberStruct.UserId);
-                }
-            } else {
-                user = this.getUser(memberStruct.UserId);
-            }
-            user.UserInfo.updateFromChatInfo(memberStruct);
-
-            checkedList.push(user.UserId);
-        }
-
-        for (let user of this.UserList) {
-            if (!checkedList.includes(user.UserId)) {
-                if (infoUpdate) {
-                    this.removeUserLeft(user.UserId);
-                } else {
-                    this.removeUserLeftInternal(user.UserId);
-                }
-            }
-        }
+        this.updateMemberList(chatinfoStruct.MemberList);
 
         let lastChatlog = chatinfoStruct.LastChatLog;
 
@@ -320,6 +295,42 @@ export class ChannelInfo {
         this.isFavorite = chatinfoStruct.Meta.Favorite;
 
         this.roomType = chatinfoStruct.Type;
+    }
+
+    updateMemberList(memberList: MemberStruct[]) {
+        let memberListUpdate = this.memberListLoaded;
+
+        if (!this.memberListLoaded) {
+            this.memberListLoaded = true;
+        }
+
+        let checkedList: ChatUser[] = [];
+
+        for (let memberStruct of memberList) {
+            let user: ChatUser;
+            if (!this.hasUser(memberStruct.UserId)) {
+                if (memberListUpdate) {
+                    user = this.addUserJoined(memberStruct.UserId, '');
+                } else {
+                    user = this.addUserInternal(memberStruct.UserId);
+                }
+            } else {
+                user = this.getUser(memberStruct.UserId);
+            }
+            user.UserInfo.updateFromChatInfo(memberStruct);
+
+            checkedList.push(user);
+        }
+
+        for (let user of this.UserList) {
+            if (!checkedList.includes(user)) {
+                if (memberListUpdate) {
+                    this.removeUserLeft(user.UserId);
+                } else {
+                    this.removeUserLeftInternal(user.UserId);
+                }
+            }
+        }
     }
 
 }

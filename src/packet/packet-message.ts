@@ -43,6 +43,33 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
     }
 }
 
+export class PacketMessageWriteRes extends LocoBsonResponsePacket {
+
+    constructor(
+        status: number,
+        public MessageId: Long = Long.ZERO,
+        public ChannelId: Long = Long.ZERO,
+        public LogId: Long = Long.ZERO,
+        public PrevLogId: Long = Long.ZERO,
+        public SenderNickname: string = '',
+        public SendTime: number = -1
+    ) {
+        super(status);
+    }
+    
+    get PacketName() {
+        return 'WRITE';
+    }
+    
+    readBodyJson(body: any) {
+        this.MessageId = JsonUtil.readLong(body['msgId']);
+        this.ChannelId = JsonUtil.readLong(body['chatId']);
+        this.LogId = JsonUtil.readLong(body['logId']);
+        this.PrevLogId = JsonUtil.readLong(body['prevId']);
+        this.SendTime = body['sendAt'];
+    }
+}
+
 export class PacketMessageRes extends LocoBsonResponsePacket {
 
     constructor(

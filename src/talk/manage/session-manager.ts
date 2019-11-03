@@ -136,11 +136,11 @@ export class SessionManager {
         return chat;
     }
     
-    initSession(initDataList: ChatDataStruct[]) {
+    async initSession(initDataList: ChatDataStruct[]) {
         this.channelMap.clear();
 
         for (let chatData of initDataList) {
-            this.addChannelInternal(chatData.ChannelId, chatData.Type);
+            let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type);
         }
     }
 
