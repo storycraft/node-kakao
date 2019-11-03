@@ -27,6 +27,10 @@ export class ChatUser {
         return this.userInfo;
     }
 
+    isClientUser() {
+        return false;
+    }
+
 }
 
 export class UserInfo {
@@ -120,6 +124,30 @@ export class ClientChatUser extends ChatUser {
 
     get MainDeviceAppVer() {
         return this.clientAccessData.MainDeviceAppVersion;
+    }
+
+    isClientUser() {
+        return true;
+    }
+
+}
+
+export class ClientChannelUser extends ChatUser {
+
+    private clientUser: ClientChatUser;
+
+    constructor(clientUser: ClientChatUser) {
+        super(clientUser.UserId);
+
+        this.clientUser = clientUser;
+    }
+
+    get ClientMainUser() {
+        return this.clientUser;
+    }
+
+    isClientUser() {
+        return true;
     }
 
 }

@@ -1,4 +1,4 @@
-import { ChatUser } from "../user/chat-user";
+import { ChatUser, ClientChannelUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
 import { ChatInfoStruct, ChatInfoMeta } from "../struct/chatinfo-struct";
@@ -73,14 +73,18 @@ export class ChatChannel extends EventEmitter {
     }
 
     chatReceived(chat: Chat) {
+        this.updateLastChat(chat);
+
+        this.emit('message', chat);
+        this.client.emit('message', chat);
+    }
+    
+    updateLastChat(chat: Chat) {
         if (chat.Channel !== this) {
             throw new Error('Pointed to wrong channel');
         }
 
         this.lastChat = chat;
-
-        this.emit('message', chat);
-        this.client.emit('message', chat);
     }
 
     async sendText(text: string) {
@@ -131,6 +135,7 @@ export class ChannelInfo {
 
     private chatmetaList: ChatInfoMeta[];
 
+    private clientChannelUser: ClientChannelUser;
     private userMap: Map<string, ChatUser>;
 
     constructor(channel: ChatChannel, roomType: ChatroomType) {
@@ -150,10 +155,16 @@ export class ChannelInfo {
 
         this.chatmetaList = [];
         this.isDirectChan = false;
+
+        this.clientChannelUser = new ClientChannelUser(this.Channel.Client.SessionManager!.ClientUser);
     }
 
     get Channel() {
         return this.channel;
+    }
+
+    get ChannelClientUser() {
+        return this.clientChannelUser;
     }
 
     get Name() {
@@ -202,7 +213,7 @@ export class ChannelInfo {
 
     getUser(id: Long): ChatUser {
         if (this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(id)) {
-            return this.channel.Client.SessionManager.ClientUser;
+            return this.ChannelClientUser;
         }
 
         if (!this.hasUser(id)) {
@@ -255,6 +266,8 @@ export class ChannelInfo {
     }
 
     update(chatinfoStruct: ChatInfoStruct) {
+        let infoUpdate = this.infoLoaded;
+        
         if (!this.infoLoaded) {
             this.infoLoaded = true;
         }
@@ -266,7 +279,11 @@ export class ChannelInfo {
         for (let memberStruct of chatinfoStruct.MemberList) {
             let user: ChatUser;
             if (!this.hasUser(memberStruct.UserId)) {
-                user = this.addUserJoined(memberStruct.UserId, '');
+                if (infoUpdate) {
+                    user = this.addUserJoined(memberStruct.UserId, '');
+                } else {
+                    user = this.addUserInternal(memberStruct.UserId);
+                }
             } else {
                 user = this.getUser(memberStruct.UserId);
             }
@@ -277,8 +294,19 @@ export class ChannelInfo {
 
         for (let user of this.UserList) {
             if (!checkedList.includes(user.UserId)) {
-                this.removeUserLeft(user.UserId);
+                if (infoUpdate) {
+                    this.removeUserLeft(user.UserId);
+                } else {
+                    this.removeUserLeftInternal(user.UserId);
+                }
             }
+        }
+
+        let lastChatlog = chatinfoStruct.LastChatLog;
+
+        if (lastChatlog) {
+            let lastChat = this.channel.Client.SessionManager!.chatFromChatlog(lastChatlog);
+            this.channel.updateLastChat(lastChat);
         }
 
         this.isDirectChan = chatinfoStruct.IsDirectChat;
