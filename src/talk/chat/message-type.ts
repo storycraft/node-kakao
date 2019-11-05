@@ -28,6 +28,7 @@ export enum MessageType {
     Nudge = 21,
     Actioncon = 22,
     Search = 23,
+    Reply = 26,
     MultiPhoto = 27,
     Mvoip = 51,
     PlusFriend = 81,

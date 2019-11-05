@@ -108,26 +108,22 @@ export class NetworkManager {
     }
 
     async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
-        this.sendPacket(new PacketChatInfoReq(channelId));
-
-        return await new Promise<ChatInfoStruct>((resolve, reject) => {
-            this.handler.once('CHATINFO', (packet: PacketChatInfoRes) => {
+        return new Promise<ChatInfoStruct>((resolve, reject) => {
+            this.sendPacket(new PacketChatInfoReq(channelId).once('response', (packet: PacketChatInfoRes) => {
                 if (packet.ChatInfo.ChannelId.equals(channelId)) {
                     resolve(packet.ChatInfo);
                 } else {
                     reject(new Error('Received wrong info packet'));
                 }
-            });
+            }));
         });
     }
 
     async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
-        this.sendPacket(new PacketGetMemberReq(channelId));
-
-        return await new Promise<MemberStruct[]>((resolve, reject) => {
-            this.handler.once('GETMEM', (packet: PacketGetMemberRes) => {
+        return new Promise<MemberStruct[]>((resolve, reject) => {
+            this.sendPacket(new PacketGetMemberReq(channelId).once('response', (packet: PacketGetMemberRes) => {
                 resolve(packet.MemberList);
-            });
+            }));
         });
     }
     
@@ -160,6 +156,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.networkManager = networkManager;
         this.logonPassed = false;
 
+        this.setMaxListeners(1000);
+
         this.on('LOGINLIST', this.onLoginPacket.bind(this));
         this.on('MSG', this.onMessagePacket.bind(this));
         this.on('MEMBER', this.onDetailMember.bind(this));
@@ -182,11 +180,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         return this.Client.SessionManager!;
     }
 
-    onRequest(packet: LocoRequestPacket): void {
+    onRequest(packetId: number, packet: LocoRequestPacket): void {
         //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
-    onResponse(packet: LocoResponsePacket): void {
+    onResponse(packetId: number, packet: LocoResponsePacket): void {
         //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }

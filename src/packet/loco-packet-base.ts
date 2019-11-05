@@ -1,3 +1,5 @@
+import { EventEmitter } from "events";
+
 /*
  * Created on Thu Oct 17 2019
  *
@@ -14,9 +16,17 @@ interface LocoPacketBase {
 
 }
 
-export interface LocoRequestPacket extends LocoPacketBase {
+export interface LocoRequestPacket extends LocoPacketBase, EventEmitter {
 
     writeBody(): Buffer;
+
+    on<T extends LocoResponsePacket>(event: 'response' | string, listener: (packet: T) => void): this;
+
+    on(event: string, listener: (...args: any[]) => void): this;
+
+    once<T extends LocoResponsePacket>(event: 'response' | string, listener: (packet: T) => void): this;
+
+    once(event: string, listener: (...args: any[]) => void):this;
     
 }
 

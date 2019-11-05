@@ -45,6 +45,8 @@ export class PacketChatInfoRes extends LocoBsonResponsePacket {
     readBodyJson(rawJson: any) {
         this.ChatInfo = new ChatInfoStruct();
 
+        console.log(rawJson);
+
         if (rawJson['chatInfo']) {
             this.ChatInfo.fromJson(rawJson['chatInfo']);
         }

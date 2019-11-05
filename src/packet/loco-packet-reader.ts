@@ -39,7 +39,17 @@ export class LocoPacketReader {
     structToPacket(header: LocoHeaderStruct, bodyBuffer: Buffer, offset: number = 0): LocoResponsePacket {
         let bodyBuf = bodyBuffer.slice(offset, offset + header.BodySize);
 
-        let packet = LocoPacketList.getResPacketByName(header.PacketName, header.StatusCode);
+        let packet: LocoResponsePacket;
+
+        if (LocoPacketList.hasResPacket(header.PacketName)) {
+            packet = LocoPacketList.getResPacketByName(header.PacketName, header.StatusCode);
+        } else {
+            if (LocoPacketList.hasResBodyType(header.BodyType)) {
+                packet = LocoPacketList.getDefaultResPacket(header.BodyType, header.PacketName, header.StatusCode);
+            } else {
+                throw new Error(`Invalid packet type: ${header.BodyType}`);
+            }
+        }
 
         packet.readBody(bodyBuf);
 

@@ -12,6 +12,7 @@ import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
 import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 import { PacketChanJoinRes } from "./packet-chan-join";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
+import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
 
 /*
  * Created on Wed Oct 30 2019
@@ -24,6 +25,9 @@ export class LocoPacketList {
     private static reqeustPacketMap: Map<string, () => LocoRequestPacket>;
     private static responsePacketMap: Map<string, (status: number) => LocoResponsePacket>;
 
+    private static defaultBodyReqPacketMap: Map<number, (packetName: string) => LocoRequestPacket>;
+    private static defaultBodyResPacketMap: Map<number, (status: number, packetName: string) => LocoResponsePacket>;
+
     static init() {
         LocoPacketList.initReqMap();
         LocoPacketList.initResMap();
@@ -31,6 +35,9 @@ export class LocoPacketList {
 
     protected static initReqMap() {
         LocoPacketList.reqeustPacketMap = new Map();
+        LocoPacketList.defaultBodyReqPacketMap = new Map();
+
+        LocoPacketList.defaultBodyReqPacketMap.set(0, (packetName: string) => new DefaultBsonRequestPacket(packetName));
 
         LocoPacketList.reqeustPacketMap.set('GETCONF', () => new PacketGetConfReq());
         LocoPacketList.reqeustPacketMap.set('CHECKIN', () => new PacketCheckInReq());
@@ -47,6 +54,9 @@ export class LocoPacketList {
 
     protected static initResMap() {
         LocoPacketList.responsePacketMap = new Map();
+        LocoPacketList.defaultBodyResPacketMap = new Map();
+
+        LocoPacketList.defaultBodyResPacketMap.set(0, (status: number, packetName: string) => new DefaultBsonResponsePacket(status, packetName));
 
         LocoPacketList.responsePacketMap.set('GETCONF', (status) => new PacketGetConfRes(status));
         LocoPacketList.responsePacketMap.set('CHECKIN', (status) => new PacketCheckInRes(status));
@@ -78,6 +88,14 @@ export class LocoPacketList {
         return LocoPacketList.responsePacketMap && LocoPacketList.responsePacketMap.has(name);
     }
 
+    static hasReqBodyType(type: number): boolean {
+        return LocoPacketList.defaultBodyReqPacketMap && LocoPacketList.defaultBodyReqPacketMap.has(type);
+    }
+
+    static hasResBodyType(type: number): boolean {
+        return LocoPacketList.defaultBodyResPacketMap && LocoPacketList.defaultBodyResPacketMap.has(type);
+    }
+
     static getReqPacketByName(name: string): LocoRequestPacket {
         if (!LocoPacketList.hasReqPacket(name)) {
             throw new Error(`${name} is not valid loco request packet`);
@@ -93,6 +111,23 @@ export class LocoPacketList {
 
         return LocoPacketList.responsePacketMap.get(name)!(status);
     }
+
+    static getDefaultReqPacket(bodyType: number, packetName: string): LocoRequestPacket {
+        if (!LocoPacketList.hasReqBodyType(bodyType)) {
+            throw new Error(`${bodyType} is not valid loco packet type`);
+        }
+
+        return LocoPacketList.defaultBodyReqPacketMap.get(bodyType)!(packetName);
+    }
+
+    static getDefaultResPacket(bodyType: number, packetName: string, status: number): LocoResponsePacket {
+        if (!LocoPacketList.hasResBodyType(bodyType)) {
+            throw new Error(`${bodyType} is not valid loco packet type`);
+        }
+
+        return LocoPacketList.defaultBodyResPacketMap.get(bodyType)!(status, packetName);
+    }
+
 
 }
 

@@ -8,8 +8,8 @@ import { LocoResponsePacket, LocoRequestPacket } from "../packet/loco-packet-bas
 
 export interface LocoPacketHandler {
 
-    onRequest(packet: LocoRequestPacket): void;
+    onRequest(packetId: number, packet: LocoRequestPacket): void;
 
-    onResponse(packet: LocoResponsePacket): void;
+    onResponse(packetId: number, packet: LocoResponsePacket): void;
 
 }

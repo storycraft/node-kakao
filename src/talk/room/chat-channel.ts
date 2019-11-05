@@ -280,8 +280,12 @@ export class ChannelInfo {
         let lastChatlog = chatinfoStruct.LastChatLog;
 
         if (lastChatlog) {
-            let lastChat = this.channel.Client.SessionManager!.chatFromChatlog(lastChatlog);
-            this.channel.updateLastChat(lastChat);
+            try {
+                let lastChat = this.channel.Client.SessionManager!.chatFromChatlog(lastChatlog);
+                this.channel.updateLastChat(lastChat);
+            } catch(e) {
+                // JUST PASS IF IT IS NOT VALID
+            }
         }
 
         this.isDirectChan = chatinfoStruct.IsDirectChat;

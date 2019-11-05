@@ -47,7 +47,7 @@ export class LocoPacketResolver extends Writable {
                 try {
                     let packet = this.socket.Reader.structToPacket(this.currentHeader!, bodyBuffer);
 
-                    this.Socket.packetReceived(packet);
+                    this.Socket.packetReceived(this.currentHeader!.PacketId, packet);
                 } catch(e) {
                     //console.log(`Packet read error: ${e}`);
                 }

@@ -115,16 +115,10 @@ export class LocoManager {
         }
 
         return new Promise((resolve) => {
-            this.locoSocket!.once('packet', (packet: LocoResponsePacket) => {
-                if (packet.PacketName !== 'LOGINLIST') {
-                    throw new Error('Received wrong packet');
-                }
-
+            this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken).once('response', (packet: PacketLoginRes) => {
                 this.locoLogon = true;
-                resolve(packet as PacketLoginRes);
-            });
-
-            this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken));
+                resolve(packet);
+            }));
         });
     }
 
@@ -138,17 +132,9 @@ export class LocoManager {
         }
 
         return await new Promise((resolve) => {
-            socket.once('packet', (packet: LocoResponsePacket) => {
-                if (packet.PacketName !== 'CHECKIN') {
-                    throw new Error('Received wrong packet');
-                }
-
-                let checkIn = packet as PacketCheckInRes;
-
-                resolve(new CheckinData(new HostData(checkIn.Host, checkIn.Port), checkIn.CacheExpire));
-            });
-
-            socket.sendPacket(new PacketCheckInReq(userId));
+            socket.sendPacket(new PacketCheckInReq(userId).once('response', (packet: PacketCheckInRes) => {
+                resolve(new CheckinData(new HostData(packet.Host, packet.Port), packet.CacheExpire));
+            }));
         });
     }
 
@@ -162,27 +148,19 @@ export class LocoManager {
         }
 
         return await new Promise((resolve, reject) => {
-            socket.once('packet', (packet: LocoResponsePacket) => {
-                if (packet.PacketName !== 'GETCONF') {
-                    throw new Error('Received wrong packet');
-                }
-
-                let getConfRes = packet as PacketGetConfRes;
-
-                if (getConfRes.HostList.length < 1 && getConfRes.PortList.length < 1) {
+            socket.sendPacket(new PacketGetConfReq().once('response', (packet: PacketGetConfRes) => {
+                if (packet.HostList.length < 1 && packet.PortList.length < 1) {
                     reject(new Error(`No server avaliable`));
                 }
 
-                resolve(new BookingData(new HostData(getConfRes.HostList[0], getConfRes.PortList[0])));
-            });
-
-            socket.sendPacket(new PacketGetConfReq());
+                resolve(new BookingData(new HostData(packet.HostList[0], packet.PortList[0])));
+            }));
         });
     }
 
-    protected onPacket(packet: LocoResponsePacket) {
+    protected onPacket(packetId: number, packet: LocoResponsePacket) {
         if (this.Handler) {
-            this.Handler.onResponse(packet);
+            this.Handler.onResponse(packetId, packet);
         }
 
         if (packet.PacketName == 'KICKOUT') {
@@ -190,9 +168,9 @@ export class LocoManager {
         }
     }
 
-    protected onPacketSend(packet: LocoRequestPacket) {
+    protected onPacketSend(packetId: number, packet: LocoRequestPacket) {
         if (this.Handler) {
-            this.Handler.onRequest(packet);
+            this.Handler.onRequest(packetId, packet);
         }
     }
 
@@ -205,9 +183,11 @@ export class LocoManager {
             throw new Error(`Invalid packet ${packet.PacketName}`);
         }
 
-        this.onPacketSend(packet);
+        let result = await this.LocoSocket!.sendPacket(packet);
 
-        return this.LocoSocket!.sendPacket(packet);
+        this.onPacketSend(this.LocoSocket!.Writer.CurrentPacketId, packet);
+
+        return result;
     }
 
     disconnect() {

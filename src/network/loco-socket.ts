@@ -25,8 +25,12 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
     private packetWriter: LocoPacketWriter;
     private packetReader: LocoPacketReader;
 
+    private packetMap: Map<number, LocoRequestPacket>;
+
     constructor(host: string, port: number, keepAlive: boolean = false, packetWriter: LocoPacketWriter = new LocoPacketWriter(), packetReader: LocoPacketReader = new LocoPacketReader()) {
         super();
+
+        this.packetMap = new Map();
         
         this.host = host;
         this.port = port;
@@ -81,6 +85,8 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
         }
 
         await new Promise((resolve, reject) => {
+            this.packetMap.clear();
+
             this.socket = this.createSocketConnection(this.host, this.port, resolve);
             this.pipeTranformation(this.socket);
 
@@ -116,6 +122,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
         this.onDisconnect();
 
         this.socket!.destroy();
+        this.packetMap.clear();
 
         this.connected = false;
 
@@ -142,8 +149,16 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
         this.onEnd(buffer);
     }
 
-    packetReceived(packet: LocoResponsePacket) {
-        this.emit('packet', packet);
+    packetReceived(packetId: number, packet: LocoResponsePacket) {
+        if (this.packetMap.has(packetId)) {
+            let requestPacket = this.packetMap.get(packetId)!;
+
+            this.packetMap.delete(packetId);
+
+            requestPacket.emit('response', packet);
+        }
+        
+        this.emit('packet', packetId, packet);
 
         if (!this.keepAlive) {
             this.disconnect();
@@ -160,6 +175,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
         }
 
         let buffer = this.structPacketToBuffer(packet);
+        this.packetMap.set(this.Writer.CurrentPacketId, packet);
 
         return this.sendBuffer(buffer);
     }
@@ -182,13 +198,13 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
 
     protected abstract onError(e: any): void;
 
-    on(event: 'packet' | string, listener: (packet: LocoResponsePacket) => void): this;
+    on(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket) => void): this;
 
     on(event: string, listener: (...args: any[]) => void) {
         return super.on(event, listener);
     }
 
-    once(event: 'packet' | string, listener: (packet: LocoResponsePacket) => void): this;
+    once(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket) => void): this;
 
     once(event: string, listener: (...args: any[]) => void) {
         return super.once(event, listener);
