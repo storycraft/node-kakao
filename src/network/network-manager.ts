@@ -1,4 +1,4 @@
-import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long } from "..";
+import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long, ChannelMetaSetStruct } from "..";
 import { LocoManager, BookingData, CheckinData } from "../loco/loco-manager";
 import { LoginAccessDataStruct } from "../talk/struct/login-access-data-struct";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bson-packet";
@@ -13,12 +13,14 @@ import { PacketChatMemberRes, PacketChatMemberReq } from "../packet/packet-chat-
 import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketLeftRes } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
-import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
+import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChatUser } from "../talk/user/chat-user";
 import { ChatroomType } from "../talk/chat/chatroom-type";
 import { PacketGetMemberReq, PacketGetMemberRes } from "../packet/packet-get-member";
+import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "../packet/packet-get-meta";
+import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
 
 /*
  * Created on Fri Nov 01 2019

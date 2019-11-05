@@ -1,7 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
-import { ChatInfoStruct } from "../talk/struct/chatinfo-struct";
+import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -44,8 +44,6 @@ export class PacketChatInfoRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawJson: any) {
         this.ChatInfo = new ChatInfoStruct();
-
-        console.log(rawJson);
 
         if (rawJson['chatInfo']) {
             this.ChatInfo.fromJson(rawJson['chatInfo']);

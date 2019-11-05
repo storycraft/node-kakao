@@ -1,7 +1,7 @@
 import { ChatUser, ClientChannelUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
-import { ChatInfoStruct, ChatInfoMeta } from "../struct/chatinfo-struct";
+import { ChatInfoStruct, ChannelMetaStruct } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { TalkClient } from "../..";
@@ -135,7 +135,7 @@ export class ChannelInfo {
 
     private isDirectChan: boolean;
 
-    private chatmetaList: ChatInfoMeta[];
+    private chatmetaList: ChannelMetaStruct[];
 
     private clientChannelUser: ClientChannelUser;
     private userMap: Map<string, ChatUser>;
@@ -291,14 +291,16 @@ export class ChannelInfo {
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
 
-        this.name = chatinfoStruct.Meta.Name;
-
         this.roomImageURL = chatinfoStruct.Meta.ImageURL;
         this.roomFullImageURL = chatinfoStruct.Meta.FullImageURL;
 
         this.isFavorite = chatinfoStruct.Meta.Favorite;
 
         this.roomType = chatinfoStruct.Type;
+    }
+
+    updateRoomName(name: string) {
+        this.name = name;
     }
 
     updateMemberList(memberList: MemberStruct[]) {

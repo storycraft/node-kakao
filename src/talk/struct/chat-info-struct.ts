@@ -2,7 +2,6 @@ import { StructBase } from "./struct-base";
 import { Long } from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
 import { ChatlogStruct } from "./chatlog-struct";
-import { ChatDataMetaStruct } from "./chatdata-struct";
 import { MemberStruct } from "./member-struct";
 import { JsonUtil } from "../../util/json-util";
 import { type } from "os";
@@ -25,10 +24,10 @@ export class ChatInfoStruct implements StructBase {
         public LastLogId: Long = Long.fromNumber(-1),
         public LastSeenLogId: Long = Long.fromNumber(-1),
         public LastChatLog: ChatlogStruct | null = null,
-        public Meta: ChatMeta = new ChatMeta(), //idk what is this
+        public Meta: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
         public MemberList: MemberStruct[] = [],
         public PushAlert: boolean = false,
-        public ChatMetaList: ChatInfoMeta[] = [],
+        public ChatMetaList: ChannelMetaStruct[] = [],
         public IsDirectChat: boolean = false
     ) {
 
@@ -50,7 +49,7 @@ export class ChatInfoStruct implements StructBase {
             this.LastChatLog.fromJson(rawJson['lastChatLog']);
         }
 
-        this.Meta = new ChatMeta();
+        this.Meta = new ChatMetaStruct();
 
         if (rawJson['meta']) {
             this.Meta.fromJson(rawJson['meta']);
@@ -75,7 +74,7 @@ export class ChatInfoStruct implements StructBase {
             let list: any[] = rawJson['chatMetas'];
 
             for (let rawMeta of list) {
-                let infoMeta = new ChatInfoMeta();
+                let infoMeta = new ChannelMetaStruct();
                 infoMeta.fromJson(rawMeta);
 
                 this.ChatMetaList.push(infoMeta);
@@ -128,7 +127,7 @@ export class ChatInfoStruct implements StructBase {
 
 }
 
-export class ChatMeta implements StructBase {
+export class ChatMetaStruct implements StructBase {
 
     constructor(
         public FullImageURL: string = '',
@@ -156,10 +155,23 @@ export class ChatMeta implements StructBase {
     }
 }
 
-export class ChatInfoMeta implements StructBase {
+export enum ChannelMetaType {
+    NOTICE = 1,
+    GROUP = 2,
+    TITLE = 3,
+    PROFILE = 4,
+    TV = 5,
+    PRIVILEGE = 6,
+    TV_LIVE = 7,
+    PLUS_BACKGROUND = 8,
+    LIVE_TALK_INFO = 11,
+    LIVE_TALK_COUNT = 12
+}
+
+export class ChannelMetaStruct implements StructBase {
 
     constructor(
-        public Type: number = 0,
+        public Type: ChannelMetaType = 0,
         public Revision: Long = Long.ZERO,
         public AuthorId: Long = Long.ZERO,
         public Content: string = '',

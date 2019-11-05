@@ -13,6 +13,7 @@ import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 import { PacketChanJoinRes } from "./packet-chan-join";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
+import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "./packet-get-meta";
 
 /*
  * Created on Wed Oct 30 2019
@@ -47,6 +48,8 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('MEMBER', () => new PacketChatMemberReq());
         LocoPacketList.reqeustPacketMap.set('CHATINFO', () => new PacketChatInfoReq());
 
+        LocoPacketList.reqeustPacketMap.set('GETMETA', () => new PacketGetMetaReq());
+        LocoPacketList.reqeustPacketMap.set('GETMETAS', () => new PacketGetMetasReq());
         LocoPacketList.reqeustPacketMap.set('GETMEM', () => new PacketGetMemberReq());
 
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
@@ -69,6 +72,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('MEMBER', (status) => new PacketChatMemberRes(status));
         LocoPacketList.responsePacketMap.set('CHATINFO', (status) => new PacketChatInfoRes(status));
 
+        LocoPacketList.responsePacketMap.set('GETMETA', (status) => new PacketGetMetaRes(status));
+        LocoPacketList.responsePacketMap.set('GETMETAS', (status) => new PacketGetMetasRes(status));
         LocoPacketList.responsePacketMap.set('GETMEM', (status) => new PacketGetMemberRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));

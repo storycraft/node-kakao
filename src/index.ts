@@ -46,8 +46,10 @@ export * from './talk/user/user-type';
 
 export * from './talk/struct/struct-base';
 export * from './talk/struct/chatdata-struct';
-export * from './talk/struct/chatinfo-struct';
+export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';
+export * from './talk/struct/channel-meta-set-struct';
+export * from './talk/struct/chat-info-struct';
 
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-attachment';
