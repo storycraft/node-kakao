@@ -34,6 +34,8 @@ export * from './packet/packet-message';
 export * from './packet/packet-chat-member';
 export * from './packet/packet-chatinfo';
 export * from './packet/packet-message-read';
+export * from './packet/packet-get-meta';
+export * from './packet/packet-get-channel-board-meta';
 export * from './packet/packet-kickout';
 
 export * from './packet/loco-packet-list';
@@ -57,6 +59,7 @@ export * from './talk/room/chat-channel';
 
 export * from './talk/user/chat-user';
 
+export * from './talk/feed/feed-type';
 
 export * from './talk-client';
 

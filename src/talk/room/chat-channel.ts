@@ -8,6 +8,7 @@ import { TalkClient } from "../..";
 import { PacketMessageWriteReq } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
 import { MemberStruct } from "../struct/member-struct";
+import { OpenLinkInfo } from "../open/open-link-info";
 
 /*
  * Created on Fri Nov 01 2019
@@ -37,8 +38,12 @@ export class ChatChannel extends EventEmitter {
 
         this.lastInfoUpdate = -1;
 
-        this.channelInfo = new ChannelInfo(this, roomType || ChatroomType.GROUP);
+        this.channelInfo = this.createChannelInfo(roomType || ChatroomType.GROUP);
         this.lastChat = null;
+    }
+
+    protected createChannelInfo(roomType: ChatroomType): ChannelInfo {
+        return new ChannelInfo(this, roomType);
     }
     
     get Client() {
@@ -55,6 +60,10 @@ export class ChatChannel extends EventEmitter {
 
     get LastInfoUpdate() {
         return this.lastInfoUpdate;
+    }
+
+    get IsOpenChat() {
+        return this.channelInfo.RoomType === ChatroomType.OPENCHAT_DIRECT || this.channelInfo.RoomType === ChatroomType.OPENCHAT_GROUP;
     }
 
     set LastInfoUpdate(value: number) {
@@ -115,6 +124,14 @@ export class ChatChannel extends EventEmitter {
 
 }
 
+export class OpenChatChannel extends ChatChannel {
+
+    protected createChannelInfo(roomType: ChatroomType): ChannelInfo {
+        return new ChannelInfo(this, roomType);
+    }
+
+}
+
 export class ChannelInfo {
 
     private channel: ChatChannel;
@@ -138,6 +155,9 @@ export class ChannelInfo {
     private chatmetaList: ChannelMetaStruct[];
 
     private clientChannelUser: ClientChannelUser;
+
+    private activeUserList: MemberStruct[];
+
     private userMap: Map<string, ChatUser>;
 
     constructor(channel: ChatChannel, roomType: ChatroomType) {
@@ -148,6 +168,8 @@ export class ChannelInfo {
         this.roomType = roomType;
 
         this.lastInfoUpdated = -1;
+
+        this.activeUserList = [];
         this.userMap = new Map();
 
         this.roomImageURL = '';
@@ -275,7 +297,7 @@ export class ChannelInfo {
 
         this.lastInfoUpdated = Date.now();
 
-        this.updateMemberList(chatinfoStruct.MemberList);
+        this.activeUserList = chatinfoStruct.MemberList;
 
         let lastChatlog = chatinfoStruct.LastChatLog;
 
@@ -303,23 +325,18 @@ export class ChannelInfo {
         this.name = name;
     }
 
-    updateMemberList(memberList: MemberStruct[]) {
-        let memberListUpdate = this.memberListLoaded;
-
+    initMemberList(memberList: MemberStruct[]) {
         if (!this.memberListLoaded) {
             this.memberListLoaded = true;
         }
 
         let checkedList: ChatUser[] = [];
 
+
         for (let memberStruct of memberList) {
             let user: ChatUser;
             if (!this.hasUser(memberStruct.UserId)) {
-                if (memberListUpdate) {
-                    user = this.addUserJoined(memberStruct.UserId, '');
-                } else {
-                    user = this.addUserInternal(memberStruct.UserId);
-                }
+                user = this.addUserInternal(memberStruct.UserId);
             } else {
                 user = this.getUser(memberStruct.UserId);
             }
@@ -330,13 +347,40 @@ export class ChannelInfo {
 
         for (let user of this.UserList) {
             if (!checkedList.includes(user)) {
-                if (memberListUpdate) {
-                    this.removeUserLeft(user.UserId);
-                } else {
-                    this.removeUserLeftInternal(user.UserId);
-                }
+                this.removeUserLeftInternal(user.UserId);
             }
         }
+    }
+
+}
+
+export class OpenChannelInfo extends ChannelInfo {
+
+    private openLinkInfo: OpenLinkInfo | null;
+
+    private openLinkInfoInit: boolean;
+
+    constructor(channel: ChatChannel, roomType: ChatroomType) {
+        super(channel, roomType);
+
+        this.openLinkInfo = null;
+        this.openLinkInfoInit = false;
+    }
+
+    get OpenLinkInfo() {
+        return this.openLinkInfo!;
+    }
+
+    get HasOpenLinkInfo() {
+        return this.openLinkInfoInit;
+    }
+
+    initOpenLinkInfo(linkInfo: OpenLinkInfo) {
+        if (!this.openLinkInfoInit) {
+            this.openLinkInfoInit = true;
+        }
+
+        this.openLinkInfo = linkInfo;
     }
 
 }

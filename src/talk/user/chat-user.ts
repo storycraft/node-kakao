@@ -134,8 +134,12 @@ export class UserInfo implements UserInfoBase {
 
 export class ClientChatUser extends ChatUser {
 
-    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct) {
+    private openChatToken: Long;
+
+    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: Long = Long.ZERO) {
         super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
+
+        this.openChatToken = openChatToken;
     }
 
     get UserInfo() {
@@ -144,6 +148,14 @@ export class ClientChatUser extends ChatUser {
 
     get KakaoStoryURL() {
         return this.UserInfo.KakaoStoryURL;
+    }
+
+    get OpenChatToken() {
+        return this.openChatToken;
+    }
+
+    set OpenChatToken(token) {
+        this.openChatToken = token;
     }
 
     get LogonTime() {

@@ -72,6 +72,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         status: number,
         public UserId: Long = Long.ZERO,
         public Revision: number = 0,
+        public OpenChatToken: Long = Long.ZERO,
         public RevisionDetail: string = '',
         public ChatDataList: ChatDataStruct[] = []
     ) {
@@ -87,6 +88,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         this.UserId = JsonUtil.readLong(body['userId']);
         this.Revision = body['revision'];
         this.RevisionDetail = body['revisionInfo'];
+        this.OpenChatToken = JsonUtil.readLong(body['ltk']);
         this.ChatDataList = [];
 
         if (body['chatDatas']) {

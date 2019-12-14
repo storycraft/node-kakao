@@ -1,4 +1,4 @@
-import { ChatChannel } from "../room/chat-channel";
+import { ChatChannel, OpenChatChannel } from "../room/chat-channel";
 import { ChatDataStruct } from "../struct/chatdata-struct";
 import { ClientChatUser, ChatUser } from "../user/chat-user";
 import { Long } from "bson";
@@ -7,6 +7,7 @@ import { ChatlogStruct } from "../struct/chatlog-struct";
 import { Chat, TextChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, StaticEmoticonChat, VideoChat, SharpSearchChat } from "../chat/chat";
 import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
+import { PacketSyncLinkReq, PacketSyncLinkRes } from "../../packet/packet-sync-link";
 
 /*
  * Created on Fri Nov 01 2019
@@ -70,7 +71,12 @@ export class SessionManager {
             throw new Error(`Invalid channel. Channel already exists`);
         }
 
-        let channel = new ChatChannel(this.Client, id, chatroomType);
+        let channel;
+        if (chatroomType === ChatroomType.OPENCHAT_DIRECT || chatroomType === ChatroomType.OPENCHAT_GROUP) {
+            channel = new OpenChatChannel(this.Client, id, chatroomType);
+        } else {
+            channel = new ChatChannel(this.Client, id, chatroomType);
+        }
 
         this.channelMap.set(id.toString(), channel);
 
@@ -135,13 +141,25 @@ export class SessionManager {
 
         return chat;
     }
+
+    async initOpenChatProfile() {
+        let openChatToken = this.ClientUser.OpenChatToken;
+
+        await new Promise((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketSyncLinkReq(openChatToken).once('response', (res: PacketSyncLinkRes) => {
+            resolve(res.LinkList);
+        })));
+    }
     
-    async initSession(initDataList: ChatDataStruct[]) {
+    async initSession(initDataList: ChatDataStruct[], openChatToken: Long) {
         this.channelMap.clear();
+
+        this.ClientUser.OpenChatToken = openChatToken;
 
         for (let chatData of initDataList) {
             let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type);
         }
+
+        await this.initOpenChatProfile();
     }
 
 }

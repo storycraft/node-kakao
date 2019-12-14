@@ -14,6 +14,9 @@ import { PacketChanJoinRes } from "./packet-chan-join";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "./packet-get-meta";
+import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
+import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
+import { PacketRewriteReq } from "./packet-rewrite";
 
 /*
  * Created on Wed Oct 30 2019
@@ -51,6 +54,11 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('GETMETA', () => new PacketGetMetaReq());
         LocoPacketList.reqeustPacketMap.set('GETMETAS', () => new PacketGetMetasReq());
         LocoPacketList.reqeustPacketMap.set('GETMEM', () => new PacketGetMemberReq());
+        LocoPacketList.reqeustPacketMap.set('GETMOMETA', () => new PacketGetChannelBoardMetaReq());
+
+        LocoPacketList.reqeustPacketMap.set('SYNCLINK', () => new PacketSyncLinkReq());
+        
+        LocoPacketList.reqeustPacketMap.set('REWRITE', () => new PacketRewriteReq());
 
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }
@@ -75,10 +83,13 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('GETMETA', (status) => new PacketGetMetaRes(status));
         LocoPacketList.responsePacketMap.set('GETMETAS', (status) => new PacketGetMetasRes(status));
         LocoPacketList.responsePacketMap.set('GETMEM', (status) => new PacketGetMemberRes(status));
+        LocoPacketList.responsePacketMap.set('GETMOMETA', (status) => new PacketGetMoimMetaRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
         LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));
         LocoPacketList.responsePacketMap.set('SYNCJOIN', (status) => new PacketChanJoinRes(status));
+
+        LocoPacketList.responsePacketMap.set('SYNCLINK', (status) => new PacketSyncLinkRes(status));
 
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 

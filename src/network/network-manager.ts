@@ -141,7 +141,7 @@ export class NetworkManager {
     async updateMemberInfo(channel: ChatChannel) {
         let infoList = await this.requestMemberInfo(channel.ChannelId);
         
-        channel.ChannelInfo.updateMemberList(infoList);
+        channel.ChannelInfo.initMemberList(infoList);
     }
     
 }
@@ -187,7 +187,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
     
     onResponse(packetId: number, packet: LocoResponsePacket): void {
-        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
+        console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }
 
@@ -197,7 +197,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
         this.logonPassed = true;
 
-        await this.SessionManager.initSession(packet.ChatDataList);
+        await this.SessionManager.initSession(packet.ChatDataList, packet.OpenChatToken);
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
