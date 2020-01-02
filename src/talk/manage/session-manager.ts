@@ -8,7 +8,7 @@ import { Chat, TextChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, 
 import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "../../packet/packet-sync-link";
-import OpenLinkStruct from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open-link-struct";
 
 /*
  * Created on Fri Nov 01 2019
