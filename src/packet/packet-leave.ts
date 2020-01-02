@@ -17,7 +17,7 @@ export class PacketLeaveReq extends LocoBsonRequestPacket {
     }
 
     get PacketName() {
-        return 'LEFT';
+        return 'LEAVE';
     }
 
     toBodyJson() {

@@ -8,6 +8,7 @@ import { Chat, TextChat, SinglePhotoChat, MultiPhotoChat, AnimatedEmoticonChat, 
 import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "../../packet/packet-sync-link";
+import OpenLinkStruct from "../struct/open-link-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -142,10 +143,10 @@ export class SessionManager {
         return chat;
     }
 
-    async initOpenChatProfile() {
+    async initOpenChatProfile(): Promise<OpenLinkStruct[]> {
         let openChatToken = this.ClientUser.OpenChatToken;
 
-        await new Promise((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketSyncLinkReq(openChatToken).once('response', (res: PacketSyncLinkRes) => {
+        return await new Promise<OpenLinkStruct[]>((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketSyncLinkReq(openChatToken).once('response', (res: PacketSyncLinkRes) => {
             resolve(res.LinkList);
         })));
     }
@@ -159,7 +160,7 @@ export class SessionManager {
             let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type);
         }
 
-        await this.initOpenChatProfile();
+        this.ClientUser.updateOpenChatProfile(await this.initOpenChatProfile());
     }
 
 }

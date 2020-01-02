@@ -17,6 +17,8 @@ import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRe
 import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
 import { PacketRewriteReq } from "./packet-rewrite";
+import { PacketKickMemberReq } from "./packet-kick-member";
+import { PacketDeleteLinkReq } from "./packet-delete-link";
 
 /*
  * Created on Wed Oct 30 2019
@@ -59,6 +61,9 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('SYNCLINK', () => new PacketSyncLinkReq());
         
         LocoPacketList.reqeustPacketMap.set('REWRITE', () => new PacketRewriteReq());
+
+        LocoPacketList.reqeustPacketMap.set('KICKMEM', () => new PacketKickMemberReq());
+        LocoPacketList.reqeustPacketMap.set('DELETELINK', () => new PacketDeleteLinkReq());
 
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }

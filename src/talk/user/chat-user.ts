@@ -2,6 +2,8 @@ import { LoginAccessDataStruct } from "../struct/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ClientSettingsStruct } from "../struct/client-settings-struct";
+import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenChatProfile } from "../open/open-chat-profile";
 
 /*
  * Created on Fri Nov 01 2019
@@ -12,9 +14,9 @@ import { ClientSettingsStruct } from "../struct/client-settings-struct";
 export class ChatUser {
     
     private userId: Long;
-    private userInfo: UserInfoBase;
+    private userInfo: ChatUserInfoBase;
 
-    constructor(userId: Long, userInfo: UserInfoBase = new UserInfo()) {
+    constructor(userId: Long, userInfo: ChatUserInfoBase = new UserInfo()) {
         this.userId = userId;
 
         this.userInfo = userInfo;
@@ -36,8 +38,6 @@ export class ChatUser {
 
 export interface UserInfoBase {
 
-    readonly AccountId: number;
-
     readonly Nickname: string;
 
     readonly ProfileImageURL: string;
@@ -46,9 +46,14 @@ export interface UserInfoBase {
 
     readonly OriginalProfileImageURL: string;
 
-    readonly InfoLoaded: boolean;
-
     readonly LastInfoCache: number;
+}
+
+export interface ChatUserInfoBase extends UserInfoBase {
+
+    readonly AccountId: number;
+
+    readonly InfoLoaded: boolean;
 
     updateNickname(nickname: string): void;
 
@@ -57,7 +62,7 @@ export interface UserInfoBase {
     updateFromChatInfo(memberStruct: MemberStruct): void;
 }
 
-export class UserInfo implements UserInfoBase {
+export class UserInfo implements ChatUserInfoBase {
 
     private infoLoaded: boolean;
 
@@ -136,10 +141,13 @@ export class ClientChatUser extends ChatUser {
 
     private openChatToken: Long;
 
+    private openChatProfileList: OpenChatProfile[];
+
     constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: Long = Long.ZERO) {
         super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
 
         this.openChatToken = openChatToken;
+        this.openChatProfileList = [];
     }
 
     get UserInfo() {
@@ -170,8 +178,20 @@ export class ClientChatUser extends ChatUser {
         return this.UserInfo.MainDeviceAppVer;
     }
 
+    get OpenChatProfileList() {
+        return this.openChatProfileList;
+    }
+
     isClientUser() {
         return true;
+    }
+
+    updateOpenChatProfile(openChatProfileList: OpenLinkStruct[]) {
+        this.openChatProfileList = [];
+
+        for (let profileStruct of openChatProfileList) {
+            this.openChatProfileList.push(OpenChatProfile.fromStruct(profileStruct));
+        }
     }
 
 }
@@ -196,7 +216,7 @@ export class ClientChannelUser extends ChatUser {
 
 }
 
-export class ClientUserInfo implements UserInfoBase {
+export class ClientUserInfo implements ChatUserInfoBase {
 
     private clientAccessData: LoginAccessDataStruct;
     private settings: ClientSettingsStruct;

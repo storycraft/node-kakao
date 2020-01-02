@@ -57,6 +57,9 @@ export * from './talk/chat/chat';
 export * from './talk/chat/chat-attachment';
 export * from './talk/room/chat-channel';
 
+export * from './talk/open/open-chat-profile';
+export * from './talk/open/open-link-info';
+
 export * from './talk/user/chat-user';
 
 export * from './talk/feed/feed-type';

@@ -31,8 +31,8 @@ export class MemberStruct implements StructBase {
         this.ProfileImageUrl = rawData['pi'] || rawData['profileImageUrl'] || '';
         this.OriginalProfileImageUrl = rawData['opi'] || rawData['originalProfileImageUrl'] || '';
         this.FullProfileImageUrl = rawData['fpi'] || rawData['fullProfileImageUrl'] || '';
-        this.Type = rawData['type'];
-        this.AccountId = rawData['accountId'];
+        this.Type = rawData['type'] || UserType.Undefined;
+        this.AccountId = rawData['accountId'] || 0;
         this.LinkedService = rawData['linkedService'] || '';
         this.StatusMessage = rawData['statusMessage'] || '';
     }

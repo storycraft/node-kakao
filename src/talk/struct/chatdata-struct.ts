@@ -16,7 +16,7 @@ export class ChatDataStruct implements StructBase {
         public Type: ChatroomType = ChatroomType.GROUP,
         public MemberCount: number = 0,
         public PushAlert: boolean = false,
-        public Metadata: ChatDataMetaStruct | null = null
+        public readonly Metadata: ChatDataMetaStruct = new ChatDataMetaStruct()
     ) {
 
     }
@@ -26,10 +26,8 @@ export class ChatDataStruct implements StructBase {
         this.Type = rawData['t'];
         this.MemberCount = rawData['a'];
         this.PushAlert = rawData['p'];
-        this.Metadata = null;
-
         if (rawData['m']) {
-            this.Metadata = new ChatDataMetaStruct().fromJson(rawData['m']);
+            this.Metadata.fromJson(rawData['m']);
         }
     }
 
@@ -69,8 +67,6 @@ export class ChatDataMetaStruct implements StructBase {
         data.FullImageURL = rawData['fullImageUrl'];
         data.Name = rawData['name'];
         data.Favorite = rawData['favorite'];
-
-        return data;
     }
 
     toJson() {
