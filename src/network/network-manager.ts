@@ -130,12 +130,12 @@ export class NetworkManager {
     }
     
     async updateChannelInfo(channel: ChatChannel) {
-        channel.LastInfoUpdate = Date.now();
-
         await this.updateMemberInfo(channel);
 
         let info = await this.requestChannelInfo(channel.ChannelId);
         channel.ChannelInfo.update(info);
+
+        channel.LastInfoUpdate = Date.now();
     }
 
     async updateMemberInfo(channel: ChatChannel) {

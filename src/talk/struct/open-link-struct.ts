@@ -52,6 +52,7 @@ export class OpenMemberStruct implements StructBase {
         public ProfileImageUrl: string = '',
         public OriginalProfileImageUrl: string = '',
         public FullProfileImageUrl: string = '',
+        public MemberType: number = 0
     ) {
 
     }
@@ -62,6 +63,7 @@ export class OpenMemberStruct implements StructBase {
         this.ProfileImageUrl = rawData['pi'] || rawData['profileImageUrl'] || '';
         this.OriginalProfileImageUrl = rawData['opi'] || rawData['originalProfileImageUrl'] || '';
         this.FullProfileImageUrl = rawData['fpi'] || rawData['fullProfileImageUrl'] || '';
+        this.MemberType = rawData['lmt'];
     }
     
     toJson() {
@@ -70,7 +72,8 @@ export class OpenMemberStruct implements StructBase {
             'nn': this.NickName,
             'pi': this.ProfileImageUrl,
             'opi': this.OriginalProfileImageUrl,
-            'fpi': this.FullProfileImageUrl
+            'fpi': this.FullProfileImageUrl,
+            'lmt': this.MemberType
         };
 
         return obj;

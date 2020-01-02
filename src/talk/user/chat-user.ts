@@ -139,11 +139,11 @@ export class UserInfo implements ChatUserInfoBase {
 
 export class ClientChatUser extends ChatUser {
 
-    private openChatToken: Long;
+    private openChatToken: number;
 
     private openChatProfileList: OpenChatProfile[];
 
-    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: Long = Long.ZERO) {
+    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: number = 0) {
         super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
 
         this.openChatToken = openChatToken;

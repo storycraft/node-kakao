@@ -147,11 +147,16 @@ export class SessionManager {
         let openChatToken = this.ClientUser.OpenChatToken;
 
         return await new Promise<OpenLinkStruct[]>((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketSyncLinkReq(openChatToken).once('response', (res: PacketSyncLinkRes) => {
+
+            if (res.OpenChatToken > openChatToken) {
+                this.ClientUser.OpenChatToken = res.OpenChatToken;
+            }
+
             resolve(res.LinkList);
         })));
     }
     
-    async initSession(initDataList: ChatDataStruct[], openChatToken: Long) {
+    async initSession(initDataList: ChatDataStruct[], openChatToken: number) {
         this.channelMap.clear();
 
         this.ClientUser.OpenChatToken = openChatToken;

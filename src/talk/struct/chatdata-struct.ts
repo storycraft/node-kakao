@@ -16,7 +16,8 @@ export class ChatDataStruct implements StructBase {
         public Type: ChatroomType = ChatroomType.GROUP,
         public MemberCount: number = 0,
         public PushAlert: boolean = false,
-        public readonly Metadata: ChatDataMetaStruct = new ChatDataMetaStruct()
+        public readonly Metadata: ChatDataMetaStruct = new ChatDataMetaStruct(),
+        public OpenToken: number = -1
     ) {
 
     }
@@ -28,6 +29,10 @@ export class ChatDataStruct implements StructBase {
         this.PushAlert = rawData['p'];
         if (rawData['m']) {
             this.Metadata.fromJson(rawData['m']);
+        }
+
+        if (this.Type == ChatroomType.OPENCHAT_DIRECT || this.Type == ChatroomType.OPENCHAT_GROUP) {
+            this.OpenToken = rawData['otk'];
         }
     }
 

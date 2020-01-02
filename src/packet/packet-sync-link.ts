@@ -12,7 +12,7 @@ import { Long } from "bson";
 export class PacketSyncLinkReq extends LocoBsonRequestPacket {
 
     constructor(
-        public OpenChatToken: Long = Long.ZERO,
+        public OpenChatToken: number = 0,
     ) {
         super();
     }
@@ -36,7 +36,7 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
         status: number,
         public LinkList: OpenLinkStruct[] = [],
         public IdList: Long[] = [],
-        public OpenChatToken: Long = Long.ZERO,
+        public OpenChatToken: number = 0,
 
     ) {
         super(status);
@@ -58,6 +58,6 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
         }
         
         this.IdList = body['dlis'];
-        this.OpenChatToken = JsonUtil.readLong(body['ltk']) || Long.ZERO;
+        this.OpenChatToken = body['ltk'];
     }
 }

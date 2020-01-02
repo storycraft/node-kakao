@@ -291,10 +291,6 @@ export class ChannelInfo {
     }
 
     update(chatinfoStruct: ChatInfoStruct) {
-        if (!this.infoLoaded) {
-            this.infoLoaded = true;
-        }
-
         this.lastInfoUpdated = Date.now();
 
         this.activeUserList = chatinfoStruct.MemberList;
@@ -319,6 +315,10 @@ export class ChannelInfo {
         this.isFavorite = chatinfoStruct.Meta.Favorite;
 
         this.roomType = chatinfoStruct.Type;
+
+        if (!this.infoLoaded) {
+            this.infoLoaded = true;
+        }
     }
 
     updateRoomName(name: string) {
@@ -326,10 +326,6 @@ export class ChannelInfo {
     }
 
     initMemberList(memberList: MemberStruct[]) {
-        if (!this.memberListLoaded) {
-            this.memberListLoaded = true;
-        }
-
         let checkedList: ChatUser[] = [];
 
 
@@ -349,6 +345,10 @@ export class ChannelInfo {
             if (!checkedList.includes(user)) {
                 this.removeUserLeftInternal(user.UserId);
             }
+        }
+
+        if (!this.memberListLoaded) {
+            this.memberListLoaded = true;
         }
     }
 
