@@ -9,6 +9,7 @@ import { PacketMessageWriteReq } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
 import { MemberStruct } from "../struct/member-struct";
 import { OpenLinkInfo } from "../open/open-link-info";
+import { MessageTemplate } from "../chat/template/message-template";
 
 /*
  * Created on Fri Nov 01 2019
@@ -74,12 +75,12 @@ export class ChatChannel extends EventEmitter {
         return this.channelInfo;
     }
 
-    getNextMessageId(): Long {
+    getNextMessageId(): number {
         if (this.lastChat) {
-            return this.lastChat.MessageId.add(Long.ONE);
+            return this.lastChat.MessageId + 1;
         }
 
-        return Long.ZERO;
+        return 0;
     }
 
     chatReceived(chat: Chat) {
@@ -102,6 +103,16 @@ export class ChatChannel extends EventEmitter {
             return;
 
         let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text);
+
+        await this.client.NetworkManager.sendPacket(packet);
+    }
+
+    async sendTemplate(template: MessageTemplate) {
+        if (!template.Valid) {
+            return;
+        }
+
+        let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, template.getPacketText(), template.getMessageType(), false, template.getPacketExtra());
 
         await this.client.NetworkManager.sendPacket(packet);
     }

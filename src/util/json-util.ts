@@ -9,7 +9,7 @@ import { Long } from "bson";
 export class JsonUtil {
 
     static readLong(value: any): Long {
-        if (value.unsigned !== undefined) {
+        if (value && value.unsigned !== undefined) {
             return (value as Long);
         }
 

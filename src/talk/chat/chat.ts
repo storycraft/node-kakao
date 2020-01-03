@@ -3,7 +3,7 @@ import { Long } from "bson";
 import { ChatChannel } from "../room/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatlogStruct } from "../struct/chatlog-struct";
-import { ChatAttachment, PhotoAttachment } from "../..";
+import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment } from "./chat-attachment";
 
 /*
@@ -20,7 +20,7 @@ export abstract class Chat {
     private channel: ChatChannel;
     private sender: ChatUser;
 
-    private messageId: Long;
+    private messageId: number;
 
     private text: string;
 
@@ -28,7 +28,7 @@ export abstract class Chat {
 
     private sendTime: number;
 
-    constructor(channel: ChatChannel, sender: ChatUser, messageId: Long, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string = '{}') {
+    constructor(channel: ChatChannel, sender: ChatUser, messageId: number, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string = '{}') {
         this.channel = channel;
         this.sender = sender;
 
@@ -97,7 +97,11 @@ export abstract class Chat {
     protected abstract readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void;
 
     async replyText(text: string) {
-        await this.Channel.sendText(text);
+        return this.Channel.sendText(text);
+    }
+
+    async replyTemplate(template: MessageTemplate) {
+        return this.Channel.sendTemplate(template);
     }
     
 }

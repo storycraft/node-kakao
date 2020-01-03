@@ -49,7 +49,7 @@ export class LocoPacketResolver extends Writable {
 
                     this.Socket.packetReceived(this.currentHeader!.PacketId, packet);
                 } catch(e) {
-                    //console.log(`Packet read error: ${e}`);
+                    console.log(`Invalid Packet read error: ${e}`);
                 }
 
                 this.packetBuffer = Buffer.allocUnsafe(0);

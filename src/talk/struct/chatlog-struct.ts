@@ -20,7 +20,7 @@ export class ChatlogStruct implements StructBase {
         public Text: string = '',
         public SendTime: number = -1,
         public RawAttachment: string = '',
-        public MessageId: Long = Long.ZERO,
+        public MessageId: number = 0,
     ) {
 
     }
@@ -32,11 +32,11 @@ export class ChatlogStruct implements StructBase {
         this.SenderId = JsonUtil.readLong(rawJson['authorId']);
         this.ChannelId = JsonUtil.readLong(rawJson['chatId']);
 
-        this.MessageId = JsonUtil.readLong(rawJson['msgId']);
+        this.MessageId = rawJson['msgId'];
         
         this.Type = rawJson['type'];
 
-        this.Text = rawJson['message'];
+        this.Text = rawJson['message'] || '';
 
         this.RawAttachment = rawJson['attachment'] || '{}';
 

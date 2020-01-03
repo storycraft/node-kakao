@@ -1,6 +1,7 @@
 import { LocoHeaderStruct } from "./loco-header-struct";
 import { LocoResponsePacket } from "./loco-packet-base";
 import { LocoPacketList } from "./loco-packet-list";
+import * as Bson from "bson";
 
 /*
  * Created on Fri Oct 18 2019

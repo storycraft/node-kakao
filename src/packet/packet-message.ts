@@ -12,7 +12,7 @@ import { Long } from "bson";
 export class PacketMessageWriteReq extends LocoBsonRequestPacket {
 
     constructor(
-        public MessageId: Long = Long.ZERO,
+        public MessageId: number = 0,
         public ChannelId: Long = Long.ZERO,
         public Text: string = '',
         public Type: MessageType = MessageType.Text,
@@ -47,7 +47,7 @@ export class PacketMessageWriteRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public MessageId: Long = Long.ZERO,
+        public MessageId: number = 0,
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
         public PrevLogId: Long = Long.ZERO,
@@ -62,7 +62,7 @@ export class PacketMessageWriteRes extends LocoBsonResponsePacket {
     }
     
     readBodyJson(body: any) {
-        this.MessageId = JsonUtil.readLong(body['msgId']);
+        this.MessageId = body['msgId'];
         this.ChannelId = JsonUtil.readLong(body['chatId']);
         this.LogId = JsonUtil.readLong(body['logId']);
         this.PrevLogId = JsonUtil.readLong(body['prevId']);
@@ -76,7 +76,7 @@ export class PacketMessageRes extends LocoBsonResponsePacket {
         status: number,
         public ChannelId: Long = Long.fromNumber(-1),
         public SenderNickname: string = '',
-        public Chatlog: ChatlogStruct = new ChatlogStruct(),
+        public readonly Chatlog: ChatlogStruct = new ChatlogStruct(),
         public NoSeen: boolean = false,
         public PushAlert: boolean = false
     ) {
@@ -93,8 +93,6 @@ export class PacketMessageRes extends LocoBsonResponsePacket {
 
         this.PushAlert = body['pushAlert'];
         this.NoSeen = body['noSeen'];
-
-        this.Chatlog = new ChatlogStruct();
 
         if (body['chatLog']) {
             this.Chatlog.fromJson(body['chatLog']);

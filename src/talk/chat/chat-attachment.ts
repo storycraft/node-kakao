@@ -10,23 +10,24 @@ export abstract class ChatAttachment {
     
     abstract readAttachment(rawJson: any): void;
 
+    abstract toJsonAttachment(): any;
+
 }
 
 export class PhotoAttachment extends ChatAttachment {
 
     constructor(
+        private imageURL: string = '',
         private keyPath: string = '',
-
         private width: number = 0,
         private height: number = 0,
-    
-        private imageURL: string = '',
+        
         private thumbnailURL: string = '',
+
+        private thumbnailWidth: number = -1,
+        private thumbnailHeight: number = -1,
     
-        private thumbnailWidth: number = 0,
-        private thumbnailHeight: number = 0,
-    
-        private size: number = 0
+        private size: number = -1
         ) {
         super();
     }
@@ -78,6 +79,33 @@ export class PhotoAttachment extends ChatAttachment {
         this.size = rawJson['s'];
     }
 
+    toJsonAttachment() {
+        let obj: any = {
+            'url': this.imageURL,
+            'k': this.KeyPath,
+            'w': this.width,
+            'h': this.height
+        };
+
+        if (this.thumbnailURL !== '') {
+            obj['thumbnailUrl'] = this.thumbnailURL;
+        }
+
+        if (this.thumbnailWidth !== -1) {
+            obj['thumbnailWidth'] = this.thumbnailWidth;
+        }
+
+        if (this.thumbnailHeight !== -1) {
+            obj['thumbnailHeight'] = this.thumbnailHeight;
+        }
+
+        if (this.size !== -1) {
+            obj['size'] = this.size;
+        }
+
+        return obj;
+    }
+
 }
 
 export class VideoAttachment extends ChatAttachment {
@@ -90,7 +118,7 @@ export class VideoAttachment extends ChatAttachment {
     
         private videoURL: string = '',
     
-        private size: number = 0
+        private size: number = -1
         ) {
         super();
     }
@@ -124,6 +152,21 @@ export class VideoAttachment extends ChatAttachment {
         this.videoURL = rawJson['url'];
         
         this.size = rawJson['s'];
+    }
+
+    toJsonAttachment() {
+        let obj: any = {
+            'url': this.videoURL,
+            'k': this.KeyPath,
+            'w': this.width,
+            'h': this.height
+        };
+
+        if (this.size !== -1) {
+            obj['size'] = this.size;
+        }
+
+        return obj;
     }
 
 }
@@ -172,6 +215,21 @@ export class EmoticonAttachment extends ChatAttachment {
         this.stopAt = rawJson['s'];
     }
 
+    toJsonAttachment() {
+        let obj: any = {
+            'path': this.path,
+            'name': this.name,
+            'type': this.type,
+            's': this.stopAt
+        };
+
+        if (this.description !== '') {
+            obj['alt'] = this.description;
+        }
+
+        return obj;
+    }
+
 }
 
 
@@ -210,17 +268,34 @@ export class LongTextAttachment extends ChatAttachment {
         this.sd = rawJson['sd'];
     }
 
+    toJsonAttachment() {
+        let obj: any = {
+            'path': this.path,
+            'k': this.KeyPath
+        };
+
+        if (this.size) {
+            obj['size'] = this.size;
+        }
+
+        if (this.sd) {
+            obj['sd'] = this.sd;
+        }
+
+        return obj;
+    }
+
 }
 
 export class SharpAttachment extends ChatAttachment {
 
     constructor(
         private question: string = '',
-        private imageURL: string = '',
-        private imageWidth: number = 0,
-        private imageHeight: number = 0,
         private redirectURL: string = '',
         private contentType: string = '',
+        private imageURL: string = '',
+        private imageWidth: number = -1,
+        private imageHeight: number = -1,
         private contentList: SharpContent[] = []
     ) {
         super();
@@ -260,8 +335,8 @@ export class SharpAttachment extends ChatAttachment {
         this.contentType = rawJson['V'];
 
         this.imageURL = rawJson['I'] || '';
-        this.imageWidth = rawJson['W'] || 0;
-        this.imageHeight = rawJson['H'] || 0;
+        this.imageWidth = rawJson['W'] || -1;
+        this.imageHeight = rawJson['H'] || -1;
 
         this.redirectURL = rawJson['L'];
 
@@ -280,6 +355,38 @@ export class SharpAttachment extends ChatAttachment {
         }
     }
 
+    toJsonAttachment() {
+        let obj: any = {
+            'Q': this.question,
+            'V': this.contentType,
+            'L': this.redirectURL
+        };
+
+        if (this.imageURL !== '') {
+            obj['I'] = this.imageURL;
+        }
+
+        if (this.imageWidth !== -1) {
+            obj['W'] = this.imageWidth;
+        }
+
+        if (this.imageHeight !== -1) {
+            obj['H'] = this.imageHeight;
+        }
+
+        if (this.contentList.length > 0) {
+            let rawList = [];
+
+            for (let content of this.contentList) {
+                rawList.push(content.toRawContent());
+            }
+
+            obj['R'] = rawList;
+        }
+
+        return obj;
+    }
+
 }
 
 export class SharpContent {
@@ -287,10 +394,10 @@ export class SharpContent {
     constructor(
         private description: string = '',
         private type: string = '',
-        private imageURL: string = '',
-        private imageWidth: number = 0,
-        private imageHeight: number = 0,
         private redirectURL: string = '',
+        private imageURL: string = '',
+        private imageWidth: number = -1,
+        private imageHeight: number = -1,
     ) {
 
     }
@@ -325,10 +432,32 @@ export class SharpContent {
         this.type = rawData['T'];
 
         this.imageURL = rawData['I'] || '';
-        this.imageWidth = rawData['W'] || 0;
-        this.imageHeight = rawData['H'] || 0;
+        this.imageWidth = rawData['W'] || -1;
+        this.imageHeight = rawData['H'] || -1;
 
         this.redirectURL = rawData['L'];
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'D': this.description,
+            'T': this.type,
+            'L': this.redirectURL
+        };
+
+        if (this.imageURL !== '') {
+            obj['I'] = this.imageURL;
+        }
+
+        if (this.imageWidth !== -1) {
+            obj['W'] = this.imageWidth;
+        }
+
+        if (this.imageHeight !== -1) {
+            obj['H'] = this.imageHeight;
+        }
+
+        return obj;
     }
 
 }
