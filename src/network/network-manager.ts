@@ -187,7 +187,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
     
     onResponse(packetId: number, packet: LocoResponsePacket): void {
-        console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
+        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }
 
