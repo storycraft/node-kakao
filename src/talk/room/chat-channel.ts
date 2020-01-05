@@ -253,7 +253,7 @@ export class ChannelInfo {
         }
 
         if (!this.hasUser(id)) {
-            throw new Error('Invalid user');
+            throw new Error(`Invalid user ${id}`);
         }
 
         return this.userMap.get(id.toString())!;

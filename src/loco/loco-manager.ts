@@ -159,12 +159,16 @@ export class LocoManager {
     }
 
     protected onPacket(packetId: number, packet: LocoResponsePacket) {
-        if (this.Handler) {
-            this.Handler.onResponse(packetId, packet);
-        }
+        try {
+            if (this.Handler) {
+                this.Handler.onResponse(packetId, packet);
+            }
 
-        if (packet.PacketName == 'KICKOUT') {
-            this.disconnect();
+            if (packet.PacketName == 'KICKOUT') {
+                this.disconnect();
+            }
+        } catch(e) {
+            throw new Error(`Error while processing packet#${packetId} ${packet.PacketName}`);
         }
     }
 
@@ -180,7 +184,8 @@ export class LocoManager {
         }
 
         if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
-            throw new Error(`Invalid packet ${packet.PacketName}`);
+            console.log(`Tried to send invalid packet ${packet.PacketName}`);
+            return false;
         }
 
         let result = await this.LocoSocket!.sendPacket(packet);
