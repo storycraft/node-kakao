@@ -169,7 +169,7 @@ export class ChannelInfo {
 
     private activeUserList: MemberStruct[];
 
-    private userMap: Map<string, ChatUser>;
+    private userMap: Map<Long, ChatUser>;
 
     constructor(channel: ChatChannel, roomType: ChatroomType) {
         this.channel = channel;
@@ -244,7 +244,7 @@ export class ChannelInfo {
     }
 
     hasUser(id: Long) {
-        return this.userMap.has(id.toString()) || this.clientChannelUser.UserId.equals(id);
+        return this.userMap.has(id) || this.clientChannelUser.UserId.equals(id);
     }
 
     getUser(id: Long): ChatUser {
@@ -256,7 +256,7 @@ export class ChannelInfo {
             throw new Error(`Invalid user ${id}`);
         }
 
-        return this.userMap.get(id.toString())!;
+        return this.userMap.get(id)!;
     }
 
     addUserJoined(userId: Long, joinMessage: string): ChatUser {
@@ -275,7 +275,7 @@ export class ChannelInfo {
 
         let newUser = new ChatUser(userId);
 
-        this.userMap.set(userId.toString(), newUser);
+        this.userMap.set(userId, newUser);
 
         return newUser;
     }
@@ -296,7 +296,7 @@ export class ChannelInfo {
 
         let user = this.getUser(id);
 
-        this.userMap.delete(id.toString());
+        this.userMap.delete(id);
 
         return user;
     }
