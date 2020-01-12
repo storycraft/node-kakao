@@ -169,7 +169,7 @@ export class ChannelInfo {
 
     private activeUserList: MemberStruct[];
 
-    private userMap: Map<Long, ChatUser>;
+    private userMap: Map<string, ChatUser>;
 
     constructor(channel: ChatChannel, roomType: ChatroomType) {
         this.channel = channel;
@@ -244,7 +244,7 @@ export class ChannelInfo {
     }
 
     hasUser(id: Long) {
-        return this.userMap.has(id) || this.clientChannelUser.UserId.equals(id);
+        return this.userMap.has(id.toString()) || this.clientChannelUser.UserId.equals(id);
     }
 
     getUser(id: Long): ChatUser {
@@ -256,7 +256,7 @@ export class ChannelInfo {
             throw new Error(`Invalid user ${id}`);
         }
 
-        return this.userMap.get(id)!;
+        return this.userMap.get(id.toString())!;
     }
 
     addUserJoined(userId: Long, joinMessage: string): ChatUser {
@@ -275,7 +275,7 @@ export class ChannelInfo {
 
         let newUser = new ChatUser(userId);
 
-        this.userMap.set(userId, newUser);
+        this.userMap.set(userId.toString(), newUser);
 
         return newUser;
     }
@@ -296,7 +296,7 @@ export class ChannelInfo {
 
         let user = this.getUser(id);
 
-        this.userMap.delete(id);
+        this.userMap.delete(id.toString());
 
         return user;
     }
@@ -305,6 +305,8 @@ export class ChannelInfo {
         this.lastInfoUpdated = Date.now();
 
         this.activeUserList = chatinfoStruct.MemberList;
+
+        this.updateMemberList(this.activeUserList);
 
         let lastChatlog = chatinfoStruct.LastChatLog;
 
@@ -336,31 +338,38 @@ export class ChannelInfo {
         this.name = name;
     }
 
-    initMemberList(memberList: MemberStruct[]) {
-        let checkedList: ChatUser[] = [];
+    initMemberList(memberList: MemberStruct[]): ChatUser[] {
+        let list = this.updateMemberList(memberList);
 
+        if (!this.memberListLoaded) {
+            this.memberListLoaded = true;
+        }
+
+        for (let user of this.UserList) {
+            if (!list.includes(user)) {
+                this.removeUserLeftInternal(user.UserId);
+            }
+        }
+
+        return list;
+    }
+
+    updateMemberList(memberList: MemberStruct[]): ChatUser[] {
+        let list: ChatUser[] = [];
 
         for (let memberStruct of memberList) {
             let user: ChatUser;
+
             if (!this.hasUser(memberStruct.UserId)) {
                 user = this.addUserInternal(memberStruct.UserId);
             } else {
                 user = this.getUser(memberStruct.UserId);
             }
+
             user.UserInfo.updateFromChatInfo(memberStruct);
-
-            checkedList.push(user);
         }
 
-        for (let user of this.UserList) {
-            if (!checkedList.includes(user)) {
-                this.removeUserLeftInternal(user.UserId);
-            }
-        }
-
-        if (!this.memberListLoaded) {
-            this.memberListLoaded = true;
-        }
+        return list;
     }
 
 }
