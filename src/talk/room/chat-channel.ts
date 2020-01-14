@@ -5,11 +5,12 @@ import { ChatInfoStruct, ChannelMetaStruct } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { TalkClient } from "../..";
-import { PacketMessageWriteReq } from "../../packet/packet-message";
+import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
 import { MemberStruct } from "../struct/member-struct";
 import { OpenLinkInfo } from "../open/open-link-info";
 import { MessageTemplate } from "../chat/template/message-template";
+import { ChatlogStruct } from "../struct/chatlog-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -98,23 +99,41 @@ export class ChatChannel extends EventEmitter {
         this.lastChat = chat;
     }
 
-    async sendText(text: string) {
-        if (text === '')
-            return;
+    async sendText(text: string): Promise<Chat> {
+        return new Promise((resolve, reject) => {
+            if (text === '') {
+                reject('Text is empty');
+                return;
+            }
 
-        let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text);
-
-        await this.client.NetworkManager.sendPacket(packet);
+            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text).once('response', (res: PacketMessageWriteRes) => {
+                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Date.now(), '', res.MessageId));
+                resolve(chat);
+            });
+    
+            this.client.NetworkManager.sendPacket(packet);
+        });
     }
 
-    async sendTemplate(template: MessageTemplate) {
-        if (!template.Valid) {
-            return;
-        }
+    async sendTemplate(template: MessageTemplate): Promise<Chat> {
+        return new Promise((resolve, reject) => {
+            if (!template.Valid) {
+                reject('Invalid template');
+                return;
+            }
 
-        let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, template.getPacketText(), template.getMessageType(), false, template.getPacketExtra());
+            let sentType = template.getMessageType();
+            let text = template.getPacketText();
+            let extra = template.getPacketExtra();
 
-        await this.client.NetworkManager.sendPacket(packet);
+            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, sentType, false, extra).once('response', (res: PacketMessageWriteRes) => {
+                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Date.now(), extra, res.MessageId));
+                
+                resolve(chat);
+            });
+    
+            this.client.NetworkManager.sendPacket(packet);
+        });
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;

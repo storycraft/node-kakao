@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { PhotoAttachment } from "../chat-attachment";
+import { PhotoAttachment, ChatAttachment } from "../chat-attachment";
 
 /*
  * Created on Fri Jan 03 2020
