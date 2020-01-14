@@ -1,5 +1,6 @@
 import * as request from "request-promise";
 import * as querystring from "querystring";
+import { Stream } from "stream";
 
 /*
  * Created on Sun Oct 13 2019
@@ -114,6 +115,30 @@ export class KakaoAPI {
         return 'dn-v.talk.kakao.com';
     }
 
+    static get PhotoFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PhotoFileHost}`;
+    }
+
+    static get ProfileFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PhotoFileHost}`;
+    }
+
+    static get GroupProfileFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PhotoFileHost}`;
+    }
+
+    static get VideoFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.VideoFileHost}`;
+    }
+
+    static get AudioFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AudioFileHost}`;
+    }
+
+    static get FileFileURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.FileHost}`;
+    }
+
     static get PhotoUploadURL() {
         return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PhotoUploadHost}/upload`;
     }
@@ -141,28 +166,86 @@ export class KakaoAPI {
 
     
     // This will return path. Use getUploadedFile to get Full URL
-    static async uploadPhoto(img: Buffer, userId?: number, chatId?: number): Promise<string> {
-        let formData: any = {
-            'photo': img
+    static async uploadProfile(img: Buffer, name: string, userId: number = -1): Promise<string> {
+        let data: any = {
+            'user_id': userId,
+            'photo': {
+                value: img,
+                options: {
+                    'filename': name
+                }
+            }
         };
 
-        if (userId) {
-            formData['user_id'] = userId;
-        }
-
-        if (chatId) {
-            formData['chat_id'] = chatId;
-        }
-
-        let value = await request(KakaoAPI.PhotoUploadURL, {
-            formData: formData
+        let value = await request(KakaoAPI.ProfileUploadURL, {
+            method: 'POST',
+            formData: data
         });
 
         return value as string;
     }
 
-    static getUploadedFile(uploadPath: string, hostType: string = KakaoAPI.PhotoFileHost): string {
-        return `${KakaoAPI.InternalProtocol}://${hostType}/${uploadPath}`;
+    static getUploadURL(type: KakaoAPI.AttachmentType) {
+        switch (type) {
+
+            case this.AttachmentType.IMAGE:
+                return KakaoAPI.PhotoUploadURL
+
+            case this.AttachmentType.AUDIO:
+                return KakaoAPI.AudioUploadURL
+
+            case this.AttachmentType.VIDEO:
+                return KakaoAPI.VideoUploadURL
+
+            case this.AttachmentType.FILE:
+                return KakaoAPI.FileUploadURL
+
+            default:
+                return KakaoAPI.FileUploadURL;
+        }
+    }
+
+    static getAttachmentURL(type: KakaoAPI.AttachmentType) {
+        switch (type) {
+
+            case this.AttachmentType.IMAGE:
+                return KakaoAPI.PhotoFileURL
+
+            case this.AttachmentType.AUDIO:
+                return KakaoAPI.AudioFileURL
+
+            case this.AttachmentType.VIDEO:
+                return KakaoAPI.VideoFileURL
+
+            case this.AttachmentType.FILE:
+                return KakaoAPI.FileFileURL
+
+            default:
+                return KakaoAPI.FileFileURL;
+        }
+    }
+
+    static async uploadAttachment(type: KakaoAPI.AttachmentType, attachment: Buffer, name: string, userId: number = -1): Promise<string> {
+        let req = request(KakaoAPI.getUploadURL(type), {
+            method: 'POST',
+            formData: {
+                'user_id': userId,
+                'attachment_type': type,
+                'attachment': {
+                    value: attachment,
+                    options: {
+                        'filename': name,
+                        'contentType': null
+                    }
+                }
+            }
+        });
+
+        return await req as string;
+    }
+
+    static getUploadedFile(uploadPath: string, type: KakaoAPI.AttachmentType): string {
+        return `${this.getAttachmentURL(type)}/${uploadPath}`;
     }
 
     static get LocoEntryPort() {
@@ -377,4 +460,18 @@ enum LogonAccount {
     LESS_SETTINGS = 'less_settings.json',
     BLOCKED_LIST = 'blocked.json',
     LOGIN_TOKEN = 'login_token.json'
+}
+
+
+export namespace KakaoAPI {
+
+    export enum AttachmentType {
+        
+        IMAGE = 'image',
+        AUDIO = 'audio',
+        VIDEO = 'video',
+        FILE = 'file'
+
+    }
+
 }
