@@ -129,7 +129,7 @@ export class KakaoAPI {
 
     
     // This will return path. Use getUploadedFile to get Full URL
-    static async uploadPhoto(img: Buffer, userId?: number, chatId?: number): Promise<string> {
+    static async uploadPhoto(img: Buffer, uploadURL: string = KakaoAPI.MUploadURL, userId?: number, chatId?: number): Promise<string> {
         let formData: any = {
             'photo': img
         };
@@ -142,14 +142,14 @@ export class KakaoAPI {
             formData['chat_id'] = chatId;
         }
 
-        let value = await request(KakaoAPI.PUploadURL, {
+        let value = await request(uploadURL, {
             formData: formData
         });
 
         return value as string;
     }
 
-    static getUploadedFile(uploadPath: string, side: string = KakaoAPI.FileHost): string {
+    static getUploadedFile(uploadPath: string, side: string = KakaoAPI.MFileHost): string {
         return `${KakaoAPI.InternalProtocol}://${side}/${uploadPath}`;
     }
 

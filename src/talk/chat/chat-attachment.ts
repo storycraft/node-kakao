@@ -17,10 +17,10 @@ export abstract class ChatAttachment {
 export class PhotoAttachment extends ChatAttachment {
 
     constructor(
-        private imageURL: string = '',
         private keyPath: string = '',
         private width: number = 0,
         private height: number = 0,
+        private imageURL: string = '',
         
         private thumbnailURL: string = '',
 
