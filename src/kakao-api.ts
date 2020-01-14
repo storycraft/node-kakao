@@ -68,6 +68,62 @@ export class KakaoAPI {
         return 'booking-loco.kakao.com';
     }
 
+
+    
+    static get PUploadHost() {
+        return 'up-p.talk.kakao.com';
+    }
+
+    static get GPUploadHost() {
+        return 'up-gp.talk.kakao.com';
+    }
+
+    static get VUploadHost() {
+        return 'up-v.talk.kakao.com';
+    }
+
+    static get AUploadHost() {
+        return 'up-a.talk.kakao.com';
+    }
+
+    static get PUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PUploadHost}/upload`;
+    }
+
+    static get GPUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.GPUploadHost}/upload`;
+    }
+
+    static get VUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.VUploadHost}/upload`;
+    }
+
+    static get AUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AUploadHost}/upload`;
+    }
+
+
+
+    static uploadPhoto(img: Buffer, userId: number, chatId: number) {
+        let formData: any = {
+            'photo': img
+        };
+
+        if (userId) {
+            formData['user_id'] = userId;
+        }
+
+        if (chatId) {
+            formData['chat_id'] = chatId;
+        }
+
+        return request(KakaoAPI.PUploadURL, {
+            formData: formData
+        });
+    }
+
+
+
     static get LocoEntryPort() {
         return 443;
     }
