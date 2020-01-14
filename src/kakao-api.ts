@@ -245,7 +245,11 @@ export class KakaoAPI {
     }
 
     static getUploadedFile(uploadPath: string, type: KakaoAPI.AttachmentType): string {
-        return `${this.getAttachmentURL(type)}/${uploadPath}`;
+        return `${this.getAttachmentURL(type)}${uploadPath}`;
+    }
+
+    static getUploadedFileKey(uploadPath: string) {
+        return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
     }
 
     static get LocoEntryPort() {
