@@ -69,6 +69,10 @@ export class KakaoAPI {
     }
 
 
+
+    static get MUploadHost() {
+        return 'up-m.talk.kakao.com';
+    }
     
     static get PUploadHost() {
         return 'up-p.talk.kakao.com';
@@ -84,6 +88,26 @@ export class KakaoAPI {
 
     static get AUploadHost() {
         return 'up-a.talk.kakao.com';
+    }
+
+    static get FileHost() {
+        return 'dn.talk.kakao.com';
+    }
+
+    static get MFileHost() {
+        return 'dn-m.talk.kakao.com';
+    }
+
+    static get AFileHost() {
+        return 'dn-a.talk.kakao.com';
+    }
+
+    static get VFileHost() {
+        return 'dn-v.talk.kakao.com';
+    }
+
+    static get MUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.MUploadHost}/upload`;
     }
 
     static get PUploadURL() {
@@ -103,8 +127,9 @@ export class KakaoAPI {
     }
 
 
-
-    static uploadPhoto(img: Buffer, userId: number, chatId: number) {
+    
+    // This will return path. Use getUploadedFile to get Full URL
+    static async uploadPhoto(img: Buffer, userId?: number, chatId?: number): Promise<string> {
         let formData: any = {
             'photo': img
         };
@@ -117,12 +142,16 @@ export class KakaoAPI {
             formData['chat_id'] = chatId;
         }
 
-        return request(KakaoAPI.PUploadURL, {
+        let value = await request(KakaoAPI.PUploadURL, {
             formData: formData
         });
+
+        return value as string;
     }
 
-
+    static getUploadedFile(uploadPath: string, side: string = KakaoAPI.FileHost): string {
+        return `${KakaoAPI.InternalProtocol}://${side}/${uploadPath}`;
+    }
 
     static get LocoEntryPort() {
         return 443;
