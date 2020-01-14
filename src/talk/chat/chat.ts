@@ -5,6 +5,7 @@ import { ChatUser } from "../user/chat-user";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment } from "./chat-attachment";
+import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
 
 /*
  * Created on Fri Nov 01 2019
@@ -102,6 +103,18 @@ export abstract class Chat {
 
     async replyTemplate(template: MessageTemplate) {
         return this.Channel.sendTemplate(template);
+    }
+
+    get Deletable(): boolean {
+        return this.Sender.isClientUser();
+    }
+
+    async delete(): Promise<boolean> {
+        if (!this.Deletable) {
+            return false;
+        }
+
+        return this.channel.Client.NetworkManager.sendPacket(new PacketDeleteChatReq(this.channel.ChannelId, this.logId));
     }
     
 }
