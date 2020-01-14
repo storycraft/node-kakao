@@ -154,7 +154,7 @@ export class KakaoAPI {
             formData['chat_id'] = chatId;
         }
 
-        let value = await request(KakaoAPI.PhotoUploadHost, {
+        let value = await request(KakaoAPI.PhotoUploadURL, {
             formData: formData
         });
 
