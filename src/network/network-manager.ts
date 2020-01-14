@@ -21,6 +21,7 @@ import { ChatroomType } from "../talk/chat/chatroom-type";
 import { PacketGetMemberReq, PacketGetMemberRes } from "../packet/packet-get-member";
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "../packet/packet-get-meta";
 import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
+import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
 
 /*
  * Created on Fri Nov 01 2019
@@ -128,20 +129,28 @@ export class NetworkManager {
             }));
         });
     }
-    
-    async updateChannelInfo(channel: ChatChannel) {
-        await this.updateMemberInfo(channel);
 
-        let info = await this.requestChannelInfo(channel.ChannelId);
-        channel.ChannelInfo.update(info);
-
-        channel.LastInfoUpdate = Date.now();
+    async requestSpecificMemberInfo(channelId: Long, idList: Long[]): Promise<MemberStruct[]> {
+        return new Promise<MemberStruct[]>((resolve, reject) => {
+            this.sendPacket(new PacketMemberReq(channelId, idList).once('response', (packet: PacketMemberRes) => {
+                resolve(packet.MemberList);
+            }));
+        });
     }
 
-    async updateMemberInfo(channel: ChatChannel) {
+    async updateChannelInfo(channel: ChatChannel) {
+        let info = await this.requestChannelInfo(channel.ChannelId);
+
+        await this.updateMemberList(channel, info);
+
+        channel.ChannelInfo.update(info);
+    }
+
+    async updateMemberList(channel: ChatChannel, chatInfo: ChatInfoStruct) {
         let infoList = await this.requestMemberInfo(channel.ChannelId);
+        let activeInfoList = await this.requestSpecificMemberInfo(channel.ChannelId, chatInfo.MemberList.map((item) => item.UserId));
         
-        channel.ChannelInfo.initMemberList(infoList);
+        channel.ChannelInfo.initMemberList(infoList.slice().concat(activeInfoList));
     }
     
 }
@@ -183,11 +192,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     onRequest(packetId: number, packet: LocoRequestPacket): void {
-        //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
+        console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
     onResponse(packetId: number, packet: LocoResponsePacket): void {
-        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
+        console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet);
     }
 

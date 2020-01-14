@@ -26,6 +26,7 @@ export * from './packet/loco-packet-writer';
 export * from './packet/packet-check-in';
 export * from './packet/packet-get-conf';
 export * from './packet/packet-get-member';
+export * from './packet/packet-member';
 export * from './packet/packet-invoice';
 export * from './packet/packet-login';
 export * from './packet/packet-leave';

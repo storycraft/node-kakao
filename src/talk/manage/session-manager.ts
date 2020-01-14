@@ -1,4 +1,4 @@
-import { ChatChannel, OpenChatChannel } from "../room/chat-channel";
+import { ChatChannel } from "../room/chat-channel";
 import { ChatDataStruct } from "../struct/chatdata-struct";
 import { ClientChatUser, ChatUser } from "../user/chat-user";
 import { Long } from "bson";
@@ -49,7 +49,7 @@ export class SessionManager {
 
     getChannelById(id: Long): ChatChannel {
         if (!this.hasChannel(id)) {
-            throw new Error(`Invalid channel ${id}`)
+            return this.addChannel(id);
         }
 
         return this.channelMap.get(id.toString())!;
@@ -59,7 +59,7 @@ export class SessionManager {
         return chatChannel.ChannelInfo.getUser(id);
     }
 
-    addChannel(id: Long, chatroomType: ChatroomType = ChatroomType.GROUP): ChatChannel {
+    addChannel(id: Long, chatroomType?: ChatroomType): ChatChannel {
         let channel = this.addChannelInternal(id, chatroomType);
 
         this.client.emit('join_channel', channel);
@@ -67,17 +67,12 @@ export class SessionManager {
         return channel;
     }
 
-    protected addChannelInternal(id: Long, chatroomType: ChatroomType): ChatChannel {
+    protected addChannelInternal(id: Long, chatroomType?: ChatroomType): ChatChannel {
         if (this.hasChannel(id)) {
             throw new Error(`Invalid channel. Channel already exists`);
         }
 
-        let channel;
-        if (chatroomType === ChatroomType.OPENCHAT_DIRECT || chatroomType === ChatroomType.OPENCHAT_GROUP) {
-            channel = new OpenChatChannel(this.Client, id, chatroomType);
-        } else {
-            channel = new ChatChannel(this.Client, id, chatroomType);
-        }
+        let channel = new ChatChannel(this.Client, id, chatroomType);
 
         this.channelMap.set(id.toString(), channel);
 

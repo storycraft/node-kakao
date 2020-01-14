@@ -20,6 +20,7 @@ import { PacketRewriteReq } from "./packet-rewrite";
 import { PacketKickMemberReq } from "./packet-kick-member";
 import { PacketDeleteLinkReq } from "./packet-delete-link";
 import { PacketDeleteChatRes } from "./packet-delete-chat";
+import { PacketMemberRes, PacketMemberReq } from "./packet-member";
 
 /*
  * Created on Wed Oct 30 2019
@@ -57,6 +58,7 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('GETMETA', () => new PacketGetMetaReq());
         LocoPacketList.reqeustPacketMap.set('GETMETAS', () => new PacketGetMetasReq());
         LocoPacketList.reqeustPacketMap.set('GETMEM', () => new PacketGetMemberReq());
+        LocoPacketList.reqeustPacketMap.set('MEMBER', () => new PacketMemberReq());
         LocoPacketList.reqeustPacketMap.set('GETMOMETA', () => new PacketGetChannelBoardMetaReq());
 
         LocoPacketList.reqeustPacketMap.set('SYNCLINK', () => new PacketSyncLinkReq());
@@ -91,6 +93,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('GETMETA', (status) => new PacketGetMetaRes(status));
         LocoPacketList.responsePacketMap.set('GETMETAS', (status) => new PacketGetMetasRes(status));
         LocoPacketList.responsePacketMap.set('GETMEM', (status) => new PacketGetMemberRes(status));
+        LocoPacketList.responsePacketMap.set('MEMBER', (status) => new PacketMemberRes(status));
         LocoPacketList.responsePacketMap.set('GETMOMETA', (status) => new PacketGetMoimMetaRes(status));
 
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));

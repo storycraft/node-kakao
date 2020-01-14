@@ -1,7 +1,7 @@
 import { ChatUser, ClientChannelUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
-import { ChatInfoStruct, ChannelMetaStruct } from "../struct/chat-info-struct";
+import { ChatInfoStruct, ChannelMetaStruct, ChannelMetaType } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { TalkClient } from "../..";
@@ -26,8 +26,6 @@ export class ChatChannel extends EventEmitter {
 
     private channelId: Long;
 
-    private lastInfoUpdate: number;
-
     private lastChat: Chat |null;
 
     private channelInfo: ChannelInfo;
@@ -37,8 +35,6 @@ export class ChatChannel extends EventEmitter {
         this.client = client;
 
         this.channelId = channelId;
-
-        this.lastInfoUpdate = -1;
 
         this.channelInfo = this.createChannelInfo(roomType || ChatroomType.GROUP);
         this.lastChat = null;
@@ -61,15 +57,11 @@ export class ChatChannel extends EventEmitter {
     }
 
     get LastInfoUpdate() {
-        return this.lastInfoUpdate;
+        return this.channelInfo.LastInfoUpdated;
     }
 
     get IsOpenChat() {
         return this.channelInfo.RoomType === ChatroomType.OPENCHAT_DIRECT || this.channelInfo.RoomType === ChatroomType.OPENCHAT_GROUP;
-    }
-
-    set LastInfoUpdate(value: number) {
-        this.lastInfoUpdate = value;
     }
 
     get ChannelInfo() {
@@ -150,14 +142,6 @@ export class ChatChannel extends EventEmitter {
 
     once(event: string, listener: (...args: any[]) => void) {
         return super.once(event, listener);
-    }
-
-}
-
-export class OpenChatChannel extends ChatChannel {
-
-    protected createChannelInfo(roomType: ChatroomType): ChannelInfo {
-        return new ChannelInfo(this, roomType);
     }
 
 }
@@ -321,12 +305,8 @@ export class ChannelInfo {
     }
 
     update(chatinfoStruct: ChatInfoStruct) {
-        this.lastInfoUpdated = Date.now();
-
         this.activeUserList = chatinfoStruct.MemberList;
-
-        this.updateMemberList(this.activeUserList);
-
+        
         let lastChatlog = chatinfoStruct.LastChatLog;
 
         if (lastChatlog) {
@@ -341,6 +321,12 @@ export class ChannelInfo {
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
 
+        for (let meta of this.chatmetaList) {
+            if (meta.Type === ChannelMetaType.TITLE) {
+                this.updateRoomName(meta.Content);
+            }
+        }
+
         this.roomImageURL = chatinfoStruct.Meta.ImageURL;
         this.roomFullImageURL = chatinfoStruct.Meta.FullImageURL;
 
@@ -351,6 +337,8 @@ export class ChannelInfo {
         if (!this.infoLoaded) {
             this.infoLoaded = true;
         }
+
+        this.lastInfoUpdated = Date.now();
     }
 
     updateRoomName(name: string) {
@@ -386,6 +374,7 @@ export class ChannelInfo {
             }
 
             user.UserInfo.updateFromChatInfo(memberStruct);
+            list.push(user);
         }
 
         return list;
