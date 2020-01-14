@@ -70,66 +70,78 @@ export class KakaoAPI {
 
 
 
-    static get MUploadHost() {
-        return 'up-m.talk.kakao.com';
-    }
-    
-    static get PUploadHost() {
-        return 'up-p.talk.kakao.com';
+    static get ProfileUploadHost() {
+        return `up-p.talk.kakao.com`;
     }
 
-    static get GPUploadHost() {
-        return 'up-gp.talk.kakao.com';
+    static get PhotoUploadHost() {
+        return `up-m.talk.kakao.com`;
     }
 
-    static get VUploadHost() {
-        return 'up-v.talk.kakao.com';
+    static get VideoUploadHost() {
+        return `up-v.talk.kakao.com`;
     }
 
-    static get AUploadHost() {
-        return 'up-a.talk.kakao.com';
+    static get AudioUploadHost() {
+        return `up-a.talk.kakao.com`;
+    }
+
+    static get LongTextUploadHost() {
+        return `up-c.talk.kakao.com`;
+    }
+
+    static get GroupProfileUploadHost() {
+        return `up-gp.talk.kakao.com`;
+    }
+
+    static get FileUploadHost() {
+        return `up.talk.kakao.com`;
     }
 
     static get FileHost() {
         return 'dn.talk.kakao.com';
     }
 
-    static get MFileHost() {
+    static get PhotoFileHost() {
         return 'dn-m.talk.kakao.com';
     }
 
-    static get AFileHost() {
+    static get AudioFileHost() {
         return 'dn-a.talk.kakao.com';
     }
 
-    static get VFileHost() {
+    static get VideoFileHost() {
         return 'dn-v.talk.kakao.com';
     }
 
-    static get MUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.MUploadHost}/upload`;
+    static get PhotoUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PhotoUploadHost}/upload`;
     }
 
-    static get PUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.PUploadHost}/upload`;
+    static get ProfileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.ProfileUploadHost}/upload`;
     }
 
-    static get GPUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.GPUploadHost}/upload`;
+    static get GroupProfileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.GroupProfileUploadHost}/upload`;
     }
 
-    static get VUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.VUploadHost}/upload`;
+    static get VideoUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.VideoUploadHost}/upload`;
     }
 
-    static get AUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AUploadHost}/upload`;
+    static get AudioUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AudioUploadHost}/upload`;
+    }
+
+    static get FileUploadURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.FileUploadHost}/file/upload`;
     }
 
 
     
     // This will return path. Use getUploadedFile to get Full URL
-    static async uploadPhoto(img: Buffer, uploadURL: string = KakaoAPI.MUploadURL, userId?: number, chatId?: number): Promise<string> {
+    static async uploadPhoto(img: Buffer, userId?: number, chatId?: number): Promise<string> {
         let formData: any = {
             'photo': img
         };
@@ -142,15 +154,15 @@ export class KakaoAPI {
             formData['chat_id'] = chatId;
         }
 
-        let value = await request(uploadURL, {
+        let value = await request(KakaoAPI.PhotoUploadHost, {
             formData: formData
         });
 
         return value as string;
     }
 
-    static getUploadedFile(uploadPath: string, side: string = KakaoAPI.MFileHost): string {
-        return `${KakaoAPI.InternalProtocol}://${side}/${uploadPath}`;
+    static getUploadedFile(uploadPath: string, hostType: string = KakaoAPI.PhotoFileHost): string {
+        return `${KakaoAPI.InternalProtocol}://${hostType}/${uploadPath}`;
     }
 
     static get LocoEntryPort() {
@@ -241,43 +253,6 @@ export class KakaoAPI {
             headers: KakaoAPI.getEmoticonHeader(),
             method: 'GET'
         });
-    }
-
-
-    static get ProfileUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-p.talk.kakao.com`;
-    }
-
-    static get PhotoUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-m.talk.kakao.com`;
-    }
-
-    static get VideoUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-v.talk.kakao.com`;
-    }
-
-    static get AudioUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-a.talk.kakao.com`;
-    }
-
-    static get LongTextUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-c.talk.kakao.com`;
-    }
-
-    static get ChatroomProfileUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up-gp.talk.kakao.com`;
-    }
-
-    static get FileProfileUploadURL() {
-        return `${KakaoAPI.InternalProtocol}://up.talk.kakao.com/file/upload`;
-    }
-
-    static getProfileUploadQuery(userId: number, attachmentType: string = 'image') {
-        return `user_id=${userId}&attachment_type=${attachmentType}`;
-    }
-
-    static getUploadQuery(userId: number, attachmentType: string) {
-        return `user_id=${userId}&attachment_type=${attachmentType}`;
     }
 
 
