@@ -21,6 +21,7 @@ import { PacketKickMemberReq } from "./packet-kick-member";
 import { PacketDeleteLinkReq } from "./packet-delete-link";
 import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
+import { PacketPingRes, PacketPingReq } from "./packet-ping";
 
 /*
  * Created on Wed Oct 30 2019
@@ -70,6 +71,8 @@ export class LocoPacketList {
 
         LocoPacketList.reqeustPacketMap.set('DELETEMSG', () => new PacketDeleteLinkReq());
 
+        LocoPacketList.reqeustPacketMap.set('PING', () => new PacketPingReq());
+
         LocoPacketList.reqeustPacketMap.set('LEAVE', () => new PacketLeaveReq());
     }
 
@@ -105,6 +108,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 
         LocoPacketList.responsePacketMap.set('DELETEMSG', (status) => new PacketDeleteChatRes(status));
+
+        LocoPacketList.responsePacketMap.set('PING', (status) => new PacketPingRes(status));
 
         LocoPacketList.responsePacketMap.set('KICKOUT', (status) => new PacketKickoutRes(status));
     }

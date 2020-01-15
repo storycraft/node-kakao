@@ -9,6 +9,7 @@ import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
 import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketHandler } from "./loco-packet-handler";
 import { LocoPacketList } from "../packet/loco-packet-list";
+import { PacketPingReq } from "../packet/packet-ping";
 
 /*
  * Created on Thu Oct 24 2019
@@ -17,6 +18,8 @@ import { LocoPacketList } from "../packet/loco-packet-list";
  */
 
 export class LocoManager {
+
+    public static readonly PING_INTERVAL = 600000;
 
     private locoSocket: LocoSocket<Socket> | null;
     private expireTime: number;
@@ -82,6 +85,8 @@ export class LocoManager {
         try {
             await this.loginToLoco(deviceUUID, accessToken);
             this.locoLogon = true;
+
+            this.schedulePing();
         } catch (e) {
             throw new Error('Cannot login to LOCO ' + e);
         }
@@ -120,6 +125,15 @@ export class LocoManager {
                 resolve(packet);
             }));
         });
+    }
+
+    private schedulePing() {
+        if (!this.locoLogon) {
+            return;
+        }
+        setTimeout(this.schedulePing.bind(this), LocoManager.PING_INTERVAL);
+
+        this.sendPacket(new PacketPingReq());
     }
 
     async getCheckinData(checkinHost: HostData, userId: number): Promise<CheckinData> {
