@@ -469,7 +469,7 @@ export namespace KakaoAPI {
         IMAGE = 'image/jpeg',
         AUDIO = 'audio/mp4',
         VIDEO = 'video/mp4',
-        FILE = 'application/*'
+        FILE = 'image/jpeg'//'application/*' //THIS DOESNT WORK WTF WHY
 
     }
 

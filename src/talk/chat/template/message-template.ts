@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { PhotoAttachment, ChatAttachment, VideoAttachment } from "../chat-attachment";
+import { PhotoAttachment, ChatAttachment, VideoAttachment, AudioAttachment } from "../chat-attachment";
 
 /*
  * Created on Fri Jan 03 2020
@@ -53,6 +53,8 @@ export class AttachmentTemplate implements MessageTemplate {
                 return MessageType.Photo;
             } else if (this.attachment instanceof VideoAttachment) {
                 return MessageType.Video;
+            } else if (this.attachment instanceof AudioAttachment) {
+                return MessageType.Audio;
             }
         }
 

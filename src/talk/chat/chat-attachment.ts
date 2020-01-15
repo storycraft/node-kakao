@@ -22,6 +22,8 @@ export class PhotoAttachment extends ChatAttachment {
         private height: number = 0,
         private imageURL: string = '',
         private size: number = -1,
+
+        //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
         private thumbnailURL: string = '',
 
@@ -170,22 +172,72 @@ export class VideoAttachment extends ChatAttachment {
 
 }
 
-export class AudioAttachment extends ChatAttachment {
+export class FileAttachment extends ChatAttachment {
 
     constructor(
-        private 
+        private keyPath: string = '',
+        private fileURL: string = '',
+        private Name: string = '',
+        private size: number = -1
     ) {
         super();
     }
 
     readAttachment(rawJson: any): void {
+        this.keyPath = rawJson['k'];
+
+        this.fileURL = rawJson['url'];
+        this.Name = rawJson['name'];
         
+        this.size = rawJson['s'];
     }
     
     toJsonAttachment() {
-        
+        let obj: any = {
+            'url': this.fileURL,
+            'name': this.Name,
+            'k': this.keyPath,
+        };
+
+        if (this.size !== -1) {
+            obj['s'] = obj['size'] = this.size;
+        }
+
+        return obj;
     }
 
+}
+
+export class AudioAttachment extends ChatAttachment {
+
+    constructor(
+        private keyPath: string = '',
+        private audioURL: string = '',
+        private size: number = -1
+    ) {
+        super();
+    }
+
+    readAttachment(rawJson: any): void {
+        this.keyPath = rawJson['tk'];
+
+        this.audioURL = rawJson['url'];
+        
+        this.size = rawJson['s'];
+    }
+    
+    toJsonAttachment() {
+        let obj: any = {
+            'url': this.audioURL,
+            'tk': this.keyPath,
+        };
+
+        if (this.size !== -1) {
+            obj['s'] = this.size;
+        }
+
+        return obj;
+    }
 
 }
 
