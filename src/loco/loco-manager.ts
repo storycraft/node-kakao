@@ -84,9 +84,6 @@ export class LocoManager {
 
         try {
             await this.loginToLoco(deviceUUID, accessToken);
-            this.locoLogon = true;
-
-            this.schedulePing();
         } catch (e) {
             throw new Error('Cannot login to LOCO ' + e);
         }
@@ -122,6 +119,7 @@ export class LocoManager {
         return new Promise((resolve) => {
             this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken).once('response', (packet: PacketLoginRes) => {
                 this.locoLogon = true;
+                this.schedulePing();
                 resolve(packet);
             }));
         });
