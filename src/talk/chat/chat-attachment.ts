@@ -21,13 +21,12 @@ export class PhotoAttachment extends ChatAttachment {
         private width: number = 0,
         private height: number = 0,
         private imageURL: string = '',
+        private size: number = -1,
         
         private thumbnailURL: string = '',
 
         private thumbnailWidth: number = -1,
         private thumbnailHeight: number = -1,
-    
-        private size: number = -1
         ) {
         super();
     }
@@ -157,17 +156,36 @@ export class VideoAttachment extends ChatAttachment {
     toJsonAttachment() {
         let obj: any = {
             'url': this.videoURL,
-            'k': this.KeyPath,
+            'tk': this.KeyPath,
             'w': this.width,
             'h': this.height
         };
 
         if (this.size !== -1) {
-            obj['size'] = this.size;
+            obj['s'] = this.size;
         }
 
         return obj;
     }
+
+}
+
+export class AudioAttachment extends ChatAttachment {
+
+    constructor(
+        private 
+    ) {
+        super();
+    }
+
+    readAttachment(rawJson: any): void {
+        
+    }
+    
+    toJsonAttachment() {
+        
+    }
+
 
 }
 

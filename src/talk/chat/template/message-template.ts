@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { PhotoAttachment, ChatAttachment } from "../chat-attachment";
+import { PhotoAttachment, ChatAttachment, VideoAttachment } from "../chat-attachment";
 
 /*
  * Created on Fri Jan 03 2020
@@ -18,21 +18,21 @@ export interface MessageTemplate {
 
 }
 
-export class PhotoTemplate implements MessageTemplate {
+export class AttachmentTemplate implements MessageTemplate {
 
     constructor(
-        private photo: PhotoAttachment,
-        private text: string = 'Photo'
+        private attachment: ChatAttachment,
+        private text: string = 'Attachment'
     ) {
 
     }
 
     get Attachment() {
-        return this.photo;
+        return this.attachment;
     }
 
     set Attachment(photo) {
-        this.photo = photo;
+        this.attachment = photo;
     }
 
     get Text() {
@@ -48,7 +48,15 @@ export class PhotoTemplate implements MessageTemplate {
     }
 
     getMessageType() {
-        return MessageType.Photo;
+        if (this.attachment) {
+            if (this.attachment instanceof PhotoAttachment) {
+                return MessageType.Photo;
+            } else if (this.attachment instanceof VideoAttachment) {
+                return MessageType.Video;
+            }
+        }
+
+        return MessageType.File;
     }
 
     getPacketText() {
@@ -56,7 +64,7 @@ export class PhotoTemplate implements MessageTemplate {
     }
 
     getPacketExtra() {
-        return JSON.stringify(this.photo.toJsonAttachment());
+        return JSON.stringify(this.attachment.toJsonAttachment());
     }
 
 }
