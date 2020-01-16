@@ -38,6 +38,8 @@ export * from './packet/packet-message-read';
 export * from './packet/packet-get-meta';
 export * from './packet/packet-get-channel-board-meta';
 export * from './packet/packet-kickout';
+export * from './packet/packet-info-link';
+export * from './packet/packet-delete-chat';
 
 export * from './packet/loco-packet-list';
 

@@ -49,7 +49,7 @@ export class SessionManager {
 
     getChannelById(id: Long): ChatChannel {
         if (!this.hasChannel(id)) {
-            return this.addChannel(id);
+            throw new Error(`Invalid channel ${id}`);
         }
 
         return this.channelMap.get(id.toString())!;
@@ -59,20 +59,20 @@ export class SessionManager {
         return chatChannel.ChannelInfo.getUser(id);
     }
 
-    addChannel(id: Long, chatroomType?: ChatroomType): ChatChannel {
-        let channel = this.addChannelInternal(id, chatroomType);
+    addChannel(id: Long, chatroomType?: ChatroomType, openLinkId?: Long): ChatChannel {
+        let channel = this.addChannelInternal(id, chatroomType, openLinkId);
 
         this.client.emit('join_channel', channel);
 
         return channel;
     }
 
-    protected addChannelInternal(id: Long, chatroomType?: ChatroomType): ChatChannel {
+    protected addChannelInternal(id: Long, chatroomType?: ChatroomType, openLinkId?: Long): ChatChannel {
         if (this.hasChannel(id)) {
             throw new Error(`Invalid channel. Channel already exists`);
         }
 
-        let channel = new ChatChannel(this.Client, id, chatroomType);
+        let channel = new ChatChannel(this.Client, id, chatroomType, openLinkId);
 
         this.channelMap.set(id.toString(), channel);
 
@@ -157,7 +157,7 @@ export class SessionManager {
         this.ClientUser.OpenChatToken = openChatToken;
 
         for (let chatData of initDataList) {
-            let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type);
+            let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type, chatData.OpenLinkId !== Long.ZERO ? chatData.OpenLinkId : undefined);
         }
 
         this.ClientUser.updateOpenChatProfile(await this.initOpenChatProfile());

@@ -22,6 +22,7 @@ import { PacketDeleteLinkReq } from "./packet-delete-link";
 import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
 import { PacketPingRes, PacketPingReq } from "./packet-ping";
+import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
 
 /*
  * Created on Wed Oct 30 2019
@@ -68,6 +69,7 @@ export class LocoPacketList {
 
         LocoPacketList.reqeustPacketMap.set('KICKMEM', () => new PacketKickMemberReq());
         LocoPacketList.reqeustPacketMap.set('DELETELINK', () => new PacketDeleteLinkReq());
+        LocoPacketList.reqeustPacketMap.set('INFOLINK', () => new PacketInfoLinkReq());
 
         LocoPacketList.reqeustPacketMap.set('DELETEMSG', () => new PacketDeleteLinkReq());
 
@@ -104,6 +106,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('SYNCJOIN', (status) => new PacketChanJoinRes(status));
 
         LocoPacketList.responsePacketMap.set('SYNCLINK', (status) => new PacketSyncLinkRes(status));
+        LocoPacketList.responsePacketMap.set('INFOLINK', (status) => new PacketInfoLinkRes(status));
 
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 

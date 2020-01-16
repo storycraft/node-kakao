@@ -11,6 +11,7 @@ import { MemberStruct } from "../struct/member-struct";
 import { OpenLinkInfo } from "../open/open-link-info";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatlogStruct } from "../struct/chatlog-struct";
+import { OpenLinkStruct } from "../struct/open-link-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -26,15 +27,19 @@ export class ChatChannel extends EventEmitter {
 
     private channelId: Long;
 
+    private openLinkId: Long | undefined;
+
     private lastChat: Chat |null;
 
     private channelInfo: ChannelInfo;
 
-    constructor(client: TalkClient, channelId: Long, roomType?: ChatroomType) {
+    constructor(client: TalkClient, channelId: Long, roomType?: ChatroomType, openLinkId?: Long) {
         super();
         this.client = client;
 
         this.channelId = channelId;
+
+        this.openLinkId = openLinkId;
 
         this.channelInfo = this.createChannelInfo(roomType || ChatroomType.GROUP);
         this.lastChat = null;
@@ -62,6 +67,10 @@ export class ChatChannel extends EventEmitter {
 
     get IsOpenChat() {
         return this.channelInfo.RoomType === ChatroomType.OPENCHAT_DIRECT || this.channelInfo.RoomType === ChatroomType.OPENCHAT_GROUP;
+    }
+
+    get OpenLinkId() {
+        return this.openLinkId;
     }
 
     get ChannelInfo() {
@@ -170,6 +179,8 @@ export class ChannelInfo {
 
     private clientChannelUser: ClientChannelUser;
 
+    private openChatToken: number;
+
     private activeUserList: MemberStruct[];
 
     private userMap: Map<string, ChatUser>;
@@ -180,6 +191,8 @@ export class ChannelInfo {
         this.memberListLoaded = false;
         
         this.roomType = roomType;
+
+        this.openChatToken = -1;
 
         this.lastInfoUpdated = -1;
 
@@ -246,6 +259,10 @@ export class ChannelInfo {
         return this.chatmetaList;
     }
 
+    get OpenChatToken() {
+        return this.openChatToken;
+    }
+
     hasUser(id: Long) {
         return this.userMap.has(id.toString()) || this.clientChannelUser.UserId.equals(id);
     }
@@ -304,7 +321,7 @@ export class ChannelInfo {
         return user;
     }
 
-    update(chatinfoStruct: ChatInfoStruct) {
+    update(chatinfoStruct: ChatInfoStruct, openLinkInfo?: OpenLinkStruct) {
         this.activeUserList = chatinfoStruct.MemberList;
         
         let lastChatlog = chatinfoStruct.LastChatLog;
@@ -316,6 +333,11 @@ export class ChannelInfo {
             } catch(e) {
                 // JUST PASS IF IT IS NOT VALID
             }
+        }
+
+        if (openLinkInfo) {
+            this.updateRoomName(openLinkInfo.LinkName);
+            this.openChatToken = openLinkInfo.OpenToken;
         }
 
         this.isDirectChan = chatinfoStruct.IsDirectChat;
@@ -378,37 +400,6 @@ export class ChannelInfo {
         }
 
         return list;
-    }
-
-}
-
-export class OpenChannelInfo extends ChannelInfo {
-
-    private openLinkInfo: OpenLinkInfo | null;
-
-    private openLinkInfoInit: boolean;
-
-    constructor(channel: ChatChannel, roomType: ChatroomType) {
-        super(channel, roomType);
-
-        this.openLinkInfo = null;
-        this.openLinkInfoInit = false;
-    }
-
-    get OpenLinkInfo() {
-        return this.openLinkInfo!;
-    }
-
-    get HasOpenLinkInfo() {
-        return this.openLinkInfoInit;
-    }
-
-    initOpenLinkInfo(linkInfo: OpenLinkInfo) {
-        if (!this.openLinkInfoInit) {
-            this.openLinkInfoInit = true;
-        }
-
-        this.openLinkInfo = linkInfo;
     }
 
 }

@@ -14,10 +14,11 @@ export class ChatDataStruct implements StructBase {
     constructor(
         public ChannelId: Long = Long.ZERO,
         public Type: ChatroomType = ChatroomType.GROUP,
+        public OpenLinkId: Long = Long.ZERO,
+        public OpenChatToken: number = -1,
         public MemberCount: number = 0,
         public PushAlert: boolean = false,
         public readonly Metadata: ChatDataMetaStruct = new ChatDataMetaStruct(),
-        public OpenToken: number = -1
     ) {
 
     }
@@ -31,8 +32,14 @@ export class ChatDataStruct implements StructBase {
             this.Metadata.fromJson(rawData['m']);
         }
 
-        if (this.Type == ChatroomType.OPENCHAT_DIRECT || this.Type == ChatroomType.OPENCHAT_GROUP) {
-            this.OpenToken = rawData['otk'];
+        this.OpenLinkId = Long.ZERO;
+        if (rawData['li']) {
+            this.OpenLinkId = JsonUtil.readLong(rawData['li']);
+        }
+
+        this.OpenChatToken = -1;
+        if (rawData['otk']) {
+            this.OpenChatToken = rawData['otk'];
         }
     }
 
@@ -47,6 +54,15 @@ export class ChatDataStruct implements StructBase {
 
         if (this.Metadata) {
             obj['m'] = this.Metadata.toJson();
+        }
+
+        if (this.OpenLinkId !== Long.ZERO) {
+            obj['li'] = this.OpenLinkId;
+        }
+
+        this.OpenChatToken = -1;
+        if (this.OpenChatToken !== -1) {
+            obj['otk'] = this.OpenChatToken;
         }
 
         return obj;

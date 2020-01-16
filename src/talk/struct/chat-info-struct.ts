@@ -17,6 +17,8 @@ export class ChatInfoStruct implements StructBase {
     constructor(
         public ChannelId: Long = Long.ZERO,
         public Type: ChatroomType = ChatroomType.GROUP,
+        public OpenLinkId: Long = Long.ZERO,
+        public OpenChatToken: number = -1,
         public ActiveMemberCount: number = 0,
         public NewMessageCount: number = 0,
         public LastUpdatedAt: string | null = null,
@@ -47,6 +49,16 @@ export class ChatInfoStruct implements StructBase {
         if (rawJson['lastChatLog']) {
             this.LastChatLog = new ChatlogStruct();
             this.LastChatLog.fromJson(rawJson['lastChatLog']);
+        }
+
+        this.OpenLinkId = Long.ZERO;
+        if (rawJson['li']) {
+            this.OpenLinkId = JsonUtil.readLong(rawJson['li']);
+        }
+
+        this.OpenChatToken = -1;
+        if (rawJson['otk']) {
+            this.OpenChatToken = rawJson['otk'];
         }
 
         this.Meta = new ChatMetaStruct();
@@ -113,6 +125,15 @@ export class ChatInfoStruct implements StructBase {
             displayMemList.push(memberStruct.toJson());
         }
         obj['displayMembers'] = displayMemList;
+
+        if (this.OpenLinkId !== Long.ZERO) {
+            obj['li'] = this.OpenLinkId;
+        }
+
+        this.OpenChatToken = -1;
+        if (this.OpenChatToken !== -1) {
+            obj['otk'] = this.OpenChatToken;
+        }
 
         let chatMetaList: any[] = [];
 

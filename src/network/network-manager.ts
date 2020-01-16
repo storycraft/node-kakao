@@ -22,6 +22,8 @@ import { PacketGetMemberReq, PacketGetMemberRes } from "../packet/packet-get-mem
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "../packet/packet-get-meta";
 import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
 import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
+import { OpenLinkStruct } from "../talk/struct/open-link-struct";
+import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link";
 
 /*
  * Created on Fri Nov 01 2019
@@ -138,12 +140,26 @@ export class NetworkManager {
         });
     }
 
+    async requestOpenChatInfo(...idList: Long[]): Promise<OpenLinkStruct[]> {
+        return new Promise<OpenLinkStruct[]>((resolve, reject) => {
+            this.sendPacket(new PacketInfoLinkReq(idList).once('response', (packet: PacketInfoLinkRes) => {
+                resolve(packet.LinkList);
+            }));
+        });
+    }
+    
+
     async updateChannelInfo(channel: ChatChannel) {
         let info = await this.requestChannelInfo(channel.ChannelId);
+        let openInfo: OpenLinkStruct | undefined = undefined;
+
+        if (info.Type == ChatroomType.OPENCHAT_GROUP || info.Type == ChatroomType.OPENCHAT_DIRECT) {
+            openInfo = (await this.requestOpenChatInfo(info.OpenLinkId!))[0];
+        }
 
         await this.updateMemberList(channel, info);
 
-        channel.ChannelInfo.update(info);
+        channel.ChannelInfo.update(info, openInfo);
     }
 
     async updateMemberList(channel: ChatChannel, chatInfo: ChatInfoStruct) {
@@ -289,8 +305,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             //INVALID CHANNEL
             return;
         }
+
+        let info = await this.NetworkManager.requestChannelInfo(chanId);
+
+        let openId: Long | undefined;
+
+        if (info.OpenLinkId !== Long.ZERO) {
+            openId = info.OpenLinkId;
+        }
         
-        let newChan = this.SessionManager.addChannel(chanId);
+        let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
         await this.NetworkManager.updateChannelInfo(newChan);
     }
 
