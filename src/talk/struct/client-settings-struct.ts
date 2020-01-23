@@ -29,41 +29,35 @@ export class ClientSettingsStruct implements StructBase {
     fromJson(rawData: any): void {
         this.Status = rawData['status'];
 
-        let profile = rawData['profile'];
-
-        if (profile) {
-            this.AllowPay = profile['allowPay'];
-            this.AllowStory = profile['allowStory'];
-            this.AllowStoryPost = profile['allowStoryPost'];
-            this.BackgroundImageURL = profile['backgroundImageUrl'];
-            this.OriginalBackgroundImageURL = profile['originalBackgroundImageUrl'];
-            this.ProfileImageURL = profile['profileImageUrl'];
-            this.FullProfileImageURL = profile['fullProfileImageUrl'];
-            this.OriginalProfileImageURL = profile['originalProfileImageUrl'];
-            this.StatusMessage = profile['statusMessage'];
-            this.StoryURL = profile['storyWebUrl'];
-            this.Suspended = profile['suspended'];
-            this.UserId = profile['userId'];
-        }
+        this.AllowPay = rawData['allowPay'];
+        this.AllowStory = rawData['allowStory'];
+        this.AllowStoryPost = rawData['allowStoryPost'];
+        this.BackgroundImageURL = rawData['backgroundImageUrl'];
+        this.OriginalBackgroundImageURL = rawData['originalBackgroundImageUrl'];
+        this.ProfileImageURL = rawData['profileImageUrl'];
+        this.FullProfileImageURL = rawData['fullProfileImageUrl'];
+        this.OriginalProfileImageURL = rawData['originalProfileImageUrl'];
+        this.StatusMessage = rawData['statusMessage'];
+        this.StoryURL = rawData['storyWebUrl'];
+        this.Suspended = rawData['suspended'];
+        this.UserId = rawData['userId'];
     }
     
     toJson() {
         return {
             'status': this.Status,
-            'profile': {
-                'allowPay': this.AllowPay,
-                'allowStory': this.AllowStory,
-                'allowStoryPost': this.AllowStoryPost,
-                'backgroundImageUrl': this.BackgroundImageURL,
-                'originalBackgroundImageUrl': this.OriginalBackgroundImageURL,
-                'profileImageUrl': this.ProfileImageURL,
-                'fullProfileImageUrl': this.FullProfileImageURL,
-                'originalProfileImageUrl': this.OriginalProfileImageURL,
-                'statusMessage': this.StatusMessage,
-                'storyWebUrl': this.StoryURL,
-                'suspended': this.Suspended,
-                'userId': this.UserId
-            }
+            'allowPay': this.AllowPay,
+            'allowStory': this.AllowStory,
+            'allowStoryPost': this.AllowStoryPost,
+            'backgroundImageUrl': this.BackgroundImageURL,
+            'originalBackgroundImageUrl': this.OriginalBackgroundImageURL,
+            'profileImageUrl': this.ProfileImageURL,
+            'fullProfileImageUrl': this.FullProfileImageURL,
+            'originalProfileImageUrl': this.OriginalProfileImageURL,
+            'statusMessage': this.StatusMessage,
+            'storyWebUrl': this.StoryURL,
+            'suspended': this.Suspended,
+            'userId': this.UserId
         };
     }
 
