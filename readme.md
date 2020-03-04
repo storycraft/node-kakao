@@ -27,11 +27,9 @@ client.on('message', (chat: Chat) => {
         chat.replyText(`${chat.Sender.UserInfo.Nickname}님이 샵 검색 전송 ${attachment.Question}. 리다이렉트 경로: ${attachment.RedirectURL}`);
     }
 
-    chat.Channel.once('message', (nextChat: Chat) => {
-        if (nextChat.Text === '안녕하세요') {
-            chat.replyText('안녕하세요');
-        }
-    })
+    if (chat.Text === '안녕하세요') {
+        chat.replyText('안녕하세요');
+    }
 });
 
 client.on('user_join', (channel: ChatChannel, user: ChatUser, joinMessage: string) => {

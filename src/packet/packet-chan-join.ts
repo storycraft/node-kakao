@@ -14,7 +14,7 @@ export class PacketChanJoinRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public Chatlog: ChatlogStruct = new ChatlogStruct()
+        public readonly Chatlog: ChatlogStruct = new ChatlogStruct()
         ) {
         super(status);
     }
@@ -25,7 +25,6 @@ export class PacketChanJoinRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawJson: any) {
         this.ChannelId = JsonUtil.readLong(rawJson['c']);
-        this.Chatlog = new ChatlogStruct();
 
         if (rawJson['chatLog']) {
             this.Chatlog.fromJson(rawJson['chatLog']);

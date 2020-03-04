@@ -23,6 +23,8 @@ import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
 import { PacketPingRes, PacketPingReq } from "./packet-ping";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
+import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
+import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 
 /*
  * Created on Wed Oct 30 2019
@@ -66,6 +68,8 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('SYNCLINK', () => new PacketSyncLinkReq());
         
         LocoPacketList.reqeustPacketMap.set('REWRITE', () => new PacketRewriteReq());
+        
+        LocoPacketList.reqeustPacketMap.set('CREATE', () => new PacketCreateChatReq());
 
         LocoPacketList.reqeustPacketMap.set('KICKMEM', () => new PacketKickMemberReq());
         LocoPacketList.reqeustPacketMap.set('DELETELINK', () => new PacketDeleteLinkReq());
@@ -101,6 +105,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('MEMBER', (status) => new PacketMemberRes(status));
         LocoPacketList.responsePacketMap.set('GETMOMETA', (status) => new PacketGetMoimMetaRes(status));
 
+        LocoPacketList.responsePacketMap.set('CREATE', (status) => new PacketCreateChatRes(status));
+
         LocoPacketList.responsePacketMap.set('NEWMEM', (status) => new PacketNewMemberRes(status));
         LocoPacketList.responsePacketMap.set('LEFT', (status) => new PacketLeftRes(status));
         LocoPacketList.responsePacketMap.set('SYNCJOIN', (status) => new PacketChanJoinRes(status));
@@ -111,6 +117,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('INVOICE', (status) => new PacketInvoiceRes(status));
 
         LocoPacketList.responsePacketMap.set('DELETEMSG', (status) => new PacketDeleteChatRes(status));
+
+        LocoPacketList.responsePacketMap.set('SYNCLINKCR', (status) => new PacketSyncJoinOpenchatRes(status));
 
         LocoPacketList.responsePacketMap.set('PING', (status) => new PacketPingRes(status));
 

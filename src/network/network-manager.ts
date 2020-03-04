@@ -24,6 +24,8 @@ import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
 import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link";
+import { PacketSyncJoinRes } from "../packet/packet-sync-join";
+import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
 
 /*
  * Created on Fri Nov 01 2019
@@ -190,6 +192,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('MEMBER', this.onDetailMember.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
         this.on('DECUNREAD', this.onMessageRead.bind(this));
+        this.on('SYNCLINKCR', this.onOpenChannelJoin.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('KICKOUT', this.onKicked.bind(this));
@@ -318,6 +321,28 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         await this.NetworkManager.updateChannelInfo(newChan);
     }
 
+    async onOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
+        if (!packet.ChatInfo) return; // DO NOTHING IF ITS NOT CREATING CHAT CHANNEL
+
+        let chanId = packet.ChatInfo.ChannelId;
+
+        if (this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let info = await this.NetworkManager.requestChannelInfo(chanId);
+
+        let openId: Long | undefined;
+
+        if (info.OpenLinkId !== Long.ZERO) {
+            openId = info.OpenLinkId;
+        }
+        
+        let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
+        await this.NetworkManager.updateChannelInfo(newChan);
+    }
+
     onDetailMember(packet: PacketChatMemberRes) {
 
     }
@@ -327,5 +352,4 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         // do something
     }
-    
 }

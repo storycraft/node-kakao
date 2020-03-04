@@ -108,7 +108,7 @@ export class ChatChannel extends EventEmitter {
             }
 
             let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text).once('response', (res: PacketMessageWriteRes) => {
-                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Date.now(), '', res.MessageId));
+                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), '', res.MessageId));
                 resolve(chat);
             });
     
@@ -128,7 +128,7 @@ export class ChatChannel extends EventEmitter {
             let extra = template.getPacketExtra();
 
             let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, sentType, false, extra).once('response', (res: PacketMessageWriteRes) => {
-                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Date.now(), extra, res.MessageId));
+                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
                 
                 resolve(chat);
             });

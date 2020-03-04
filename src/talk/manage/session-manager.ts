@@ -9,6 +9,7 @@ import { MessageType } from "../chat/message-type";
 import { ChatroomType } from "../chat/chatroom-type";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "../../packet/packet-sync-link";
 import { OpenLinkStruct } from "../struct/open-link-struct";
+import { PacketCreateChatReq, PacketCreateChatRes } from "../../packet/packet-create-chat";
 
 /*
  * Created on Fri Nov 01 2019
@@ -57,6 +58,17 @@ export class SessionManager {
 
     getUserFrom(chatChannel: ChatChannel, id: Long): ChatUser {
         return chatChannel.ChannelInfo.getUser(id);
+    }
+
+    async createChannel(...users: ChatUser[]): Promise<ChatChannel> {
+        return await new Promise<ChatChannel>((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketCreateChatReq(users.map((user) => user.UserId)).once('response', (res: PacketCreateChatRes) => {
+            if (this.hasChannel(res.ChannelId)) resolve(this.getChannelById(res.ChannelId));
+
+            let chan = this.addChannel(res.ChannelId, res.ChatInfo.Type);
+            chan.ChannelInfo.update(res.ChatInfo);
+
+            resolve();
+        })));
     }
 
     addChannel(id: Long, chatroomType?: ChatroomType, openLinkId?: Long): ChatChannel {
