@@ -24,7 +24,6 @@ import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
 import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link";
-import { PacketSyncJoinRes } from "../packet/packet-sync-join";
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
 
 /*
