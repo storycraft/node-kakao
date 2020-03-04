@@ -74,7 +74,6 @@ export class AttachmentTemplate implements MessageTemplate {
 export class SharpMessageTemplate implements MessageTemplate {
 
     constructor(
-        private attachment: ChatAttachment,
         private text: string = 'Search message',
         private sharpAttachment: SharpAttachment
     ) {
