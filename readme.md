@@ -9,11 +9,7 @@ IV randomzing and many functions that I may not know are disabled or tricked to 
 
 ## Unknown parts
 
-How to generate X-VC field. (seems like using user-agent, email, device-uuid)  
-How to generate device_uuid by using device ids?  
-  
-Since X-VC value is related to security.  
-You need to extract it somehow.
+How to generate device_uuid by using device ids?
 
 ## Example code
 
@@ -52,5 +48,5 @@ client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Lo
     console.log(reader.UserInfo.Nickname + ' 이 ' + channel.ChannelId + ' 방의 글을 읽었습니다. 워터마크: ' + watermark);
 });
 
-await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id', 'xvc value');
+await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id');
 ```

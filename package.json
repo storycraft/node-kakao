@@ -1,6 +1,6 @@
 {
   "name": "node-kakao",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "KakaoTalk PC Client implemention(Loco protocol wrapper) written with Node",
   "main": "dist/index.js",
   "scripts": {

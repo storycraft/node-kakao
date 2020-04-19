@@ -51,7 +51,7 @@ export class TalkClient extends EventEmitter {
         return this.networkManager.Logon;
     }
 
-    async login(email: string, password: string, deviceUUID: string, xvc: string) {
+    async login(email: string, password: string, deviceUUID: string) {
         if (this.LocoLogon) {
             throw new Error('Already logon to loco');
         }
@@ -60,7 +60,7 @@ export class TalkClient extends EventEmitter {
 
         try {
             let loginAccessData = new LoginAccessDataStruct();
-            loginAccessData.fromJson(JSON.parse(await KakaoAPI.requestLogin(xvc, email, password, deviceUUID, this.Name, true)));
+            loginAccessData.fromJson(JSON.parse(await KakaoAPI.requestLogin(email, password, deviceUUID, this.Name, true)));
 
             let statusCode = loginAccessData.Status;
             if (statusCode !== 0) {

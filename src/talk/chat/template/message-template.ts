@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { PhotoAttachment, ChatAttachment, VideoAttachment, AudioAttachment, SharpAttachment } from "../chat-attachment";
+import { PhotoAttachment, ChatAttachment, VideoAttachment, AudioAttachment, SharpAttachment, EmoticonAttachment } from "../chat-attachment";
 
 /*
  * Created on Fri Jan 03 2020
@@ -110,6 +110,62 @@ export class SharpMessageTemplate implements MessageTemplate {
 
     getPacketExtra() {
         return JSON.stringify(this.sharpAttachment.toJsonAttachment());
+    }
+
+}
+
+export abstract class EmoticonMessageTemplate implements MessageTemplate {
+
+    constructor(
+        private text: string = 'Emoticon',
+        private emoticonAttachment: EmoticonAttachment
+    ) {
+
+    }
+
+    abstract getMessageType(): MessageType
+
+    get Text() {
+        return this.text;
+    }
+
+    set Text(text) {
+        this.text = text;
+    }
+
+    get EmoticonAttachment() {
+        return this.emoticonAttachment;
+    }
+
+    set EmoticonAttachment(value) {
+        this.emoticonAttachment = value;
+    }
+
+    get Valid() {
+        return true;
+    }
+
+    getPacketText() {
+        return this.text;
+    }
+
+    getPacketExtra() {
+        return JSON.stringify(this.emoticonAttachment.toJsonAttachment());
+    }
+}
+
+export class StaticEmoticonMessageTemplate extends EmoticonMessageTemplate {
+
+    getMessageType() {
+        return MessageType.Sticker;
+    }
+
+}
+
+export class EmoticonAniMessageTemplate extends EmoticonMessageTemplate {
+
+    getMessageType() {
+        return MessageType.StickerAni;
     }
 
 }

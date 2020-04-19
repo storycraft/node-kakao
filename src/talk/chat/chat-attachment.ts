@@ -247,8 +247,8 @@ export class EmoticonAttachment extends ChatAttachment {
         private name: string = '',
         private path: string = '',
         private type: string = '',
+        private stopAt: number = 0,
         private description: string = '',
-        private stopAt: number = 0
     ) {
         super();
     }

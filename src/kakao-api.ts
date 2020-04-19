@@ -2,6 +2,7 @@ import * as request from "request-promise";
 import * as querystring from "querystring";
 import { Stream } from "stream";
 import { strict } from "assert";
+import * as Crypto from "crypto";
 
 /*
  * Created on Sun Oct 13 2019
@@ -27,7 +28,7 @@ export class KakaoAPI {
     }
 
     static get Version() {
-        return '3.0.6';
+        return '3.1.1';
     }
 
     static get InternalAppVersion() {
@@ -35,7 +36,7 @@ export class KakaoAPI {
     }
 
     static get InternalAppSubVersion() {
-        return '2319';
+        return '2441';
     }
 
     static get OSVersion() {
@@ -386,7 +387,7 @@ export class KakaoAPI {
         }
     }
     
-    static requestLogin(verifyCodeExtra: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string) {
+    static requestLogin(email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
         let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion);
 
         let queryData = querystring.stringify(loginData);
@@ -399,7 +400,7 @@ export class KakaoAPI {
         });
     }
 
-    static requestPasscode(verifyCodeExtra: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string) {
+    static requestPasscode(email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
         let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion);
 
         let queryData = querystring.stringify(loginData);
@@ -412,7 +413,7 @@ export class KakaoAPI {
         });
     }
 
-    static registerDevice(passcode: string, verifyCodeExtra: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string) {
+    static registerDevice(passcode: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
         let deviceRegisterData = KakaoAPI.getDeviceRegisterData(email, password, deviceUUID, deviceName, passcode, permanent, osVersion);
 
         let queryData = querystring.stringify(deviceRegisterData);
@@ -423,6 +424,20 @@ export class KakaoAPI {
             body: queryData,
             method: 'POST'
         });
+    }
+
+    static calculateXVCKey(aHeader: string, email: string, deviceUUID: string): string {
+        return this.calculateFullXVCKey(aHeader, email, deviceUUID).substring(0, 16);
+    }
+
+    static calculateFullXVCKey(aHeader: string, email: string, deviceUUID: string): string {
+        let res = `HEATH|${aHeader}|DEMIAN|${email}|${deviceUUID}`;
+
+        let hash = Crypto.createHash('sha512');
+
+        hash.update(res);
+
+        return hash.digest('hex');
     }
 
     static requestAccountSettings(accessToken: string, deviceUUID: string, since: number = 0, language: string = KakaoAPI.Language) {
