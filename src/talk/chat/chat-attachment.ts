@@ -36,7 +36,7 @@ export class PhotoAttachment implements ChatAttachment {
         public Width: number = 0,
         public Height: number = 0,
         public ImageURL: string = '',
-        public Size: number = -1,
+        public Size: Long = Long.ZERO,
 
         //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
@@ -64,7 +64,7 @@ export class PhotoAttachment implements ChatAttachment {
         this.ThumbnailWidth = rawJson['thumbnailWidth'];
         this.ThumbnailHeight = rawJson['thumbnailHeight'];
         
-        this.Size = rawJson['s'];
+        this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
 
     toJsonAttachment() {
@@ -87,8 +87,8 @@ export class PhotoAttachment implements ChatAttachment {
             obj['thumbnailHeight'] = this.ThumbnailHeight;
         }
 
-        if (this.Size !== -1) {
-            obj['size'] = this.Size;
+        if (this.Size !== Long.ZERO) {
+            obj['s'] = obj['size'] = this.Size;
         }
 
         return obj;
@@ -106,7 +106,7 @@ export class VideoAttachment implements ChatAttachment {
     
         public VideoURL: string = '',
     
-        public Size: number = -1
+        public Size: Long = Long.ZERO,
         ) {
             
     }
@@ -123,7 +123,7 @@ export class VideoAttachment implements ChatAttachment {
 
         this.VideoURL = rawJson['url'];
         
-        this.Size = rawJson['s'];
+        this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
 
     toJsonAttachment() {
@@ -134,8 +134,8 @@ export class VideoAttachment implements ChatAttachment {
             'h': this.Height
         };
 
-        if (this.Size !== -1) {
-            obj['s'] = this.Size;
+        if (this.Size !== Long.ZERO) {
+            obj['s'] = obj['size'] = this.Size;
         }
 
         return obj;
@@ -149,7 +149,8 @@ export class FileAttachment implements ChatAttachment {
         public KeyPath: string = '',
         public FileURL: string = '',
         public Name: string = '',
-        public Size: number = -1
+        public Size: Long = Long.ZERO,
+        public Expire: Long = Long.ZERO
     ) {
         
     }
@@ -164,7 +165,8 @@ export class FileAttachment implements ChatAttachment {
         this.FileURL = rawJson['url'];
         this.Name = rawJson['name'];
         
-        this.Size = rawJson['s'];
+        this.Size = JsonUtil.readLong(rawJson['size'] || rawJson['s']);
+        this.Expire = JsonUtil.readLong(rawJson['expire']);
     }
     
     toJsonAttachment() {
@@ -174,8 +176,12 @@ export class FileAttachment implements ChatAttachment {
             'k': this.KeyPath,
         };
 
-        if (this.Size !== -1) {
+        if (this.Size !== Long.ZERO) {
             obj['s'] = obj['size'] = this.Size;
+        }
+
+        if (this.Expire !== Long.ZERO) {
+            obj['expire'] = this.Expire;
         }
 
         return obj;
@@ -188,7 +194,7 @@ export class AudioAttachment implements ChatAttachment {
     constructor(
         public KeyPath: string = '',
         public AudioURL: string = '',
-        public Size: number = -1
+        public Size: Long = Long.ZERO
     ) {
         
     }
@@ -202,7 +208,7 @@ export class AudioAttachment implements ChatAttachment {
 
         this.AudioURL = rawJson['url'];
         
-        this.Size = rawJson['s'];
+        this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
     
     toJsonAttachment() {
@@ -211,8 +217,8 @@ export class AudioAttachment implements ChatAttachment {
             'tk': this.KeyPath,
         };
 
-        if (this.Size !== -1) {
-            obj['s'] = this.Size;
+        if (this.Size !== Long.ZERO) {
+            obj['s'] = obj['size'] = this.Size;
         }
 
         return obj;
@@ -227,6 +233,9 @@ export class EmoticonAttachment implements ChatAttachment {
         public Path: string = '',
         public Type: string = '',
         public StopAt: number = 0,
+        public Sound: string = '',
+        public Width: number = -1,
+        public Height: number = -1,
         public Description: string = '',
     ) {
         
@@ -246,6 +255,11 @@ export class EmoticonAttachment implements ChatAttachment {
         this.Type = rawJson['type'];
         this.Description = rawJson['alt'];
         this.StopAt = rawJson['s'];
+
+        this.Sound = rawJson['sound'];
+
+        this.Width = rawJson['width'] || -1;
+        this.Height = rawJson['height'] || -1;
     }
 
     toJsonAttachment() {
@@ -258,6 +272,18 @@ export class EmoticonAttachment implements ChatAttachment {
 
         if (this.Description !== '') {
             obj['alt'] = this.Description;
+        }
+
+        if (this.Sound !== '') {
+            obj['sound'] = this.Sound;
+        }
+
+        if (this.Width !== -1) {
+            obj['width'] = this.Width;
+        }
+
+        if (this.Height !== -1) {
+            obj['height'] = this.Height;
         }
 
         return obj;
@@ -280,7 +306,7 @@ export class LongTextAttachment implements ChatAttachment {
     constructor(
         public Path: string = '',
         public KeyPath: string = '',
-        public Size: number = 0,
+        public Size: Long = Long.ZERO,
         public SD: boolean = false//whats this
     ) {
         
@@ -293,7 +319,7 @@ export class LongTextAttachment implements ChatAttachment {
     readAttachment(rawJson: any) {
         this.Path = rawJson['path'];
         this.KeyPath = rawJson['k'];
-        this.Size = rawJson['s'];
+        this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
         this.SD = rawJson['sd'];
     }
 
@@ -303,8 +329,8 @@ export class LongTextAttachment implements ChatAttachment {
             'k': this.KeyPath
         };
 
-        if (this.Size) {
-            obj['size'] = this.Size;
+        if (this.Size !== Long.ZERO) {
+            obj['s'] = obj['size'] = this.Size;
         }
 
         if (this.SD) {
@@ -555,4 +581,20 @@ export class ReplyAttachment implements ChatAttachment {
         
         return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.UserId, chat.Text, chat.getMentionContentList());
     }
+}
+
+export class KakaoLinkV2Attachment implements ChatAttachment {
+
+    readAttachment(rawJson: any): void {
+        throw new Error("Method not implemented.");
+    }
+
+    toJsonAttachment() {
+        throw new Error("Method not implemented.");
+    }
+
+    get RequiredMessageType() {
+        return MessageType.KakaoLinkV2;
+    }
+
 }
