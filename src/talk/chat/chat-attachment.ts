@@ -1,4 +1,9 @@
 import { KakaoAPI } from "../../kakao-api";
+import { Long } from "bson";
+import { MessageType } from "./message-type";
+import { Chat } from "./chat";
+import { JsonUtil } from "../../util/json-util";
+import { ChatUser } from "../user/chat-user";
 
 /*
  * Created on Sun Nov 03 2019
@@ -6,102 +11,84 @@ import { KakaoAPI } from "../../kakao-api";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export abstract class ChatAttachment {
+export interface ChatAttachment {
     
-    abstract readAttachment(rawJson: any): void;
+    readAttachment(rawJson: any): void;
 
-    abstract toJsonAttachment(): any;
+    toJsonAttachment(): any;
+
+    readonly RequiredMessageType: MessageType;
 
 }
 
-export class PhotoAttachment extends ChatAttachment {
+export interface AttachmentContent {
+
+    readRawContent(rawData: any): void;
+
+    toRawContent(): any;
+
+}
+
+export class PhotoAttachment implements ChatAttachment {
 
     constructor(
-        private keyPath: string = '',
-        private width: number = 0,
-        private height: number = 0,
-        private imageURL: string = '',
-        private size: number = -1,
+        public KeyPath: string = '',
+        public Width: number = 0,
+        public Height: number = 0,
+        public ImageURL: string = '',
+        public Size: number = -1,
 
         //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
-        private thumbnailURL: string = '',
+        public ThumbnailURL: string = '',
 
-        private thumbnailWidth: number = -1,
-        private thumbnailHeight: number = -1,
+        public ThumbnailWidth: number = -1,
+        public ThumbnailHeight: number = -1,
         ) {
-        super();
+            
     }
 
-    get KeyPath() {
-        return this.keyPath;
-    }
-
-    get Width() {
-        return this.width;
-    }
-
-    get Height() {
-        return this.height;
-    }
-
-    get ImageURL() {
-        return this.imageURL;
-    }
-
-    get ThumbnailWidth() {
-        return this.thumbnailWidth;
-    }
-
-    get ThumbnailHeight() {
-        return this.thumbnailHeight;
-    }
-
-    get ThumbnailURL() {
-        return this.thumbnailURL;
-    }
-
-    get Size() {
-        return this.size;
+    get RequiredMessageType() {
+        return MessageType.Photo;
     }
 
     readAttachment(rawJson: any) {
-        this.keyPath = rawJson['k'];
+        this.KeyPath = rawJson['k'];
 
-        this.width = rawJson['w'];
-        this.height = rawJson['h'];
+        this.Width = rawJson['w'];
+        this.Height = rawJson['h'];
 
-        this.imageURL = rawJson['url'];
-        this.thumbnailURL = rawJson['thumbnailUrl'];
+        this.ImageURL = rawJson['url'];
+        this.ThumbnailURL = rawJson['thumbnailUrl'];
         
-        this.thumbnailWidth = rawJson['thumbnailWidth'];
-        this.thumbnailHeight = rawJson['thumbnailHeight'];
+        this.ThumbnailWidth = rawJson['thumbnailWidth'];
+        this.ThumbnailHeight = rawJson['thumbnailHeight'];
         
-        this.size = rawJson['s'];
+        this.Size = rawJson['s'];
     }
 
     toJsonAttachment() {
         let obj: any = {
-            'url': this.imageURL,
+            'url': this.ImageURL,
             'k': this.KeyPath,
-            'w': this.width,
-            'h': this.height
+            'w': this.Width,
+            'h': this.Height
         };
 
-        if (this.thumbnailURL !== '') {
-            obj['thumbnailUrl'] = this.thumbnailURL;
+        if (this.ThumbnailURL !== '') {
+            obj['thumbnailUrl'] = this.ThumbnailURL;
         }
 
-        if (this.thumbnailWidth !== -1) {
-            obj['thumbnailWidth'] = this.thumbnailWidth;
+        if (this.ThumbnailWidth !== -1) {
+            obj['thumbnailWidth'] = this.ThumbnailWidth;
         }
 
-        if (this.thumbnailHeight !== -1) {
-            obj['thumbnailHeight'] = this.thumbnailHeight;
+        if (this.ThumbnailHeight !== -1) {
+            obj['thumbnailHeight'] = this.ThumbnailHeight;
         }
 
-        if (this.size !== -1) {
-            obj['size'] = this.size;
+        if (this.Size !== -1) {
+            obj['size'] = this.Size;
         }
 
         return obj;
@@ -109,62 +96,46 @@ export class PhotoAttachment extends ChatAttachment {
 
 }
 
-export class VideoAttachment extends ChatAttachment {
+export class VideoAttachment implements ChatAttachment {
 
     constructor(
-        private keyPath: string = '',
+        public KeyPath: string = '',
 
-        private width: number = 0,
-        private height: number = 0,
+        public Width: number = 0,
+        public Height: number = 0,
     
-        private videoURL: string = '',
+        public VideoURL: string = '',
     
-        private size: number = -1
+        public Size: number = -1
         ) {
-        super();
+            
     }
 
-    get KeyPath() {
-        return this.keyPath;
-    }
-
-    get Width() {
-        return this.width;
-    }
-
-    get Height() {
-        return this.height;
-    }
-
-    get VideoURL() {
-        return this.videoURL;
-    }
-
-    get Size() {
-        return this.size;
+    get RequiredMessageType() {
+        return MessageType.Video;
     }
 
     readAttachment(rawJson: any) {
-        this.keyPath = rawJson['tk'];
+        this.KeyPath = rawJson['tk'];
 
-        this.width = rawJson['w'];
-        this.height = rawJson['h'];
+        this.Width = rawJson['w'];
+        this.Height = rawJson['h'];
 
-        this.videoURL = rawJson['url'];
+        this.VideoURL = rawJson['url'];
         
-        this.size = rawJson['s'];
+        this.Size = rawJson['s'];
     }
 
     toJsonAttachment() {
         let obj: any = {
-            'url': this.videoURL,
+            'url': this.VideoURL,
             'tk': this.KeyPath,
-            'w': this.width,
-            'h': this.height
+            'w': this.Width,
+            'h': this.Height
         };
 
-        if (this.size !== -1) {
-            obj['s'] = this.size;
+        if (this.Size !== -1) {
+            obj['s'] = this.Size;
         }
 
         return obj;
@@ -172,35 +143,39 @@ export class VideoAttachment extends ChatAttachment {
 
 }
 
-export class FileAttachment extends ChatAttachment {
+export class FileAttachment implements ChatAttachment {
 
     constructor(
-        private keyPath: string = '',
-        private fileURL: string = '',
-        private Name: string = '',
-        private size: number = -1
+        public KeyPath: string = '',
+        public FileURL: string = '',
+        public Name: string = '',
+        public Size: number = -1
     ) {
-        super();
+        
+    }
+
+    get RequiredMessageType() {
+        return MessageType.File;
     }
 
     readAttachment(rawJson: any): void {
-        this.keyPath = rawJson['k'];
+        this.KeyPath = rawJson['k'];
 
-        this.fileURL = rawJson['url'];
+        this.FileURL = rawJson['url'];
         this.Name = rawJson['name'];
         
-        this.size = rawJson['s'];
+        this.Size = rawJson['s'];
     }
     
     toJsonAttachment() {
         let obj: any = {
-            'url': this.fileURL,
+            'url': this.FileURL,
             'name': this.Name,
-            'k': this.keyPath,
+            'k': this.KeyPath,
         };
 
-        if (this.size !== -1) {
-            obj['s'] = obj['size'] = this.size;
+        if (this.Size !== -1) {
+            obj['s'] = obj['size'] = this.Size;
         }
 
         return obj;
@@ -208,32 +183,36 @@ export class FileAttachment extends ChatAttachment {
 
 }
 
-export class AudioAttachment extends ChatAttachment {
+export class AudioAttachment implements ChatAttachment {
 
     constructor(
-        private keyPath: string = '',
-        private audioURL: string = '',
-        private size: number = -1
+        public KeyPath: string = '',
+        public AudioURL: string = '',
+        public Size: number = -1
     ) {
-        super();
+        
+    }
+
+    get RequiredMessageType() {
+        return MessageType.Audio;
     }
 
     readAttachment(rawJson: any): void {
-        this.keyPath = rawJson['tk'];
+        this.KeyPath = rawJson['tk'];
 
-        this.audioURL = rawJson['url'];
+        this.AudioURL = rawJson['url'];
         
-        this.size = rawJson['s'];
+        this.Size = rawJson['s'];
     }
     
     toJsonAttachment() {
         let obj: any = {
-            'url': this.audioURL,
-            'tk': this.keyPath,
+            'url': this.AudioURL,
+            'tk': this.KeyPath,
         };
 
-        if (this.size !== -1) {
-            obj['s'] = this.size;
+        if (this.Size !== -1) {
+            obj['s'] = this.Size;
         }
 
         return obj;
@@ -241,115 +220,95 @@ export class AudioAttachment extends ChatAttachment {
 
 }
 
-export class EmoticonAttachment extends ChatAttachment {
+export class EmoticonAttachment implements ChatAttachment {
 
     constructor(
-        private name: string = '',
-        private path: string = '',
-        private type: string = '',
-        private stopAt: number = 0,
-        private description: string = '',
+        public Name: string = '',
+        public Path: string = '',
+        public Type: string = '',
+        public StopAt: number = 0,
+        public Description: string = '',
     ) {
-        super();
+        
     }
 
-    get Name() {
-        return this.name;
-    }
-
-    get Path() {
-        return this.path;
+    get RequiredMessageType(): MessageType {
+        return MessageType.Sticker;
     }
 
     getEmoticonURL(region: string = 'kr') {
-        return KakaoAPI.getEmoticonImageURL(this.path, region);
-    }
-
-    get Type() {
-        return this.type;
-    }
-
-    get Description() {
-        return this.description;
-    }
-
-    get StopAt() {
-        return this.stopAt;
+        return KakaoAPI.getEmoticonImageURL(this.Path, region);
     }
 
     readAttachment(rawJson: any) {
-        this.path = rawJson['path'];
-        this.name = rawJson['name'];
-        this.type = rawJson['type'];
-        this.description = rawJson['alt'];
-        this.stopAt = rawJson['s'];
+        this.Path = rawJson['path'];
+        this.Name = rawJson['name'];
+        this.Type = rawJson['type'];
+        this.Description = rawJson['alt'];
+        this.StopAt = rawJson['s'];
     }
 
     toJsonAttachment() {
         let obj: any = {
-            'path': this.path,
-            'name': this.name,
-            'type': this.type,
-            's': this.stopAt
+            'path': this.Path,
+            'name': this.Name,
+            'type': this.Type,
+            's': this.StopAt
         };
 
-        if (this.description !== '') {
-            obj['alt'] = this.description;
+        if (this.Description !== '') {
+            obj['alt'] = this.Description;
         }
 
         return obj;
+    }
+
+}
+
+export class EmoticonAniAttachment extends EmoticonAttachment {
+
+    get RequiredMessageType(): MessageType {
+        return MessageType.StickerAni;
     }
 
 }
 
 
 //unused
-export class LongTextAttachment extends ChatAttachment {
+export class LongTextAttachment implements ChatAttachment {
 
     constructor(
-        private path: string = '',
-        private keyPath: string = '',
-        private size: number = 0,
-        private sd: boolean = false//whats this
+        public Path: string = '',
+        public KeyPath: string = '',
+        public Size: number = 0,
+        public SD: boolean = false//whats this
     ) {
-        super();
+        
     }
 
-    get Path() {
-        return this.path;
-    }
-
-    get KeyPath() {
-        return this.keyPath;
-    }
-
-    get Size() {
-        return this.size;
-    }
-
-    get SD() {
-        return this.sd;
+    get RequiredMessageType() {
+        return MessageType.Template;
     }
 
     readAttachment(rawJson: any) {
-        this.path = rawJson['path'];
-        this.keyPath = rawJson['k'];
-        this.size = rawJson['s'];
-        this.sd = rawJson['sd'];
+        this.Path = rawJson['path'];
+        this.KeyPath = rawJson['k'];
+        this.Size = rawJson['s'];
+        this.SD = rawJson['sd'];
     }
 
     toJsonAttachment() {
         let obj: any = {
-            'path': this.path,
+            'path': this.Path,
             'k': this.KeyPath
         };
 
-        if (this.size) {
-            obj['size'] = this.size;
+        if (this.Size) {
+            obj['size'] = this.Size;
         }
 
-        if (this.sd) {
-            obj['sd'] = this.sd;
+        if (this.SD) {
+            obj['sd'] = this.SD;
         }
 
         return obj;
@@ -357,60 +316,36 @@ export class LongTextAttachment extends ChatAttachment {
 
 }
 
-export class SharpAttachment extends ChatAttachment {
+export class SharpAttachment implements ChatAttachment {
 
     constructor(
-        private question: string = '',
-        private redirectURL: string = '',
-        private contentType: string = '',
-        private imageURL: string = '',
-        private imageWidth: number = -1,
-        private imageHeight: number = -1,
-        private contentList: SharpContent[] = []
+        public Question: string = '',
+        public RedirectURL: string = '',
+        public ContentType: string = '',
+        public ImageURL: string = '',
+        public ImageWidth: number = -1,
+        public ImageHeight: number = -1,
+        public ContentList: SharpContent[] = []
     ) {
-        super();
+        
     }
 
-    get Question() {
-        return this.question;
-    }
-
-    get ImageURL() {
-        return this.imageURL;
-    }
-
-    get ImageWidth() {
-        return this.imageWidth;
-    }
-
-    get ImageHeight() {
-        return this.imageHeight;
-    }
-
-    get RedirectURL() {
-        return this.redirectURL;
-    }
-
-    get ContentType() {
-        return this.contentType;
-    }
-
-    get ContentList() {
-        return this.contentList;
+    get RequiredMessageType() {
+        return MessageType.Search;
     }
 
     readAttachment(rawJson: any): void {
-        this.question = rawJson['Q'];
+        this.Question = rawJson['Q'];
 
-        this.contentType = rawJson['V'];
+        this.ContentType = rawJson['V'];
 
-        this.imageURL = rawJson['I'] || '';
-        this.imageWidth = rawJson['W'] || -1;
-        this.imageHeight = rawJson['H'] || -1;
+        this.ImageURL = rawJson['I'] || '';
+        this.ImageWidth = rawJson['W'] || -1;
+        this.ImageHeight = rawJson['H'] || -1;
 
-        this.redirectURL = rawJson['L'];
+        this.RedirectURL = rawJson['L'];
 
-        this.contentList = [];
+        this.ContentList = [];
 
         if (rawJson['R']) {
             let list: any[] = rawJson['R'];
@@ -420,34 +355,34 @@ export class SharpAttachment extends ChatAttachment {
 
                 content.readRawContent(rawContent);
 
-                this.contentList.push(content);
+                this.ContentList.push(content);
             }
         }
     }
 
     toJsonAttachment() {
         let obj: any = {
-            'Q': this.question,
-            'V': this.contentType,
-            'L': this.redirectURL
+            'Q': this.Question,
+            'V': this.ContentType,
+            'L': this.RedirectURL
         };
 
-        if (this.imageURL !== '') {
-            obj['I'] = this.imageURL;
+        if (this.ImageURL !== '') {
+            obj['I'] = this.ImageURL;
         }
 
-        if (this.imageWidth !== -1) {
-            obj['W'] = this.imageWidth;
+        if (this.ImageWidth !== -1) {
+            obj['W'] = this.ImageWidth;
         }
 
-        if (this.imageHeight !== -1) {
-            obj['H'] = this.imageHeight;
+        if (this.ImageHeight !== -1) {
+            obj['H'] = this.ImageHeight;
         }
 
-        if (this.contentList.length > 0) {
+        if (this.ContentList.length > 0) {
             let rawList = [];
 
-            for (let content of this.contentList) {
+            for (let content of this.ContentList) {
                 rawList.push(content.toRawContent());
             }
 
@@ -459,75 +394,165 @@ export class SharpAttachment extends ChatAttachment {
 
 }
 
-export class SharpContent {
+export class SharpContent implements AttachmentContent {
 
     constructor(
-        private description: string = '',
-        private type: string = '',
-        private redirectURL: string = '',
-        private imageURL: string = '',
-        private imageWidth: number = -1,
-        private imageHeight: number = -1,
+        public Description: string = '',
+        public Type: string = '',
+        public RedirectURL: string = '',
+        public ImageURL: string = '',
+        public ImageWidth: number = -1,
+        public ImageHeight: number = -1,
     ) {
-
-    }
-
-    get Description() {
-        return this.description;
-    }
-
-    get Type() {
-        return this.type;
-    }
-
-    get ImageURL() {
-        return this.imageURL;
-    }
-
-    get ImageWidth() {
-        return this.imageWidth;
-    }
-
-    get ImageHeight() {
-        return this.imageHeight;
-    }
-
-    get RedirectURL() {
-        return this.redirectURL;
+        
     }
 
     readRawContent(rawData: any) {
-        this.description = rawData['D'];
+        this.Description = rawData['D'];
 
-        this.type = rawData['T'];
+        this.Type = rawData['T'];
 
-        this.imageURL = rawData['I'] || '';
-        this.imageWidth = rawData['W'] || -1;
-        this.imageHeight = rawData['H'] || -1;
+        this.ImageURL = rawData['I'] || '';
+        this.ImageWidth = rawData['W'] || -1;
+        this.ImageHeight = rawData['H'] || -1;
 
-        this.redirectURL = rawData['L'];
+        this.RedirectURL = rawData['L'];
     }
 
     toRawContent(): any {
         let obj: any = {
-            'D': this.description,
-            'T': this.type,
-            'L': this.redirectURL
+            'D': this.Description,
+            'T': this.Type,
+            'L': this.RedirectURL
         };
 
-        if (this.imageURL !== '') {
-            obj['I'] = this.imageURL;
+        if (this.ImageURL !== '') {
+            obj['I'] = this.ImageURL;
         }
 
-        if (this.imageWidth !== -1) {
-            obj['W'] = this.imageWidth;
+        if (this.ImageWidth !== -1) {
+            obj['W'] = this.ImageWidth;
         }
 
-        if (this.imageHeight !== -1) {
-            obj['H'] = this.imageHeight;
+        if (this.ImageHeight !== -1) {
+            obj['H'] = this.ImageHeight;
         }
 
         return obj;
     }
 
+}
+
+export class MentionContentList implements AttachmentContent {
+    
+    constructor(
+        public UserId: Long = Long.ZERO,
+        public Length: number = 0,
+        public IndexList: number[] = []
+    ) {
+        
+    }
+
+    readRawContent(rawData: any): void {
+        this.IndexList = rawData['at'] || [];
+        this.UserId = JsonUtil.readLong(rawData['user_id']);
+        this.Length = rawData['len'];
+    }
+
+    toRawContent() {
+        let obj: any = {
+            'at': this.IndexList,
+            'len': this.Length,
+            'user_id': this.UserId
+        };
+
+        return obj;
+    }
+
+}
+
+export interface ChatContent {
+
+    readonly ContentType: string;
+
+}
+
+export class ChatMention implements ChatContent {
+    
+    constructor(
+        public User: ChatUser
+    ) {
+        
+    }
+
+    get ContentType() {
+        return 'mention';
+    }
+
+}
+
+export class ReplyAttachment implements ChatAttachment {
+
+    constructor(
+        public SourceType: MessageType = MessageType.Text,
+        public SourceLogId: Long = Long.ZERO,
+        public SourceUserId: Long = Long.ZERO,
+        public SourceMessage: string = '',
+        public SourceMentionList: MentionContentList[] = [],
+        public SourceLinkId: Long = Long.ZERO // ONLY ON OPENPROFILE ?!
+
+    ) {
+
+    }
+
+    get RequiredMessageType() {
+        return MessageType.Reply;
+    }
+
+    readAttachment(rawData: any) {
+        this.SourceLogId = JsonUtil.readLong(rawData['src_logId']);
+
+        let rawMentionList = rawData['src_mentions'] || [];
+
+        this.SourceMentionList = [];
+        for (let rawMention of rawMentionList) {
+            let content = new MentionContentList();
+
+            content.readRawContent(rawMention);
+
+            this.SourceMentionList.push(content);
+        }
+
+        this.SourceMessage = rawData['src_message'];
+        this.SourceType = rawData['src_type'];
+        this.SourceUserId = JsonUtil.readLong(rawData['src_userId']);
+
+        if (rawData['src_linkId']) {
+            this.SourceLinkId = JsonUtil.readLong(rawData['src_linkId']);
+        }
+    }
+
+    toJsonAttachment(): any {
+        let obj: any = {
+            'src_logId': this.SourceLogId,
+            'src_mentions': this.SourceMentionList,
+            'src_message': this.SourceMessage,
+            'src_type': this.SourceType,
+            'src_userId': this.SourceUserId
+        };
+
+        if (this.SourceLinkId !== Long.ZERO) {
+            obj['src_linkId'] = this.SourceLinkId;
+        }
+
+        return obj;
+    }
+
+    static fromChat(chat: Chat): ReplyAttachment {
+        if (chat.Channel.IsOpenChat) {
+            return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.UserId, chat.Text, chat.getMentionContentList()); // LinkId?
+        }
+        
+        return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.UserId, chat.Text, chat.getMentionContentList());
+    }
 }

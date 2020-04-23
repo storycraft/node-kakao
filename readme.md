@@ -17,14 +17,15 @@ How to generate device_uuid by using device ids?
 let client = new TalkClient('TEST_CLIENT');
 
 client.on('message', (chat: Chat) => {
-    if (chat instanceof SharpSearchChat) {
+    if (chat.Type === MessageType.Search) {
         let attachment = chat.AttachmentList[0] as SharpAttachment;
 
         chat.replyText(`${chat.Sender.UserInfo.Nickname}님이 샵 검색 전송 ${attachment.Question}. 리다이렉트 경로: ${attachment.RedirectURL}`);
     }
 
     if (chat.Text === '안녕하세요') {
-        chat.replyText('안녕하세요');
+        chat.replyText('안녕하세요 ', new ChatMention(chat.Sender)); // Ex) 안녕하세요 @storycraft
+        //chat.Channel.sendTemplate(new AttachmentTemplate(ReplyAttachment.fromChat(chat), '안녕하세요')); // 답장형식
     }
 });
 

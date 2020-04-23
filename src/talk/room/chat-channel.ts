@@ -1,10 +1,10 @@
 import { ChatUser, ClientChannelUser } from "../user/chat-user";
 import { Long } from "bson";
+import * as BSON from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
 import { ChatInfoStruct, ChannelMetaStruct, ChannelMetaType } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
-import { TalkClient } from "../..";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
 import { MemberStruct } from "../struct/member-struct";
@@ -12,6 +12,9 @@ import { OpenLinkInfo } from "../open/open-link-info";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
+import { ChatMention, MentionContentList, ChatContent } from "../chat/chat-attachment";
+import { TalkClient } from "../../talk-client";
+import { JsonUtil } from "../../util/json-util";
 
 /*
  * Created on Fri Nov 01 2019
@@ -29,7 +32,7 @@ export class ChatChannel extends EventEmitter {
 
     private openLinkId: Long | undefined;
 
-    private lastChat: Chat |null;
+    private lastChat: Chat | null;
 
     private channelInfo: ChannelInfo;
 
@@ -48,7 +51,7 @@ export class ChatChannel extends EventEmitter {
     protected createChannelInfo(roomType: ChatroomType): ChannelInfo {
         return new ChannelInfo(this, roomType);
     }
-    
+
     get Client() {
         return this.client;
     }
@@ -91,7 +94,7 @@ export class ChatChannel extends EventEmitter {
         this.emit('message', chat);
         this.client.emit('message', chat);
     }
-    
+
     updateLastChat(chat: Chat) {
         if (chat.Channel !== this) {
             throw new Error('Pointed to wrong channel');
@@ -100,18 +103,79 @@ export class ChatChannel extends EventEmitter {
         this.lastChat = chat;
     }
 
-    async sendText(text: string): Promise<Chat> {
-        return new Promise((resolve, reject) => {
-            if (text === '') {
-                reject('Text is empty');
-                return;
-            }
+    // NOTE This send as combined 1 text message
+    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
+        let text = '';
 
-            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text).once('response', (res: PacketMessageWriteRes) => {
-                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), '', res.MessageId));
+        if (textFormat.length < 1) {
+            throw new Error('Text is empty');
+        }
+
+        let mentionPrefix = '@';
+        let mentionMap: Map<string, MentionContentList> = new Map();
+
+        let mentionCount = 1;
+        let len = textFormat.length;
+        for (let i = 0; i < len; i++) { // TODO: Better format parsing
+            let fragment = textFormat[i];
+
+            let type = typeof(fragment);
+
+            if (type === 'string') {
+                text += fragment;
+            } else if (type === 'object') {
+                let content = fragment as ChatContent;
+                switch (content.ContentType) {
+                    case 'mention': {
+                        let mentionContent = content as ChatMention;
+
+                        let mentionContentList = mentionMap.get(mentionContent.User.UserId.toString());
+                        let nickname = mentionContent.User.UserInfo.Nickname || 'unknown';
+
+                        if (!mentionContentList) {
+                            mentionContentList = new MentionContentList(mentionContent.User.UserId, nickname.length);
+
+                            mentionMap.set(mentionContent.User.UserId.toString(), mentionContentList);
+                        }
+
+                        mentionContentList.IndexList.push(mentionCount++);
+
+                        text += `${mentionPrefix}${nickname}`;
+                        break;
+                    }
+
+                    default: throw new Error(`Unknownt ChatContent ${fragment} at format index:${i}`);
+                }
+
+            } else {
+                throw new Error(`Unknownt type ${typeof(fragment)} at format index:${i}`);
+            }
+        }
+
+        if (text === '') {
+            throw new Error('Text is empty');
+        }
+
+        let extra: any = {};
+
+        let mentionMapValues = mentionMap.values();
+        let mentions: any[] = [];
+        for (let mentionList of mentionMapValues) {
+            mentions.push(mentionList.toRawContent());
+        }
+
+        if (mentions.length > 0) {
+            extra['mentions'] = mentions;
+        }
+
+        let extraText = JsonUtil.stringifyLoseless(extra);
+
+        return new Promise((resolve, reject) => {
+            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text, false, extraText).once('response', (res: PacketMessageWriteRes) => {
+                let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
                 resolve(chat);
             });
-    
+
             this.client.NetworkManager.sendPacket(packet);
         });
     }
@@ -129,10 +193,10 @@ export class ChatChannel extends EventEmitter {
 
             let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, sentType, false, extra).once('response', (res: PacketMessageWriteRes) => {
                 let chat = this.client.SessionManager!.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
-                
+
                 resolve(chat);
             });
-    
+
             this.client.NetworkManager.sendPacket(packet);
         });
     }
@@ -170,7 +234,7 @@ export class ChannelInfo {
     private roomFullImageURL: string;
 
     private name: string;
-    
+
     private isFavorite: boolean;
 
     private isDirectChan: boolean;
@@ -189,7 +253,7 @@ export class ChannelInfo {
         this.channel = channel;
         this.infoLoaded = false;
         this.memberListLoaded = false;
-        
+
         this.roomType = roomType;
 
         this.openChatToken = -1;
@@ -284,13 +348,13 @@ export class ChannelInfo {
 
         this.channel.emit('join', newUser, joinMessage);
         this.channel.Client.emit('user_join', this.channel, newUser, joinMessage);
-        
+
         return newUser;
     }
 
     protected addUserInternal(userId: Long) {
         if (this.hasUser(userId) || this.channel.Client.SessionManager && this.channel.Client.SessionManager.ClientUser.UserId.equals(userId)) {
-            throw new Error('This user is already joined');
+            throw new Error('This user already joined');
         }
 
         let newUser = new ChatUser(userId);
@@ -323,14 +387,14 @@ export class ChannelInfo {
 
     update(chatinfoStruct: ChatInfoStruct, openLinkInfo?: OpenLinkStruct) {
         this.activeUserList = chatinfoStruct.MemberList;
-        
+
         let lastChatlog = chatinfoStruct.LastChatLog;
 
         if (lastChatlog) {
             try {
                 let lastChat = this.channel.Client.SessionManager!.chatFromChatlog(lastChatlog);
                 this.channel.updateLastChat(lastChat);
-            } catch(e) {
+            } catch (e) {
                 // JUST PASS IF IT IS NOT VALID
             }
         }

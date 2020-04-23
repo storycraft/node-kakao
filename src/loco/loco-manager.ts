@@ -129,6 +129,7 @@ export class LocoManager {
         if (!this.locoLogon) {
             return;
         }
+
         setTimeout(this.schedulePing.bind(this), LocoManager.PING_INTERVAL);
 
         this.sendPacket(new PacketPingReq());

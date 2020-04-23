@@ -31,6 +31,7 @@ export enum MessageType {
     Reply = 26,
     MultiPhoto = 27,
     Mvoip = 51,
+    KakaoLinkV2 = 71,
     PlusFriend = 81,
     PlusFriendViral = 83,
     Template = 90,

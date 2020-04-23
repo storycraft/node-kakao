@@ -1,5 +1,6 @@
 import { MessageType } from "../message-type";
-import { PhotoAttachment, ChatAttachment, VideoAttachment, AudioAttachment, SharpAttachment, EmoticonAttachment } from "../chat-attachment";
+import { ChatAttachment, SharpAttachment, EmoticonAttachment } from "../chat-attachment";
+import { JsonUtil } from "../../../util/json-util";
 
 /*
  * Created on Fri Jan 03 2020
@@ -22,7 +23,7 @@ export class AttachmentTemplate implements MessageTemplate {
 
     constructor(
         private attachment: ChatAttachment,
-        private text: string = 'Attachment'
+        private text: string = '' //required for some attachment
     ) {
 
     }
@@ -48,17 +49,7 @@ export class AttachmentTemplate implements MessageTemplate {
     }
 
     getMessageType() {
-        if (this.attachment) {
-            if (this.attachment instanceof PhotoAttachment) {
-                return MessageType.Photo;
-            } else if (this.attachment instanceof VideoAttachment) {
-                return MessageType.Video;
-            } else if (this.attachment instanceof AudioAttachment) {
-                return MessageType.Audio;
-            }
-        }
-
-        return MessageType.File;
+        return this.attachment.RequiredMessageType;
     }
 
     getPacketText() {
@@ -66,11 +57,12 @@ export class AttachmentTemplate implements MessageTemplate {
     }
 
     getPacketExtra() {
-        return JSON.stringify(this.attachment.toJsonAttachment());
+        return JsonUtil.stringifyLoseless(this.attachment.toJsonAttachment());
     }
 
 }
 
+//@depreacted
 export class SharpMessageTemplate implements MessageTemplate {
 
     constructor(
@@ -114,6 +106,7 @@ export class SharpMessageTemplate implements MessageTemplate {
 
 }
 
+//@depreacted
 export abstract class EmoticonMessageTemplate implements MessageTemplate {
 
     constructor(
@@ -154,6 +147,7 @@ export abstract class EmoticonMessageTemplate implements MessageTemplate {
     }
 }
 
+//@depreacted
 export class StaticEmoticonMessageTemplate extends EmoticonMessageTemplate {
 
     getMessageType() {
@@ -162,6 +156,7 @@ export class StaticEmoticonMessageTemplate extends EmoticonMessageTemplate {
 
 }
 
+//@depreacted
 export class EmoticonAniMessageTemplate extends EmoticonMessageTemplate {
 
     getMessageType() {

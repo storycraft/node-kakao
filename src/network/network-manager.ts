@@ -5,7 +5,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bs
 import { EventEmitter } from "events";
 import { PacketMessageRes } from "../packet/packet-message";
 import { PacketLoginRes } from "../packet/packet-login";
-import { SessionManager } from "../talk/manage/session-manager";
+import { SessionManager } from "../talk/session/session-manager";
 import { ChatChannel } from "../talk/room/chat-channel";
 import { PacketChatInfoReq, PacketChatInfoRes } from "../packet/packet-chatinfo";
 import { PacketKickoutRes } from "../packet/packet-kickout";
@@ -57,6 +57,10 @@ export class NetworkManager {
 
     get Client() {
         return this.client;
+    }
+
+    get LocoManager() {
+        return this.locoManager;
     }
 
     get NeedReLogon() {

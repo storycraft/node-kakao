@@ -4,7 +4,7 @@ import { LocoManager } from "./loco/loco-manager";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct } from "./talk/struct/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
-import { SessionManager } from "./talk/manage/session-manager";
+import { SessionManager } from "./talk/session/session-manager";
 import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/room/chat-channel";

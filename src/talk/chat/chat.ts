@@ -1,11 +1,11 @@
 import { MessageType } from "./message-type";
-import { Long } from "bson";
+import { Long, EJSON } from "bson";
 import { ChatChannel } from "../room/chat-channel";
 import { ChatUser } from "../user/chat-user";
-import { ChatlogStruct } from "../struct/chatlog-struct";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment } from "./chat-attachment";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./chat-attachment";
 import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
+import { JsonUtil } from "../../util/json-util";
 
 /*
  * Created on Fri Nov 01 2019
@@ -26,6 +26,7 @@ export abstract class Chat {
     private text: string;
 
     private attachmentList: ChatAttachment[];
+    private mentionMap: Map<string, MentionContentList>;
 
     private sendTime: number;
 
@@ -42,7 +43,8 @@ export abstract class Chat {
         this.sendTime = sendTime;
 
         this.attachmentList = [];
-        this.processAttachment(rawAttachment);
+        this.mentionMap = new Map();
+        this.processAttachment(text, rawAttachment);
     }
 
     get Channel() {
@@ -77,9 +79,39 @@ export abstract class Chat {
         return this.attachmentList;
     }
 
+    get MentionMap() {
+        return this.mentionMap;
+    }
+
+    getMentionContentList() {
+        return Array.from(this.mentionMap.values());
+    }
+
+    isMentioned(userId: Long): boolean {
+        return this.mentionMap.has(userId.toString());
+    }
+
+    getUserMentionList(userId: Long): MentionContentList | null {
+        if (!this.isMentioned(userId)) return null;
+
+        return this.mentionMap.get(userId.toString())!;
+    }
+
+    getMentionCount(userId: Long): number {
+        let mentionList = this.getUserMentionList(userId);
+
+        if (!mentionList) return 0;
+        
+        return this.getUserMentionList(userId)!.IndexList.length;
+    }
+
     abstract get Type(): MessageType;
 
-    protected processAttachment(rawAttachment: string) {
+    isFeed(): boolean {
+        return this.Type === MessageType.Feed;
+    }
+
+    protected processAttachment(text: string, rawAttachment: string) { // adds text for old types
         if (!rawAttachment || rawAttachment === '') {
             return;
         }
@@ -87,18 +119,32 @@ export abstract class Chat {
         let json: any = {};
 
         try {
-            json = JSON.parse(rawAttachment);
+            json = JsonUtil.parseLoseless(rawAttachment);
         } catch(e) {
             
         }
 
         this.readAttachment(json, this.attachmentList);
+
+        if (json['mentions']) this.processMention(json['mentions']);
     }
 
     protected abstract readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void;
 
-    async replyText(text: string) {
-        return this.Channel.sendText(text);
+    protected processMention(rawMentions: any[]) {
+        this.mentionMap.clear();
+
+        for (let rawMention of rawMentions) {
+            let content = new MentionContentList();
+
+            content.readRawContent(rawMention);
+
+            this.mentionMap.set(content.UserId.toString(), content);
+        }
+    }
+
+    async replyText(...textFormat: (string | ChatMention)[]) {
+        return this.Channel.sendText(...textFormat);
     }
 
     async replyTemplate(template: MessageTemplate) {
@@ -252,6 +298,22 @@ export class SharpSearchChat extends Chat {
     
     get Type() {
         return MessageType.Search;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let sharpAttachment = new SharpAttachment();
+
+        sharpAttachment.readAttachment(attachmentJson);
+
+        attachmentList.push(sharpAttachment);
+    }
+
+}
+
+export class ReplyChat extends Chat {
+    
+    get Type() {
+        return MessageType.Reply;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
