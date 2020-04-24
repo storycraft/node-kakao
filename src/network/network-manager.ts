@@ -153,27 +153,6 @@ export class NetworkManager {
         });
     }
     
-
-    async updateChannelInfo(channel: ChatChannel) {
-        let info = await this.requestChannelInfo(channel.ChannelId);
-        let openInfo: OpenLinkStruct | undefined = undefined;
-
-        if (info.Type == ChatroomType.OPENCHAT_GROUP || info.Type == ChatroomType.OPENCHAT_DIRECT) {
-            openInfo = (await this.requestOpenChatInfo(info.OpenLinkId!))[0];
-        }
-
-        await this.updateMemberList(channel, info);
-
-        channel.ChannelInfo.update(info, openInfo);
-    }
-
-    async updateMemberList(channel: ChatChannel, chatInfo: ChatInfoStruct) {
-        let infoList = await this.requestMemberInfo(channel.ChannelId);
-        let activeInfoList = await this.requestSpecificMemberInfo(channel.ChannelId, chatInfo.MemberList.map((item) => item.UserId));
-        
-        channel.ChannelInfo.initMemberList(infoList.slice().concat(activeInfoList));
-    }
-    
 }
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
@@ -242,7 +221,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let channel = this.SessionManager.getChannelById(chanId);
 
         if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await this.NetworkManager.updateChannelInfo(channel);
+            await channel.ChannelInfo.updateInfo();
         }
 
         let chatLog = packet.Chatlog;
@@ -265,7 +244,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let channel = this.SessionManager.getChannelById(chanId);
 
         if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await this.NetworkManager.updateChannelInfo(channel);
+            await channel.ChannelInfo.updateInfo();
         }
 
         let reader = channel.ChannelInfo.getUser(packet.ReaderId);
@@ -291,7 +270,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channelInfo.addUserJoined(chatlog.SenderId, chatlog.Text);
 
         if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await this.NetworkManager.updateChannelInfo(channel);
+            await channel.ChannelInfo.updateInfo();
         }
     }
 
@@ -321,7 +300,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
         
         let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
-        await this.NetworkManager.updateChannelInfo(newChan);
+        await newChan.ChannelInfo.updateInfo();
     }
 
     async onOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
@@ -343,7 +322,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
         
         let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
-        await this.NetworkManager.updateChannelInfo(newChan);
+        await newChan.ChannelInfo.updateInfo();
     }
 
     onDetailMember(packet: PacketChatMemberRes) {

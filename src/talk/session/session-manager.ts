@@ -26,11 +26,14 @@ export class SessionManager {
 
     private channelMap: Map<string, ChatChannel>;
 
+    private userMap: Map<string, ChatUser>;
+
     constructor(client: TalkClient, clientUser: ClientChatUser) {
         this.client = client;
         this.clientUser = clientUser;
 
         this.channelMap = new Map();
+        this.userMap = new Map();
     }
 
     get Client() {
@@ -57,7 +60,21 @@ export class SessionManager {
         return this.channelMap.get(id.toString())!;
     }
 
-    getUserFrom(chatChannel: ChatChannel, id: Long): ChatUser {
+    getUser(id: Long): ChatUser {
+        if (this.hasUser(id)) return this.userMap.get(id.toString())!;
+
+        let user = new ChatUser(id);
+
+        this.userMap.get(id.toString());
+
+        return user;
+    }
+
+    hasUser(id: Long) {
+        return this.userMap.has(id.toString());
+    }
+
+    getUserFrom(chatChannel: ChatChannel, id: Long): ChatUser | null {
         return chatChannel.ChannelInfo.getUser(id);
     }
 
@@ -66,7 +83,7 @@ export class SessionManager {
             if (this.hasChannel(res.ChannelId)) resolve(this.getChannelById(res.ChannelId));
 
             let chan = this.addChannel(res.ChannelId, res.ChatInfo.Type);
-            chan.ChannelInfo.update(res.ChatInfo);
+            chan.ChannelInfo.updateFromStruct(res.ChatInfo);
 
             resolve();
         })));
@@ -85,7 +102,7 @@ export class SessionManager {
             throw new Error(`Invalid channel. Channel already exists`);
         }
 
-        let channel = new ChatChannel(this.Client, id, chatroomType, openLinkId);
+        let channel = new ChatChannel(this, id, chatroomType, openLinkId);
 
         this.channelMap.set(id.toString(), channel);
 
@@ -110,7 +127,7 @@ export class SessionManager {
 
     chatFromChatlog(chatLog: ChatlogStruct) {
         let channel = this.getChannelById(chatLog.ChannelId);
-        let sender = this.getUserFrom(channel, chatLog.SenderId);
+        let sender = this.getUser(chatLog.SenderId);
 
         const TypedChat = ChatDeserializeMap.getChatConstructor(chatLog.Type);
         return new TypedChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
