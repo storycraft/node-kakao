@@ -6,6 +6,7 @@ import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./chat-attachment";
 import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
 import { JsonUtil } from "../../util/json-util";
+import { ChatFeed } from "./chat-feed";
 
 /*
  * Created on Fri Nov 01 2019
@@ -109,6 +110,18 @@ export abstract class Chat {
 
     isFeed(): boolean {
         return this.Type === MessageType.Feed;
+    }
+    
+    private feed?: ChatFeed;
+
+    getFeed() {
+        if (!this.isFeed()) {
+            throw new Error(`Message ${this.logId.toString()} is not Feed`);
+        }
+
+        if (this.feed) return this.feed;
+
+        return this.feed = ChatFeed.getFeedFromText(this.text);
     }
 
     protected processAttachment(text: string, rawAttachment: string) { // adds text for old types

@@ -25,6 +25,7 @@ import { PacketPingRes, PacketPingReq } from "./packet-ping";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
 import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
+import { PacketDeleteMemberRes } from "./packet-delmem";
 
 /*
  * Created on Wed Oct 30 2019
@@ -119,6 +120,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('DELETEMSG', PacketDeleteChatRes);
 
         LocoPacketList.responsePacketMap.set('SYNCLINKCR', PacketSyncJoinOpenchatRes);
+
+        LocoPacketList.responsePacketMap.set('DELMEM', PacketDeleteMemberRes);
 
         LocoPacketList.responsePacketMap.set('PING', PacketPingRes);
 

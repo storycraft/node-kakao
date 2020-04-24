@@ -25,6 +25,8 @@ import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link";
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
+import { PacketDeleteMemberRes } from "../packet/packet-delmem";
+import { FeedType } from "../talk/feed/feed-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -175,6 +177,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('NEWMEM', this.onNewMember.bind(this));
         this.on('DECUNREAD', this.onMessageRead.bind(this));
         this.on('SYNCLINKCR', this.onOpenChannelJoin.bind(this));
+        this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('KICKOUT', this.onKicked.bind(this));
@@ -213,16 +216,15 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onMessagePacket(packet: PacketMessageRes) {
         let chanId = packet.ChannelId;
 
+        let channel: ChatChannel;
         if (!this.SessionManager.hasChannel(chanId)) {
-            //INVALID CHANNEL
-            return;
+            let info = await this.networkManager.requestChannelInfo(chanId);
+            channel = this.SessionManager.addChannel(chanId, info.Type, info.OpenLinkId !== Long.ZERO ? info.OpenLinkId : undefined);
+        } else {
+            channel = this.SessionManager.getChannelById(chanId);
         }
 
-        let channel = this.SessionManager.getChannelById(chanId);
-
-        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await channel.ChannelInfo.updateInfo();
-        }
+        await this.getUpdatedChannelInfo(channel);
 
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
@@ -243,16 +245,14 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel = this.SessionManager.getChannelById(chanId);
 
-        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await channel.ChannelInfo.updateInfo();
-        }
+        let channelInfo = await this.getUpdatedChannelInfo(channel);
 
-        let reader = channel.ChannelInfo.getUser(packet.ReaderId);
+        let reader = channelInfo.getUser(packet.ReaderId);
 
         let watermark = packet.Watermark;
 
         this.Client.emit('message_read', channel, reader, watermark);
-    } 
+    }
 
     async onNewMember(packet: PacketNewMemberRes) {
         let chanId = packet.Chatlog.ChannelId;
@@ -263,15 +263,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel = this.SessionManager.getChannelById(chanId);
 
-        let channelInfo = channel.ChannelInfo;
+        let channelInfo = await this.getUpdatedChannelInfo(channel);
 
         let chatlog = packet.Chatlog;
 
         channelInfo.addUserJoined(chatlog.SenderId, chatlog.Text);
-
-        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await channel.ChannelInfo.updateInfo();
-        }
     }
 
     onChannelLeft(packet: PacketLeftRes) {
@@ -325,6 +321,30 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         await newChan.ChannelInfo.updateInfo();
     }
 
+    async onMemberDelete(packet: PacketDeleteMemberRes) {
+        let chatLog = packet.Chatlog;
+        let chanId = chatLog.ChannelId;
+
+        if (this.SessionManager.hasChannel(chanId)) {
+            //INVALID CHANNEL
+            return;
+        }
+
+        let chat = this.SessionManager.chatFromChatlog(chatLog);
+
+        if (!chat.isFeed()) return;
+
+        let feed = chat.getFeed();
+
+        let info = await this.getUpdatedChannelInfo(chat.Channel);
+
+        if (feed.FeedType === FeedType.CHAT_KICKED || feed.FeedType === FeedType.OPENLINK_KICKED || feed.FeedType === FeedType.SECRET_LEAVE) {
+            if (!feed.MemberId) return;
+
+            info.removeUserLeft(feed.MemberId);
+        }
+    }
+
     onDetailMember(packet: PacketChatMemberRes) {
 
     }
@@ -333,5 +353,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let reason = packet.Reason;
 
         // do something
+    }
+
+    protected async getUpdatedChannelInfo(channel: ChatChannel) {
+        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
+            await channel.ChannelInfo.updateInfo();
+        }
+
+        return channel.ChannelInfo;
     }
 }
