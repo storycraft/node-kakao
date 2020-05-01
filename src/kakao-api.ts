@@ -442,7 +442,7 @@ export class KakaoAPI {
 
     static requestAccountSettings(accessToken: string, deviceUUID: string, since: number = 0, language: string = KakaoAPI.Language) {
         return request({
-            url: `${KakaoAPI.getInternalURL(LogonAccount.MORE_SETTINGS)}?since=0&lang=${language}`,
+            url: `${KakaoAPI.getInternalURL(LogonAccount.MORE_SETTINGS)}?since=${since}&lang=${language}`,
             headers: KakaoAPI.getSessionHeader(accessToken, deviceUUID),
             method: 'GET'
         });

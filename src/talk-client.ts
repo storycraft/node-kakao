@@ -67,7 +67,9 @@ export class TalkClient extends EventEmitter {
                 if (statusCode == -100) {
                     throw new Error(`This device is not registered.`);
                 } else if (statusCode == 30) {
-                    throw new Error(`ERR 30. Someof field values are wrong`);
+                    throw new Error(`ERR 30. Some field values are wrong`);
+                } else if (statusCode == -997) {
+                    throw new Error(`ERR -997. Account restricted.`);
                 }
 
                 throw new Error(`Access login ERR ${statusCode}`);

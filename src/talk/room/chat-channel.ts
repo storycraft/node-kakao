@@ -1,6 +1,5 @@
 import { ChatUser, ClientChannelUser } from "../user/chat-user";
 import { Long } from "bson";
-import * as BSON from "bson";
 import { ChatroomType } from "../chat/chatroom-type";
 import { ChatInfoStruct, ChannelMetaStruct, ChannelMetaType } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
@@ -8,14 +7,14 @@ import { Chat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
 import { MemberStruct } from "../struct/member-struct";
-import { OpenLinkInfo } from "../open/open-link-info";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
-import { ChatMention, MentionContentList, ChatContent } from "../chat/chat-attachment";
-import { TalkClient } from "../../talk-client";
-import { JsonUtil } from "../../util/json-util";
+import { ChatContent } from "../chat/attachment/chat-attachment";
 import { SessionManager } from "../session/session-manager";
+import { ChatBuilder } from "../chat/chat-builder";
+import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
+import { ChatFeed } from "../chat/chat-feed";
 
 /*
  * Created on Fri Nov 01 2019
@@ -31,26 +30,18 @@ export class ChatChannel extends EventEmitter {
 
     private channelId: Long;
 
-    private openLinkId: Long | undefined;
-
     private lastChat: Chat | null;
 
-    private channelInfo: ChannelInfo;
+    private channelInfo: ChannelInfo | null;
 
-    constructor(sessionManager: SessionManager, channelId: Long, roomType?: ChatroomType, openLinkId?: Long) {
+    constructor(sessionManager: SessionManager, channelId: Long) {
         super();
         this.sessionManager = sessionManager;
 
         this.channelId = channelId;
 
-        this.openLinkId = openLinkId;
-
-        this.channelInfo = this.createChannelInfo(roomType || ChatroomType.GROUP);
+        this.channelInfo = null;
         this.lastChat = null;
-    }
-
-    protected createChannelInfo(roomType: ChatroomType): ChannelInfo {
-        return new ChannelInfo(this, roomType);
     }
 
     get SessionManager() {
@@ -69,28 +60,16 @@ export class ChatChannel extends EventEmitter {
         return this.channelId;
     }
 
-    get LastInfoUpdate() {
-        return this.channelInfo.LastInfoUpdated;
-    }
-
-    get IsOpenChat() {
-        return this.channelInfo.RoomType === ChatroomType.OPENCHAT_DIRECT || this.channelInfo.RoomType === ChatroomType.OPENCHAT_GROUP;
-    }
-
-    get OpenLinkId() {
-        return this.openLinkId;
-    }
-
-    get ChannelInfo() {
-        return this.channelInfo;
-    }
-
-    getNextMessageId(): number {
-        if (this.lastChat) {
-            return this.lastChat.MessageId + 1;
+    async getChannelInfo(forceUpdate?: boolean) {
+        if (!this.channelInfo) {
+            this.channelInfo = new ChannelInfo(this);
         }
 
-        return 0;
+        if (forceUpdate || this.channelInfo.LastInfoUpdated + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
+            await this.channelInfo.updateInfo();
+        }
+
+        return this.channelInfo;
     }
 
     chatReceived(chat: Chat) {
@@ -108,102 +87,38 @@ export class ChatChannel extends EventEmitter {
         this.lastChat = chat;
     }
 
-    // NOTE This send as combined 1 text message
-    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
-        let text = '';
-
-        if (textFormat.length < 1) {
-            throw new Error('Text is empty');
-        }
-
-        let mentionPrefix = '@';
-        let mentionMap: Map<string, MentionContentList> = new Map();
-
-        let mentionCount = 1;
-        let len = textFormat.length;
-        for (let i = 0; i < len; i++) { // TODO: Better format parsing
-            let fragment = textFormat[i];
-
-            let type = typeof(fragment);
-
-            if (type === 'string') {
-                text += fragment;
-            } else if (type === 'object') {
-                let content = fragment as ChatContent;
-                switch (content.ContentType) {
-                    case 'mention': {
-                        let mentionContent = content as ChatMention;
-
-                        let mentionContentList = mentionMap.get(mentionContent.User.UserId.toString());
-                        let nickname = mentionContent.User.UserInfo.Nickname || 'unknown';
-
-                        if (!mentionContentList) {
-                            mentionContentList = new MentionContentList(mentionContent.User.UserId, nickname.length);
-
-                            mentionMap.set(mentionContent.User.UserId.toString(), mentionContentList);
-                        }
-
-                        mentionContentList.IndexList.push(mentionCount++);
-
-                        text += `${mentionPrefix}${nickname}`;
-                        break;
-                    }
-
-                    default: throw new Error(`Unknownt ChatContent ${fragment} at format index:${i}`);
-                }
-
-            } else {
-                throw new Error(`Unknownt type ${typeof(fragment)} at format index:${i}`);
-            }
-        }
-
-        if (text === '') {
-            throw new Error('Text is empty');
-        }
-
-        let extra: any = {};
-
-        let mentionMapValues = mentionMap.values();
-        let mentions: any[] = [];
-        for (let mentionList of mentionMapValues) {
-            mentions.push(mentionList.toRawContent());
-        }
-
-        if (mentions.length > 0) {
-            extra['mentions'] = mentions;
-        }
-
-        let extraText = JsonUtil.stringifyLoseless(extra);
-
-        return new Promise((resolve, reject) => {
-            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, MessageType.Text, false, extraText).once('response', (res: PacketMessageWriteRes) => {
-                let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
-                resolve(chat);
-            });
-
-            this.sessionManager.Client.NetworkManager.sendPacket(packet);
-        });
+    async markChannelRead() {
+        await this.Client.NetworkManager.sendPacket(new PacketMessageNotiReadReq(this.channelId));
     }
 
+    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
+        let { text, extra } = ChatBuilder.buildMessage(...textFormat);
+        
+        let userId = this.sessionManager.ClientUser.UserId;
+        
+        let res = await this.sessionManager.Client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.sessionManager.getNextMessageId(), this.channelId, text, MessageType.Text, false, extra));
+
+        let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), extra, res.MessageId));
+        
+        return chat;
+    }
+    
     async sendTemplate(template: MessageTemplate): Promise<Chat> {
-        return new Promise((resolve, reject) => {
-            if (!template.Valid) {
-                reject('Invalid template');
-                return;
-            }
+        if (!template.Valid) {
+            throw new Error('Invalid template');
+        }
 
-            let sentType = template.getMessageType();
-            let text = template.getPacketText();
-            let extra = template.getPacketExtra();
+        let sentType = template.getMessageType();
+        let text = template.getPacketText();
+        let extra = template.getPacketExtra();
 
-            let packet = new PacketMessageWriteReq(this.getNextMessageId(), this.channelId, text, sentType, false, extra).once('response', (res: PacketMessageWriteRes) => {
-                let chat = this.SessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
+        let channelInfo = await this.getChannelInfo();
 
-                resolve(chat);
-            });
+        let res = await this.sessionManager.Client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.sessionManager.getNextMessageId(), this.channelId, text, sentType, false, extra));
 
-            this.SessionManager.Client.NetworkManager.sendPacket(packet);
-        });
+        let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
+
+        return chat;
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;
@@ -248,7 +163,8 @@ export class ChannelInfo {
 
     private clientChannelUser: ClientChannelUser;
 
-    private openChatToken: number;
+    private openLinkId?: Long;
+    private openLinkInfo?: OpenLinkStruct;
 
     private activeUserList: MemberStruct[];
 
@@ -257,14 +173,12 @@ export class ChannelInfo {
     private pendingInfoReq: Promise<void> | null;
     private pendingUserInfoReq: Promise<void> | null;
 
-    constructor(channel: ChatChannel, roomType: ChatroomType) {
+    constructor(channel: ChatChannel) {
         this.channel = channel;
         this.infoLoaded = false;
         this.memberListLoaded = false;
 
-        this.roomType = roomType;
-
-        this.openChatToken = -1;
+        this.roomType = ChatroomType.UNKNOWN;
 
         this.lastInfoUpdated = -1;
 
@@ -333,8 +247,30 @@ export class ChannelInfo {
         return this.chatmetaList;
     }
 
-    get OpenChatToken() {
-        return this.openChatToken;
+    get OpenLinkId() {
+        return this.openLinkId || null;
+    }
+
+    get OpenLinkToken() {
+        if (this.openLinkInfo) return this.openLinkInfo.OpenToken;
+
+        return null;
+    }
+
+    get ClientOpenLinkProfile() {
+        if (this.openLinkInfo) return this.openLinkInfo.Member;
+
+        return null;
+    }
+
+    get ChannelOpenLinkURL() {
+        if (this.openLinkInfo) return this.openLinkInfo.LinkURL;
+
+        return null;
+    }
+
+    get IsOpenChat() {
+        return this.roomType === ChatroomType.OPENCHAT_DIRECT || this.roomType === ChatroomType.OPENCHAT_GROUP;
     }
 
     hasUser(id: Long) {
@@ -353,11 +289,11 @@ export class ChannelInfo {
         return this.localUserMap.get(id.toString())!;
     }
 
-    addUserJoined(userId: Long, joinMessage: string): ChatUser {
+    addUserJoined(userId: Long, joinFeed: ChatFeed): ChatUser {
         let newUser = this.addUserInternal(userId);
 
-        this.channel.emit('join', newUser, joinMessage);
-        this.channel.Client.emit('user_join', this.channel, newUser, joinMessage);
+        this.channel.emit('join', newUser, joinFeed);
+        this.channel.Client.emit('user_join', this.channel, newUser, joinFeed);
 
         return newUser;
     }
@@ -411,11 +347,6 @@ export class ChannelInfo {
             }
         }
 
-        if (openLinkInfo) {
-            this.updateRoomName(openLinkInfo.LinkName);
-            this.openChatToken = openLinkInfo.OpenToken;
-        }
-
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
 
@@ -432,6 +363,9 @@ export class ChannelInfo {
 
         this.roomType = chatinfoStruct.Type;
 
+        if (this.IsOpenChat)
+            this.openLinkId = chatinfoStruct.OpenLinkId;
+        
         if (!this.infoLoaded) {
             this.infoLoaded = true;
         }
@@ -439,11 +373,11 @@ export class ChannelInfo {
         this.lastInfoUpdated = Date.now();
     }
 
-    updateRoomName(name: string) {
+    protected updateRoomName(name: string) {
         this.name = name;
     }
 
-    initMemberList(memberList: MemberStruct[]): ChatUser[] {
+    protected initMemberList(memberList: MemberStruct[]): ChatUser[] {
         let list = this.updateMemberList(memberList);
 
         if (!this.memberListLoaded) {
@@ -459,7 +393,7 @@ export class ChannelInfo {
         return list;
     }
 
-    updateMemberList(memberList: MemberStruct[]): ChatUser[] {
+    protected updateMemberList(memberList: MemberStruct[]): ChatUser[] {
         let list: ChatUser[] = [];
 
         for (let memberStruct of memberList) {
@@ -481,30 +415,29 @@ export class ChannelInfo {
     async updateInfo(): Promise<void> {
         if (this.pendingInfoReq) return this.pendingInfoReq;
 
-        let resolver: () => void;
-        this.pendingInfoReq = new Promise((resolve, reject) => {resolver = resolve});
-
         let networkManager = this.channel.Client.NetworkManager;
 
         let info = await networkManager.requestChannelInfo(this.channel.ChannelId);
-        let openInfo: OpenLinkStruct | undefined = undefined;
-
-        if (info.Type == ChatroomType.OPENCHAT_GROUP || info.Type == ChatroomType.OPENCHAT_DIRECT) {
-            openInfo = (await networkManager.requestOpenChatInfo(info.OpenLinkId!))[0];
-        }
 
         await this.updateMemberInfo(info);
 
-        this.updateFromStruct(info, openInfo);
+        this.updateFromStruct(info, this.openLinkInfo);
 
-        resolver!();
+        await this.updateOpenInfo();
     }
 
-    async updateMemberInfo(chatInfo: ChatInfoStruct): Promise<void> {
-        if (this.pendingUserInfoReq) return this.pendingUserInfoReq;
+    async updateOpenInfo(): Promise<void> {
+        if (this.IsOpenChat) {
+            this.openLinkInfo = (await this.Channel.SessionManager.OpenChatManager.getOpenInfoFromId(this.OpenLinkId!))[0];
+        }
 
-        let resolver: () => void;
-        this.pendingUserInfoReq = new Promise((resolve, reject) => {resolver = resolve});
+        if (this.openLinkInfo) {
+            this.updateRoomName(this.openLinkInfo.LinkName);
+        }
+    }
+
+    protected async updateMemberInfo(chatInfo: ChatInfoStruct): Promise<void> {
+        if (this.pendingUserInfoReq) return this.pendingUserInfoReq;
 
         let networkManager = this.channel.Client.NetworkManager;
 
@@ -512,8 +445,6 @@ export class ChannelInfo {
         let activeInfoList = await networkManager.requestSpecificMemberInfo(this.channel.ChannelId, chatInfo.MemberList.map((item) => item.UserId));
         
         this.initMemberList(infoList.slice().concat(activeInfoList));
-
-        resolver!();
     }
 
 }

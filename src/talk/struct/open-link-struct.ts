@@ -1,6 +1,7 @@
 import { StructBase } from "./struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../util/json-util";
+import { OpenLinkType } from "../open/open-link-type";
 
 /*
  * Created on Fri Nov 22 2019
@@ -16,8 +17,11 @@ export class OpenLinkStruct implements StructBase {
         public OpenToken: number = 0,
         public LinkName: string = '',
         public LinkURL: string = '',
-        public readonly Member: OpenMemberStruct = new OpenMemberStruct()
-    ) {
+        public LinkType: OpenLinkType = OpenLinkType.PROFILE,
+        public readonly Member: OpenMemberStruct = new OpenMemberStruct(),
+        public Description: string = '',
+        public CoverURL: string = ''
+        ) {
         
     }
 
@@ -27,7 +31,12 @@ export class OpenLinkStruct implements StructBase {
         this.LinkName = rawData['ln'];
         this.LinkURL = rawData['lu'];
 
+        this.LinkType = rawData['lt'];
+
         this.Member.fromJson(rawData['olu']);
+
+        this.Description = rawData['desc'];
+        this.CoverURL = rawData['liu'];
     }
     
     toJson() {
@@ -36,7 +45,10 @@ export class OpenLinkStruct implements StructBase {
             'otk': this.OpenToken,
             'ln': this.LinkName,
             'lu': this.LinkURL,
-            'olu': this.Member.toJson()
+            'lt': this.LinkType,
+            'olu': this.Member.toJson(),
+            'desc': this.Description,
+            'liu': this.CoverURL
         };
 
         return obj;

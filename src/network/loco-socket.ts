@@ -155,7 +155,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
 
             this.packetMap.delete(packetId);
 
-            requestPacket.emit('response', packet);
+            requestPacket.onResponse(packet);
         }
         
         this.emit('packet', packetId, packet);

@@ -1,4 +1,4 @@
-import { LocoBsonResponsePacket } from "./loco-bson-packet";
+import { LocoBsonResponsePacket, LocoBsonRequestPacket } from "./loco-bson-packet";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 

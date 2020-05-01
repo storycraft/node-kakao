@@ -26,6 +26,8 @@ import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
 import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
+import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./loco-noti-read";
+import { PacketJoinInfoReq } from "./packet-join-info";
 
 /*
  * Created on Wed Oct 30 2019
@@ -75,8 +77,12 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('KICKMEM', PacketKickMemberReq);
         LocoPacketList.reqeustPacketMap.set('DELETELINK', PacketDeleteLinkReq);
         LocoPacketList.reqeustPacketMap.set('INFOLINK', PacketInfoLinkReq);
+        LocoPacketList.reqeustPacketMap.set('JOININFO', PacketJoinInfoReq);
 
         LocoPacketList.reqeustPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
+
+        LocoPacketList.reqeustPacketMap.set('NOTIREAD', PacketMessageNotiReadReq);
+        
 
         LocoPacketList.reqeustPacketMap.set('PING', PacketPingReq);
 
@@ -96,6 +102,7 @@ export class LocoPacketList {
 
         LocoPacketList.responsePacketMap.set('MSG', PacketMessageRes);
         LocoPacketList.responsePacketMap.set('WRITE', PacketMessageWriteRes);
+        LocoPacketList.responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);
         LocoPacketList.responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
         LocoPacketList.responsePacketMap.set('MEMBER', PacketChatMemberRes);
         LocoPacketList.responsePacketMap.set('CHATINFO', PacketChatInfoRes);

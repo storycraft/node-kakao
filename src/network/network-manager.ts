@@ -27,6 +27,7 @@ import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "../packet/packet-delmem";
 import { FeedType } from "../talk/feed/feed-type";
+import { ChatFeed } from "../talk/chat/chat-feed";
 
 /*
  * Created on Fri Nov 01 2019
@@ -119,40 +120,31 @@ export class NetworkManager {
         return this.locoManager.sendPacket(packet);
     }
 
+    async requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket) {
+        this.sendPacket(packet);
+
+        return packet.submitResponseTicket<T>();
+    }
+
     async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
-        return new Promise<ChatInfoStruct>((resolve, reject) => {
-            this.sendPacket(new PacketChatInfoReq(channelId).once('response', (packet: PacketChatInfoRes) => {
-                if (packet.ChatInfo.ChannelId.equals(channelId)) {
-                    resolve(packet.ChatInfo);
-                } else {
-                    reject(new Error('Received wrong info packet'));
-                }
-            }));
-        });
+        let res = await this.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
+
+        if (res.ChatInfo.ChannelId.equals(channelId)) {
+            return res.ChatInfo;
+        } else {
+            throw new Error('Received wrong info packet');
+        }
     }
 
     async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
-        return new Promise<MemberStruct[]>((resolve, reject) => {
-            this.sendPacket(new PacketGetMemberReq(channelId).once('response', (packet: PacketGetMemberRes) => {
-                resolve(packet.MemberList);
-            }));
-        });
+        let res = await this.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
+        return res.MemberList;
     }
 
     async requestSpecificMemberInfo(channelId: Long, idList: Long[]): Promise<MemberStruct[]> {
-        return new Promise<MemberStruct[]>((resolve, reject) => {
-            this.sendPacket(new PacketMemberReq(channelId, idList).once('response', (packet: PacketMemberRes) => {
-                resolve(packet.MemberList);
-            }));
-        });
-    }
-
-    async requestOpenChatInfo(...idList: Long[]): Promise<OpenLinkStruct[]> {
-        return new Promise<OpenLinkStruct[]>((resolve, reject) => {
-            this.sendPacket(new PacketInfoLinkReq(idList).once('response', (packet: PacketInfoLinkRes) => {
-                resolve(packet.LinkList);
-            }));
-        });
+        let res = await this.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channelId, idList));
+        
+        return res.MemberList;
     }
     
 }
@@ -218,13 +210,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel: ChatChannel;
         if (!this.SessionManager.hasChannel(chanId)) {
-            let info = await this.networkManager.requestChannelInfo(chanId);
-            channel = this.SessionManager.addChannel(chanId, info.Type, info.OpenLinkId !== Long.ZERO ? info.OpenLinkId : undefined);
+            channel = this.SessionManager.addChannel(chanId);
         } else {
             channel = this.SessionManager.getChannelById(chanId);
         }
-
-        await this.getUpdatedChannelInfo(channel);
 
         let chatLog = packet.Chatlog;
         let chat = this.SessionManager.chatFromChatlog(chatLog);
@@ -245,7 +234,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel = this.SessionManager.getChannelById(chanId);
 
-        let channelInfo = await this.getUpdatedChannelInfo(channel);
+        let channelInfo = await channel.getChannelInfo();
 
         let reader = channelInfo.getUser(packet.ReaderId);
 
@@ -263,11 +252,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channel = this.SessionManager.getChannelById(chanId);
 
-        let channelInfo = await this.getUpdatedChannelInfo(channel);
+        let channelInfo = await channel.getChannelInfo();
 
         let chatlog = packet.Chatlog;
 
-        channelInfo.addUserJoined(chatlog.SenderId, chatlog.Text);
+        channelInfo.addUserJoined(chatlog.SenderId, ChatFeed.getFeedFromText(chatlog.Text));
     }
 
     onChannelLeft(packet: PacketLeftRes) {
@@ -286,17 +275,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             //INVALID CHANNEL
             return;
         }
-
-        let info = await this.NetworkManager.requestChannelInfo(chanId);
-
-        let openId: Long | undefined;
-
-        if (info.OpenLinkId !== Long.ZERO) {
-            openId = info.OpenLinkId;
-        }
         
-        let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
-        await newChan.ChannelInfo.updateInfo();
+        let newChan = this.SessionManager.addChannel(chanId);
     }
 
     async onOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
@@ -308,17 +288,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             //INVALID CHANNEL
             return;
         }
-
-        let info = await this.NetworkManager.requestChannelInfo(chanId);
-
-        let openId: Long | undefined;
-
-        if (info.OpenLinkId !== Long.ZERO) {
-            openId = info.OpenLinkId;
-        }
         
-        let newChan = this.SessionManager.addChannel(chanId, info.Type, openId);
-        await newChan.ChannelInfo.updateInfo();
+        let newChan = this.SessionManager.addChannel(chanId);
     }
 
     async onMemberDelete(packet: PacketDeleteMemberRes) {
@@ -336,7 +307,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let feed = chat.getFeed();
 
-        let info = await this.getUpdatedChannelInfo(chat.Channel);
+        let info = await chat.Channel.getChannelInfo();
 
         if (feed.FeedType === FeedType.CHAT_KICKED || feed.FeedType === FeedType.OPENLINK_KICKED || feed.FeedType === FeedType.SECRET_LEAVE) {
             if (!feed.MemberId) return;
@@ -353,13 +324,5 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let reason = packet.Reason;
 
         // do something
-    }
-
-    protected async getUpdatedChannelInfo(channel: ChatChannel) {
-        if (channel.LastInfoUpdate + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await channel.ChannelInfo.updateInfo();
-        }
-
-        return channel.ChannelInfo;
     }
 }

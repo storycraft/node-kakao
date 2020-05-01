@@ -116,13 +116,17 @@ export class LocoManager {
             throw new Error('Already logon to LOCO');
         }
 
-        return new Promise((resolve) => {
-            this.locoSocket!.sendPacket(new PacketLoginReq(deviceUUID, accessToken).once('response', (packet: PacketLoginRes) => {
-                this.locoLogon = true;
-                this.schedulePing();
-                resolve(packet);
-            }));
-        });
+        let packet = new PacketLoginReq(deviceUUID, accessToken);
+        let ticket = packet.submitResponseTicket<PacketLoginRes>();
+
+        this.locoSocket!.sendPacket(packet);
+
+        let res = await ticket;
+
+        this.locoLogon = true;
+        this.schedulePing();
+
+        return res;
     }
 
     private schedulePing() {
@@ -144,11 +148,13 @@ export class LocoManager {
             throw new Error('Cannot contact to checkin server');
         }
 
-        return await new Promise((resolve) => {
-            socket.sendPacket(new PacketCheckInReq(userId).once('response', (packet: PacketCheckInRes) => {
-                resolve(new CheckinData(new HostData(packet.Host, packet.Port), packet.CacheExpire));
-            }));
-        });
+        let packet = new PacketCheckInReq(userId);
+        let ticket = packet.submitResponseTicket<PacketCheckInRes>();
+        socket.sendPacket(packet);
+
+        let res = await ticket;
+
+        return new CheckinData(new HostData(res.Host, res.Port), res.CacheExpire);
     }
 
     async getBookingData(bookingHost: HostData = HostData.BookingHost): Promise<BookingData> {
@@ -160,15 +166,17 @@ export class LocoManager {
             throw new Error('Cannot contact to booking server');
         }
 
-        return await new Promise((resolve, reject) => {
-            socket.sendPacket(new PacketGetConfReq().once('response', (packet: PacketGetConfRes) => {
-                if (packet.HostList.length < 1 && packet.PortList.length < 1) {
-                    reject(new Error(`No server avaliable`));
-                }
+        let packet = new PacketGetConfReq();
+        let ticket = packet.submitResponseTicket<PacketGetConfRes>();
+        socket.sendPacket(packet);
 
-                resolve(new BookingData(new HostData(packet.HostList[0], packet.PortList[0])));
-            }));
-        });
+        let res = await ticket;
+        
+        if (res.HostList.length < 1 && res.PortList.length < 1) {
+            throw new Error(`No server avaliable`);
+        }
+
+        return new BookingData(new HostData(res.HostList[0], res.PortList[0]));
     }
 
     protected onPacket(packetId: number, packet: LocoResponsePacket) {

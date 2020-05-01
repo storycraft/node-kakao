@@ -1,6 +1,7 @@
 import * as Bson from "bson";
 import { LocoRequestPacket, LocoResponsePacket } from "./loco-packet-base";
 import { EventEmitter } from "events";
+import { promises } from "dns";
 
 /*
  * Created on Wed Oct 30 2019
@@ -8,7 +9,9 @@ import { EventEmitter } from "events";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export abstract class LocoBsonRequestPacket extends EventEmitter implements LocoRequestPacket {
+export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
+
+    private resolveList: ((packet: any) => void)[] = [];
 
     get StatusCode() {
         return 0;
@@ -26,16 +29,14 @@ export abstract class LocoBsonRequestPacket extends EventEmitter implements Loco
         return Bson.serialize(this.toBodyJson());
     }
 
-    on<T extends LocoResponsePacket>(event: 'response' | string, listener: (packet: T) => void): this;
-
-    on(event: string, listener: (...args: any[]) => void) {
-        return super.on(event, listener);
+    onResponse<T extends LocoResponsePacket>(packet: T) {
+        this.resolveList.forEach(resolve => resolve(packet));
+        this.resolveList = [];
     }
 
-    once<T extends LocoResponsePacket>(event: 'response' | string, listener: (packet: T) => void): this;
-
-    once(event: string, listener: (...args: any[]) => void) {
-        return super.once(event, listener);
+    submitResponseTicket<T extends LocoResponsePacket>(): Promise<T> {
+        let promise = new Promise<T>((resolve, reject) => this.resolveList.push(resolve));
+        return promise;
     }
 
 }

@@ -57,11 +57,8 @@ export * from './talk/struct/channel-meta-set-struct';
 export * from './talk/struct/chat-info-struct';
 
 export * from './talk/chat/chat';
-export * from './talk/chat/chat-attachment';
+export * from './talk/chat/attachment/chat-attachment';
 export * from './talk/room/chat-channel';
-
-export * from './talk/open/open-chat-profile';
-export * from './talk/open/open-link-info';
 
 export * from './talk/chat/template/message-template';
 

@@ -29,8 +29,8 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-client.on('user_join', (channel: ChatChannel, user: ChatUser, joinMessage: string) => {
-    console.log(user.UserInfo.Nickname + ' 님이 ' + channel.ChannelId + ' 방에 참여했습니다. 참가메세지: ' + joinMessage);
+client.on('user_join', (channel: ChatChannel, user: ChatUser, joinFeed: chatFeed) => {
+    console.log(user.UserInfo.Nickname + ' 님이 ' + channel.ChannelId + ' 방에 참여했습니다.');
 });
 
 client.on('user_left', (channel: ChatChannel, user: ChatUser) => {

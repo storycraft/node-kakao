@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { ChatAttachment, SharpAttachment, EmoticonAttachment } from "../chat-attachment";
+import { ChatAttachment, SharpAttachment, EmoticonAttachment } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
 
 /*
@@ -32,8 +32,8 @@ export class AttachmentTemplate implements MessageTemplate {
         return this.attachment;
     }
 
-    set Attachment(photo) {
-        this.attachment = photo;
+    set Attachment(attachment) {
+        this.attachment = attachment;
     }
 
     get Text() {
@@ -102,65 +102,6 @@ export class SharpMessageTemplate implements MessageTemplate {
 
     getPacketExtra() {
         return JSON.stringify(this.sharpAttachment.toJsonAttachment());
-    }
-
-}
-
-//@depreacted
-export abstract class EmoticonMessageTemplate implements MessageTemplate {
-
-    constructor(
-        private text: string = 'Emoticon',
-        private emoticonAttachment: EmoticonAttachment
-    ) {
-
-    }
-
-    abstract getMessageType(): MessageType
-
-    get Text() {
-        return this.text;
-    }
-
-    set Text(text) {
-        this.text = text;
-    }
-
-    get EmoticonAttachment() {
-        return this.emoticonAttachment;
-    }
-
-    set EmoticonAttachment(value) {
-        this.emoticonAttachment = value;
-    }
-
-    get Valid() {
-        return true;
-    }
-
-    getPacketText() {
-        return this.text;
-    }
-
-    getPacketExtra() {
-        return JSON.stringify(this.emoticonAttachment.toJsonAttachment());
-    }
-}
-
-//@depreacted
-export class StaticEmoticonMessageTemplate extends EmoticonMessageTemplate {
-
-    getMessageType() {
-        return MessageType.Sticker;
-    }
-
-}
-
-//@depreacted
-export class EmoticonAniMessageTemplate extends EmoticonMessageTemplate {
-
-    getMessageType() {
-        return MessageType.StickerAni;
     }
 
 }

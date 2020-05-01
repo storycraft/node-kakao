@@ -11,6 +11,7 @@ import { PacketSyncLinkReq, PacketSyncLinkRes } from "../../packet/packet-sync-l
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { PacketCreateChatReq, PacketCreateChatRes } from "../../packet/packet-create-chat";
 import { ChatDeserializeMap } from "../chat/chat-deserialize-map";
+import { OpenChatManager } from "../open/open-chat-manager";
 
 /*
  * Created on Fri Nov 01 2019
@@ -25,12 +26,19 @@ export class SessionManager {
     private clientUser: ClientChatUser;
 
     private channelMap: Map<string, ChatChannel>;
-
     private userMap: Map<string, ChatUser>;
+
+    private messageId: number;
+
+    private openChatManager: OpenChatManager;
 
     constructor(client: TalkClient, clientUser: ClientChatUser) {
         this.client = client;
         this.clientUser = clientUser;
+
+        this.messageId = 0;
+
+        this.openChatManager = new OpenChatManager(this);
 
         this.channelMap = new Map();
         this.userMap = new Map();
@@ -46,6 +54,10 @@ export class SessionManager {
     
     get ChannelList() {
         return Array.from(this.channelMap.values());
+    }
+
+    get OpenChatManager() {
+        return this.openChatManager;
     }
 
     hasChannel(id: Long): boolean {
@@ -74,35 +86,34 @@ export class SessionManager {
         return this.userMap.has(id.toString());
     }
 
-    getUserFrom(chatChannel: ChatChannel, id: Long): ChatUser | null {
-        return chatChannel.ChannelInfo.getUser(id);
+    async getUserFrom(chatChannel: ChatChannel, id: Long): Promise<ChatUser | null> {
+        return (await chatChannel.getChannelInfo()).getUser(id);
     }
 
     async createChannel(...users: ChatUser[]): Promise<ChatChannel> {
-        return await new Promise<ChatChannel>((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketCreateChatReq(users.map((user) => user.UserId)).once('response', (res: PacketCreateChatRes) => {
-            if (this.hasChannel(res.ChannelId)) resolve(this.getChannelById(res.ChannelId));
+        let res = await this.Client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.UserId)));
 
-            let chan = this.addChannel(res.ChannelId, res.ChatInfo.Type);
-            chan.ChannelInfo.updateFromStruct(res.ChatInfo);
+        if (this.hasChannel(res.ChannelId)) return this.getChannelById(res.ChannelId);
 
-            resolve();
-        })));
+        let chan = this.addChannel(res.ChannelId);
+
+        return chan;
     }
 
-    addChannel(id: Long, chatroomType?: ChatroomType, openLinkId?: Long): ChatChannel {
-        let channel = this.addChannelInternal(id, chatroomType, openLinkId);
+    addChannel(id: Long): ChatChannel {
+        let channel = this.addChannelInternal(id);
 
         this.client.emit('join_channel', channel);
 
         return channel;
     }
 
-    protected addChannelInternal(id: Long, chatroomType?: ChatroomType, openLinkId?: Long): ChatChannel {
+    protected addChannelInternal(id: Long): ChatChannel {
         if (this.hasChannel(id)) {
             throw new Error(`Invalid channel. Channel already exists`);
         }
 
-        let channel = new ChatChannel(this, id, chatroomType, openLinkId);
+        let channel = new ChatChannel(this, id);
 
         this.channelMap.set(id.toString(), channel);
 
@@ -133,17 +144,21 @@ export class SessionManager {
         return new TypedChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
     }
 
-    async initOpenChatProfile(): Promise<OpenLinkStruct[]> {
+    // Count sent message count?!
+    getNextMessageId(): number {
+        return this.messageId++;
+    }
+
+    async syncOpenChatProfile(): Promise<OpenLinkStruct[]> {
         let openChatToken = this.ClientUser.OpenChatToken;
 
-        return await new Promise<OpenLinkStruct[]>((resolve, reject) => this.Client.NetworkManager.sendPacket(new PacketSyncLinkReq(openChatToken).once('response', (res: PacketSyncLinkRes) => {
+        let res = await this.Client.NetworkManager.requestPacketRes<PacketSyncLinkRes>(new PacketSyncLinkReq(openChatToken));
 
-            if (res.OpenChatToken > openChatToken) {
-                this.ClientUser.OpenChatToken = res.OpenChatToken;
-            }
+        if (res.OpenChatToken > openChatToken) {
+            this.ClientUser.OpenChatToken = res.OpenChatToken;
+        }
 
-            resolve(res.LinkList);
-        })));
+        return res.LinkList;
     }
     
     async initSession(initDataList: ChatDataStruct[], openChatToken: number) {
@@ -152,10 +167,8 @@ export class SessionManager {
         this.ClientUser.OpenChatToken = openChatToken;
 
         for (let chatData of initDataList) {
-            let channel = this.addChannelInternal(chatData.ChannelId, chatData.Type, chatData.OpenLinkId !== Long.ZERO ? chatData.OpenLinkId : undefined);
+            let channel = this.addChannelInternal(chatData.ChannelId);
         }
-
-        this.ClientUser.updateOpenChatProfile(await this.initOpenChatProfile());
     }
 
 }

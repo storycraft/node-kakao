@@ -2,8 +2,7 @@ import { LoginAccessDataStruct } from "../struct/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ClientSettingsStruct } from "../struct/client-settings-struct";
-import { OpenLinkStruct } from "../struct/open-link-struct";
-import { OpenChatProfile } from "../open/open-chat-profile";
+import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -73,6 +72,9 @@ export class UserInfo implements ChatUserInfoBase {
     private fullProfileImageURL: string;
     private originalProfileImageURL: string;
 
+    private openChatToken?: number;
+    private profileLinkId?: Long;
+
     private lastInfoCache: number;
 
     constructor() {
@@ -115,6 +117,19 @@ export class UserInfo implements ChatUserInfoBase {
         return this.lastInfoCache;
     }
 
+    get ProfileLinkId() {
+        return this.profileLinkId;
+    }
+
+    get OpenChatToken() {
+        return this.openChatToken;
+    }
+
+    isOpenUser(): boolean {
+        if (this.profileLinkId) return true;
+        return false;
+    }
+
     updateNickname(nickname: string) {
         this.nickname = nickname;
     }
@@ -133,6 +148,14 @@ export class UserInfo implements ChatUserInfoBase {
         this.profileImageURL = memberStruct.ProfileImageUrl || '';
         this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
+        
+        if (memberStruct.OpenChatToken !== 0) {
+            this.openChatToken = memberStruct.OpenChatToken;
+        }
+
+        if (memberStruct.ProfileLinkId !== Long.ZERO) {
+            this.profileLinkId = memberStruct.ProfileLinkId;
+        }
     }
 
 }
@@ -141,13 +164,10 @@ export class ClientChatUser extends ChatUser {
 
     private openChatToken: number;
 
-    private openChatProfileList: OpenChatProfile[];
-
     constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: number = 0) {
         super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
 
         this.openChatToken = openChatToken;
-        this.openChatProfileList = [];
     }
 
     get UserInfo() {
@@ -178,20 +198,8 @@ export class ClientChatUser extends ChatUser {
         return this.UserInfo.MainDeviceAppVer;
     }
 
-    get OpenChatProfileList() {
-        return this.openChatProfileList;
-    }
-
     isClientUser() {
         return true;
-    }
-
-    updateOpenChatProfile(openChatProfileList: OpenLinkStruct[]) {
-        this.openChatProfileList = [];
-
-        for (let profileStruct of openChatProfileList) {
-            this.openChatProfileList.push(OpenChatProfile.fromStruct(profileStruct));
-        }
     }
 
 }

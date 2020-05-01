@@ -3,10 +3,11 @@ import { Long, EJSON } from "bson";
 import { ChatChannel } from "../room/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./chat-attachment";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
 import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
+import { KakaoLinkV2Attachment } from "./attachment/kakaolink-attachment";
 
 /*
  * Created on Fri Nov 01 2019
@@ -335,6 +336,22 @@ export class ReplyChat extends Chat {
         sharpAttachment.readAttachment(attachmentJson);
 
         attachmentList.push(sharpAttachment);
+    }
+
+}
+
+export class KakaoLinkV2Chat extends Chat {
+    
+    get Type() {
+        return MessageType.KakaoLinkV2;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let linkAttachment = new KakaoLinkV2Attachment();
+
+        linkAttachment.readAttachment(attachmentJson);
+
+        attachmentList.push(linkAttachment);
     }
 
 }

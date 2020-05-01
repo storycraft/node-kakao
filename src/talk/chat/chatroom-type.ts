@@ -6,6 +6,7 @@
 
 export enum ChatroomType {
 
+    UNKNOWN = 'UNKNOWN',
     GROUP = 'MultiChat',
     SELFCHAT = 'MemoChat',
     OPENCHAT_GROUP = 'OM',

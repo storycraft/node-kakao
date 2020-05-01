@@ -20,7 +20,9 @@ export class MemberStruct implements StructBase {
         public Type: UserType = UserType.Undefined,
         public AccountId: number = 0,
         public LinkedService: string = '',
-        public StatusMessage: string = ''
+        public StatusMessage: string = '',
+        public OpenChatToken: number = 0,
+        public ProfileLinkId: Long = Long.ZERO;
     ) {
 
     }
@@ -35,6 +37,9 @@ export class MemberStruct implements StructBase {
         this.AccountId = rawData['accountId'] || 0;
         this.LinkedService = rawData['linkedService'] || '';
         this.StatusMessage = rawData['statusMessage'] || '';
+
+        this.OpenChatToken = rawData['opt'];
+        this.ProfileLinkId = rawData['pli'];
     }
     
     toJson() {
@@ -54,6 +59,14 @@ export class MemberStruct implements StructBase {
 
         if (this.StatusMessage !== '') {
             obj['statusMessage'] = this.StatusMessage;
+        }
+
+        if (this.OpenChatToken !== 0) {
+            obj['opt'] = this.OpenChatToken;
+        }
+
+        if (this.ProfileLinkId !== Long.ZERO) {
+            obj['pli'] = this.ProfileLinkId;
         }
 
         return obj;
