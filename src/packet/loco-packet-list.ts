@@ -7,7 +7,7 @@ import { PacketMessageReadRes } from "./packet-message-read";
 import { PacketKickoutRes } from "./packet-kickout";
 import { PacketInvoiceRes } from "./packet-invoice";
 import { PacketNewMemberRes } from "./packet-new-member";
-import { PacketLeftRes, PacketLeaveReq } from "./packet-leave";
+import { PacketLeftRes, PacketLeaveReq, PacketLeaveRes } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
 import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 import { PacketChanJoinRes } from "./packet-chan-join";
@@ -117,6 +117,7 @@ export class LocoPacketList {
 
         LocoPacketList.responsePacketMap.set('NEWMEM', PacketNewMemberRes);
         LocoPacketList.responsePacketMap.set('LEFT', PacketLeftRes);
+        LocoPacketList.responsePacketMap.set('LEAVE', PacketLeaveRes);
         LocoPacketList.responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
 
         LocoPacketList.responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);

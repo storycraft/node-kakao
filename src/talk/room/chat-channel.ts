@@ -15,6 +15,7 @@ import { SessionManager } from "../session/session-manager";
 import { ChatBuilder } from "../chat/chat-builder";
 import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
+import { PacketLeaveReq, PacketLeaveRes } from "../../packet/packet-leave";
 
 /*
  * Created on Fri Nov 01 2019
@@ -119,6 +120,13 @@ export class ChatChannel extends EventEmitter {
         let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, channelInfo.ChannelClientUser.UserId, this.channelId, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
 
         return chat;
+    }
+
+    async leave(block: boolean = false): Promise<Long> {
+        let res = await this.sessionManager.Client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(this.ChannelId, block));
+        this.sessionManager.removeChannelLeft(this.ChannelId);
+
+        return res.LastTokenId;
     }
 
     on(event: 'message' | string, listener: (chat: Chat) => void): this;

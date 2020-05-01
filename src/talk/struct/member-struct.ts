@@ -22,7 +22,7 @@ export class MemberStruct implements StructBase {
         public LinkedService: string = '',
         public StatusMessage: string = '',
         public OpenChatToken: number = 0,
-        public ProfileLinkId: Long = Long.ZERO;
+        public ProfileLinkId: Long = Long.ZERO
     ) {
 
     }

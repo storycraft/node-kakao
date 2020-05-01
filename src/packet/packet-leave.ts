@@ -11,7 +11,8 @@ import { Long } from "bson";
 export class PacketLeaveReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: Long = Long.ZERO  
+        public ChannelId: Long = Long.ZERO,
+        public Block: boolean = false
     ) {
         super();
     }
@@ -22,8 +23,28 @@ export class PacketLeaveReq extends LocoBsonRequestPacket {
 
     toBodyJson() {
         return {
-            'chatId': JsonUtil.readLong(this.ChannelId)
+            'chatId': JsonUtil.readLong(this.ChannelId),
+            'block': this.Block
         };
+    }
+    
+}
+
+export class PacketLeaveRes extends LocoBsonResponsePacket {
+
+    constructor(
+        status: number,
+        public LastTokenId: Long = Long.ZERO,
+    ) {
+        super(status);
+    }
+
+    get PacketName() {
+        return 'LEAVE';
+    }
+
+    readBodyJson(rawData: any) {
+        this.LastTokenId = JsonUtil.readLong(rawData['lastTokenId']);
     }
     
 }
