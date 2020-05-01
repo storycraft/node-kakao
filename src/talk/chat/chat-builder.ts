@@ -10,7 +10,7 @@ import { JsonUtil } from "../../util/json-util";
 export namespace ChatBuilder {
     export type BuiltMessage = {
         'text': string,
-        'extra': string
+        'extra': any
     };
 
     export function buildMessage(...textFormat: (string | ChatContent)[]): BuiltMessage {
@@ -77,11 +77,9 @@ export namespace ChatBuilder {
             extra['mentions'] = mentions;
         }
 
-        let extraText = JsonUtil.stringifyLoseless(extra);
-
         return {
             'text': text,
-            'extra': extraText
+            'extra': extra
         }
     }
 

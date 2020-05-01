@@ -1,6 +1,7 @@
 import { MessageType } from "../message-type";
-import { ChatAttachment, SharpAttachment, EmoticonAttachment } from "../attachment/chat-attachment";
+import { ChatAttachment, SharpAttachment, EmoticonAttachment, ChatContent } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
+import { ChatBuilder } from "../chat-builder";
 
 /*
  * Created on Fri Jan 03 2020
@@ -21,11 +22,17 @@ export interface MessageTemplate {
 
 export class AttachmentTemplate implements MessageTemplate {
 
+    private packetText: string;
+    private textExtra: any;
+
     constructor(
         private attachment: ChatAttachment,
-        private text: string = '' //required for some attachment
+        ...textFormat: (string | ChatContent)[]
     ) {
+        let msg = ChatBuilder.buildMessage(...textFormat);
 
+        this.packetText = msg.text;
+        this.textExtra = msg.extra;
     }
 
     get Attachment() {
@@ -37,11 +44,14 @@ export class AttachmentTemplate implements MessageTemplate {
     }
 
     get Text() {
-        return this.text;
+        return this.packetText;
     }
 
-    set Text(text) {
-        this.text = text;
+    setText(...textFormat: (string | ChatContent)[]) {
+        let msg = ChatBuilder.buildMessage(...textFormat);
+
+        this.packetText = msg.text;
+        this.textExtra = msg.extra;
     }
 
     get Valid() {
@@ -53,11 +63,11 @@ export class AttachmentTemplate implements MessageTemplate {
     }
 
     getPacketText() {
-        return this.text;
+        return this.packetText;
     }
 
     getPacketExtra() {
-        return JsonUtil.stringifyLoseless(this.attachment.toJsonAttachment());
+        return JsonUtil.stringifyLoseless({ ...this.textExtra, ...this.attachment.toJsonAttachment() });
     }
 
 }

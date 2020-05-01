@@ -73,6 +73,8 @@ export class SessionManager {
     }
 
     getUser(id: Long): ChatUser {
+        if (this.clientUser.UserId.equals(id)) return this.clientUser;
+        
         if (this.hasUser(id)) return this.userMap.get(id.toString())!;
 
         let user = new ChatUser(id);
@@ -83,7 +85,7 @@ export class SessionManager {
     }
 
     hasUser(id: Long) {
-        return this.userMap.has(id.toString());
+        return this.userMap.has(id.toString()) || this.clientUser.UserId.equals(id);
     }
 
     async getUserFrom(chatChannel: ChatChannel, id: Long): Promise<ChatUser | null> {

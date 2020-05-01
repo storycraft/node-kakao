@@ -16,6 +16,7 @@ import { ChatBuilder } from "../chat/chat-builder";
 import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { PacketLeaveReq, PacketLeaveRes } from "../../packet/packet-leave";
+import { JsonUtil } from "../../util/json-util";
 
 /*
  * Created on Fri Nov 01 2019
@@ -94,12 +95,14 @@ export class ChatChannel extends EventEmitter {
 
     async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
         let { text, extra } = ChatBuilder.buildMessage(...textFormat);
+
+        let extraText = JsonUtil.stringifyLoseless(extra);
         
         let userId = this.sessionManager.ClientUser.UserId;
         
-        let res = await this.sessionManager.Client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.sessionManager.getNextMessageId(), this.channelId, text, MessageType.Text, false, extra));
+        let res = await this.sessionManager.Client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.sessionManager.getNextMessageId(), this.channelId, text, MessageType.Text, false, extraText));
 
-        let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), extra, res.MessageId));
+        let chat = this.sessionManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.channelId, MessageType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
         
         return chat;
     }
@@ -423,6 +426,9 @@ export class ChannelInfo {
     async updateInfo(): Promise<void> {
         if (this.pendingInfoReq) return this.pendingInfoReq;
 
+        let resolver: () => void | null;
+        this.pendingInfoReq = new Promise((resolve, reject) => resolver = resolve);
+
         let networkManager = this.channel.Client.NetworkManager;
 
         let info = await networkManager.requestChannelInfo(this.channel.ChannelId);
@@ -432,6 +438,8 @@ export class ChannelInfo {
         this.updateFromStruct(info, this.openLinkInfo);
 
         await this.updateOpenInfo();
+
+        resolver!();
     }
 
     async updateOpenInfo(): Promise<void> {
@@ -447,12 +455,17 @@ export class ChannelInfo {
     protected async updateMemberInfo(chatInfo: ChatInfoStruct): Promise<void> {
         if (this.pendingUserInfoReq) return this.pendingUserInfoReq;
 
+        let resolver: () => void | null;
+        this.pendingUserInfoReq = new Promise((resolve, reject) => resolver = resolve);
+
         let networkManager = this.channel.Client.NetworkManager;
 
         let infoList = await networkManager.requestMemberInfo(this.channel.ChannelId);
         let activeInfoList = await networkManager.requestSpecificMemberInfo(this.channel.ChannelId, chatInfo.MemberList.map((item) => item.UserId));
         
         this.initMemberList(infoList.slice().concat(activeInfoList));
+
+        resolver!();
     }
 
 }

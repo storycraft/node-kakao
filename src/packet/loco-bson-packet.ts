@@ -35,7 +35,7 @@ export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
     }
 
     submitResponseTicket<T extends LocoResponsePacket>(): Promise<T> {
-        let promise = new Promise<T>((resolve, reject) => this.resolveList.push(resolve));
+        let promise = new Promise<T>((resolve, reject) => { this.resolveList.push(resolve) });
         return promise;
     }
 

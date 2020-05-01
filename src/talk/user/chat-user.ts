@@ -3,6 +3,7 @@ import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ClientSettingsStruct } from "../struct/client-settings-struct";
 import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
+import { UserType } from "./user-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -77,6 +78,8 @@ export class UserInfo implements ChatUserInfoBase {
 
     private lastInfoCache: number;
 
+    private userType: UserType;
+
     constructor() {
         this.infoLoaded = false;
         this.accountId = 0;
@@ -87,6 +90,7 @@ export class UserInfo implements ChatUserInfoBase {
         this.originalProfileImageURL = '';
 
         this.lastInfoCache = -1;
+        this.userType = UserType.Undefined;
     }
 
     get AccountId() {
@@ -125,7 +129,16 @@ export class UserInfo implements ChatUserInfoBase {
         return this.openChatToken;
     }
 
+    get UserType() {
+        return this.userType;
+    }
+
     isOpenUser(): boolean {
+        if (this.openChatToken) return true;
+        return false;
+    }
+
+    hasOpenProfile(): boolean {
         if (this.profileLinkId) return true;
         return false;
     }
@@ -156,6 +169,8 @@ export class UserInfo implements ChatUserInfoBase {
         if (memberStruct.ProfileLinkId !== Long.ZERO) {
             this.profileLinkId = memberStruct.ProfileLinkId;
         }
+
+        this.userType = memberStruct.Type;
     }
 
 }
