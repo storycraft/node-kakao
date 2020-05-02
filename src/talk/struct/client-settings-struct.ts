@@ -1,4 +1,6 @@
 import { StructBase } from "./struct-base";
+import { JsonUtil } from "../../util/json-util";
+import { Long } from "bson";
 
 /*
  * Created on Sun Nov 03 2019
@@ -21,7 +23,7 @@ export class ClientSettingsStruct implements StructBase {
         public StatusMessage: string = '',
         public StoryURL: string = '',
         public Suspended: boolean = false,
-        public UserId: number = 0
+        public UserId: Long = Long.ZERO
     ) {
 
     }
@@ -40,7 +42,7 @@ export class ClientSettingsStruct implements StructBase {
         this.StatusMessage = rawData['statusMessage'];
         this.StoryURL = rawData['storyWebUrl'];
         this.Suspended = rawData['suspended'];
-        this.UserId = rawData['userId'];
+        this.UserId = JsonUtil.readLong(rawData['userId']);
     }
     
     toJson() {

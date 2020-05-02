@@ -17,7 +17,7 @@ import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRe
 import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
 import { PacketRewriteReq } from "./packet-rewrite";
-import { PacketKickMemberReq } from "./packet-kick-member";
+import { PacketKickMemberReq, PacketKickMemberRes } from "./packet-kick-member";
 import { PacketDeleteLinkReq } from "./packet-delete-link";
 import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
@@ -27,7 +27,7 @@ import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
 import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./loco-noti-read";
-import { PacketJoinInfoReq } from "./packet-join-info";
+import { PacketJoinInfoReq, PacketJoinInfoRes } from "./packet-join-info";
 
 /*
  * Created on Wed Oct 30 2019
@@ -112,6 +112,10 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('GETMEM', PacketGetMemberRes);
         LocoPacketList.responsePacketMap.set('MEMBER', PacketMemberRes);
         LocoPacketList.responsePacketMap.set('GETMOMETA', PacketGetMoimMetaRes);
+
+        LocoPacketList.responsePacketMap.set('JOININFO', PacketJoinInfoRes);
+
+        LocoPacketList.responsePacketMap.set('KICKMEM', PacketKickMemberRes);
 
         LocoPacketList.responsePacketMap.set('CREATE', PacketCreateChatRes);
 

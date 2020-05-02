@@ -4,9 +4,16 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export enum StatusCode {
+
+    SUCCESS = 0,
+    OPERATION_DENIED = -500
+
+}
+
 interface LocoPacketBase {
 
-    readonly StatusCode: number;
+    readonly StatusCode: StatusCode;
 
     readonly PacketName: string;
 

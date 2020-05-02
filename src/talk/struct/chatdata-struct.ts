@@ -1,4 +1,4 @@
-import { ChatroomType } from "../chat/chatroom-type";
+import { ChannelType } from "../chat/channel-type";
 import { StructBase } from "./struct-base";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
@@ -13,7 +13,7 @@ export class ChatDataStruct implements StructBase {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
-        public Type: ChatroomType = ChatroomType.GROUP,
+        public Type: ChannelType = ChannelType.GROUP,
         public OpenLinkId: Long = Long.ZERO,
         public OpenChatToken: number = -1,
         public MemberCount: number = 0,

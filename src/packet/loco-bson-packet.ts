@@ -1,5 +1,5 @@
 import * as Bson from "bson";
-import { LocoRequestPacket, LocoResponsePacket } from "./loco-packet-base";
+import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "./loco-packet-base";
 import { EventEmitter } from "events";
 import { promises } from "dns";
 
@@ -13,8 +13,8 @@ export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
 
     private resolveList: ((packet: any) => void)[] = [];
 
-    get StatusCode() {
-        return 0;
+    get StatusCode(): StatusCode {
+        return StatusCode.SUCCESS;
     }
 
     abstract get PacketName(): string;
@@ -47,7 +47,7 @@ export abstract class LocoBsonResponsePacket implements LocoResponsePacket {
         
     }
 
-    get StatusCode() {
+    get StatusCode(): StatusCode {
         return this.status;
     }
 

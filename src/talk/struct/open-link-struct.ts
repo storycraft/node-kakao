@@ -18,7 +18,7 @@ export class OpenLinkStruct implements StructBase {
         public LinkName: string = '',
         public LinkURL: string = '',
         public LinkType: OpenLinkType = OpenLinkType.PROFILE,
-        public readonly Member: OpenMemberStruct = new OpenMemberStruct(),
+        public readonly Owner: OpenMemberStruct = new OpenMemberStruct(),
         public Description: string = '',
         public CoverURL: string = ''
         ) {
@@ -33,7 +33,7 @@ export class OpenLinkStruct implements StructBase {
 
         this.LinkType = rawData['lt'];
 
-        this.Member.fromJson(rawData['olu']);
+        this.Owner.fromJson(rawData['olu']);
 
         this.Description = rawData['desc'];
         this.CoverURL = rawData['liu'];
@@ -46,7 +46,7 @@ export class OpenLinkStruct implements StructBase {
             'ln': this.LinkName,
             'lu': this.LinkURL,
             'lt': this.LinkType,
-            'olu': this.Member.toJson(),
+            'olu': this.Owner.toJson(),
             'desc': this.Description,
             'liu': this.CoverURL
         };

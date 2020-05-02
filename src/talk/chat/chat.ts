@@ -1,6 +1,6 @@
 import { MessageType } from "./message-type";
 import { Long, EJSON } from "bson";
-import { ChatChannel } from "../room/chat-channel";
+import { ChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
@@ -174,9 +174,21 @@ export abstract class Chat {
             return false;
         }
 
-        return this.channel.Client.NetworkManager.sendPacket(new PacketDeleteChatReq(this.channel.ChannelId, this.logId));
+        return this.channel.Client.NetworkManager.sendPacket(new PacketDeleteChatReq(this.channel.Id, this.logId));
     }
     
+}
+
+export class FeedChat extends Chat {
+    
+    get Type() {
+        return MessageType.Feed;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        
+    }
+
 }
 
 export class TextChat extends Chat {

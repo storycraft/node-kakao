@@ -1,5 +1,6 @@
 import { KakaoAPI } from "../kakao-api";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 17 2019
@@ -10,7 +11,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 export class PacketCheckInReq extends LocoBsonRequestPacket {
 
     constructor(
-        public UserId: number = 0,
+        public UserId: Long = Long.ZERO,
         public Os: string = KakaoAPI.Agent,
         public NetType: number = 0,
         public Appver: string = KakaoAPI.InternalAppVersion,

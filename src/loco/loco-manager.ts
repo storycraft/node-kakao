@@ -10,6 +10,7 @@ import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketHandler } from "./loco-packet-handler";
 import { LocoPacketList } from "../packet/loco-packet-list";
 import { PacketPingReq } from "../packet/packet-ping";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 24 2019
@@ -76,7 +77,7 @@ export class LocoManager {
         return new LocoSecureSocket(hostInfo.Host, hostInfo.Port, true);
     }
 
-    async connect(deviceUUID: string, accessToken: string, userId: number): Promise<boolean> {
+    async connect(deviceUUID: string, accessToken: string, userId: Long): Promise<boolean> {
         let bookingData = await this.getBookingData();
         let checkinData = await this.getCheckinData(bookingData.CheckinHost, userId);
         
@@ -139,7 +140,7 @@ export class LocoManager {
         this.sendPacket(new PacketPingReq());
     }
 
-    async getCheckinData(checkinHost: HostData, userId: number): Promise<CheckinData> {
+    async getCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
         let socket = this.createCheckinSocket(checkinHost);
 
         let connected = await socket.connect();

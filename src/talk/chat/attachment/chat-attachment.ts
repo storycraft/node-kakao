@@ -575,6 +575,6 @@ export class ReplyAttachment implements ChatAttachment {
     }
 
     static fromChat(chat: Chat): ReplyAttachment {
-        return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.UserId, chat.Text, chat.getMentionContentList());
+        return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.Id, chat.Text, chat.getMentionContentList());
     }
 }
