@@ -161,10 +161,10 @@ export class ChannelInfo {
             }
         }
 
-        this.roomImageURL = chatinfoStruct.Meta.ImageURL;
-        this.roomFullImageURL = chatinfoStruct.Meta.FullImageURL;
+        this.roomImageURL = chatinfoStruct.Metadata.ImageURL;
+        this.roomFullImageURL = chatinfoStruct.Metadata.FullImageURL;
 
-        this.isFavorite = chatinfoStruct.Meta.Favorite;
+        this.isFavorite = chatinfoStruct.Metadata.Favorite;
 
         this.roomType = chatinfoStruct.Type;
 

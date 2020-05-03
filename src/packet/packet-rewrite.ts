@@ -15,8 +15,8 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
         public Time: number = 0,
-        public RewriteFeedType: FeedType.OPENLINK_REWRITE_FEED | FeedType.RICH_CONTENT = FeedType.OPENLINK_REWRITE_FEED,
-        public Unknown1: string = '',
+        public RewriteFeedType: FeedType = FeedType.OPENLINK_REWRITE_FEED,
+        public Unknown1: string = '', //Chat Reporting?
         public Unknown2: string = '',
     ) {
         super();
@@ -34,11 +34,11 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
             't': this.Time
         };
 
-        if (this.Unknown1.trim() != '') {
+        if (this.Unknown1 !== '') {
             obj['rcli'] = this.Unknown1;
         }
 
-        if (this.Unknown2.trim() != '') {
+        if (this.Unknown2 !== '') {
             obj['cat'] = this.Unknown2;
         }
 

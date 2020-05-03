@@ -191,7 +191,7 @@ export abstract class Chat {
 
         let openChannel = this.channel as OpenChatChannel;
 
-        return openChannel.hideChat(this.logId);
+        return openChannel.hideChat(this);
     }
     
 }

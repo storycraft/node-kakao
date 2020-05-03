@@ -18,6 +18,8 @@ import { ChatUser } from "../user/chat-user";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
 import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite";
 import { FeedType } from "../feed/feed-type";
+import { OpenMemberType } from "./open-member-type";
+import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 
 export class OpenChatManager extends IdStore<OpenLinkStruct> {
 
@@ -99,11 +101,17 @@ export class OpenChatManager extends IdStore<OpenLinkStruct> {
         }
     }
 
-    async kickMember(channel: OpenChatChannel, user: ChatUser): Promise<boolean> {
+    async getLinkOwner(linkId: Long): Promise<ChatUser> {
+        let info = await this.get(linkId);
+        
+        return this.client.UserManager.get(info.Owner.UserId);
+    }
+
+    async kickMember(channel: OpenChatChannel, userId: Long): Promise<boolean> {
         let info = await channel.getChannelInfo();
 
-        if (info.hasUserInfo(user.Id)) {
-            let res = await this.Client.NetworkManager.requestPacketRes<PacketKickMemberRes>(new PacketKickMemberReq(channel.LinkId, channel.Id, user.Id));
+        if (info.hasUserInfo(userId)) {
+            let res = await this.Client.NetworkManager.requestPacketRes<PacketKickMemberRes>(new PacketKickMemberReq(channel.LinkId, channel.Id, userId));
 
             return res.StatusCode === StatusCode.SUCCESS;
         }
@@ -112,9 +120,7 @@ export class OpenChatManager extends IdStore<OpenLinkStruct> {
     }
     
     async deleteLink(linkId: Long): Promise<boolean> {
-        let info = await this.get(linkId);
-
-        if (this.ClientUser.Id.notEquals(info.Owner.UserId)) return false;
+        if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;
 
         let res = await this.Client.NetworkManager.requestPacketRes<PacketDeleteLinkRes>(new PacketDeleteLinkReq(linkId));
 
@@ -127,9 +133,17 @@ export class OpenChatManager extends IdStore<OpenLinkStruct> {
     }
 
     async hideChat(channel: OpenChatChannel, logId: Long): Promise<boolean> {
+        let res = await this.Client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, Math.floor(Date.now() / 1000), FeedType.OPENLINK_REWRITE_FEED));
+
+        return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async updateOpenMemberType(channel: OpenChatChannel, idTypeSet: Map<Long, OpenMemberType>): Promise<boolean> {
         let linkId = channel.LinkId;
 
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(linkId, channel.Id, logId, Date.now() / 1000, FeedType.OPENLINK_REWRITE_FEED));
+        if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;
+        
+        let res = await this.Client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, Array.from(idTypeSet.keys()), Array.from(idTypeSet.values())));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }

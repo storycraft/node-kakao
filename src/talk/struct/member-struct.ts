@@ -2,6 +2,7 @@ import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
+import { OpenMemberType } from "../open/open-member-type";
 
 /*
  * Created on Sat Nov 02 2019
@@ -22,6 +23,7 @@ export class MemberStruct implements StructBase {
         public LinkedService: string = '',
         public StatusMessage: string = '',
         public OpenChatToken: number = 0,
+        public OpenChatMemberType: OpenMemberType = OpenMemberType.NONE,
         public ProfileLinkId: Long = Long.ZERO
     ) {
 
@@ -38,8 +40,9 @@ export class MemberStruct implements StructBase {
         this.LinkedService = rawData['linkedService'] || '';
         this.StatusMessage = rawData['statusMessage'] || '';
 
-        this.OpenChatToken = rawData['opt'];
-        this.ProfileLinkId = rawData['pli'];
+        this.OpenChatToken = rawData['opt'] || 0;
+        this.ProfileLinkId = rawData['pli'] || Long.ZERO;
+        this.OpenChatMemberType = rawData['mt'] || OpenMemberType.NONE;
     }
     
     toJson() {
@@ -63,6 +66,7 @@ export class MemberStruct implements StructBase {
 
         if (this.OpenChatToken !== 0) {
             obj['opt'] = this.OpenChatToken;
+            obj['mt'] = this.OpenChatMemberType;
         }
 
         if (this.ProfileLinkId !== Long.ZERO) {
