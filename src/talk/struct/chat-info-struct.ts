@@ -5,6 +5,7 @@ import { ChatlogStruct } from "./chatlog-struct";
 import { MemberStruct } from "./member-struct";
 import { JsonUtil } from "../../util/json-util";
 import { type } from "os";
+import { ChatDataBase } from "./chatdata-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -12,7 +13,7 @@ import { type } from "os";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatInfoStruct implements StructBase {
+export class ChatInfoStruct implements ChatDataBase, StructBase {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
@@ -26,7 +27,7 @@ export class ChatInfoStruct implements StructBase {
         public LastLogId: Long = Long.fromNumber(-1),
         public LastSeenLogId: Long = Long.fromNumber(-1),
         public LastChatLog: ChatlogStruct | null = null,
-        public readonly Meta: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
+        public readonly Metadata: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
         public readonly MemberList: MemberStruct[] = [],
         public PushAlert: boolean = false,
         public ChatMetaList: ChannelMetaStruct[] = [],
@@ -62,7 +63,7 @@ export class ChatInfoStruct implements StructBase {
         }
 
         if (rawJson['meta']) {
-            this.Meta.fromJson(rawJson['meta']);
+            this.Metadata.fromJson(rawJson['meta']);
         }
 
         this.MemberList.length = 0;
@@ -115,7 +116,7 @@ export class ChatInfoStruct implements StructBase {
             obj['lastChatLog'] = this.LastChatLog.toJson();
         }
 
-        obj['meta'] = this.Meta;
+        obj['meta'] = this.Metadata;
 
         let displayMemList: any[] = [];
 

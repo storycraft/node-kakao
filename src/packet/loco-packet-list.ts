@@ -16,9 +16,9 @@ import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "./packet-get-meta";
 import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
-import { PacketRewriteReq } from "./packet-rewrite";
+import { PacketRewriteReq, PacketRewriteRes } from "./packet-rewrite";
 import { PacketKickMemberReq, PacketKickMemberRes } from "./packet-kick-member";
-import { PacketDeleteLinkReq } from "./packet-delete-link";
+import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "./packet-delete-link";
 import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
 import { PacketPingRes, PacketPingReq } from "./packet-ping";
@@ -28,6 +28,8 @@ import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
 import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./loco-noti-read";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "./packet-join-info";
+import { PacketSetMemTypeRes, PacketSetMemTypeReq } from "./packet-set-mem-type";
+import { PacketLinkKickedRes } from "./packet-link-kicked";
 
 /*
  * Created on Wed Oct 30 2019
@@ -78,6 +80,7 @@ export class LocoPacketList {
         LocoPacketList.reqeustPacketMap.set('DELETELINK', PacketDeleteLinkReq);
         LocoPacketList.reqeustPacketMap.set('INFOLINK', PacketInfoLinkReq);
         LocoPacketList.reqeustPacketMap.set('JOININFO', PacketJoinInfoReq);
+        LocoPacketList.reqeustPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
 
         LocoPacketList.reqeustPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
 
@@ -126,6 +129,10 @@ export class LocoPacketList {
 
         LocoPacketList.responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
         LocoPacketList.responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
+        LocoPacketList.responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
+        LocoPacketList.responsePacketMap.set('REWRITE', PacketRewriteRes);
+        LocoPacketList.responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
+        LocoPacketList.responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
 
         LocoPacketList.responsePacketMap.set('INVOICE', PacketInvoiceRes);
 

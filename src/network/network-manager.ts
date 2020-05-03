@@ -28,6 +28,7 @@ import { PacketDeleteMemberRes } from "../packet/packet-delmem";
 import { FeedType } from "../talk/feed/feed-type";
 import { ChatFeed } from "../talk/chat/chat-feed";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
+import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
 
 /*
  * Created on Fri Nov 01 2019
@@ -166,9 +167,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('SYNCLINKCR', this.onOpenChannelJoin.bind(this));
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
+        this.on('LINKKICKED', this.onLinkKicked.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
-        this.on('KICKOUT', this.onKicked.bind(this));
+        this.on('KICKOUT', this.onLocoKicked.bind(this));
     }
 
     get NetworkManager() {
@@ -267,6 +269,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.ChannelManager.syncLeft(channel);
     }
 
+    async onLinkKicked(packet: PacketLinkKickedRes) {
+        let channel = await this.ChannelManager.get(packet.ChannelId);
+
+        this.ChannelManager.syncLeft(channel);
+    }
+
     async onChannelJoin(packet: PacketChanJoinRes) {
         let chanId = packet.ChannelId;
 
@@ -336,7 +344,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         info.removeUserLeft(feed.Member.UserId);
     }
 
-    onKicked(packet: PacketKickoutRes) {
+    onLocoKicked(packet: PacketKickoutRes) {
         let reason = packet.Reason;
 
         this.Client.emit('disconnected', reason);

@@ -1,13 +1,14 @@
 import { MessageType } from "./message-type";
 import { Long, EJSON } from "bson";
-import { ChatChannel } from "../channel/chat-channel";
+import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
-import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
+import { PacketDeleteChatReq, PacketDeleteChatRes } from "../../packet/packet-delete-chat";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { KakaoLinkV2Attachment } from "./attachment/kakaolink-attachment";
+import { StatusCode } from "../../packet/loco-packet-base";
 
 /*
  * Created on Fri Nov 01 2019
@@ -169,12 +170,28 @@ export abstract class Chat {
         return this.Sender.isClientUser();
     }
 
+    get Hidable(): boolean {
+        return this.channel.isOpenChat();
+    }
+
     async delete(): Promise<boolean> {
         if (!this.Deletable) {
             return false;
         }
 
-        return this.channel.Client.NetworkManager.sendPacket(new PacketDeleteChatReq(this.channel.Id, this.logId));
+        let res = await this.channel.Client.NetworkManager.requestPacketRes<PacketDeleteChatRes>(new PacketDeleteChatReq(this.channel.Id, this.logId));
+
+        return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async hide(): Promise<boolean> {
+        if (!this.Hidable) {
+            return false;
+        }
+
+        let openChannel = this.channel as OpenChatChannel;
+
+        return openChannel.hideChat(this.logId);
     }
     
 }

@@ -10,7 +10,7 @@ import { Long } from "bson";
 export class PacketDeleteChatReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChatId: Long = Long.ZERO,
+        public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO
     ) {
         super();
@@ -22,7 +22,7 @@ export class PacketDeleteChatReq extends LocoBsonRequestPacket {
 
     toBodyJson() {
         return {
-            'chatId': this.ChatId,
+            'chatId': this.ChannelId,
             'logId': this.LogId
         };
     }

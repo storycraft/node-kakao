@@ -9,7 +9,15 @@ import { Long } from "bson";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatDataStruct implements StructBase {
+export interface ChatDataBase {
+    ChannelId: Long;
+    Type: ChannelType;
+    OpenLinkId: Long;
+    OpenChatToken: number;
+    readonly Metadata: ChatDataMetaStruct;
+}
+
+export class ChatDataStruct implements ChatDataBase, StructBase {
 
     constructor(
         public ChannelId: Long = Long.ZERO,

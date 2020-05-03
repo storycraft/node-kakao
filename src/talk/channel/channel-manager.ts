@@ -12,7 +12,7 @@ import { ChatUser } from "../user/chat-user";
 import { PacketCreateChatRes, PacketCreateChatReq } from "../../packet/packet-create-chat";
 import { PacketChatInfoReq, PacketChatInfoRes } from "../../packet/packet-chatinfo";
 import { ChatInfoStruct } from "../struct/chat-info-struct";
-import { ChatDataStruct } from "../struct/chatdata-struct";
+import { ChatDataStruct, ChatDataBase } from "../struct/chatdata-struct";
 import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
 import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
@@ -27,6 +27,10 @@ export class ChannelManager extends IdStore<ChatChannel> {
         return this.client;
     }
 
+    getChannelList() {
+        return Array.from(super.values());
+    }
+
     get(id: Long) {
         return super.get(id, true);
     }
@@ -36,7 +40,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = this.channelFromChatInfo(res.ChatInfo);
+        let chan = this.channelFromChatData(res.ChatInfo);
 
         this.setCache(res.ChannelId, chan);
 
@@ -46,18 +50,18 @@ export class ChannelManager extends IdStore<ChatChannel> {
     protected async fetchValue(key: Long): Promise<ChatChannel> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(key));
 
-        return this.channelFromChatInfo(res.ChatInfo);
+        return this.channelFromChatData(res.ChatInfo);
     }
 
-    protected channelFromChatInfo(chatInfo: ChatInfoStruct): ChatChannel {
+    protected channelFromChatData(chatData: ChatDataBase): ChatChannel {
         let channel: ChatChannel;
 
-        switch(chatInfo.Type) {
+        switch(chatData.Type) {
 
             case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, chatInfo.ChannelId, chatInfo.Type, chatInfo.OpenLinkId, chatInfo.OpenChatToken); break;
+            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, chatData.ChannelId, chatData.Type, chatData.OpenLinkId, chatData.OpenChatToken); break;
 
-            default: channel = new ChatChannel(this.client, chatInfo.ChannelId, chatInfo.Type); break;
+            default: channel = new ChatChannel(this.client, chatData.ChannelId, chatData.Type); break;
             
         }
 
@@ -87,7 +91,9 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
     initalizeLoginData(chatDataList: ChatDataStruct[]) {
         for (let chatData of chatDataList) {
-            
+            let channel: ChatChannel = this.channelFromChatData(chatData);
+
+            this.setCache(channel.Id, channel);
         }
     }
 

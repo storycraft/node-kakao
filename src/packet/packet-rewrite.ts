@@ -1,4 +1,4 @@
-import { LocoBsonRequestPacket } from "./loco-bson-packet";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { FeedType } from "../talk/feed/feed-type";
 
@@ -11,11 +11,11 @@ import { FeedType } from "../talk/feed/feed-type";
 export class PacketRewriteReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ClientOpenUserId: Long = Long.ZERO,
+        public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
         public Time: number = 0,
-        public RewriteFeedType: FeedType | null = FeedType.OPENLINK_REWRITE_FEED,
+        public RewriteFeedType: FeedType.OPENLINK_REWRITE_FEED | FeedType.RICH_CONTENT = FeedType.OPENLINK_REWRITE_FEED,
         public Unknown1: string = '',
         public Unknown2: string = '',
     ) {
@@ -28,7 +28,7 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
     
     toBodyJson() {
         let obj: any = {
-            'li': this.ClientOpenUserId,
+            'li': this.LinkId,
             'c': this.ChannelId,
             'logId': this.LogId,
             't': this.Time
@@ -49,4 +49,15 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         return obj;
     }
 
+}
+
+export class PacketRewriteRes extends LocoBsonResponsePacket {
+    
+    get PacketName() {
+        return 'REWRITE';
+    }
+
+    readBodyJson(body: any): void {
+        
+    }
 }

@@ -161,4 +161,16 @@ export class OpenChatChannel extends ChatChannel {
         return this.Client.OpenChatManager.kickMember(this, user);
     }
 
+    async deleteLink(): Promise<boolean> {
+        return this.Client.OpenChatManager.deleteLink(this.linkId);
+    }
+
+    async hideChat(logId: Long) {
+        return this.Client.OpenChatManager.hideChat(this, logId);
+    }
+
+    async getOpenProfile(): Promise<OpenLinkStruct> {
+        return this.Client.OpenChatManager.get(this.linkId);
+    }
+
 }

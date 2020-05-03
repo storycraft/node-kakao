@@ -37,6 +37,10 @@ export abstract class ConvertibleMap<K, MK, V> {
         this.cacheMap.delete(this.convertKey(key));
     }
 
+    protected values() {
+        return this.cacheMap.values();
+    }
+
     protected clear() {
         this.cacheMap.clear();
     }

@@ -68,7 +68,7 @@ export abstract class LocoBsonResponsePacket implements LocoResponsePacket {
             promoteLongs: false
         });
 
-        this.status = json['status'] || 0;
+        this.status = json['status'] || StatusCode.SUCCESS;
 
         this.readBodyJson(json);
     }
