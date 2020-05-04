@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { IdStore } from "../../store/store";
+import { AsyncIdStore } from "../../store/store";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { Long } from "bson";
 import { TalkClient } from "../../talk-client";
@@ -17,7 +17,7 @@ import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
 import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 
-export class ChannelManager extends IdStore<ChatChannel> {
+export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
     constructor(private client: TalkClient) {
         super();

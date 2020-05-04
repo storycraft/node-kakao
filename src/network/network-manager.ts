@@ -220,7 +220,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let channelInfo = await channel.getChannelInfo();
 
-        let reader = await this.UserManager.get(packet.ReaderId);
+        let reader = this.UserManager.get(packet.ReaderId);
 
         let watermark = packet.Watermark;
 
@@ -312,7 +312,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let info = await chat.Channel.getChannelInfo();
 
-        let kickedUser = await this.UserManager.get(feed.Member.UserId);
+        let kickedUser = this.UserManager.get(feed.Member.UserId);
 
         kickedUser.emit('left', channel, feed);
         channel.emit('left', kickedUser, feed);
@@ -335,7 +335,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         
         let info = await chat.Channel.getChannelInfo();
             
-        let leftUser = await this.UserManager.get(feed.Member.UserId);
+        let leftUser = this.UserManager.get(feed.Member.UserId);
 
         leftUser.emit('left', channel, feed);
         channel.emit('left', leftUser, feed);

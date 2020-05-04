@@ -10,7 +10,7 @@ import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
 import { PacketSyncLinkRes, PacketSyncLinkReq } from "../../packet/packet-sync-link";
 import { TalkClient } from "../../talk-client";
-import { IdStore } from "../../store/store";
+import { AsyncIdStore } from "../../store/store";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { OpenChatChannel } from "../channel/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
@@ -21,7 +21,7 @@ import { FeedType } from "../feed/feed-type";
 import { OpenMemberType } from "./open-member-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 
-export class OpenChatManager extends IdStore<OpenLinkStruct> {
+export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
     private static readonly LINK_REGEX: RegExp = /(http(s)?:\/\/(open.kakao.com\/o)?\/)/g;
 

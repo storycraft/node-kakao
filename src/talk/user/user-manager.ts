@@ -19,11 +19,11 @@ export class UserManager extends IdStore<ChatUser> {
         return this.client;
     }
 
-    protected async fetchValue(key: Long): Promise<ChatUser> {
+    protected fetchValue(key: Long): ChatUser {
         return new ChatUser(this.client, key);
     }
 
-    async get(key: Long) {
+    get(key: Long) {
         if (this.client.ClientUser.Id.equals(key)) return this.client.ClientUser;
 
         return super.get(key, true);

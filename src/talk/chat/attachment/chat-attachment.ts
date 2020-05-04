@@ -347,11 +347,11 @@ export class SharpAttachment implements ChatAttachment {
     constructor(
         public Question: string = '',
         public RedirectURL: string = '',
-        public ContentType: string = '',
+        public ContentType: SharpContentType = SharpContentType.NONE,
+        public ContentList: SharpContent[] = [],
         public ImageURL: string = '',
         public ImageWidth: number = -1,
-        public ImageHeight: number = -1,
-        public ContentList: SharpContent[] = []
+        public ImageHeight: number = -1
     ) {
         
     }
@@ -363,7 +363,7 @@ export class SharpAttachment implements ChatAttachment {
     readAttachment(rawJson: any): void {
         this.Question = rawJson['Q'];
 
-        this.ContentType = rawJson['V'];
+        this.ContentType = rawJson['V'] || SharpContentType.NONE;
 
         this.ImageURL = rawJson['I'] || '';
         this.ImageWidth = rawJson['W'] || -1;
@@ -377,7 +377,18 @@ export class SharpAttachment implements ChatAttachment {
             let list: any[] = rawJson['R'];
 
             for (let rawContent of list) {
-                let content = new SharpContent();
+                let content: SharpContent;
+
+                switch(this.ContentType) {
+                    case SharpContentType.VIDEO_CLIP: content = new SharpVideoContent(); break;
+                    
+                    case SharpContentType.LIST: content = new SharpImageContent(); break;
+
+                    case SharpContentType.IMAGE: content = new SharpImageContent(); break;
+
+                    case SharpContentType.WEATHER: 
+                    default: continue;
+                }
 
                 content.readRawContent(rawContent);
 
@@ -420,23 +431,40 @@ export class SharpAttachment implements ChatAttachment {
 
 }
 
-export class SharpContent implements AttachmentContent {
+export enum SharpContentType {
+
+    NONE = '',
+    LIST = 'list',
+    IMAGE = 'image',
+    VIDEO_CLIP = 'vclip',
+    WEATHER = 'weather'
+
+}
+
+export abstract class SharpContent implements AttachmentContent {
+    
+    abstract readRawContent(rawData: any): void;
+    
+    abstract toRawContent(): any;
+
+}
+
+export class SharpImageContent extends SharpContent {
 
     constructor(
+        public Title: string = '',
         public Description: string = '',
-        public Type: string = '',
         public RedirectURL: string = '',
         public ImageURL: string = '',
         public ImageWidth: number = -1,
         public ImageHeight: number = -1,
     ) {
-        
+        super();
     }
 
     readRawContent(rawData: any) {
+        this.Title = rawData['T'];
         this.Description = rawData['D'];
-
-        this.Type = rawData['T'];
 
         this.ImageURL = rawData['I'] || '';
         this.ImageWidth = rawData['W'] || -1;
@@ -448,8 +476,60 @@ export class SharpContent implements AttachmentContent {
     toRawContent(): any {
         let obj: any = {
             'D': this.Description,
-            'T': this.Type,
+            'T': this.Title,
             'L': this.RedirectURL
+        };
+
+        if (this.ImageURL !== '') {
+            obj['I'] = this.ImageURL;
+        }
+
+        if (this.ImageWidth !== -1) {
+            obj['W'] = this.ImageWidth;
+        }
+
+        if (this.ImageHeight !== -1) {
+            obj['H'] = this.ImageHeight;
+        }
+
+        return obj;
+    }
+
+}
+
+export class SharpVideoContent extends SharpContent {
+
+    constructor(
+        public Title: string = '',
+        public Description: string = '',
+        public RedirectURL: string = '',
+        public PlayTime: number = 0,
+        public ImageURL: string = '',
+        public ImageWidth: number = -1,
+        public ImageHeight: number = -1,
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any) {
+        this.Title = rawData['T'];
+        this.Description = rawData['D'];
+
+        this.PlayTime = rawData['PT'] || 0;
+
+        this.ImageURL = rawData['I'] || '';
+        this.ImageWidth = rawData['W'] || -1;
+        this.ImageHeight = rawData['H'] || -1;
+
+        this.RedirectURL = rawData['L'];
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'D': this.Description,
+            'T': this.Title,
+            'L': this.RedirectURL,
+            'PT': this.PlayTime
         };
 
         if (this.ImageURL !== '') {

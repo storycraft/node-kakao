@@ -16,7 +16,7 @@ import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { PacketLeaveReq, PacketLeaveRes } from "../../packet/packet-leave";
 import { JsonUtil } from "../../util/json-util";
-import { ChannelInfo } from "./channel-info";
+import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { TalkClient } from "../../talk-client";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
 import { StatusCode } from "../../packet/loco-packet-base";
@@ -33,13 +33,17 @@ export class ChatChannel extends EventEmitter {
 
     private lastChat: Chat | null;
 
-    private channelInfo: ChannelInfo | null;
+    private readonly channelInfo: ChannelInfo;
 
     constructor(private client: TalkClient, private id: Long, private type: ChannelType) {
         super();
 
-        this.channelInfo = null;
+        this.channelInfo = this.createChannelInfo();
         this.lastChat = null;
+    }
+
+    protected createChannelInfo(): ChannelInfo {
+        return new ChannelInfo(this);
     }
 
     get Client() {
@@ -58,11 +62,7 @@ export class ChatChannel extends EventEmitter {
         return this.type;
     }
 
-    async getChannelInfo(forceUpdate?: boolean) {
-        if (!this.channelInfo) {
-            this.channelInfo = new ChannelInfo(this);
-        }
-
+    async getChannelInfo(forceUpdate: boolean = false) {
         if (forceUpdate || this.channelInfo.LastInfoUpdated + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
             await this.channelInfo.updateInfo();
         }
@@ -104,8 +104,6 @@ export class ChatChannel extends EventEmitter {
         let text = template.getPacketText();
         let extra = template.getPacketExtra();
 
-        let channelInfo = await this.getChannelInfo();
-
         let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
         let chat = this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.client.ClientUser.Id, this.id, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
@@ -145,6 +143,14 @@ export class OpenChatChannel extends ChatChannel {
         super(client, channelId, type);
     }
 
+    protected createChannelInfo(): OpenChannelInfo {
+        return new OpenChannelInfo(this);
+    }
+    
+    async getChannelInfo(forceUpdate: boolean = false): Promise<OpenChannelInfo> {
+        return super.getChannelInfo(forceUpdate) as Promise<OpenChannelInfo>;
+    }
+
     get LinkId() {
         return this.linkId;
     }
@@ -162,10 +168,14 @@ export class OpenChatChannel extends ChatChannel {
     }
 
     async kickMemberId(userId: Long): Promise<boolean> {
+        if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
+
         return this.Client.OpenChatManager.kickMember(this, userId);
     }
 
     async deleteLink(): Promise<boolean> {
+        if (!(await this.getChannelInfo()).LinkOwner.isClientUser()) return false;
+
         return this.Client.OpenChatManager.deleteLink(this.linkId);
     }
 
@@ -174,6 +184,8 @@ export class OpenChatChannel extends ChatChannel {
     }
 
     async hideChatId(logId: Long) {
+        if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
+
         return this.Client.OpenChatManager.hideChat(this, logId);
     }
 

@@ -10,6 +10,8 @@ import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ChannelType } from "../chat/channel-type";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
+import { OpenMemberType } from "../open/open-member-type";
+import { OpenLinkStruct } from "../struct/open-link-struct";
 
 
 export class ChannelInfo {
@@ -133,7 +135,7 @@ export class ChannelInfo {
             throw new Error('This user already joined');
         }
 
-        let newUser = await this.channel.Client.UserManager.get(userId);
+        let newUser = this.channel.Client.UserManager.get(userId);
 
         let info = new UserInfo(newUser);
         info.updateFromStruct((await this.channel.Client.NetworkManager.requestSpecificMemberInfo(this.channel.Id, [ userId ]))[0]);
@@ -175,15 +177,19 @@ export class ChannelInfo {
         this.name = name;
     }
 
-    protected async initUserInfo(memberList: MemberStruct[]) {
+    protected async initUserInfoList(memberList: MemberStruct[]) {
         this.userInfoMap.clear();
 
         for (let memberStruct of memberList) {
-            let info = new UserInfo(await this.channel.Client.UserManager.get(memberStruct.UserId));
-            info.updateFromStruct(memberStruct);
-    
-            this.userInfoMap.set(memberStruct.UserId.toString(), info);
+            this.initUserInfo(memberStruct);
         }
+    }
+
+    protected initUserInfo(memberStruct: MemberStruct) {
+        let info = new UserInfo(this.channel.Client.UserManager.get(memberStruct.UserId));
+        info.updateFromStruct(memberStruct);
+
+        this.userInfoMap.set(memberStruct.UserId.toString(), info);
     }
 
     async updateInfo(): Promise<void> {
@@ -200,18 +206,7 @@ export class ChannelInfo {
 
         this.updateFromStruct(info);
 
-        await this.updateOpenInfo();
-
         resolver!();
-    }
-
-    async updateOpenInfo(): Promise<void> {
-        if (this.channel.isOpenChat()) {
-            let openChannel = this.channel as OpenChatChannel;
-            let openLinkInfo = (await this.Channel.Client.OpenChatManager.get(openChannel.LinkId));
-
-            this.updateRoomName(openLinkInfo.LinkName);
-        }
     }
 
     protected async updateMemberInfo(chatInfo: ChatInfoStruct): Promise<void> {
@@ -225,9 +220,75 @@ export class ChannelInfo {
         let infoList = await networkManager.requestMemberInfo(this.channel.Id);
         let activeInfoList = await networkManager.requestSpecificMemberInfo(this.channel.Id, chatInfo.MemberList.map((item) => item.UserId));
         
-        await this.initUserInfo(infoList.slice().concat(activeInfoList));
+        await this.initUserInfoList(infoList.slice().concat(activeInfoList));
 
         resolver!();
     }
 
+}
+
+export class OpenChannelInfo extends ChannelInfo {
+    
+    private linkInfo: OpenLinkStruct = new OpenLinkStruct();
+
+    private memberTypeMap: Map<string, OpenMemberType> = new Map();
+
+    get Channel(): OpenChatChannel {
+        return super.Channel as OpenChatChannel;
+    }
+
+    get CoverURL() {
+        return this.linkInfo.CoverURL;
+    }
+
+    get LinkURL() {
+        return this.linkInfo.LinkURL;
+    }
+
+    get LinkOwner(): ChatUser {
+        return this.Channel.Client.UserManager.get(this.linkInfo.Owner.UserId);
+    }
+
+    canManageChannel(user: ChatUser) {
+        return this.canManageChannelId(user.Id);
+    }
+
+    canManageChannelId(userId: Long) {
+        return this.isManagerId(userId) || userId.equals(this.LinkOwner.Id);
+    }
+
+    isManager(user: ChatUser) {
+        return this.isManagerId(user.Id);
+    }
+
+    isManagerId(userId: Long) {
+        return this.getMemberTypeId(userId) === OpenMemberType.MANAGER;
+    }
+
+    protected initUserInfo(memberStruct: MemberStruct) {
+        super.initUserInfo(memberStruct);
+
+        this.memberTypeMap.set(memberStruct.UserId.toString(), memberStruct.OpenChatMemberType);
+    }
+
+    getMemberType(user: ChatUser): OpenMemberType {
+        return this.getMemberTypeId(user.Id);
+    }
+
+    getMemberTypeId(userId: Long): OpenMemberType {
+        if (!this.hasUserInfo(userId)) OpenMemberType.NONE;
+
+        return this.memberTypeMap.get(userId.toString())!;
+    }
+
+    async updateFromStruct(chatinfoStruct: ChatInfoStruct): Promise<void> {
+        super.updateFromStruct(chatinfoStruct);
+
+        let openLinkInfo = (await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId));
+
+        this.updateRoomName(openLinkInfo.LinkName);
+        
+        this.linkInfo = openLinkInfo;
+    }
+    
 }

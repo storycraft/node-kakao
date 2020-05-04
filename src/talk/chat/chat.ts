@@ -9,6 +9,7 @@ import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { KakaoLinkV2Attachment } from "./attachment/kakaolink-attachment";
 import { StatusCode } from "../../packet/loco-packet-base";
+import { ChannelType } from "./channel-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -171,7 +172,7 @@ export abstract class Chat {
     }
 
     get Hidable(): boolean {
-        return this.channel.isOpenChat();
+        return this.channel.isOpenChat() && this.channel.Type === ChannelType.OPENCHAT_GROUP;
     }
 
     async delete(): Promise<boolean> {
@@ -179,9 +180,7 @@ export abstract class Chat {
             return false;
         }
 
-        let res = await this.channel.Client.NetworkManager.requestPacketRes<PacketDeleteChatRes>(new PacketDeleteChatReq(this.channel.Id, this.logId));
-
-        return res.StatusCode === StatusCode.SUCCESS;
+        return this.channel.Client.ChatManager.deleteChat(this.Channel.Id, this.logId);
     }
 
     async hide(): Promise<boolean> {
@@ -330,7 +329,7 @@ export class LongTextChat extends Chat {
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let textAttachment = new LongTextAttachment();
-        textAttachment.readAttachment(LongTextAttachment);
+        textAttachment.readAttachment(attachmentJson);
 
         attachmentList.push(textAttachment);
     }
