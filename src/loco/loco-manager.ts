@@ -210,11 +210,11 @@ export class LocoManager {
             return false;
         }
 
-        let result = await this.LocoSocket!.sendPacket(packet);
+        let promise = this.LocoSocket!.sendPacket(packet);
 
         this.onPacketSend(this.LocoSocket!.Writer.CurrentPacketId, packet);
 
-        return result;
+        return await promise;
     }
 
     disconnect() {
