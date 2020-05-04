@@ -115,9 +115,10 @@ export class TalkClient extends EventEmitter {
         let loginRes = await this.networkManager.locoLogin(deviceUUID, this.clientUser.Id, loginAccessData.AccessToken);
 
         this.channelManager.initalizeLoginData(loginRes.ChatDataList);
-        await this.openChatManager.initOpenSession();
 
         this.clientUser = new ClientChatUser(this, loginAccessData, settings, loginRes.OpenChatToken);
+
+        await this.openChatManager.initOpenSession();
 
         this.emit('login', this.clientUser);
     }

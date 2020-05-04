@@ -29,6 +29,7 @@ import { FeedType } from "../talk/feed/feed-type";
 import { ChatFeed } from "../talk/chat/chat-feed";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
 import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
+import { PacketJoinLinkRes } from "../packet/packet-join-link";
 
 /*
  * Created on Fri Nov 01 2019
@@ -164,7 +165,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('MSG', this.onMessagePacket.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
         this.on('DECUNREAD', this.onMessageRead.bind(this));
-        this.on('SYNCLINKCR', this.onOpenChannelJoin.bind(this));
+        this.on('JOINLINK', this.onOpenChannelJoin.bind(this));
+        this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
@@ -283,7 +285,19 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('join_channel', newChan);
     }
 
-    async onOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
+    async onOpenChannelJoin(packet: PacketJoinLinkRes) {
+        if (!packet.ChatInfo) return;
+
+        let chanId = packet.ChatInfo.ChannelId;
+
+        if (this.ChannelManager.has(chanId)) return;
+        
+        let newChan = await this.ChannelManager.get(chanId);
+
+        this.Client.emit('join_channel', newChan);
+    }
+
+    async syncOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
         if (!packet.ChatInfo) return; // DO NOTHING IF ITS NOT CREATING CHAT CHANNEL
 
         let chanId = packet.ChatInfo.ChannelId;

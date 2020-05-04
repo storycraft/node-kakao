@@ -20,6 +20,8 @@ import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite"
 import { FeedType } from "../feed/feed-type";
 import { OpenMemberType } from "./open-member-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
+import { PacketJoinLinkReq } from "../../packet/packet-join-link";
+import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes, OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
 
 export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
@@ -146,6 +148,30 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         let res = await this.Client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, Array.from(idTypeSet.keys()), Array.from(idTypeSet.values())));
 
         return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async joinOpenLink(linkId: Long, passcode: string = ''): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinInfoRes>(new PacketJoinLinkReq(linkId, 'EW', passcode));
+
+        return res.StatusCode === StatusCode.SUCCESS; 
+    }
+
+    async changeToMainProfile(channelLinkId: Long): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(new PacketUpdateOpenchatProfileReq(channelLinkId, OpenchatProfileType.MAIN));
+
+        return res.StatusCode === StatusCode.SUCCESS; 
+    }
+
+    async changeToKakaoProfile(channelLinkId: Long, nickname: string, profilePath: string): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(new PacketUpdateOpenchatProfileReq(channelLinkId, OpenchatProfileType.KAKAO_ANON, nickname, profilePath));
+
+        return res.StatusCode === StatusCode.SUCCESS; 
+    }
+
+    async changeToLinkProfile(channelLinkId: Long, profileLinkId: Long): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(new PacketUpdateOpenchatProfileReq(channelLinkId, OpenchatProfileType.OPEN_PROFILE, '', '', profileLinkId));
+
+        return res.StatusCode === StatusCode.SUCCESS; 
     }
 
 }

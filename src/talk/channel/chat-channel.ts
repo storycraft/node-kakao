@@ -189,6 +189,18 @@ export class OpenChatChannel extends ChatChannel {
         return this.Client.OpenChatManager.hideChat(this, logId);
     }
 
+    async changeToMainProfile(): Promise<boolean> {
+        return this.Client.OpenChatManager.changeToMainProfile(this.linkId);
+    }
+
+    async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
+        return this.Client.OpenChatManager.changeToKakaoProfile(this.linkId, nickname, profilePath);
+    }
+
+    async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
+        return this.Client.OpenChatManager.changeToLinkProfile(this.linkId, profileLinkId);
+    }
+
     async getOpenProfile(): Promise<OpenLinkStruct> {
         return this.Client.OpenChatManager.get(this.linkId);
     }
