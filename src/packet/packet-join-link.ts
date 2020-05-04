@@ -10,13 +10,21 @@ import { MemberStruct } from "../talk/struct/member-struct";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { OpenchatProfileType } from "./packet-update-openchat-profile";
 
 export class PacketJoinLinkReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
         public Ref: string = '',
-        public ChannelKey: string = ''
+        public ChannelKey: string = '',
+        
+        public ProfileType: OpenchatProfileType = OpenchatProfileType.MAIN,
+
+        public Nickname: string = '',           // KAKAO_ANON
+        public ProfilePath: string = '', 
+
+        public ProfileLinkId: Long = Long.ZERO  // OPEN_PROFILE
     ) {
         super();
     }
@@ -26,11 +34,22 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
-        return {
+        let obj: any = {
             'li': this.LinkId,
             'ref': this.Ref,
-            'tk': this.ChannelKey
+            'tk': this.ChannelKey,
+            'ptp': this.ProfileType
+        };
+
+        if (this.ProfileType === OpenchatProfileType.KAKAO_ANON) {
+            if (this.Nickname !== '') obj['nn'] = this.Nickname;
+
+            if (this.ProfilePath !== '') obj['pp'] = this.ProfilePath;
+        } else if (this.ProfileType === OpenchatProfileType.OPEN_PROFILE) {
+            obj['pli'] = this.ProfileLinkId;
         }
+
+        return obj;
     }
 
 }

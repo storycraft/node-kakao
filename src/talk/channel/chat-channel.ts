@@ -20,6 +20,8 @@ import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { TalkClient } from "../../talk-client";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
 import { StatusCode } from "../../packet/loco-packet-base";
+import { OpenMemberType } from "../open/open-member-type";
+import { OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
 
 /*
  * Created on Fri Nov 01 2019
@@ -190,15 +192,25 @@ export class OpenChatChannel extends ChatChannel {
     }
 
     async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeToMainProfile(this.linkId);
+        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.MAIN);
     }
 
     async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeToKakaoProfile(this.linkId, nickname, profilePath);
+        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
     async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeToLinkProfile(this.linkId, profileLinkId);
+        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
+    }
+
+    async updateOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
+        return this.updateOpenMemberTypeId(user.Id, memberType);
+    }
+
+    async updateOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
+        if (!(await this.getChannelInfo()).hasUserInfo(userId)) return false;
+
+        return this.Client.OpenChatManager.updateOpenMemberType(this, userId, memberType);
     }
 
     async getOpenProfile(): Promise<OpenLinkStruct> {

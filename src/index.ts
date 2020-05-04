@@ -23,30 +23,33 @@ export * from './packet/loco-header-struct';
 export * from './packet/loco-packet-reader';
 export * from './packet/loco-packet-writer';
 
-export * from './packet/packet-check-in';
-export * from './packet/packet-get-conf';
-export * from './packet/packet-get-member';
-export * from './packet/packet-member';
-export * from './packet/packet-invoice';
-export * from './packet/packet-login';
-export * from './packet/packet-leave';
-export * from './packet/packet-new-member';
-export * from './packet/packet-message';
-export * from './packet/packet-chat-member';
-export * from './packet/packet-chatinfo';
-export * from './packet/packet-message-read';
-export * from './packet/packet-get-meta';
-export * from './packet/packet-get-channel-board-meta';
-export * from './packet/packet-kickout';
-export * from './packet/packet-info-link';
-export * from './packet/packet-delete-chat';
-
 export * from './packet/loco-packet-list';
+
+export { OpenchatProfileType } from './packet/packet-update-openchat-profile';
 
 export * from './secure/crypto-manager';
 
 export * from './talk/chat/channel-type';
 export * from './talk/chat/message-type';
+export * from './talk/chat/chat-builder';
+export * from './talk/user/user-type';
+
+export * from './talk/open/open-link-type';
+export * from './talk/open/open-member-type';
+
+export * from './talk/chat/chat';
+export * from './talk/chat/attachment/chat-attachment';
+export * from './talk/chat/attachment/kakaolink-attachment';
+
+export * from './talk/chat/template/message-template';
+
+export * from './talk/channel/chat-channel';
+export * from './talk/channel/channel-info';
+
+export * from './talk/user/chat-user';
+
+export * from './talk/feed/feed-type';
+
 export * from './talk/user/user-type';
 
 export * from './talk/struct/struct-base';
@@ -54,17 +57,10 @@ export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';
 export * from './talk/struct/channel-meta-set-struct';
-export * from './talk/struct/chat-info-struct';
-
-export * from './talk/chat/chat';
-export * from './talk/chat/attachment/chat-attachment';
-export * from './talk/channel/chat-channel';
-
-export * from './talk/chat/template/message-template';
-
-export * from './talk/user/chat-user';
-
-export * from './talk/feed/feed-type';
+export * from './talk/struct/open-link-struct';
+export * from './talk/struct/login-access-data-struct';
+export * from './talk/struct/channel-board-meta-struct';
+export * from './talk/struct/client-settings-struct';
 
 export * from './talk-client';
 
