@@ -84,7 +84,7 @@ export class LocoPacketList {
         LocoPacketList.requestPacketMap.set('JOININFO', PacketJoinInfoReq);
         LocoPacketList.requestPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
         LocoPacketList.requestPacketMap.set('JOINLINK', PacketJoinLinkReq);
-        LocoPacketList.requestPacketMap.set('UPLINKPF', PacketUpdateOpenchatProfileReq);
+        LocoPacketList.requestPacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileReq);
 
         LocoPacketList.requestPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
 
@@ -138,7 +138,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
         LocoPacketList.responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
         LocoPacketList.responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
-        LocoPacketList.responsePacketMap.set('UPLINKPF', PacketUpdateOpenchatProfileRes);
+        LocoPacketList.responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
 
         LocoPacketList.responsePacketMap.set('INVOICE', PacketInvoiceRes);
 

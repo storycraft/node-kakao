@@ -31,7 +31,7 @@ export class PacketUpdateOpenchatProfileReq extends LocoBsonRequestPacket {
     }
 
     get PacketName() {
-        return 'UPLINKPF';
+        return 'UPLINKPROF';
     }
     
     toBodyJson() {
@@ -62,7 +62,7 @@ export class PacketUpdateOpenchatProfileRes extends LocoBsonResponsePacket {
     }
 
     get PacketName() {
-        return 'UPLINKPF';
+        return 'UPLINKPROF';
     }
 
     readBodyJson(rawData: any) {

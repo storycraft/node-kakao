@@ -11,7 +11,7 @@ import { MemberStruct } from "../struct/member-struct";
 import { ChannelType } from "../chat/channel-type";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { OpenMemberType } from "../open/open-member-type";
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
 
 
 export class ChannelInfo {
@@ -119,7 +119,7 @@ export class ChannelInfo {
     }
 
     getUserInfoId(id: Long): UserInfo | null {
-        if (this.Channel.Client.ClientUser.Id.equals(id)) {
+        if (this.clientUserInfo.User.Id.equals(id)) {
             return this.ClientUserInfo;
         }
 
@@ -135,12 +135,7 @@ export class ChannelInfo {
             throw new Error('This user already joined');
         }
 
-        let newUser = this.channel.Client.UserManager.get(userId);
-
-        let info = new UserInfo(newUser);
-        info.updateFromStruct((await this.channel.Client.NetworkManager.requestSpecificMemberInfo(this.channel.Id, [ userId ]))[0]);
-
-        this.userInfoMap.set(userId.toString(), info);
+        this.initUserInfo((await this.channel.Client.UserManager.requestSpecificMemberInfo(this.channel.Id, [ userId ]))[0]);
     }
 
     removeUserLeft(id: Long): boolean {
@@ -181,6 +176,11 @@ export class ChannelInfo {
         this.userInfoMap.clear();
 
         for (let memberStruct of memberList) {
+            if (this.clientUserInfo.User.Id.equals(memberStruct.UserId)) {
+                this.clientUserInfo.updateFromStruct(memberStruct);
+                continue;
+            }
+
             this.initUserInfo(memberStruct);
         }
     }
@@ -192,15 +192,17 @@ export class ChannelInfo {
         this.userInfoMap.set(memberStruct.UserId.toString(), info);
     }
 
+    async updateClientInfo() {
+        
+    }
+
     async updateInfo(): Promise<void> {
         if (this.pendingInfoReq) return this.pendingInfoReq;
 
         let resolver: () => void | null;
         this.pendingInfoReq = new Promise((resolve, reject) => resolver = resolve);
 
-        let networkManager = this.channel.Client.NetworkManager;
-
-        let info = await networkManager.requestChannelInfo(this.channel.Id);
+        let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
 
         await this.updateMemberInfo(info);
 
@@ -215,12 +217,12 @@ export class ChannelInfo {
         let resolver: () => void | null;
         this.pendingUserInfoReq = new Promise((resolve, reject) => resolver = resolve);
 
-        let networkManager = this.channel.Client.NetworkManager;
+        let userManager = this.channel.Client.UserManager;
 
-        let infoList = await networkManager.requestMemberInfo(this.channel.Id);
-        let activeInfoList = await networkManager.requestSpecificMemberInfo(this.channel.Id, chatInfo.MemberList.map((item) => item.UserId));
+        let infoList = await userManager.requestMemberInfo(this.channel.Id);
+        let activeInfoList = await userManager.requestSpecificMemberInfo(this.channel.Id, chatInfo.MemberList.map((item) => item.UserId));
         
-        await this.initUserInfoList(infoList.slice().concat(activeInfoList));
+        this.initUserInfoList(infoList.concat(activeInfoList));
 
         resolver!();
     }
@@ -289,6 +291,14 @@ export class OpenChannelInfo extends ChannelInfo {
         this.updateRoomName(openLinkInfo.LinkName);
         
         this.linkInfo = openLinkInfo;
+    }
+
+    updateOpenUserInfo(memberStruct: OpenMemberStruct) {
+        let info = this.getUserInfoId(memberStruct.UserId);
+
+        if (!info) return;
+
+        info.updateFromOpenStruct(memberStruct);
     }
     
 }

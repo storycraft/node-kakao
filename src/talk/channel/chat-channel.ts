@@ -192,15 +192,15 @@ export class OpenChatChannel extends ChatChannel {
     }
 
     async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.MAIN);
+        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.MAIN);
     }
 
     async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
+        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
     async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this.linkId, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
+        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
     }
 
     async updateOpenMemberType(user: ChatUser, memberType: OpenMemberType) {

@@ -11,7 +11,11 @@ import { JsonUtil } from "../util/json-util";
 
 export class PacketCreateChatReq extends LocoBsonRequestPacket {
 
-    constructor(public UserIdList: Long[] = []) {
+    constructor(
+        public UserIdList: Long[] = [],
+        public Nickname: string = '',
+        public ProfileURL: string = ''
+        ) {
         super();
     }
 
@@ -20,9 +24,14 @@ export class PacketCreateChatReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson(): any {
-        return {
+        let obj: any = {
             'memberIds': this.UserIdList
-        }
+        };
+
+        if (this.Nickname !== '') obj['nickname'] = this.Nickname;
+        if (this.ProfileURL !== '') obj['profileImageUrl'] = this.ProfileURL;
+
+        return obj;
     }
 
 }

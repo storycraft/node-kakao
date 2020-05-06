@@ -54,7 +54,7 @@ export class ChatUser extends EventEmitter {
     }
 
     async createDM() {
-        return this.client.ChannelManager.createChannel(this);
+        return this.client.ChannelManager.createChannel([this]);
     }
 
     on(event: 'message', listener: (chat: Chat) => void): this;
@@ -193,6 +193,15 @@ export class UserInfo implements ChatUserInfoBase {
         }
 
         this.userType = memberStruct.Type;
+    }
+
+    updateFromOpenStruct(memberStruct: OpenMemberStruct) {
+        this.user.updateNickname(memberStruct.NickName);
+        this.profileImageURL = memberStruct.ProfileImageUrl || '';
+        this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
+        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
+        
+        this.openChatToken = memberStruct.OpenChatToken;
     }
 
 }

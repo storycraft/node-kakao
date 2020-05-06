@@ -6,6 +6,7 @@
 
 export enum OpenMemberType {
 
+    UNKNOWN = 1,
     NONE = 2,
     MANAGER = 4
 

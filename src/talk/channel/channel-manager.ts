@@ -35,8 +35,8 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return super.get(id, true);
     }
 
-    async createChannel(...users: ChatUser[]): Promise<ChatChannel> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id)));
+    async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id), nickname, profileURL));
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
@@ -66,6 +66,16 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         }
 
         return channel;
+    }
+
+    async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
+
+        if (res.ChatInfo.ChannelId.equals(channelId)) {
+            return res.ChatInfo;
+        } else {
+            throw new Error('Received wrong info packet');
+        }
     }
 
     async leave(channel: ChatChannel, block: boolean = false): Promise<boolean> {

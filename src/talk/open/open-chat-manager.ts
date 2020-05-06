@@ -12,7 +12,7 @@ import { PacketSyncLinkRes, PacketSyncLinkReq } from "../../packet/packet-sync-l
 import { TalkClient } from "../../talk-client";
 import { AsyncIdStore } from "../../store/store";
 import { StatusCode } from "../../packet/loco-packet-base";
-import { OpenChatChannel } from "../channel/chat-channel";
+import { OpenChatChannel, ChatChannel } from "../channel/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
 import { ChatUser } from "../user/chat-user";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
@@ -176,22 +176,27 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         return res.StatusCode === StatusCode.SUCCESS; 
     }
 
-    async changeProfile(channelLinkId: Long, profileType: OpenchatProfileType.MAIN): Promise<boolean>;
-    async changeProfile(channelLinkId: Long, profileType: OpenchatProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<boolean>;
-    async changeProfile(channelLinkId: Long, profileType: OpenchatProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<boolean>;
-    async changeProfile(channelLinkId: Long, profileType: OpenchatProfileType): Promise<boolean> {
+    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.MAIN): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType): Promise<boolean> {
         let packet: PacketUpdateOpenchatProfileReq;
         if (profileType === OpenchatProfileType.MAIN) {
-            packet = new PacketUpdateOpenchatProfileReq(channelLinkId, profileType);
+            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType);
         } else if (profileType === OpenchatProfileType.KAKAO_ANON) {
-            packet = new PacketUpdateOpenchatProfileReq(channelLinkId, profileType, arguments[2], arguments[3]);
+            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType, arguments[2], arguments[3]);
         } else if (profileType === OpenchatProfileType.OPEN_PROFILE) {
-            packet = new PacketUpdateOpenchatProfileReq(channelLinkId, profileType, '', '', arguments[2]);
+            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType, '', '', arguments[2]);
         } else {
             return false;
         }
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(packet);
+
+        let info = await channel.getChannelInfo();
+        let userInfo = info.getUserInfo(this.client.ClientUser);
+        
+        if (userInfo) userInfo.updateFromOpenStruct(res.UpdatedProfile);
 
         return res.StatusCode === StatusCode.SUCCESS; 
     }

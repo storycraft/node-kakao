@@ -1,28 +1,14 @@
-import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long, ChannelMetaSetStruct } from "..";
+import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long } from "..";
 import { LocoManager, BookingData, CheckinData } from "../loco/loco-manager";
-import { LoginAccessDataStruct } from "../talk/struct/login-access-data-struct";
-import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../packet/loco-bson-packet";
 import { EventEmitter } from "events";
 import { PacketMessageRes } from "../packet/packet-message";
 import { PacketLoginRes } from "../packet/packet-login";
 import { ChatChannel } from "../talk/channel/chat-channel";
-import { PacketChatInfoReq, PacketChatInfoRes } from "../packet/packet-chatinfo";
 import { PacketKickoutRes } from "../packet/packet-kickout";
-import { PacketChatMemberRes, PacketChatMemberReq } from "../packet/packet-chat-member";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketLeftRes, PacketLeaveRes } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
-import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
-import { MemberStruct } from "../talk/struct/member-struct";
-import { ChatUser } from "../talk/user/chat-user";
-import { ChannelType } from "../talk/chat/channel-type";
-import { PacketGetMemberReq, PacketGetMemberRes } from "../packet/packet-get-member";
-import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "../packet/packet-get-meta";
-import { ChannelMetaStruct } from "../talk/struct/chat-info-struct";
-import { PacketMemberReq, PacketMemberRes } from "../packet/packet-member";
-import { OpenLinkStruct } from "../talk/struct/open-link-struct";
-import { PacketInfoLinkReq, PacketInfoLinkRes } from "../packet/packet-info-link";
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "../packet/packet-delmem";
 import { FeedType } from "../talk/feed/feed-type";
@@ -126,27 +112,6 @@ export class NetworkManager {
         this.sendPacket(packet);
 
         return packet.submitResponseTicket<T>();
-    }
-
-    async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
-        let res = await this.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
-
-        if (res.ChatInfo.ChannelId.equals(channelId)) {
-            return res.ChatInfo;
-        } else {
-            throw new Error('Received wrong info packet');
-        }
-    }
-
-    async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
-        let res = await this.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
-        return res.MemberList;
-    }
-
-    async requestSpecificMemberInfo(channelId: Long, idList: Long[]): Promise<MemberStruct[]> {
-        let res = await this.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channelId, idList));
-        
-        return res.MemberList;
     }
     
 }
