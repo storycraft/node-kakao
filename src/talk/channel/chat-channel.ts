@@ -203,14 +203,14 @@ export class OpenChatChannel extends ChatChannel {
         return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
     }
 
-    async updateOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
-        return this.updateOpenMemberTypeId(user.Id, memberType);
+    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
+        return this.setOpenMemberTypeId(user.Id, memberType);
     }
 
-    async updateOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
+    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
         if (!(await this.getChannelInfo()).hasUserInfo(userId)) return false;
 
-        return this.Client.OpenChatManager.updateOpenMemberType(this, userId, memberType);
+        return this.Client.OpenChatManager.setOpenMemberType(this, userId, memberType);
     }
 
     async getOpenProfile(): Promise<OpenLinkStruct> {

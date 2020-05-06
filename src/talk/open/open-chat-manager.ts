@@ -146,7 +146,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         return res.StatusCode === StatusCode.SUCCESS;
     }
 
-    async updateOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType): Promise<boolean> {
+    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType): Promise<boolean> {
         let linkId = channel.LinkId;
 
         if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;

@@ -16,6 +16,8 @@ import { ChatFeed } from "../talk/chat/chat-feed";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
 import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
 import { PacketJoinLinkRes } from "../packet/packet-join-link";
+import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
+import { OpenChannelInfo } from "../talk/channel/channel-info";
 
 /*
  * Created on Fri Nov 01 2019
@@ -132,6 +134,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('DECUNREAD', this.onMessageRead.bind(this));
         this.on('JOINLINK', this.onOpenChannelJoin.bind(this));
         this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
+        this.on('SYNCMEMT', this.syncMemberTypeChange.bind(this));
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
@@ -272,6 +275,21 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let newChan = await this.ChannelManager.get(chanId);
 
         this.Client.emit('join_channel', newChan);
+    }
+
+    async syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
+        let chanId = packet.ChannelId;
+
+        let channel = await this.ChannelManager.get(chanId);
+        
+        if (!channel.isOpenChat()) return;
+
+        let info = (await channel.getChannelInfo()) as OpenChannelInfo;
+
+        let len = packet.MemberIdList.length;
+        for (let i = 0; i < len; i++) {
+            info.updateMemberType(packet.MemberIdList[i], packet.MemberTypeList[i]);
+        }
     }
 
     async onOpenChannelKick(packet: PacketKickMemberRes) {

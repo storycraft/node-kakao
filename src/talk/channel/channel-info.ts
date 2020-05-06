@@ -270,7 +270,13 @@ export class OpenChannelInfo extends ChannelInfo {
     protected initUserInfo(memberStruct: MemberStruct) {
         super.initUserInfo(memberStruct);
 
-        this.memberTypeMap.set(memberStruct.UserId.toString(), memberStruct.OpenChatMemberType);
+        this.updateMemberType(memberStruct.UserId, memberStruct.OpenChatMemberType);
+    }
+
+    updateMemberType(userId: Long, memberType: OpenMemberType) {
+        if (!this.hasUserInfo(userId)) return;
+
+        this.memberTypeMap.set(userId.toString(), memberType);
     }
 
     getMemberType(user: ChatUser): OpenMemberType {

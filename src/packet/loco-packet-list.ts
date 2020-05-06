@@ -32,6 +32,7 @@ import { PacketSetMemTypeRes, PacketSetMemTypeReq } from "./packet-set-mem-type"
 import { PacketLinkKickedRes } from "./packet-link-kicked";
 import { PacketJoinLinkRes, PacketJoinLinkReq } from "./packet-join-link";
 import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "./packet-update-openchat-profile";
+import { PacketSyncMemberTypeRes } from "./packet-sync-member-type";
 
 /*
  * Created on Wed Oct 30 2019
@@ -139,6 +140,8 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
         LocoPacketList.responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
         LocoPacketList.responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
+
+        LocoPacketList.responsePacketMap.set('SYNCMEMT', PacketSyncMemberTypeRes);
 
         LocoPacketList.responsePacketMap.set('INVOICE', PacketInvoiceRes);
 
