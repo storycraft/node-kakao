@@ -6,7 +6,7 @@ Version Information
 |----|-----------------------|
 | v1 | experimental. buggy   |
 
-Note: this implemention is very unstable and can stop working anytime.
+Note: this implemention can stop working anytime.
 
 ## Warning
 
@@ -35,24 +35,24 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-client.on('user_join', (channel: ChatChannel, user: ChatUser, joinFeed: chatFeed) => {
-    console.log(user.Nickname + ' 님이 ' + channel.ChannelId + ' 방에 참여했습니다.');
+client.on('user_join', (channel: ChatChannel, user: ChatUser, joinFeed: ChatFeed) => {
+    console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에 참여했습니다.');
 });
 
 client.on('user_left', (channel: ChatChannel, user: ChatUser) => {
-    console.log(user.Nickname + ' 님이 ' + channel.ChannelId + ' 방에서 나갔습니다.');
+    console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에서 나갔습니다.');
 });
 
 client.on('join_channel', (channel: ChatChannel) => {
-    console.log('클라이언트가 ' + channel.ChannelId + ' 방에 참여했습니다');
+    console.log('클라이언트가 ' + channel.Id + ' 방에 참여했습니다');
 });
 
 client.on('left_channel', (channel: ChatChannel) => {
-    console.log('클라이언트가 ' + channel.ChannelId + ' 방에서 나갔습니다');
+    console.log('클라이언트가 ' + channel.Id + ' 방에서 나갔습니다');
 });
 
 client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Long) => {
-    console.log(reader.Nickname + ' 이(가) ' + channel.ChannelId + ' 방의 글을 읽었습니다. 워터마크: ' + watermark);
+    console.log(reader.Nickname + ' 이(가) ' + channel.Id + ' 방의 글을 읽었습니다. 워터마크: ' + watermark);
 });
 
 await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id');

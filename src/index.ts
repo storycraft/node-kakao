@@ -29,15 +29,18 @@ export { OpenchatProfileType } from './packet/packet-update-openchat-profile';
 
 export * from './secure/crypto-manager';
 
-export * from './talk/chat/channel-type';
 export * from './talk/chat/message-type';
+export * from './talk/chat/channel-type';
 export * from './talk/chat/chat-builder';
-export * from './talk/user/user-type';
 
 export * from './talk/open/open-link-type';
 export * from './talk/open/open-member-type';
 
 export * from './talk/chat/chat';
+export * from './talk/chat/chat-feed';
+
+export * from './talk/feed/feed-type';
+
 export * from './talk/chat/attachment/chat-attachment';
 export * from './talk/chat/attachment/sharp-attachment';
 export * from './talk/chat/attachment/custom-attachment';
@@ -48,9 +51,6 @@ export * from './talk/channel/chat-channel';
 export * from './talk/channel/channel-info';
 
 export * from './talk/user/chat-user';
-
-export * from './talk/feed/feed-type';
-
 export * from './talk/user/user-type';
 
 export * from './talk/struct/struct-base';
