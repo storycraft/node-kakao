@@ -364,14 +364,15 @@ export class KakaoAPI {
         };
     }
 
-    static getLoginData(email: string, password: string, deviceUUID: string, deviceName: string, permanent = true, osVersion: string = KakaoAPI.OSVersion) {
+    static getLoginData(email: string, password: string, deviceUUID: string, deviceName: string, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
         return {
             'email': email,
             'password': password,
             'device_uuid': deviceUUID,
             'os_version': osVersion,
             'device_name': deviceName,
-            'permanent': permanent
+            'permanent': permanent,
+            'forced': forced
         }
     }
 
