@@ -6,7 +6,7 @@ import { PacketLoginRes } from "../packet/packet-login";
 import { ChatChannel } from "../talk/channel/chat-channel";
 import { PacketKickoutRes } from "../packet/packet-kickout";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
-import { PacketLeftRes, PacketLeaveRes } from "../packet/packet-leave";
+import { PacketLeftRes, PacketLeaveRes, PacketLeaveReq } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
@@ -142,6 +142,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
+        this.on('LEAVE', this.onChannelLeave.bind(this));
         this.on('KICKOUT', this.onLocoKicked.bind(this));
     }
 
@@ -169,9 +170,9 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
     }
     
-    onResponse(packetId: number, packet: LocoResponsePacket): void {
+    onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
         //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
-        this.emit(packet.PacketName, packet);
+        this.emit(packet.PacketName, packet, reqPacket);
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
@@ -220,7 +221,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
 
         for(let id of idList) {
-            let user = await this.UserManager.get(id);
+            let user = this.UserManager.get(id);
 
             if (user.isClientUser()) {
                 user.emit('join', channel, feed);
@@ -238,13 +239,28 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onChannelLeft(packet: PacketLeftRes) {
         let channel = await this.ChannelManager.get(packet.ChannelId);
 
-        this.ChannelManager.syncLeft(channel);
+        this.Client.emit('left_channel', channel);
+        this.ChannelManager.removeChannel(channel);
+    }
+
+    async onChannelLeave(packet: PacketLeaveRes, reqPacket?: PacketLeaveReq) {
+        if (!reqPacket) return;
+
+        let chanId = reqPacket.ChannelId;
+
+        if (!this.ChannelManager.has(chanId)) return;
+
+        let channel = await this.ChannelManager.get(chanId);
+
+        this.Client.emit('left_channel', channel);
+        this.ChannelManager.removeChannel(channel);
     }
 
     async onLinkKicked(packet: PacketLinkKickedRes) {
         let channel = await this.ChannelManager.get(packet.ChannelId);
 
-        this.ChannelManager.syncLeft(channel);
+        this.Client.emit('left_channel', channel);
+        this.ChannelManager.removeChannel(channel);
     }
 
     async onChannelJoin(packet: PacketChanJoinRes) {
@@ -296,6 +312,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     
     async syncProfileUpdate(packet: PacketSyncProfileRes) {
         let chanId = packet.ChannelId;
+
+        if (chanId.equals(Long.ZERO)) return;
 
         let channel = await this.ChannelManager.get(chanId);
 

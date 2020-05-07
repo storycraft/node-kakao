@@ -84,25 +84,17 @@ export class TalkClient extends EventEmitter {
         return this.networkManager.Logon;
     }
 
-    async login(email: string, password: string, deviceUUID: string) {
+    async login(email: string, password: string, deviceUUID: string, forced: boolean = false) {
         if (this.LocoLogon) {
             throw new Error('Already logon to loco');
         }
 
         let loginAccessData = new LoginAccessDataStruct();
-        loginAccessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, deviceUUID, this.Name, true)));
+        loginAccessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, deviceUUID, this.Name, forced)));
 
         let statusCode = loginAccessData.Status;
         if (statusCode !== 0) {
-            if (statusCode == -100) {
-                throw new Error(`STATUS -100: This device is not registered.`);
-            } else if (statusCode == 30) {
-                throw new Error(`ERR 30: Some field values are wrong`);
-            } else if (statusCode == -997) {
-                throw new Error(`ERR -997: Account restricted`);
-            }
-
-            throw new Error(`Access login ERR: ${statusCode}`);
+            throw statusCode;
         }
 
         let settings = new ClientSettingsStruct();

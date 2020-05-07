@@ -10,6 +10,6 @@ export interface LocoPacketHandler {
 
     onRequest(packetId: number, packet: LocoRequestPacket): void;
 
-    onResponse(packetId: number, packet: LocoResponsePacket): void;
+    onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void;
 
 }

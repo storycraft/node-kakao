@@ -26,6 +26,7 @@ export class PacketSyncProfileRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawData: any) {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
+
         this.LinkId = JsonUtil.readLong(rawData['li']);
         
         if (rawData['olu']) {

@@ -90,20 +90,15 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     }
 
     async leave(channel: ChatChannel, block: boolean = false): Promise<boolean> {
-        let id = channel.Id;
-        let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(id, block));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
 
-        if (res.StatusCode !== StatusCode.SUCCESS) return false;
-
-        return this.syncLeft(channel);
+        return res.StatusCode !== StatusCode.SUCCESS;
     }
 
-    syncLeft(channel: ChatChannel) {
+    removeChannel(channel: ChatChannel) {
         let id = channel.Id;
 
         if (!this.has(id)) return false;
-
-        this.client.emit('left_channel', channel);
 
         this.delete(id);
 

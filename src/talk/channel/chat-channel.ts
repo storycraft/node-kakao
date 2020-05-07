@@ -1,12 +1,10 @@
 import { ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "../chat/channel-type";
-import { ChatInfoStruct, ChannelMetaStruct, ChannelMetaType } from "../struct/chat-info-struct";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { MessageType } from "../chat/message-type";
-import { MemberStruct } from "../struct/member-struct";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
@@ -14,15 +12,11 @@ import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatBuilder } from "../chat/chat-builder";
 import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
-import { PacketLeaveReq, PacketLeaveRes } from "../../packet/packet-leave";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { TalkClient } from "../../talk-client";
-import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
-import { StatusCode } from "../../packet/loco-packet-base";
 import { OpenMemberType } from "../open/open-member-type";
 import { OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
-import { PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
 
 /*
  * Created on Fri Nov 01 2019

@@ -1,7 +1,5 @@
 import * as Bson from "bson";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "./loco-packet-base";
-import { EventEmitter } from "events";
-import { promises } from "dns";
 
 /*
  * Created on Wed Oct 30 2019

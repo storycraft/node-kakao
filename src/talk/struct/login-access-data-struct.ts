@@ -6,10 +6,20 @@ import { StructBase } from "./struct-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export enum LoginStatusCode {
+
+    PASS = 0,
+    VALIDATION_FAILED = -30,
+    DEVICE_NOT_REGISTERED = -100,
+    DEVICE_LOGON_ANOTHER = -101,
+    RESTRICTED = -997
+
+}
+
 export class LoginAccessDataStruct implements StructBase {
 
     constructor(
-        public Status: number = 0,
+        public Status: LoginStatusCode = 0,
         public StoryURL: string = '',
         public UserId: number = 0,
         public CountryISO: string = '',

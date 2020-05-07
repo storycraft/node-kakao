@@ -180,10 +180,10 @@ export class LocoManager {
         return new BookingData(new HostData(res.HostList[0], res.PortList[0]));
     }
 
-    protected onPacket(packetId: number, packet: LocoResponsePacket) {
+    protected onPacket(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) {
         try {
             if (this.Handler) {
-                this.Handler.onResponse(packetId, packet);
+                this.Handler.onResponse(packetId, packet, reqPacket);
             }
 
             if (packet.PacketName == 'KICKOUT') {
