@@ -3,12 +3,11 @@ import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
-import { PacketDeleteChatReq, PacketDeleteChatRes } from "../../packet/packet-delete-chat";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
+import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { CustomAttachment } from "./attachment/custom-attachment";
-import { StatusCode } from "../../packet/loco-packet-base";
 import { ChannelType } from "./channel-type";
 
 /*

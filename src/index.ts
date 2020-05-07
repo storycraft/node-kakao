@@ -39,6 +39,7 @@ export * from './talk/open/open-member-type';
 
 export * from './talk/chat/chat';
 export * from './talk/chat/attachment/chat-attachment';
+export * from './talk/chat/attachment/sharp-attachment';
 export * from './talk/chat/attachment/custom-attachment';
 
 export * from './talk/chat/template/message-template';
