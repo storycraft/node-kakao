@@ -33,6 +33,8 @@ import { PacketLinkKickedRes } from "./packet-link-kicked";
 import { PacketJoinLinkRes, PacketJoinLinkReq } from "./packet-join-link";
 import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "./packet-update-openchat-profile";
 import { PacketSyncMemberTypeRes } from "./packet-sync-member-type";
+import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "./packet-chat-on-room";
+import { PacketSyncProfileRes } from "./packet-sync-profile";
 
 /*
  * Created on Wed Oct 30 2019
@@ -90,7 +92,7 @@ export class LocoPacketList {
         LocoPacketList.requestPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
 
         LocoPacketList.requestPacketMap.set('NOTIREAD', PacketMessageNotiReadReq);
-        
+        LocoPacketList.requestPacketMap.set('CHATONROOM', PacketChatOnRoomReq);
 
         LocoPacketList.requestPacketMap.set('PING', PacketPingReq);
 
@@ -140,6 +142,10 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
         LocoPacketList.responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
         LocoPacketList.responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
+
+        LocoPacketList.responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);
+
+        LocoPacketList.responsePacketMap.set('CHATONROOM', PacketChatOnRoomRes);
 
         LocoPacketList.responsePacketMap.set('SYNCMEMT', PacketSyncMemberTypeRes);
 

@@ -12,6 +12,7 @@ import { ChannelType } from "../chat/channel-type";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { OpenMemberType } from "../open/open-member-type";
 import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
+import { PacketChatOnRoomRes, PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
 
 
 export class ChannelInfo {
@@ -33,8 +34,6 @@ export class ChannelInfo {
 
     private chatmetaList: ChannelMetaStruct[];
 
-    private activeUserList: MemberStruct[];
-
     private userInfoMap: Map<string, UserInfo>;
 
     private clientUserInfo: UserInfo;
@@ -49,7 +48,6 @@ export class ChannelInfo {
 
         this.lastInfoUpdated = -1;
 
-        this.activeUserList = [];
         this.userInfoMap = new Map();
 
         this.roomImageURL = '';
@@ -130,7 +128,7 @@ export class ChannelInfo {
         return this.userInfoMap.get(id.toString())!;
     }
 
-    async addUserJoined(userId: Long): Promise<void> {
+    async addUserInfo(userId: Long): Promise<void> {
         if (this.hasUserInfo(userId) || this.channel.Client.ClientUser.Id.equals(userId)) {
             throw new Error('This user already joined');
         }
@@ -138,7 +136,7 @@ export class ChannelInfo {
         this.initUserInfo((await this.channel.Client.UserManager.requestSpecificMemberInfo(this.channel.Id, [ userId ]))[0]);
     }
 
-    removeUserLeft(id: Long): boolean {
+    removeUserInfo(id: Long): boolean {
         if (this.channel.Client.ClientUser.Id.equals(id)) {
             throw new Error('Client user cannot be removed');
         }
@@ -147,8 +145,6 @@ export class ChannelInfo {
     }
 
     updateFromStruct(chatinfoStruct: ChatInfoStruct) {
-        this.activeUserList = chatinfoStruct.MemberList;
-
         this.isDirectChan = chatinfoStruct.IsDirectChat;
         this.chatmetaList = chatinfoStruct.ChatMetaList;
 
@@ -172,28 +168,11 @@ export class ChannelInfo {
         this.name = name;
     }
 
-    protected async initUserInfoList(memberList: MemberStruct[]) {
-        this.userInfoMap.clear();
-
-        for (let memberStruct of memberList) {
-            if (this.clientUserInfo.User.Id.equals(memberStruct.UserId)) {
-                this.clientUserInfo.updateFromStruct(memberStruct);
-                continue;
-            }
-
-            this.initUserInfo(memberStruct);
-        }
-    }
-
     protected initUserInfo(memberStruct: MemberStruct) {
         let info = new UserInfo(this.channel.Client.UserManager.get(memberStruct.UserId));
         info.updateFromStruct(memberStruct);
 
         this.userInfoMap.set(memberStruct.UserId.toString(), info);
-    }
-
-    async updateClientInfo() {
-        
     }
 
     async updateInfo(): Promise<void> {
@@ -204,25 +183,35 @@ export class ChannelInfo {
 
         let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
 
-        await this.updateMemberInfo(info);
+        await this.updateMemberInfo();
 
         this.updateFromStruct(info);
 
         resolver!();
     }
 
-    protected async updateMemberInfo(chatInfo: ChatInfoStruct): Promise<void> {
+    protected updateFromChatOnRoom(res: PacketChatOnRoomRes) {
+        for (let memberStruct of res.MemberList) {
+            if (this.clientUserInfo.User.Id.equals(memberStruct.UserId)) {
+                this.clientUserInfo.updateFromStruct(memberStruct);
+                continue;
+            }
+
+            this.initUserInfo(memberStruct);
+        }
+    }
+
+    protected async updateMemberInfo(): Promise<void> {
         if (this.pendingUserInfoReq) return this.pendingUserInfoReq;
 
         let resolver: () => void | null;
         this.pendingUserInfoReq = new Promise((resolve, reject) => resolver = resolve);
 
-        let userManager = this.channel.Client.UserManager;
+        this.userInfoMap.clear();
 
-        let infoList = await userManager.requestMemberInfo(this.channel.Id);
-        let activeInfoList = await userManager.requestSpecificMemberInfo(this.channel.Id, chatInfo.MemberList.map((item) => item.UserId));
-        
-        this.initUserInfoList(infoList.concat(activeInfoList));
+        let res = await this.channel.Client.ChannelManager.requestChatOnRoom(this.channel);
+
+        this.updateFromChatOnRoom(res);
 
         resolver!();
     }
@@ -292,19 +281,23 @@ export class OpenChannelInfo extends ChannelInfo {
     async updateFromStruct(chatinfoStruct: ChatInfoStruct): Promise<void> {
         super.updateFromStruct(chatinfoStruct);
 
-        let openLinkInfo = (await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId));
+        let openLinkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
 
         this.updateRoomName(openLinkInfo.LinkName);
         
         this.linkInfo = openLinkInfo;
     }
 
-    updateOpenUserInfo(memberStruct: OpenMemberStruct) {
-        let info = this.getUserInfoId(memberStruct.UserId);
+    protected async updateFromChatOnRoom(res: PacketChatOnRoomRes) {
+        super.updateFromChatOnRoom(res);
+        
+        if (res.ClientOpenProfile) {
+            this.ClientUserInfo.updateFromOpenStruct(res.ClientOpenProfile);
+        } else {
+            let linkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
 
-        if (!info) return;
-
-        info.updateFromOpenStruct(memberStruct);
+            if (linkInfo.Owner.UserId.equals(this.ClientUserInfo.User.Id)) this.ClientUserInfo.updateFromOpenStruct(linkInfo.Owner);
+        }
     }
     
 }

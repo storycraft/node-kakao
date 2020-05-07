@@ -28,7 +28,7 @@ export class ChatInfoStruct implements ChatDataBase, StructBase {
         public LastSeenLogId: Long = Long.fromNumber(-1),
         public LastChatLog: ChatlogStruct | null = null,
         public readonly Metadata: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
-        public readonly MemberList: MemberStruct[] = [],
+        public readonly ActiveMemberList: MemberStruct[] = [],
         public PushAlert: boolean = false,
         public ChatMetaList: ChannelMetaStruct[] = [],
         public IsDirectChat: boolean = false
@@ -66,7 +66,7 @@ export class ChatInfoStruct implements ChatDataBase, StructBase {
             this.Metadata.fromJson(rawJson['meta']);
         }
 
-        this.MemberList.length = 0;
+        this.ActiveMemberList.length = 0;
 
         if (rawJson['displayMembers']) {
             let list: any[] = rawJson['displayMembers'];
@@ -75,7 +75,7 @@ export class ChatInfoStruct implements ChatDataBase, StructBase {
                 let memberStruct = new MemberStruct();
                 memberStruct.fromJson(rawMember);
 
-                this.MemberList.push(memberStruct);
+                this.ActiveMemberList.push(memberStruct);
             }
         }
 
@@ -120,7 +120,7 @@ export class ChatInfoStruct implements ChatDataBase, StructBase {
 
         let displayMemList: any[] = [];
 
-        for (let memberStruct of this.MemberList) {
+        for (let memberStruct of this.ActiveMemberList) {
             displayMemList.push(memberStruct.toJson());
         }
         obj['displayMembers'] = displayMemList;

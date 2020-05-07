@@ -22,6 +22,7 @@ import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-ki
 import { StatusCode } from "../../packet/loco-packet-base";
 import { OpenMemberType } from "../open/open-member-type";
 import { OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
+import { PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
 
 /*
  * Created on Fri Nov 01 2019

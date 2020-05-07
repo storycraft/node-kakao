@@ -59,10 +59,7 @@ export class PacketSetMemTypeRes extends LocoBsonResponsePacket {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
 
         if (rawData['mids']) {
-            this.MemberIdList = [];
-            for (let id of rawData['mids']) {
-                this.MemberIdList.push(JsonUtil.readLong(id));
-            }
+            this.MemberIdList = rawData['mids'];
         }
 
         if (rawData['mts']) {

@@ -16,6 +16,7 @@ import { ChatDataStruct, ChatDataBase } from "../struct/chatdata-struct";
 import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
 import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
+import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -76,6 +77,16 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         } else {
             throw new Error('Received wrong info packet');
         }
+    }
+
+    async requestChatOnRoom(channel: ChatChannel): Promise<PacketChatOnRoomRes> {
+        let packet = new PacketChatOnRoomReq(channel.Id, channel.LastChat ? channel.LastChat.LogId : Long.ZERO);
+
+        if (channel.isOpenChat()) {
+            packet.OpenChatToken = (<OpenChatChannel> channel).OpenToken;
+        }
+
+        return await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(packet);
     }
 
     async leave(channel: ChatChannel, block: boolean = false): Promise<boolean> {

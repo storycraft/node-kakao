@@ -107,7 +107,7 @@ export class UserInfo implements ChatUserInfoBase {
     private fullProfileImageURL: string;
     private originalProfileImageURL: string;
 
-    private openChatToken?: number;
+    private openProfileToken?: number;
     private profileLinkId?: Long;
 
     private lastInfoCache: number;
@@ -155,8 +155,8 @@ export class UserInfo implements ChatUserInfoBase {
         return this.profileLinkId;
     }
 
-    get OpenChatToken() {
-        return this.openChatToken;
+    get OpenProfileToken() {
+        return this.openProfileToken;
     }
 
     get UserType() {
@@ -164,7 +164,7 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     isOpenUser(): boolean {
-        if (this.openChatToken) return true;
+        if (this.openProfileToken) return true;
         return false;
     }
 
@@ -184,8 +184,8 @@ export class UserInfo implements ChatUserInfoBase {
         this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
         
-        if (memberStruct.OpenChatToken !== 0) {
-            this.openChatToken = memberStruct.OpenChatToken;
+        if (memberStruct.OpenProfileToken !== 0) {
+            this.openProfileToken = memberStruct.OpenProfileToken;
         }
 
         if (memberStruct.ProfileLinkId !== Long.ZERO) {
@@ -201,7 +201,7 @@ export class UserInfo implements ChatUserInfoBase {
         this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
         
-        this.openChatToken = memberStruct.OpenChatToken;
+        this.openProfileToken = memberStruct.OpenChatToken;
     }
 
 }

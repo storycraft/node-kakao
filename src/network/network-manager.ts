@@ -18,6 +18,7 @@ import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
 import { PacketJoinLinkRes } from "../packet/packet-join-link";
 import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
 import { OpenChannelInfo } from "../talk/channel/channel-info";
+import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 
 /*
  * Created on Fri Nov 01 2019
@@ -135,6 +136,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('JOINLINK', this.onOpenChannelJoin.bind(this));
         this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
         this.on('SYNCMEMT', this.syncMemberTypeChange.bind(this));
+        this.on('SYNCLINKPF', this.syncProfileUpdate.bind(this));
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
@@ -224,7 +226,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
                 user.emit('join', channel, feed);
                 this.Client.emit('join_channel', channel);
             } else {
-                await channelInfo.addUserJoined(id);
+                await channelInfo.addUserInfo(id);
 
                 user.emit('join', channel, feed);
                 channel.emit('join', user, feed);
@@ -291,6 +293,20 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
             info.updateMemberType(packet.MemberIdList[i], packet.MemberTypeList[i]);
         }
     }
+    
+    async syncProfileUpdate(packet: PacketSyncProfileRes) {
+        let chanId = packet.ChannelId;
+
+        let channel = await this.ChannelManager.get(chanId);
+
+        let info = await channel.getChannelInfo();
+
+        let userInfo = info.getUserInfoId(packet.OpenMember.UserId);
+
+        if (!userInfo) return;
+
+        userInfo.updateFromOpenStruct(packet.OpenMember);
+    }
 
     async onOpenChannelKick(packet: PacketKickMemberRes) {
         let chanId = packet.ChannelId;
@@ -315,7 +331,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.emit('left', kickedUser, feed);
         this.Client.emit('user_left', kickedUser, feed);
 
-        if (!this.Client.ClientUser.Id.equals(feed.Member.UserId)) info.removeUserLeft(feed.Member.UserId);
+        if (!this.Client.ClientUser.Id.equals(feed.Member.UserId)) info.removeUserInfo(feed.Member.UserId);
     }
 
     async onMemberDelete(packet: PacketDeleteMemberRes) {
@@ -338,7 +354,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.emit('left', leftUser, feed);
         this.Client.emit('user_left', leftUser, feed);
 
-        info.removeUserLeft(feed.Member.UserId);
+        info.removeUserInfo(feed.Member.UserId);
     }
 
     onLocoKicked(packet: PacketKickoutRes) {

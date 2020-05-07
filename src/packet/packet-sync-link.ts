@@ -57,7 +57,7 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
             }
         }
         
-        this.IdList = body['dlis'];
+        if (body['dlis']) this.IdList = body['dlis'];
         this.OpenChatToken = body['ltk'];
     }
 }
