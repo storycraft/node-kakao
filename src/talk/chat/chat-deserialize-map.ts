@@ -32,7 +32,7 @@ export class ChatDeserializeMap {
         this.typeMap.set(MessageType.StickerAni, AnimatedEmoticonChat);
         this.typeMap.set(MessageType.Search, SharpSearchChat);
         this.typeMap.set(MessageType.Reply, ReplyChat);
-        this.typeMap.set(MessageType.KakaoLinkV2, ReplyChat);
+        this.typeMap.set(MessageType.Custom, ReplyChat);
     }
 
     static get DefaultConstructor() {

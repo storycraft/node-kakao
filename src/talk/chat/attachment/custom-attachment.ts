@@ -8,7 +8,7 @@ import { MessageType } from "../message-type";
 import { ChatAttachment } from "./chat-attachment";
 import { AttachmentContent } from "./chat-attachment";
 
-export class KakaoLinkV2Content implements AttachmentContent {
+export class CustomContent implements AttachmentContent {
 
     readRawContent(rawData: any): void {
         
@@ -24,7 +24,7 @@ export class KakaoLinkV2Content implements AttachmentContent {
 
 }
 
-export class KakaoLinkV2Attachment implements ChatAttachment {
+export class CustomAttachment implements ChatAttachment {
 
     constructor(
 
@@ -41,7 +41,7 @@ export class KakaoLinkV2Attachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.KakaoLinkV2;
+        return MessageType.Custom;
     }
 
 }

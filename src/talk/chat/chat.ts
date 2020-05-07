@@ -7,7 +7,7 @@ import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachmen
 import { PacketDeleteChatReq, PacketDeleteChatRes } from "../../packet/packet-delete-chat";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
-import { KakaoLinkV2Attachment } from "./attachment/kakaolink-attachment";
+import { CustomAttachment } from "./attachment/custom-attachment";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { ChannelType } from "./channel-type";
 
@@ -371,11 +371,11 @@ export class ReplyChat extends Chat {
 export class KakaoLinkV2Chat extends Chat {
     
     get Type() {
-        return MessageType.KakaoLinkV2;
+        return MessageType.Custom;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let linkAttachment = new KakaoLinkV2Attachment();
+        let linkAttachment = new CustomAttachment();
 
         linkAttachment.readAttachment(attachmentJson);
 

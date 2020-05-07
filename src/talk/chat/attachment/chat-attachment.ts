@@ -342,6 +342,88 @@ export class LongTextAttachment implements ChatAttachment {
 
 }
 
+export enum SharpContentType {
+
+    NONE = '',
+    LIST = 'list',
+    IMAGE = 'image',
+    VIDEO_CLIP = 'vclip',
+    WEATHER = 'weather',
+    MOVIE = 'movie'
+
+}
+
+export abstract class SharpContent implements AttachmentContent {
+    
+    abstract readRawContent(rawData: any): void;
+    
+    abstract toRawContent(): any;
+
+}
+
+export abstract class SharpFragment extends SharpContent {
+
+}
+
+export class SharpImageFragment extends SharpFragment {
+
+    constructor(
+        public ImageURL: string = '',
+        public ImageWidth: number = -1,
+        public ImageHeight: number = -1
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any) {
+        this.ImageURL = rawData['I'] || '';
+        this.ImageWidth = rawData['W'] || -1;
+        this.ImageHeight = rawData['H'] || -1;
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'I': this.ImageURL
+        }
+
+        if (this.ImageWidth !== -1) {
+            obj['W'] = this.ImageWidth;
+        }
+
+        if (this.ImageHeight !== -1) {
+            obj['H'] = this.ImageHeight;
+        }
+
+        return obj;
+    }
+}
+
+export class SharpTextFragment extends SharpFragment {
+    constructor(
+        public Text: string = '',
+        public Description: string = ''
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any) {
+        this.Text = rawData['T'] || '';
+        this.Description = rawData['DE'] || '';
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'T': this.Text
+        }
+
+        if (this.Description !== '') {
+            obj['DE'] = this.Description;
+        }
+
+        return obj;
+    }
+}
+
 export class SharpAttachment implements ChatAttachment {
 
     constructor(
@@ -349,9 +431,7 @@ export class SharpAttachment implements ChatAttachment {
         public RedirectURL: string = '',
         public ContentType: SharpContentType = SharpContentType.NONE,
         public ContentList: SharpContent[] = [],
-        public ImageURL: string = '',
-        public ImageWidth: number = -1,
-        public ImageHeight: number = -1
+        public MainImage?: SharpImageFragment
     ) {
         
     }
@@ -365,9 +445,10 @@ export class SharpAttachment implements ChatAttachment {
 
         this.ContentType = rawJson['V'] || SharpContentType.NONE;
 
-        this.ImageURL = rawJson['I'] || '';
-        this.ImageWidth = rawJson['W'] || -1;
-        this.ImageHeight = rawJson['H'] || -1;
+        if (rawJson['I']) {
+            this.MainImage = new SharpImageFragment();
+            this.MainImage.readRawContent(rawJson);
+        }
 
         this.RedirectURL = rawJson['L'];
 
@@ -382,9 +463,10 @@ export class SharpAttachment implements ChatAttachment {
                 switch(this.ContentType) {
                     case SharpContentType.VIDEO_CLIP: content = new SharpVideoContent(); break;
                     
-                    case SharpContentType.LIST: content = new SharpImageContent(); break;
-
+                    case SharpContentType.LIST:
                     case SharpContentType.IMAGE: content = new SharpImageContent(); break;
+
+                    case SharpContentType.MOVIE: content = new SharpMovieContent(); break;
 
                     case SharpContentType.WEATHER: 
                     default: continue;
@@ -404,16 +486,8 @@ export class SharpAttachment implements ChatAttachment {
             'L': this.RedirectURL
         };
 
-        if (this.ImageURL !== '') {
-            obj['I'] = this.ImageURL;
-        }
-
-        if (this.ImageWidth !== -1) {
-            obj['W'] = this.ImageWidth;
-        }
-
-        if (this.ImageHeight !== -1) {
-            obj['H'] = this.ImageHeight;
+        if (this.MainImage) {
+            Object.assign(obj, this.MainImage.toRawContent());
         }
 
         if (this.ContentList.length > 0) {
@@ -431,66 +505,139 @@ export class SharpAttachment implements ChatAttachment {
 
 }
 
-export enum SharpContentType {
-
-    NONE = '',
-    LIST = 'list',
-    IMAGE = 'image',
-    VIDEO_CLIP = 'vclip',
-    WEATHER = 'weather'
-
-}
-
-export abstract class SharpContent implements AttachmentContent {
-    
-    abstract readRawContent(rawData: any): void;
-    
-    abstract toRawContent(): any;
-
-}
-
 export class SharpImageContent extends SharpContent {
 
     constructor(
-        public Title: string = '',
-        public Description: string = '',
         public RedirectURL: string = '',
-        public ImageURL: string = '',
-        public ImageWidth: number = -1,
-        public ImageHeight: number = -1,
+        public Text?: SharpTextFragment,
+        public InfoText: string = '',
+        public Image?: SharpImageFragment
     ) {
         super();
     }
 
     readRawContent(rawData: any) {
-        this.Title = rawData['T'];
-        this.Description = rawData['D'];
+        if (rawData['T']) {
+            this.Text = new SharpTextFragment();
+            this.Text.readRawContent(rawData);
+        }
 
-        this.ImageURL = rawData['I'] || '';
-        this.ImageWidth = rawData['W'] || -1;
-        this.ImageHeight = rawData['H'] || -1;
+        this.InfoText = rawData['D'];
 
         this.RedirectURL = rawData['L'];
+
+        if (rawData['I']) {
+            this.Image = new SharpImageFragment();
+            this.Image.readRawContent(rawData);
+        }
+        
     }
 
     toRawContent(): any {
         let obj: any = {
-            'D': this.Description,
-            'T': this.Title,
             'L': this.RedirectURL
         };
 
-        if (this.ImageURL !== '') {
-            obj['I'] = this.ImageURL;
+        if (this.InfoText !== '') {
+            obj['D'] = this.InfoText;
         }
 
-        if (this.ImageWidth !== -1) {
-            obj['W'] = this.ImageWidth;
+        if (this.Text) {
+            Object.assign(obj, this.Text.toRawContent());
         }
 
-        if (this.ImageHeight !== -1) {
-            obj['H'] = this.ImageHeight;
+        if (this.Image) {
+            Object.assign(obj, this.Image.toRawContent());
         }
+
+        return obj;
+    }
+
+}
+
+export class SharpMovieContent extends SharpContent {
+
+    constructor(
+        public RedirectURL: string = '',
+        public Text?: SharpTextFragment,
+        public InfoText: string = '',
+        public StarRate: string = '',
+        public ExtraInfoList: SharpTextFragment[] = [],
+        public ImageList: SharpImageFragment[] = []
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any) {
+        if (rawData['T']) {
+            this.Text = new SharpTextFragment();
+            this.Text.readRawContent(rawData);
+        }
+
+        this.InfoText = rawData['D'];
+
+        this.RedirectURL = rawData['L'];
+
+        if (rawData['IL']) {
+            this.ImageList = [];
+
+            for (let rawImage of rawData['IL']) {
+                if (!rawImage) continue;
+                
+                let img = new SharpImageFragment();
+                img.readRawContent(rawImage);
+                this.ImageList.push(img);
+            }
+            
+        }
+
+        if (rawData['DL']) {
+            this.ExtraInfoList = [];
+
+            for (let rawText of rawData['DL']) {
+                if (!rawText) continue;
+                
+                let text = new SharpTextFragment();
+                text.readRawContent(rawText);
+                this.ExtraInfoList.push(text);
+            }
+        }
+        
+        this.StarRate = rawData['ST'];
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'L': this.RedirectURL
+        };
+
+        if (this.InfoText !== '') {
+            obj['D'] = this.InfoText;
+        }
+
+        if (this.Text) {
+            Object.assign(obj, this.Text.toRawContent());
+        }
+
+        if (this.ImageList.length > 0) {
+            let list = [];
+            for (let image of this.ImageList) {
+                list.push(image.toRawContent());
+            }
+
+            obj['IL'] = list;
+        }
+
+        if (this.ExtraInfoList.length > 0) {
+            let list = [];
+            for (let text of this.ExtraInfoList) {
+                list.push(text.toRawContent());
+            }
+
+            obj['DL'] = list;
+        }
+
+        obj['ST'] = this.StarRate;
 
         return obj;
     }
@@ -500,48 +647,49 @@ export class SharpImageContent extends SharpContent {
 export class SharpVideoContent extends SharpContent {
 
     constructor(
-        public Title: string = '',
-        public Description: string = '',
         public RedirectURL: string = '',
+        public Text?: SharpTextFragment,
+        public InfoText: string = '',
         public PlayTime: number = 0,
-        public ImageURL: string = '',
-        public ImageWidth: number = -1,
-        public ImageHeight: number = -1,
+        public Image?: SharpImageFragment
     ) {
         super();
     }
 
     readRawContent(rawData: any) {
-        this.Title = rawData['T'];
-        this.Description = rawData['D'];
+        if (rawData['T']) {
+            this.Text = new SharpTextFragment();
+            this.Text.readRawContent(rawData);
+        }
+
+        this.InfoText = rawData['D'];
 
         this.PlayTime = rawData['PT'] || 0;
 
-        this.ImageURL = rawData['I'] || '';
-        this.ImageWidth = rawData['W'] || -1;
-        this.ImageHeight = rawData['H'] || -1;
+        if (rawData['I']) {
+            this.Image = new SharpImageFragment();
+            this.Image.readRawContent(rawData);
+        }
 
         this.RedirectURL = rawData['L'];
     }
 
     toRawContent(): any {
         let obj: any = {
-            'D': this.Description,
-            'T': this.Title,
             'L': this.RedirectURL,
             'PT': this.PlayTime
         };
 
-        if (this.ImageURL !== '') {
-            obj['I'] = this.ImageURL;
+        if (this.InfoText !== '') {
+            obj['D'] = this.InfoText;
         }
 
-        if (this.ImageWidth !== -1) {
-            obj['W'] = this.ImageWidth;
+        if (this.Text) {
+            Object.assign(obj, this.Text.toRawContent());
         }
 
-        if (this.ImageHeight !== -1) {
-            obj['H'] = this.ImageHeight;
+        if (this.Image) {
+            Object.assign(obj, this.Image.toRawContent());
         }
 
         return obj;
