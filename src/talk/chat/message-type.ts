@@ -6,6 +6,7 @@
 
 export enum MessageType {
     
+    Unknown = -1,
     Feed = 0,
     Text = 1,
     Photo = 2,

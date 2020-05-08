@@ -194,6 +194,18 @@ export abstract class Chat {
     
 }
 
+export class UnknownChat extends Chat {
+    
+    get Type() {
+        return MessageType.Unknown;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        
+    }
+
+}
+
 export class FeedChat extends Chat {
     
     get Type() {

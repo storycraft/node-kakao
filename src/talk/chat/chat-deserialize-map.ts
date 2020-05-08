@@ -5,7 +5,7 @@
  */
 
 import { MessageType } from "./message-type";
-import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat, CustomChat } from "./chat";
+import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat, CustomChat, UnknownChat } from "./chat";
 import { Long } from "bson";
 import { ChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
@@ -20,7 +20,7 @@ export class ChatDeserializeMap {
     
     private static typeMap: Map<MessageType, ChatDeserializeMap.ChatConstructor> = new Map();
 
-    private static defaultConstructor: ChatDeserializeMap.ChatConstructor = TextChat;
+    private static defaultConstructor: ChatDeserializeMap.ChatConstructor = UnknownChat;
 
     static init() {
         this.typeMap.set(MessageType.Feed, FeedChat);
