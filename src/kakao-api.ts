@@ -488,4 +488,17 @@ export namespace KakaoAPI {
         LOGIN_TOKEN = 'login_token.json'
     }
 
+    export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
+
+        SUCCESS = 0,
+        LOGIN_FAILED = 30,
+        DEVICE_NOT_REGISTERED = -100,
+        ANOTHER_LOGINED = -101,
+        DEVICE_REGISTER_FAILED = -102,
+        PASSCODE_REQUEST_FAILED = -112,
+        OPERATION_DENIED = -500,
+        ACCOUNT_RESTRICTED = -997
+
+    }
+
 }

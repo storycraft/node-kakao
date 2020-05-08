@@ -84,9 +84,10 @@ export class URLFragment extends CustomFragment {
 
     constructor(
         public LinkWin: string = '',
-        public LinkMacOS: string = '',
-        public LinkAndroid: string = '',
-        public LinkIos: string = ''
+        public LinkMacOS: string = LinkWin,
+        
+        public LinkAndroid: string = LinkWin,
+        public LinkIos: string = LinkAndroid
 
     ) {
         super();

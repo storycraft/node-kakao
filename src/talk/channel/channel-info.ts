@@ -293,6 +293,7 @@ export class OpenChannelInfo extends ChannelInfo {
         
         if (res.ClientOpenProfile) {
             this.ClientUserInfo.updateFromOpenStruct(res.ClientOpenProfile);
+            this.updateMemberType(this.ClientUserInfo.User.Id, res.ClientOpenProfile.MemberType);
         } else {
             let linkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
 
