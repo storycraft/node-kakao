@@ -93,7 +93,7 @@ export class URLFragment extends CustomFragment {
     }
 
     readRawContent(rawData: any): void {
-        if (rawData['LWD']) this.LinkWin = rawData['LCW'];
+        if (rawData['LPC']) this.LinkWin = rawData['LPC'];
         if (rawData['LMO']) this.LinkMacOS = rawData['LMO'];
 
         if (rawData['LCA']) this.LinkAndroid = rawData['LCA'];
@@ -103,7 +103,7 @@ export class URLFragment extends CustomFragment {
     toRawContent() {
         let obj: any = {};
 
-        if (this.LinkWin !== '') obj['LWD'] = this.LinkWin;
+        if (this.LinkWin !== '') obj['LPC'] = this.LinkWin;
         if (this.LinkMacOS !== '') obj['LMO'] = this.LinkMacOS;
 
         if (this.LinkAndroid !== '') obj['LCA'] = this.LinkAndroid;
@@ -180,7 +180,7 @@ export class ButtonFragment extends CustomFragment {
 
         if (this.DisplayType) obj['BU']['SR'] = this.DisplayType;
 
-        if (this.Link) obj['L'] = this.Link;
+        if (this.Link) obj['L'] = this.Link.toRawContent();
 
         return obj;
     }
