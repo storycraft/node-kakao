@@ -367,18 +367,18 @@ export class ReplyChat extends Chat {
 
 }
 
-export class KakaoLinkV2Chat extends Chat {
+export class CustomChat extends Chat {
     
     get Type() {
         return MessageType.Custom;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let linkAttachment = new CustomAttachment();
+        let customAttachment = new CustomAttachment();
 
-        linkAttachment.readAttachment(attachmentJson);
+        customAttachment.readAttachment(attachmentJson);
 
-        attachmentList.push(linkAttachment);
+        attachmentList.push(customAttachment);
     }
 
 }

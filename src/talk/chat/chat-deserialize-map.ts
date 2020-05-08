@@ -5,7 +5,7 @@
  */
 
 import { MessageType } from "./message-type";
-import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat } from "./chat";
+import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat, CustomChat } from "./chat";
 import { Long } from "bson";
 import { ChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
@@ -32,7 +32,7 @@ export class ChatDeserializeMap {
         this.typeMap.set(MessageType.StickerAni, AnimatedEmoticonChat);
         this.typeMap.set(MessageType.Search, SharpSearchChat);
         this.typeMap.set(MessageType.Reply, ReplyChat);
-        this.typeMap.set(MessageType.Custom, ReplyChat);
+        this.typeMap.set(MessageType.Custom, CustomChat);
     }
 
     static get DefaultConstructor() {

@@ -316,7 +316,8 @@ export class SharpImageContent extends SharpContent {
 
 export enum WeatherIcon {
 
-    SUNNY = '00',
+    SUNNY = '01',
+    SUN_LITTLE_CLOUD = '02',
     SUN_CLOUDY = '03',
     MOON_CLOUDY = '22'
 
