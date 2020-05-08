@@ -526,9 +526,9 @@ export class CustomInfo implements CustomBaseContent {
         public ServiceIcon?: string,
         public ServiceLink?: URLFragment,
         public Link?: URLFragment,
+        public Secure?: boolean,
         public Fw?: boolean,
         public Ref: string = '',
-        public Lock?: boolean,
         public Ad?: boolean,
     ) {
 
@@ -550,7 +550,7 @@ export class CustomInfo implements CustomBaseContent {
         this.ServiceIcon = rawData['SIC'];
 
         this.Ad = rawData['AD'];
-        this.Lock = rawData['LOCK'];
+        this.Secure = rawData['LOCK'];
 
         if (rawData['L']) {
             this.Link = new URLFragment();
@@ -580,7 +580,7 @@ export class CustomInfo implements CustomBaseContent {
         if (this.ServiceNickname) obj['SNM'] = this.ServiceNickname;
         if (this.ServiceIcon) obj['SIC'] = this.ServiceIcon;
 
-        if (typeof(this.Lock) !== 'undefined') obj['LOCK'] = this.Lock;
+        if (typeof(this.Secure) !== 'undefined') obj['LOCK'] = this.Secure;
 
         if (typeof(this.Fw) !== 'undefined') obj['FW'] = this.Fw;
         if (typeof(this.Ad) !== 'undefined') obj['AD'] = this.Ad;
