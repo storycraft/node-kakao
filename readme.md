@@ -1,17 +1,18 @@
-# NodeKakao - KakaoTalk PC implemention(Loco protocol wrapper)
+# NodeKakao - Loco protocol compatible library
 [![NPM](https://nodei.co/npm/node-kakao.png)](https://nodei.co/npm/node-kakao/)
 
-Version Information
-| v2 | Current               |
+Note: this implemention can stop working anytime.
+
+## Version Information
+
+| v2 | (Recommended) Current |
 |----|-----------------------|
 | v1 | experimental. buggy   |
-
-Note: this implemention can stop working anytime.
 
 ## Warning
 
 There are many security issue to use for production (I expect noone would use this anyway :P).  
-IV randomzing and many functions that I may not know are disabled or tricked to keep this client simple.
+Many functions that I may not know are disabled or tricked to keep this client simple.
 
 ## Unknown parts
 
@@ -57,3 +58,18 @@ client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Lo
 
 await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id');
 ```
+
+License
+-------
+node-kakao is following MIT License.
+
+Basic Reference
+---------
+hallazzang([pykakao](https://github.com/hallazzang/pykakao/))
+ssut([pykakao](https://github.com/ssut/pykakao))
+Cai([0x90 :: Cai's Blog](http://www.bpak.org/blog/))
+- [[KakaoTalk+] LOCO 프로토콜 분석 (1)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-1/)
+- [[KakaoTalk+] LOCO 프로토콜 분석 (2)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-2/)
+- [[KakaoTalk+] LOCO 프로토콜 분석 (3)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-3/)
+- [[KakaoTalk+] LOCO 프로토콜 분석 (4)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-4/)
+- [[KakaoTalkPC] 카카오톡 PC 버전 분석 (1)](https://www.bpak.org/blog/2013/08/kakaotalkpc-카카오톡-pc-버전-분석-1/)

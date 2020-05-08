@@ -5,7 +5,6 @@
  */
 
 import { ChatContent, MentionContentList, ChatMention } from "./attachment/chat-attachment";
-import { JsonUtil } from "../../util/json-util";
 
 export namespace ChatBuilder {
     export type BuiltMessage = {
@@ -53,7 +52,7 @@ export namespace ChatBuilder {
                         break;
                     }
 
-                    default: throw new Error(`Unknownt ChatContent ${fragment} at format index:${i}`);
+                    default: throw new Error(`Unknown ChatContent ${fragment} at format index:${i}`);
                 }
 
             } else {
