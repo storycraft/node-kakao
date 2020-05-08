@@ -15,10 +15,6 @@ export namespace ChatBuilder {
     export function buildMessage(...textFormat: (string | ChatContent)[]): BuiltMessage {
         let text = '';
 
-        if (textFormat.length < 1) {
-            throw new Error('Text is empty');
-        }
-
         let mentionPrefix = '@';
         let mentionMap: Map<string, MentionContentList> = new Map();
 
@@ -58,10 +54,6 @@ export namespace ChatBuilder {
             } else {
                 throw new Error(`Unknown type ${typeof(fragment)} at format index:${i}`);
             }
-        }
-
-        if (text === '') {
-            throw new Error('Text is empty');
         }
 
         let extra: any = {};

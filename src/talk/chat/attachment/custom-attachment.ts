@@ -83,7 +83,7 @@ export class TextDescFragment extends CustomFragment {
 export class URLFragment extends CustomFragment {
 
     constructor(
-        public LinkPC: string = '',
+        public LinkWin: string = '',
         public LinkMacOS: string = '',
         public LinkAndroid: string = '',
         public LinkIos: string = ''
@@ -93,7 +93,7 @@ export class URLFragment extends CustomFragment {
     }
 
     readRawContent(rawData: any): void {
-        if (rawData['LPC']) this.LinkPC = rawData['LPC'];
+        if (rawData['LWD']) this.LinkWin = rawData['LCW'];
         if (rawData['LMO']) this.LinkMacOS = rawData['LMO'];
 
         if (rawData['LCA']) this.LinkAndroid = rawData['LCA'];
@@ -103,7 +103,7 @@ export class URLFragment extends CustomFragment {
     toRawContent() {
         let obj: any = {};
 
-        if (this.LinkPC !== '') obj['LPC'] = this.LinkPC;
+        if (this.LinkWin !== '') obj['LWD'] = this.LinkWin;
         if (this.LinkMacOS !== '') obj['LMO'] = this.LinkMacOS;
 
         if (this.LinkAndroid !== '') obj['LCA'] = this.LinkAndroid;
@@ -167,7 +167,10 @@ export class ButtonFragment extends CustomFragment {
             if (rawData['BU']['SR']) this.DisplayType = rawData['BU']['SR'];
         }
 
-        if (rawData['L']) this.Link?.readRawContent(rawData['L']);
+        if (rawData['L']) {
+            this.Link = new URLFragment();
+            this.Link.readRawContent(rawData['L']);
+        }
     }
 
     toRawContent() {
@@ -402,35 +405,48 @@ export class CustomFeedContent extends CustomContent {
 export class CarouselCover extends CustomContent {
 
     constructor(
-        public Background: ImageFragment = new ImageFragment(),
-        public Link: URLFragment = new URLFragment(),
-
         public Text: TextDescFragment = new TextDescFragment(),
-        public Thumbnail?: ImageFragment
+        public Thumbnail?: ImageFragment,
+        public Link?: URLFragment,
+
+        public Background?: ImageFragment
     ) {
         super();
     }
 
     readRawContent(rawData: any): void {
-        if (rawData['BG']) this.Background.readRawContent(rawData['BG']);
-        if (rawData['L']) this.Link.readRawContent(rawData['L']);
+        if (rawData['L']) {
+            this.Link = new URLFragment();
+            this.Link.readRawContent(rawData['L']);
+        }
 
-        if (rawData['TD']) this.Link.readRawContent(rawData['TD']);
+        if (rawData['TD']) this.Text.readRawContent(rawData['TD']);
         if (rawData['TH']) {
             this.Thumbnail = new ImageFragment();
             this.Thumbnail.readRawContent(rawData['TH']);
+        }
+
+        if (rawData['BG']) {
+            this.Background = new ImageFragment();
+            this.Background.readRawContent(rawData['BG']);
         }
     }
 
     toRawContent() {
         let obj: any = {
-            'BG': this.Background.toRawContent(),
-            'L': this.Link.toRawContent(),
             'TD': this.Text.toRawContent()
         };
 
+        if (this.Link) {
+            obj['L'] = this.Link.toRawContent();
+        }
+
         if (this.Thumbnail) {
-            obj['TH'] = this.Thumbnail;
+            obj['TH'] = this.Thumbnail.toRawContent();
+        }
+
+        if (this.Background) {
+            obj['BG'] = this.Background.toRawContent();
         }
 
         return obj;
@@ -490,6 +506,7 @@ export class CustomCarouselContent extends CustomContent {
             obj['CTA'] = this.ContentTail.toRawContent();
         }
 
+        return obj;
     }
 
 }
@@ -636,13 +653,13 @@ export class CustomAttachment implements ChatAttachment {
 
     toJsonAttachment() {
         let obj: any = {
-            'P': this.Info
+            'P': this.Info.toRawContent()
         };
 
-        if (this.Content) obj['C'] = this.Content;
+        if (this.Content) obj['C'] = this.Content.toRawContent();
 
         if (this.LinkInfo) {
-            obj['K'] = this.LinkInfo;
+            obj['K'] = this.LinkInfo.toRawContent();
         }
 
         return obj;

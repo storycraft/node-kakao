@@ -104,6 +104,7 @@ export class LocoManager {
         }
 
         this.locoSocket.on('packet', this.onPacket.bind(this));
+        this.locoSocket.on('disconnected', this.disconnect.bind(this));
 
         return true;
     }
@@ -224,6 +225,8 @@ export class LocoManager {
 
         this.locoConnected = false;
         this.locoLogon = false;
+
+        if (this.handler) this.handler.onDisconnected();
     }
 
 }

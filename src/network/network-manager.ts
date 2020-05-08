@@ -57,7 +57,7 @@ export class NetworkManager {
         return this.locoManager;
     }
 
-    get NeedReLogon() {
+    get NeedReLogin() {
         return this.locoManager.NeedRelogin;
     }
 
@@ -123,8 +123,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
     private networkManager: NetworkManager;
 
+    private kickReason: number;
+
     constructor(networkManager: NetworkManager) {
         super();
+
+        this.kickReason = -1;
 
         this.networkManager = networkManager;
 
@@ -173,6 +177,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
         //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet, reqPacket);
+    }
+
+    onDisconnected(): void {
+        this.Client.emit('disconnected', this.kickReason);
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
@@ -378,6 +386,6 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     onLocoKicked(packet: PacketKickoutRes) {
         let reason = packet.Reason;
 
-        this.Client.emit('disconnected', reason);
+        this.kickReason = reason;
     }
 }

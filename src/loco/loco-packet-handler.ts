@@ -12,4 +12,6 @@ export interface LocoPacketHandler {
 
     onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void;
 
+    onDisconnected(): void;
+
 }
