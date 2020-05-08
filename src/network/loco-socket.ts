@@ -136,17 +136,18 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
     }
 
     protected onDisconnected() {
-
+        this.emit('disconnected');
     }
 
     protected connectionError(e: any) {
         this.onError(e);
+        this.disconnect();
     }
 
     protected connectionEnded(buffer: Buffer) {
-        this.connected = false;
-
         this.onEnd(buffer);
+
+        this.disconnect();
     }
 
     packetReceived(packetId: number, packet: LocoResponsePacket) {
@@ -156,9 +157,11 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
             this.packetMap.delete(packetId);
 
             requestPacket.onResponse(packet);
+
+            this.emit('packet', packetId, packet, requestPacket);
+        } else {
+            this.emit('packet', packetId, packet);
         }
-        
-        this.emit('packet', packetId, packet);
 
         if (!this.keepAlive) {
             this.disconnect();
@@ -198,13 +201,15 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
 
     protected abstract onError(e: any): void;
 
-    on(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket) => void): this;
+    on(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) => void): this;
+    on(event: 'disconnected' | string, listener: () => void): this;
 
     on(event: string, listener: (...args: any[]) => void) {
         return super.on(event, listener);
     }
 
-    once(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket) => void): this;
+    once(event: 'packet' | string, listener: (packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) => void): this;
+    once(event: 'disconnected' | string, listener: () => void): this;
 
     once(event: string, listener: (...args: any[]) => void) {
         return super.once(event, listener);

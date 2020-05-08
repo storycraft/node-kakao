@@ -1,4 +1,4 @@
-import { ChatroomType } from "../chat/chatroom-type";
+import { ChannelType } from "../chat/channel-type";
 import { StructBase } from "./struct-base";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
@@ -9,11 +9,19 @@ import { Long } from "bson";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatDataStruct implements StructBase {
+export interface ChatDataBase {
+    ChannelId: Long;
+    Type: ChannelType;
+    OpenLinkId: Long;
+    OpenChatToken: number;
+    readonly Metadata: ChatDataMetaStruct;
+}
+
+export class ChatDataStruct implements ChatDataBase, StructBase {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
-        public Type: ChatroomType = ChatroomType.GROUP,
+        public Type: ChannelType = ChannelType.GROUP,
         public OpenLinkId: Long = Long.ZERO,
         public OpenChatToken: number = -1,
         public MemberCount: number = 0,

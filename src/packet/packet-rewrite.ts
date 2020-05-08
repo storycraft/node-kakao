@@ -1,4 +1,4 @@
-import { LocoBsonRequestPacket } from "./loco-bson-packet";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { FeedType } from "../talk/feed/feed-type";
 
@@ -11,12 +11,12 @@ import { FeedType } from "../talk/feed/feed-type";
 export class PacketRewriteReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ClientOpenUserId: Long = Long.ZERO,
+        public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
         public Time: number = 0,
-        public RewriteFeedType: FeedType | null = FeedType.OPENLINK_REWRITE_FEED,
-        public Unknown1: string = '',
+        public RewriteFeedType: FeedType = FeedType.OPENLINK_REWRITE_FEED,
+        public Unknown1: string = '', //Chat Reporting?
         public Unknown2: string = '',
     ) {
         super();
@@ -28,17 +28,17 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
     
     toBodyJson() {
         let obj: any = {
-            'li': this.ClientOpenUserId,
+            'li': this.LinkId,
             'c': this.ChannelId,
             'logId': this.LogId,
             't': this.Time
         };
 
-        if (this.Unknown1.trim() != '') {
+        if (this.Unknown1 !== '') {
             obj['rcli'] = this.Unknown1;
         }
 
-        if (this.Unknown2.trim() != '') {
+        if (this.Unknown2 !== '') {
             obj['cat'] = this.Unknown2;
         }
 
@@ -49,4 +49,15 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         return obj;
     }
 
+}
+
+export class PacketRewriteRes extends LocoBsonResponsePacket {
+    
+    get PacketName() {
+        return 'REWRITE';
+    }
+
+    readBodyJson(body: any): void {
+        
+    }
 }

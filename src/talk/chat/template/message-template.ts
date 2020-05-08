@@ -1,5 +1,5 @@
 import { MessageType } from "../message-type";
-import { ChatAttachment, SharpAttachment, EmoticonAttachment, ChatContent } from "../attachment/chat-attachment";
+import { ChatAttachment, EmoticonAttachment, ChatContent } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
 import { ChatBuilder } from "../chat-builder";
 
@@ -68,50 +68,6 @@ export class AttachmentTemplate implements MessageTemplate {
 
     getPacketExtra() {
         return JsonUtil.stringifyLoseless({ ...this.textExtra, ...this.attachment.toJsonAttachment() });
-    }
-
-}
-
-//@depreacted
-export class SharpMessageTemplate implements MessageTemplate {
-
-    constructor(
-        private text: string = 'Search message',
-        private sharpAttachment: SharpAttachment
-    ) {
-
-    }
-
-    getMessageType() {
-        return MessageType.Search;
-    }
-
-    get Text() {
-        return this.text;
-    }
-
-    set Text(text) {
-        this.text = text;
-    }
-
-    get SharpAttachment() {
-        return this.sharpAttachment;
-    }
-
-    set SharpAttachment(value) {
-        this.sharpAttachment = value;
-    }
-
-    get Valid() {
-        return true;
-    }
-
-    getPacketText() {
-        return this.text;
-    }
-
-    getPacketExtra() {
-        return JSON.stringify(this.sharpAttachment.toJsonAttachment());
     }
 
 }

@@ -2,6 +2,7 @@ import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
+import { OpenMemberType } from "../open/open-member-type";
 
 /*
  * Created on Sat Nov 02 2019
@@ -21,7 +22,8 @@ export class MemberStruct implements StructBase {
         public AccountId: number = 0,
         public LinkedService: string = '',
         public StatusMessage: string = '',
-        public OpenChatToken: number = 0,
+        public OpenProfileToken: number = 0,
+        public OpenChatMemberType: OpenMemberType = OpenMemberType.NONE,
         public ProfileLinkId: Long = Long.ZERO
     ) {
 
@@ -38,8 +40,9 @@ export class MemberStruct implements StructBase {
         this.LinkedService = rawData['linkedService'] || '';
         this.StatusMessage = rawData['statusMessage'] || '';
 
-        this.OpenChatToken = rawData['opt'];
-        this.ProfileLinkId = rawData['pli'];
+        this.OpenProfileToken = rawData['opt'] || 0;
+        this.ProfileLinkId = rawData['pli'] || Long.ZERO;
+        this.OpenChatMemberType = rawData['mt'] || OpenMemberType.NONE;
     }
     
     toJson() {
@@ -61,8 +64,9 @@ export class MemberStruct implements StructBase {
             obj['statusMessage'] = this.StatusMessage;
         }
 
-        if (this.OpenChatToken !== 0) {
-            obj['opt'] = this.OpenChatToken;
+        if (this.OpenProfileToken !== 0) {
+            obj['opt'] = this.OpenProfileToken;
+            obj['mt'] = this.OpenChatMemberType;
         }
 
         if (this.ProfileLinkId !== Long.ZERO) {

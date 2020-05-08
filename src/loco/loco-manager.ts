@@ -10,6 +10,7 @@ import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketHandler } from "./loco-packet-handler";
 import { LocoPacketList } from "../packet/loco-packet-list";
 import { PacketPingReq } from "../packet/packet-ping";
+import { Long } from "bson";
 
 /*
  * Created on Thu Oct 24 2019
@@ -76,7 +77,7 @@ export class LocoManager {
         return new LocoSecureSocket(hostInfo.Host, hostInfo.Port, true);
     }
 
-    async connect(deviceUUID: string, accessToken: string, userId: number): Promise<boolean> {
+    async connect(deviceUUID: string, accessToken: string, userId: Long): Promise<boolean> {
         let bookingData = await this.getBookingData();
         let checkinData = await this.getCheckinData(bookingData.CheckinHost, userId);
         
@@ -103,6 +104,7 @@ export class LocoManager {
         }
 
         this.locoSocket.on('packet', this.onPacket.bind(this));
+        this.locoSocket.on('disconnected', this.disconnect.bind(this));
 
         return true;
     }
@@ -139,7 +141,7 @@ export class LocoManager {
         this.sendPacket(new PacketPingReq());
     }
 
-    async getCheckinData(checkinHost: HostData, userId: number): Promise<CheckinData> {
+    async getCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
         let socket = this.createCheckinSocket(checkinHost);
 
         let connected = await socket.connect();
@@ -179,10 +181,10 @@ export class LocoManager {
         return new BookingData(new HostData(res.HostList[0], res.PortList[0]));
     }
 
-    protected onPacket(packetId: number, packet: LocoResponsePacket) {
+    protected onPacket(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) {
         try {
             if (this.Handler) {
-                this.Handler.onResponse(packetId, packet);
+                this.Handler.onResponse(packetId, packet, reqPacket);
             }
 
             if (packet.PacketName == 'KICKOUT') {
@@ -209,11 +211,11 @@ export class LocoManager {
             return false;
         }
 
-        let result = await this.LocoSocket!.sendPacket(packet);
+        let promise = this.LocoSocket!.sendPacket(packet);
 
         this.onPacketSend(this.LocoSocket!.Writer.CurrentPacketId, packet);
 
-        return result;
+        return await promise;
     }
 
     disconnect() {
@@ -223,6 +225,8 @@ export class LocoManager {
 
         this.locoConnected = false;
         this.locoLogon = false;
+
+        if (this.handler) this.handler.onDisconnected();
     }
 
 }

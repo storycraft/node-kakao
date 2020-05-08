@@ -5,9 +5,9 @@
  */
 
 import { MessageType } from "./message-type";
-import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat } from "./chat";
+import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat } from "./chat";
 import { Long } from "bson";
-import { ChatChannel } from "../room/chat-channel";
+import { ChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 
 export namespace ChatDeserializeMap {
@@ -23,6 +23,7 @@ export class ChatDeserializeMap {
     private static defaultConstructor: ChatDeserializeMap.ChatConstructor = TextChat;
 
     static init() {
+        this.typeMap.set(MessageType.Feed, FeedChat);
         this.typeMap.set(MessageType.Text, TextChat);
         this.typeMap.set(MessageType.Photo, SinglePhotoChat);
         this.typeMap.set(MessageType.MultiPhoto, MultiPhotoChat);
@@ -31,7 +32,7 @@ export class ChatDeserializeMap {
         this.typeMap.set(MessageType.StickerAni, AnimatedEmoticonChat);
         this.typeMap.set(MessageType.Search, SharpSearchChat);
         this.typeMap.set(MessageType.Reply, ReplyChat);
-        this.typeMap.set(MessageType.KakaoLinkV2, ReplyChat);
+        this.typeMap.set(MessageType.Custom, ReplyChat);
     }
 
     static get DefaultConstructor() {

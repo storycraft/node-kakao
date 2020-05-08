@@ -1,13 +1,14 @@
 import { MessageType } from "./message-type";
 import { Long, EJSON } from "bson";
-import { ChatChannel } from "../room/chat-channel";
+import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, SharpAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
-import { PacketDeleteChatReq } from "../../packet/packet-delete-chat";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
+import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
-import { KakaoLinkV2Attachment } from "./attachment/kakaolink-attachment";
+import { CustomAttachment } from "./attachment/custom-attachment";
+import { ChannelType } from "./channel-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -169,14 +170,40 @@ export abstract class Chat {
         return this.Sender.isClientUser();
     }
 
+    get Hidable(): boolean {
+        return this.channel.isOpenChat() && this.channel.Type === ChannelType.OPENCHAT_GROUP;
+    }
+
     async delete(): Promise<boolean> {
         if (!this.Deletable) {
             return false;
         }
 
-        return this.channel.Client.NetworkManager.sendPacket(new PacketDeleteChatReq(this.channel.ChannelId, this.logId));
+        return this.channel.Client.ChatManager.deleteChat(this.Channel.Id, this.logId);
+    }
+
+    async hide(): Promise<boolean> {
+        if (!this.Hidable) {
+            return false;
+        }
+
+        let openChannel = this.channel as OpenChatChannel;
+
+        return openChannel.hideChat(this);
     }
     
+}
+
+export class FeedChat extends Chat {
+    
+    get Type() {
+        return MessageType.Feed;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        
+    }
+
 }
 
 export class TextChat extends Chat {
@@ -301,7 +328,7 @@ export class LongTextChat extends Chat {
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let textAttachment = new LongTextAttachment();
-        textAttachment.readAttachment(LongTextAttachment);
+        textAttachment.readAttachment(attachmentJson);
 
         attachmentList.push(textAttachment);
     }
@@ -343,11 +370,11 @@ export class ReplyChat extends Chat {
 export class KakaoLinkV2Chat extends Chat {
     
     get Type() {
-        return MessageType.KakaoLinkV2;
+        return MessageType.Custom;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let linkAttachment = new KakaoLinkV2Attachment();
+        let linkAttachment = new CustomAttachment();
 
         linkAttachment.readAttachment(attachmentJson);
 

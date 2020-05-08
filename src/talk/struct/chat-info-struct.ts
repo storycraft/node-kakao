@@ -1,10 +1,11 @@
 import { StructBase } from "./struct-base";
 import { Long } from "bson";
-import { ChatroomType } from "../chat/chatroom-type";
+import { ChannelType } from "../chat/channel-type";
 import { ChatlogStruct } from "./chatlog-struct";
 import { MemberStruct } from "./member-struct";
 import { JsonUtil } from "../../util/json-util";
 import { type } from "os";
+import { ChatDataBase } from "./chatdata-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -12,11 +13,11 @@ import { type } from "os";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatInfoStruct implements StructBase {
+export class ChatInfoStruct implements ChatDataBase, StructBase {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
-        public Type: ChatroomType = ChatroomType.GROUP,
+        public Type: ChannelType = ChannelType.GROUP,
         public OpenLinkId: Long = Long.ZERO,
         public OpenChatToken: number = -1,
         public ActiveMemberCount: number = 0,
@@ -26,8 +27,8 @@ export class ChatInfoStruct implements StructBase {
         public LastLogId: Long = Long.fromNumber(-1),
         public LastSeenLogId: Long = Long.fromNumber(-1),
         public LastChatLog: ChatlogStruct | null = null,
-        public Meta: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
-        public MemberList: MemberStruct[] = [],
+        public readonly Metadata: ChatMetaStruct = new ChatMetaStruct(), //idk what is this
+        public readonly ActiveMemberList: MemberStruct[] = [],
         public PushAlert: boolean = false,
         public ChatMetaList: ChannelMetaStruct[] = [],
         public IsDirectChat: boolean = false
@@ -61,13 +62,11 @@ export class ChatInfoStruct implements StructBase {
             this.OpenChatToken = rawJson['otk'];
         }
 
-        this.Meta = new ChatMetaStruct();
-
         if (rawJson['meta']) {
-            this.Meta.fromJson(rawJson['meta']);
+            this.Metadata.fromJson(rawJson['meta']);
         }
 
-        this.MemberList = [];
+        this.ActiveMemberList.length = 0;
 
         if (rawJson['displayMembers']) {
             let list: any[] = rawJson['displayMembers'];
@@ -76,7 +75,7 @@ export class ChatInfoStruct implements StructBase {
                 let memberStruct = new MemberStruct();
                 memberStruct.fromJson(rawMember);
 
-                this.MemberList.push(memberStruct);
+                this.ActiveMemberList.push(memberStruct);
             }
         }
 
@@ -117,11 +116,11 @@ export class ChatInfoStruct implements StructBase {
             obj['lastChatLog'] = this.LastChatLog.toJson();
         }
 
-        obj['meta'] = this.Meta;
+        obj['meta'] = this.Metadata;
 
         let displayMemList: any[] = [];
 
-        for (let memberStruct of this.MemberList) {
+        for (let memberStruct of this.ActiveMemberList) {
             displayMemList.push(memberStruct.toJson());
         }
         obj['displayMembers'] = displayMemList;

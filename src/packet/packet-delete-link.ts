@@ -1,4 +1,4 @@
-import { LocoBsonRequestPacket } from "./loco-bson-packet";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 
 /*
@@ -10,7 +10,7 @@ import { Long } from "bson";
 export class PacketDeleteLinkReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ClientOpenUserId: Long = Long.ZERO,
+        public LinkId: Long = Long.ZERO,
     ) {
         super();
     }
@@ -21,9 +21,21 @@ export class PacketDeleteLinkReq extends LocoBsonRequestPacket {
 
     toBodyJson() {
         let obj: any = {
-            'li': this.ClientOpenUserId
+            'li': this.LinkId
         };
 
         return obj;
     }
+}
+
+export class PacketDeleteLinkRes extends LocoBsonResponsePacket {
+
+    get PacketName(): string {
+        return 'DELETELINK';
+    }
+
+    readBodyJson(body: any): void {
+        
+    }
+
 }

@@ -18,7 +18,7 @@ export class OpenLinkStruct implements StructBase {
         public LinkName: string = '',
         public LinkURL: string = '',
         public LinkType: OpenLinkType = OpenLinkType.PROFILE,
-        public readonly Member: OpenMemberStruct = new OpenMemberStruct(),
+        public readonly Owner: OpenMemberStruct = new OpenMemberStruct(),
         public Description: string = '',
         public CoverURL: string = ''
         ) {
@@ -33,7 +33,7 @@ export class OpenLinkStruct implements StructBase {
 
         this.LinkType = rawData['lt'];
 
-        this.Member.fromJson(rawData['olu']);
+        this.Owner.fromJson(rawData['olu']);
 
         this.Description = rawData['desc'];
         this.CoverURL = rawData['liu'];
@@ -46,7 +46,7 @@ export class OpenLinkStruct implements StructBase {
             'ln': this.LinkName,
             'lu': this.LinkURL,
             'lt': this.LinkType,
-            'olu': this.Member.toJson(),
+            'olu': this.Owner.toJson(),
             'desc': this.Description,
             'liu': this.CoverURL
         };
@@ -64,7 +64,8 @@ export class OpenMemberStruct implements StructBase {
         public ProfileImageUrl: string = '',
         public OriginalProfileImageUrl: string = '',
         public FullProfileImageUrl: string = '',
-        public MemberType: number = 0
+        public MemberType: number = 0,
+        public OpenChatToken: number = 0
     ) {
 
     }
@@ -76,6 +77,7 @@ export class OpenMemberStruct implements StructBase {
         this.OriginalProfileImageUrl = rawData['opi'] || rawData['originalProfileImageUrl'] || '';
         this.FullProfileImageUrl = rawData['fpi'] || rawData['fullProfileImageUrl'] || '';
         this.MemberType = rawData['lmt'];
+        this.OpenChatToken = rawData['opt'];
     }
     
     toJson() {
@@ -85,7 +87,8 @@ export class OpenMemberStruct implements StructBase {
             'pi': this.ProfileImageUrl,
             'opi': this.OriginalProfileImageUrl,
             'fpi': this.FullProfileImageUrl,
-            'lmt': this.MemberType
+            'lmt': this.MemberType,
+            'opt': this.OpenChatToken
         };
 
         return obj;

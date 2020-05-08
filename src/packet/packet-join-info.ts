@@ -43,7 +43,7 @@ export class PacketJoinInfoRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(body: any): void {
-        this.OpenLink.fromJson(body['ol']);
+        if (body['ol']) this.OpenLink.fromJson(body['ol']);
     }
 
 }

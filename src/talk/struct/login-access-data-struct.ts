@@ -1,4 +1,6 @@
 import { StructBase } from "./struct-base";
+import { Long } from "bson";
+import { JsonUtil } from "../../util/json-util";
 
 /*
  * Created on Fri Nov 01 2019
@@ -6,12 +8,22 @@ import { StructBase } from "./struct-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export enum LoginStatusCode {
+
+    PASS = 0,
+    VALIDATION_FAILED = -30,
+    DEVICE_NOT_REGISTERED = -100,
+    DEVICE_LOGON_ANOTHER = -101,
+    RESTRICTED = -997
+
+}
+
 export class LoginAccessDataStruct implements StructBase {
 
     constructor(
-        public Status: number = 0,
+        public Status: LoginStatusCode = 0,
         public StoryURL: string = '',
-        public UserId: number = 0,
+        public UserId: Long = Long.ZERO,
         public CountryISO: string = '',
         public CountryCode: string = '0',
         public AccountId: number = 0,
@@ -31,7 +43,7 @@ export class LoginAccessDataStruct implements StructBase {
     fromJson(data: any) {
         this.Status = data['status'];
         this.StoryURL = data['story_url'];
-        this.UserId = data['userId'],
+        this.UserId = JsonUtil.readLong(data['userId']),
         this.CountryISO = data['countryIso'],
         this.CountryCode = data['countryCode'],
         this.AccountId = data['accountId'],

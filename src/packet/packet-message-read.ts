@@ -12,9 +12,9 @@ export class PacketMessageReadRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelId: Long = Long.fromNumber(-1),
-        public ReaderId: Long = Long.fromNumber(-1),
-        public Watermark: Long = Long.fromNumber(-1),
+        public ChannelId: Long = Long.ZERO,
+        public ReaderId: Long = Long.ZERO,
+        public Watermark: Long = Long.ZERO, //chat log id
     ) {
         super(status);
     }

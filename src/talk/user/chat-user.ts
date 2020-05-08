@@ -4,6 +4,11 @@ import { MemberStruct } from "../struct/member-struct";
 import { ClientSettingsStruct } from "../struct/client-settings-struct";
 import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
 import { UserType } from "./user-type";
+import { EventEmitter } from "events";
+import { ChatChannel } from "../channel/chat-channel";
+import { Chat } from "../chat/chat";
+import { ChatFeed } from "../chat/chat-feed";
+import { TalkClient } from "../../talk-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -11,34 +16,68 @@ import { UserType } from "./user-type";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatUser {
+export class ChatUser extends EventEmitter {
+
+    private client: TalkClient;
     
-    private userId: Long;
-    private userInfo: ChatUserInfoBase;
+    private id: Long;
 
-    constructor(userId: Long, userInfo: ChatUserInfoBase = new UserInfo()) {
-        this.userId = userId;
+    private nickname: string;
 
-        this.userInfo = userInfo;
+    constructor(client: TalkClient, userId: Long, nickname: string = '') {
+        super();
+        
+        this.client = client;
+
+        this.id = userId;
+        this.nickname = nickname;
     }
 
-    get UserId() {
-        return this.userId;
+    get Client() {
+        return this.client;
     }
 
-    get UserInfo() {
-        return this.userInfo;
+    get Id() {
+        return this.id;
+    }
+
+    get Nickname() {
+        return this.nickname;
+    }
+
+    updateNickname(nickname: string) {
+        if (this.nickname !== nickname) this.nickname = nickname;
     }
 
     isClientUser() {
         return false;
     }
 
+    async createDM() {
+        return this.client.ChannelManager.createChannel([this]);
+    }
+
+    on(event: 'message', listener: (chat: Chat) => void): this;
+    on(event: 'message_read', listener: (channel: ChatChannel, watermark: Long) => void): this;
+    on(event: 'join', listener: (newChannel: ChatChannel, joinFeed: ChatFeed) => void): this;
+    on(event: 'left', listener: (leftChannel: ChatChannel, leftFeed: ChatFeed) => void): this;
+
+    on(event: string, listener: (...args: any[]) => void) {
+        return super.on(event, listener);
+    }
+
+    once(event: 'message', listener: (chat: Chat) => void): this;
+    once(event: 'message_read', listener: (channel: ChatChannel, watermark: Long) => void): this;
+    once(event: 'join', listener: (newChannel: ChatChannel, joinFeed: ChatFeed) => void): this;
+    once(event: 'left', listener: (leftChannel: ChatChannel, leftFeed: ChatFeed) => void): this;
+
+    once(event: string, listener: (...args: any[]) => void) {
+        return super.once(event, listener);
+    }
+
 }
 
 export interface UserInfoBase {
-
-    readonly Nickname: string;
 
     readonly ProfileImageURL: string;
 
@@ -53,37 +92,32 @@ export interface ChatUserInfoBase extends UserInfoBase {
 
     readonly AccountId: number;
 
-    readonly InfoLoaded: boolean;
-
-    updateNickname(nickname: string): void;
-
     update(memberStruct: MemberStruct): void;
 
-    updateFromChatInfo(memberStruct: MemberStruct): void;
+    updateFromStruct(memberStruct: MemberStruct): void;
 }
 
 export class UserInfo implements ChatUserInfoBase {
 
-    private infoLoaded: boolean;
+    private user: ChatUser;
 
     private accountId: number;
-    private nickname: string;
 
     private profileImageURL: string;
     private fullProfileImageURL: string;
     private originalProfileImageURL: string;
 
-    private openChatToken?: number;
+    private openProfileToken?: number;
     private profileLinkId?: Long;
 
     private lastInfoCache: number;
 
     private userType: UserType;
 
-    constructor() {
-        this.infoLoaded = false;
+    constructor(user: ChatUser) {
+        this.user = user;
+
         this.accountId = 0;
-        this.nickname = '';
 
         this.profileImageURL = '';
         this.fullProfileImageURL = '';
@@ -93,12 +127,12 @@ export class UserInfo implements ChatUserInfoBase {
         this.userType = UserType.Undefined;
     }
 
-    get AccountId() {
-        return this.accountId;
+    get User() {
+        return this.user;
     }
 
-    get Nickname() {
-        return this.nickname;
+    get AccountId() {
+        return this.accountId;
     }
 
     get ProfileImageURL() {
@@ -113,10 +147,6 @@ export class UserInfo implements ChatUserInfoBase {
         return this.originalProfileImageURL;
     }
 
-    get InfoLoaded() {
-        return this.infoLoaded;
-    }
-
     get LastInfoCache() {
         return this.lastInfoCache;
     }
@@ -125,8 +155,8 @@ export class UserInfo implements ChatUserInfoBase {
         return this.profileLinkId;
     }
 
-    get OpenChatToken() {
-        return this.openChatToken;
+    get OpenProfileToken() {
+        return this.openProfileToken;
     }
 
     get UserType() {
@@ -134,7 +164,7 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     isOpenUser(): boolean {
-        if (this.openChatToken) return true;
+        if (this.openProfileToken) return true;
         return false;
     }
 
@@ -143,27 +173,19 @@ export class UserInfo implements ChatUserInfoBase {
         return false;
     }
 
-    updateNickname(nickname: string) {
-        this.nickname = nickname;
-    }
-
     update(memberStruct: MemberStruct) {
-        if (!this.infoLoaded) {
-            this.infoLoaded = true;
-        }
-
-        this.updateFromChatInfo(memberStruct);
+        this.updateFromStruct(memberStruct);
     }
 
-    updateFromChatInfo(memberStruct: MemberStruct) {
+    updateFromStruct(memberStruct: MemberStruct) {
         this.accountId = memberStruct.AccountId;
-        this.nickname = memberStruct.NickName;
+        this.user.updateNickname(memberStruct.NickName);
         this.profileImageURL = memberStruct.ProfileImageUrl || '';
         this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
         
-        if (memberStruct.OpenChatToken !== 0) {
-            this.openChatToken = memberStruct.OpenChatToken;
+        if (memberStruct.OpenProfileToken !== 0) {
+            this.openProfileToken = memberStruct.OpenProfileToken;
         }
 
         if (memberStruct.ProfileLinkId !== Long.ZERO) {
@@ -173,64 +195,33 @@ export class UserInfo implements ChatUserInfoBase {
         this.userType = memberStruct.Type;
     }
 
+    updateFromOpenStruct(memberStruct: OpenMemberStruct) {
+        this.user.updateNickname(memberStruct.NickName);
+        this.profileImageURL = memberStruct.ProfileImageUrl || '';
+        this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
+        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
+        
+        this.openProfileToken = memberStruct.OpenChatToken;
+    }
+
 }
 
 export class ClientChatUser extends ChatUser {
 
-    private openChatToken: number;
+    private mainUserInfo: ClientUserInfo;
 
-    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, openChatToken: number = 0) {
-        super(Long.fromNumber(clientAccessData.UserId), new ClientUserInfo(clientAccessData, settings));
+    constructor(client: TalkClient, clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, private mainOpenToken: number) {
+        super(client, clientAccessData.UserId);
 
-        this.openChatToken = openChatToken;
+        this.mainUserInfo = new ClientUserInfo(clientAccessData, settings);
     }
 
-    get UserInfo() {
-        return super.UserInfo as ClientUserInfo;
+    get MainUserInfo() {
+        return this.mainUserInfo;
     }
 
-    get KakaoStoryURL() {
-        return this.UserInfo.KakaoStoryURL;
-    }
-
-    get OpenChatToken() {
-        return this.openChatToken;
-    }
-
-    set OpenChatToken(token) {
-        this.openChatToken = token;
-    }
-
-    get LogonTime() {
-        return this.UserInfo.LogonTime;
-    }
-
-    get MainDeviceName() {
-        return this.UserInfo.MainDeviceName;
-    }
-
-    get MainDeviceAppVer() {
-        return this.UserInfo.MainDeviceAppVer;
-    }
-
-    isClientUser() {
-        return true;
-    }
-
-}
-
-export class ClientChannelUser extends ChatUser {
-
-    private clientUser: ClientChatUser;
-
-    constructor(clientUser: ClientChatUser) {
-        super(clientUser.UserId);
-
-        this.clientUser = clientUser;
-    }
-
-    get ClientMainUser() {
-        return this.clientUser;
+    get MainOpenToken() {
+        return this.mainOpenToken;
     }
 
     isClientUser() {
@@ -244,21 +235,13 @@ export class ClientUserInfo implements ChatUserInfoBase {
     private clientAccessData: LoginAccessDataStruct;
     private settings: ClientSettingsStruct;
 
-    private nickname: string;
-
     constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct) {
         this.clientAccessData = clientAccessData;
         this.settings = settings;
-
-        this.nickname = '';
     }
 
     get AccountId() {
         return this.clientAccessData.AccountId;
-    }
-
-    get Nickname() {
-        return this.nickname;
     }
 
     get ProfileImageURL() {
@@ -281,10 +264,6 @@ export class ClientUserInfo implements ChatUserInfoBase {
         return this.settings.OriginalBackgroundImageURL;
     }
 
-    get InfoLoaded() {
-        return true;
-    }
-
     get LastInfoCache() {
         return Date.now();
     }
@@ -305,15 +284,11 @@ export class ClientUserInfo implements ChatUserInfoBase {
         return this.clientAccessData.MainDeviceAppVersion;
     }
 
-    updateNickname(nickname: string) {
-        this.nickname = nickname;
-    }
-
     update(memberStruct: MemberStruct) {
         
     }
 
-    updateFromChatInfo(memberStruct: MemberStruct) {
+    updateFromStruct(memberStruct: MemberStruct) {
 
     }
 
