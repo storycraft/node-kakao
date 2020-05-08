@@ -329,7 +329,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onOpenChannelKick(packet: PacketKickMemberRes) {
         let chanId = packet.ChannelId;
 
-        if (this.ChannelManager.has(chanId)) return;
+        if (!this.ChannelManager.has(chanId)) return;
         
         let channel = await this.ChannelManager.get(chanId);
 

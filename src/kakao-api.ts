@@ -445,6 +445,16 @@ export class KakaoAPI {
             method: 'GET'
         });
     }
+
+
+
+    static createSendTextURL(message: string) {
+        return `kakaotalk://leverage?action=sendtext&message=${encodeURIComponent(message)}`;
+    }
+
+    static createJoinLinkURL(code: string, ref: string = 'EW') {
+        return `kakaoopen://join?l=${code}&r=${ref}`;
+    }
 }
 
 

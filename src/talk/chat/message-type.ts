@@ -38,3 +38,9 @@ export enum MessageType {
     ApiTemplate = 91,
 
 }
+
+export namespace MessageTypeOffset {
+
+    export const DELETED_MESSAGE_OFFSET = 16384;
+
+}

@@ -1,4 +1,6 @@
 import { StructBase } from "./struct-base";
+import { Long } from "bson";
+import { JsonUtil } from "../../util/json-util";
 
 /*
  * Created on Fri Nov 01 2019
@@ -21,7 +23,7 @@ export class LoginAccessDataStruct implements StructBase {
     constructor(
         public Status: LoginStatusCode = 0,
         public StoryURL: string = '',
-        public UserId: number = 0,
+        public UserId: Long = Long.ZERO,
         public CountryISO: string = '',
         public CountryCode: string = '0',
         public AccountId: number = 0,
@@ -41,7 +43,7 @@ export class LoginAccessDataStruct implements StructBase {
     fromJson(data: any) {
         this.Status = data['status'];
         this.StoryURL = data['story_url'];
-        this.UserId = data['userId'],
+        this.UserId = JsonUtil.readLong(data['userId']),
         this.CountryISO = data['countryIso'],
         this.CountryCode = data['countryCode'],
         this.AccountId = data['accountId'],

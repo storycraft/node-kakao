@@ -15,7 +15,7 @@ export enum SharpContentType {
 
 }
 
-export abstract class SharpContent implements AttachmentContent {
+export abstract class SharpBaseContent implements AttachmentContent {
     
     abstract readRawContent(rawData: any): void;
     
@@ -23,7 +23,15 @@ export abstract class SharpContent implements AttachmentContent {
 
 }
 
-export abstract class SharpFragment extends SharpContent {
+export abstract class SharpContent extends SharpBaseContent {
+    
+    abstract readRawContent(rawData: any): void;
+    
+    abstract toRawContent(): any;
+
+}
+
+export abstract class SharpFragment extends SharpBaseContent {
 
 }
 
@@ -153,7 +161,7 @@ export class SharpAttachment implements ChatAttachment {
             let list: any[] = rawJson['R'];
 
             for (let rawContent of list) {
-                let content: SharpContent;
+                let content: SharpBaseContent;
 
                 switch(this.ContentType) {
                     case SharpContentType.VIDEO_CLIP: content = new SharpVideoContent(); break;

@@ -211,7 +211,7 @@ export class ClientChatUser extends ChatUser {
     private mainUserInfo: ClientUserInfo;
 
     constructor(client: TalkClient, clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, private mainOpenToken: number) {
-        super(client, Long.fromNumber(clientAccessData.UserId));
+        super(client, clientAccessData.UserId);
 
         this.mainUserInfo = new ClientUserInfo(clientAccessData, settings);
     }
