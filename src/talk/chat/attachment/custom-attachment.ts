@@ -270,6 +270,46 @@ export class ProfileFragment extends CustomFragment {
 
 }
 
+export class ListHeaderFragment extends CustomFragment {
+
+    constructor(
+        public TextDesc: TextDescFragment = new TextDescFragment(),
+        public Link?: URLFragment,
+        public Background?: ImageFragment
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any): void {
+        if (rawData['TD']) {
+            this.TextDesc.readRawContent(rawData['TD']);
+        }
+
+        if (rawData['L']) {
+            this.Link = new URLFragment();
+            this.Link.readRawContent(rawData['L']);
+        }
+
+        if (rawData['BG']) {
+            this.Background = new ImageFragment();
+            this.Background.readRawContent(rawData['BG']);
+        }
+    }
+    
+    toRawContent() {
+        let obj: any = {
+            'TD': this.TextDesc.toRawContent()
+        };
+
+        if (this.Link) obj['L'] = this.Link.toRawContent();
+
+        if (this.Background) obj['BG'] = this.Background.toRawContent();
+
+        return obj;
+    }
+
+}
+
 export abstract class CustomContent extends CustomBaseContent {
 
     static fromRawContent(rawContent: any, type: CustomType): CustomContent {
@@ -278,6 +318,8 @@ export abstract class CustomContent extends CustomBaseContent {
         switch(type) {
 
             case CustomType.CAROUSEL: content = new CustomCarouselContent(); break;
+
+            case CustomType.LIST: content = new CustomListContent(); break;
 
             case CustomType.FEED:
             default: content = new CustomFeedContent(); break;
@@ -397,6 +439,117 @@ export class CustomFeedContent extends CustomContent {
         if (this.Link) obj['L'] = this.Link.toRawContent();
         if (this.Profile) obj['PR'] = this.Profile.toRawContent();
         if (this.Social) obj['SO'] = this.Social.toRawContent();
+
+        return obj;
+    }
+
+}
+
+export class ListItemFragment extends CustomFragment {
+
+    constructor(
+        public Text: TextDescFragment = new TextDescFragment(),
+        public Link?: URLFragment,
+        public Thumbnail?: ImageFragment
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any): void {
+        if (rawData['TD']) this.Text.readRawContent(rawData['TD']);
+
+        if (rawData['L']) {
+            this.Link = new URLFragment();
+            this.Link.readRawContent(rawData['L']);
+        }
+
+        if (rawData['TH']) {
+            this.Thumbnail = new ImageFragment();
+            this.Thumbnail.readRawContent(rawData['TH']);
+        }
+    }
+
+    toRawContent() {
+        let obj: any = {
+            'TD': this.Text.toRawContent()
+        };
+
+        if (this.Link) {
+            obj['L'] = this.Link.toRawContent();
+        }
+
+        if (this.Thumbnail) {
+            obj['TH'] = this.Thumbnail.toRawContent();
+        }
+
+        return obj;
+    }
+
+}
+
+export class CustomListContent extends CustomContent {
+
+    constructor(
+        public Header: ListHeaderFragment = new ListHeaderFragment(),
+        public ItemList: ListItemFragment[] = [],
+        public ButtonStyle: CustomButtonStyle = CustomButtonStyle.HORIZONTAL,
+        public ButtonList: ButtonFragment[] = [],
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any): void {
+        if (rawData['HD']) {
+            this.Header.readRawContent(rawData['HD']);
+        }
+
+        this.ButtonStyle = rawData['BUT'];
+
+        if (rawData['BUL']) {
+            this.ButtonList = [];
+
+            for (let rawButton of rawData['BUL']) {
+                if (!rawButton) continue;
+
+                let btn = new ButtonFragment();
+                btn.readRawContent(rawButton);
+
+                this.ButtonList.push(btn);
+            }
+        }
+
+        if (rawData['ITL']) {
+            this.ItemList = [];
+
+            for (let rawItem of rawData['ITL']) {
+                if (!rawItem) continue;
+
+                let item = new ListItemFragment();
+                item.readRawContent(rawItem);
+
+                this.ItemList.push(item);
+            }
+        }
+
+    }
+
+    toRawContent() {
+        let obj: any = {
+            'HD': this.Header.toRawContent(),
+            'BUT': this.ButtonStyle
+        };
+
+        let buttonList = [];
+        for (let btn of this.ButtonList) {
+            buttonList.push(btn.toRawContent());
+        }
+        obj['BUL'] = buttonList;
+
+        let itemList = [];
+        for (let item of this.ItemList) {
+            itemList.push(item.toRawContent());
+        }
+        obj['ITL'] = itemList;
 
         return obj;
     }
