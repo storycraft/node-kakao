@@ -492,6 +492,7 @@ export namespace KakaoAPI {
     export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
 
         SUCCESS = 0,
+        LOGIN_FAILED_ROW = 12,
         LOGIN_FAILED = 30,
         MOBILE_UNREGISTERED = 32,
         DEVICE_NOT_REGISTERED = -100,

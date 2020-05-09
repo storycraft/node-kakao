@@ -316,11 +316,45 @@ export class SharpImageContent extends SharpContent {
 
 export enum WeatherIcon {
 
-    SUNNY = '01',
-    SUN_LITTLE_CLOUD = '02',
+    CLEAR = '01',
+    SUN_SILGHTLY_CLOUDY = '02',
     SUN_CLOUDY = '03',
-    MOON_CLOUDY = '22'
+    CLOUDY = '04',
+    SUN_WITH_CLOUD = '05',
+    SUN_CLOUDY_2 = '06',
+    RAIN = '07',
+    CLOUD_RAIN = '08',
+    RAIN_UMBRELLA = '09',
+    LITTLE_RAIN = '10',
+    SNOW = '11',
+    CLOUD_SNOW = '12',
+    CLOUD_SUN_SNOW = '13',
+    SNOW_RAIN = '14',
+    CLOUDY_SNOW_RAIN = '15',
+    LITTLE_SNOW = '16',
+    LIGHTNING = '17',
+    FOG = '18',
+    HAIL = '19',
 
+    NIGHT_CLEAR = '20',
+    NIGHT_SILGHTLY_CLOUDY = '21',
+    NIGHT_MOON_CLOUDY = '22',
+    MOON_WITH_CLOUD = '23',
+    NIGHT_CLOUDY_2 = '24',
+    NIGHT_LITTLE_RAIN = '25',
+    CLOUD_MOON_SNOW = '26',
+    NIGHT_LITTLE_RAIN_2 = '27',
+    NIGHT_CLOUDY = '28',
+    NIGHT_RAIN = '29',
+    NIGHT_CLOUD_RAIN = '30',
+    NIGHT_RAIN_UMBRELLA = '31',
+    NIGHT_SNOW = '32',
+    NIGHT_CLOUD_SNOW = '33',
+    NIGHT_SNOW_RAIN = '34',
+    NIGHT_CLOUDY_SNOW_RAIN = '35',
+    NIGHT_LIGHTNING = '36',
+    NIGHT_FOG = '37',
+    NIGHT_HAIL = '39'
 }
 
 export class SharpWeatherFragment extends SharpFragment {
