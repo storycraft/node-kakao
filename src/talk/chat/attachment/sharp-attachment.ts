@@ -360,7 +360,7 @@ export enum WeatherIcon {
 export class SharpWeatherFragment extends SharpFragment {
     
     constructor(
-        public Icon: WeatherIcon = WeatherIcon.SUNNY,
+        public Icon: WeatherIcon = WeatherIcon.CLEAR,
         public Text: SharpTextFragment = new SharpTextFragment(),
         public Temperature: string = ''
     ) {
