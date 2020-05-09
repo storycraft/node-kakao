@@ -354,7 +354,7 @@ export enum WeatherIcon {
     NIGHT_CLOUDY_SNOW_RAIN = '35',
     NIGHT_LIGHTNING = '36',
     NIGHT_FOG = '37',
-    NIGHT_HAIL = '39'
+    NIGHT_HAIL = '38'
 }
 
 export class SharpWeatherFragment extends SharpFragment {
