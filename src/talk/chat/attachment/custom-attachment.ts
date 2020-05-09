@@ -321,6 +321,8 @@ export abstract class CustomContent extends CustomBaseContent {
 
             case CustomType.LIST: content = new CustomListContent(); break;
 
+            case CustomType.COMMERCE: content = new CustomCommerceContent(); break;
+
             case CustomType.FEED:
             default: content = new CustomFeedContent(); break;
         }
@@ -382,12 +384,12 @@ export class CustomFeedContent extends CustomContent {
             this.ThumbnailList = [];
 
             for (let rawImg of rawData['THL']) {
-                if (!rawImg) continue;
+                if (rawImg['TH']) {
+                    let img = new ImageFragment();
+                    img.readRawContent(rawImg['TH']);
 
-                let img = new ImageFragment();
-                img.readRawContent(rawImg);
-
-                this.ThumbnailList.push(img);
+                    this.ThumbnailList.push(img);
+                }
             }
         }
 
@@ -426,7 +428,7 @@ export class CustomFeedContent extends CustomContent {
 
         let thumbList = [];
         for (let thumb of this.ThumbnailList) {
-            thumbList.push(thumb.toRawContent());
+            thumbList.push({ 'TH': thumb.toRawContent() });
         }
         obj['THL'] = thumbList;
 
@@ -550,6 +552,143 @@ export class CustomListContent extends CustomContent {
             itemList.push(item.toRawContent());
         }
         obj['ITL'] = itemList;
+
+        return obj;
+    }
+
+}
+
+export class CommercePriceFragment extends CustomContent {
+
+    constructor(
+        public RealPrice: number = 0,
+        public DiscountedPrice: number = 0,
+        public DiscountRate: number = 0,
+        public PriceUnit: string = '',
+        public UnitFirst: number = 0 // 0 == false, 0 !== true; perfect logic
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any) {
+        this.RealPrice = rawData['RP'];
+        this.DiscountedPrice = rawData['DP'];
+        this.DiscountRate = rawData['DR'];
+        this.PriceUnit = rawData['CU'];
+        this.UnitFirst = rawData['CP'];
+    }
+
+    toRawContent(): any {
+        let obj: any = {
+            'RP': this.RealPrice,
+            'DP': this.DiscountedPrice,
+            'DR': this.DiscountRate,
+            'CU': this.PriceUnit,
+            'CP': this.UnitFirst
+        };
+
+        return obj;
+    }
+
+}
+
+export class CustomCommerceContent extends CustomContent {
+
+    constructor(
+        public ThumbnailList: ImageFragment[] = [],
+        public ExtraThumbCount: number = 0,
+        public ButtonStyle: CustomButtonStyle = CustomButtonStyle.HORIZONTAL,
+        public ButtonList: ButtonFragment[] = [],
+        public TextDesc?: TextDescFragment,
+        public Price?: CommercePriceFragment,
+        public Profile?: ProfileFragment
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any): void {
+        if (rawData['TI']) {
+            if (rawData['TI']['TD']) {
+                this.TextDesc = new TextDescFragment();
+                this.TextDesc.readRawContent('TD');
+            }
+        }
+
+        this.ButtonStyle = rawData['BUT'];
+
+        if (rawData['BUL']) {
+            this.ButtonList = [];
+
+            for (let rawButton of rawData['BUL']) {
+                if (!rawButton) continue;
+
+                let btn = new ButtonFragment();
+                btn.readRawContent(rawButton);
+
+                this.ButtonList.push(btn);
+            }
+        }
+
+        if (rawData['THC']) this.ExtraThumbCount = rawData['THC'];
+
+        if (rawData['THL']) {
+            this.ThumbnailList = [];
+
+            for (let rawImg of rawData['THL']) {
+                if (rawImg['TH']) {
+                    let img = new ImageFragment();
+                    img.readRawContent(rawImg['TH']);
+
+                    this.ThumbnailList.push(img);
+                }
+            }
+        }
+
+        if (rawData['PR']) {
+            this.Profile = new ProfileFragment();
+            this.Profile.readRawContent(rawData['PR']);
+        }
+
+        if (rawData['CMC']) {
+            this.Price = new CommercePriceFragment();
+            this.Price.readRawContent(rawData['CMC']);
+        }
+
+    }
+
+    toRawContent() {
+        let textItem: any = {};
+
+        if (this.TextDesc) {
+            textItem['TD'] = this.TextDesc.toRawContent();
+        }
+
+        let obj: any = {
+            'TI': textItem,
+            'BUT': this.ButtonStyle
+        };
+
+        if (this.ExtraThumbCount) obj['THC'] = this.ExtraThumbCount;
+
+        let thumbList = [];
+        for (let thumb of this.ThumbnailList) {
+            thumbList.push({ 'TH': thumb.toRawContent() });
+        }
+        obj['THL'] = thumbList;
+
+        let buttonList = [];
+        for (let btn of this.ButtonList) {
+            buttonList.push(btn.toRawContent());
+        }
+        obj['BUL'] = buttonList;
+
+        if (this.Profile) {
+            obj['PR'] = this.Profile.toRawContent();
+        }
+
+        if (this.Price) {
+            obj['CMC'] = this.Price.toRawContent();
+        }
 
         return obj;
     }
