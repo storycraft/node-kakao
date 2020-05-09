@@ -47,7 +47,7 @@ export class LocoEncryptedTransformer extends Transform {
                 let iv = this.encryptedBuffer.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE, LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE);
                 let encryptedBodyBuffer = this.encryptedBuffer.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE, encryptedPacketSize);
                 
-                let decrypted = this.Crypto.toAESDecrypted(encryptedBodyBuffer, iv);
+                let decrypted = this.Crypto.toDecryptedPacketBuffer(encryptedBodyBuffer, iv);
 
                 let newBuf = Buffer.allocUnsafe(this.encryptedBuffer.length - encryptedPacketSize);
 

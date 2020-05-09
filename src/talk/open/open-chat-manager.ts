@@ -89,6 +89,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
     async initOpenSession() {
         this.clear();
+        
         this.clientLinkIdList = [];
 
         let list = await this.requestClientProfile();

@@ -470,6 +470,7 @@ export namespace KakaoAPI {
     }
 
     export enum Account {
+        
         LOGIN = 'login.json',
         REGISTER_DEVICE = 'register_device.json',
         REQUEST_PASSCODE = 'request_passcode.json',

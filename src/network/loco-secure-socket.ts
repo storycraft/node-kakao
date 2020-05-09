@@ -35,7 +35,7 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
 
     protected structPacketToBuffer(packet: LocoRequestPacket): Buffer {
         let packetBuffer = this.Writer.toBuffer(packet);
-        let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(packetBuffer);
+        let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(packetBuffer, this.crypto.randomCipherIV());
 
         return encryptedPacketBuffer;
     }

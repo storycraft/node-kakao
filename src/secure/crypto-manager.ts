@@ -12,19 +12,12 @@ export class CryptoManager {
 
     private key: Buffer;
 
-    private packetCipherIV: Buffer;
-
-    constructor(key: Buffer = crypto.randomBytes(16), packetCipherIV: Buffer = crypto.randomBytes(16)) {
+    constructor(key: Buffer = crypto.randomBytes(16)) {
         this.key = key;
-        this.packetCipherIV = packetCipherIV;
     }
 
     get Key() {
         return this.key;
-    }
-
-    get PacketCipherIV() {
-        return this.packetCipherIV;
     }
 
     get PEMPublicKey(): string {
@@ -78,22 +71,24 @@ export class CryptoManager {
         return encryptedBuffer;
     }
 
-    toEncryptedPacket(packetBuffer: Buffer): Buffer {
-        let encryptedBuf = this.toAESEncrypted(packetBuffer, this.packetCipherIV);
+    toEncryptedPacket(packetBuffer: Buffer, cipherIV: Buffer): Buffer {
+        let encryptedBuf = this.toAESEncrypted(packetBuffer, cipherIV);
 
         let buffer = Buffer.allocUnsafe(encryptedBuf.length + 20);
 
         buffer.writeUInt32LE(encryptedBuf.length + 16, 0);
-        this.packetCipherIV.copy(buffer, 4);
+        cipherIV.copy(buffer, 4);
         encryptedBuf.copy(buffer, 20);
 
         return buffer;
     }
 
-    toDecryptedPacketBuffer(encryptedPacketBuffer: Buffer): Buffer {
-        let decryptedBuffer = this.toAESDecrypted(encryptedPacketBuffer, this.packetCipherIV);
+    randomCipherIV(): Buffer {
+        return crypto.randomBytes(16);
+    }
 
-        return decryptedBuffer;
+    toDecryptedPacketBuffer(encryptedPacketBuffer: Buffer, cipherIV: Buffer): Buffer {
+        return this.toAESDecrypted(encryptedPacketBuffer, cipherIV);
     }
 
     getRSAEncryptedKey(): Buffer {

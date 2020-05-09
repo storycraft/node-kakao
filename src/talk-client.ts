@@ -108,8 +108,8 @@ export class TalkClient extends EventEmitter {
 
         this.clientUser = new ClientChatUser(this, loginAccessData, settings, loginRes.OpenChatToken);
 
+        this.userManager.initalizeClient();
         this.channelManager.initalizeLoginData(loginRes.ChatDataList);
-
         await this.openChatManager.initOpenSession();
 
         this.emit('login', this.clientUser);

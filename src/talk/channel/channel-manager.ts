@@ -106,6 +106,8 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     }
 
     initalizeLoginData(chatDataList: ChatDataStruct[]) {
+        this.clear();
+        
         for (let chatData of chatDataList) {
             let channel: ChatChannel = this.channelFromChatData(chatData);
 

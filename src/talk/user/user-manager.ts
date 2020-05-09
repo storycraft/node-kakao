@@ -43,4 +43,8 @@ export class UserManager extends IdStore<ChatUser> {
         return res.MemberList;
     }
 
+    initalizeClient() {
+        this.clear();
+    }
+
 }
