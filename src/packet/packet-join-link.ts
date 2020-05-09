@@ -5,12 +5,11 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { Long } from "..";
+import { Long, OpenchatProfileType } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
-import { OpenchatProfileType } from "./packet-update-openchat-profile";
 
 export class PacketJoinLinkReq extends LocoBsonRequestPacket {
 

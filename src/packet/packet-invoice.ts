@@ -1,5 +1,5 @@
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
-import { MessageType } from "../talk/chat/message-type";
+import { ChatType } from "../talk/chat/chat-type";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 
@@ -14,7 +14,7 @@ export class PacketInvoiceRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public Type: MessageType = MessageType.Text,
+        public Type: ChatType = ChatType.Text,
         public Extra: string = ''
 
         ) {

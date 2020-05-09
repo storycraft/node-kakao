@@ -1,5 +1,5 @@
 import { ChatAttachment, AttachmentContent } from "./chat-attachment";
-import { MessageType } from "../message-type";
+import { ChatType } from "../chat-type";
 
 export enum SharpContentType {
 
@@ -140,7 +140,7 @@ export class SharpAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Search;
+        return ChatType.Search;
     }
 
     readAttachment(rawJson: any): void {

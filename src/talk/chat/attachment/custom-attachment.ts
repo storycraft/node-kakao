@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { MessageType } from "../message-type";
+import { ChatType } from "../chat-type";
 import { ChatAttachment } from "./chat-attachment";
 import { AttachmentContent } from "./chat-attachment";
 
@@ -667,7 +667,7 @@ export class CustomAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Custom;
+        return ChatType.Custom;
     }
 
 }

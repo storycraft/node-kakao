@@ -5,8 +5,7 @@
  */
 
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
-import { Long } from "..";
-import { OpenMemberType } from "../talk/open/open-member-type";
+import { Long, OpenMemberType } from "..";
 import { JsonUtil } from "../util/json-util";
 
 export class PacketSyncMemberTypeRes extends LocoBsonResponsePacket {

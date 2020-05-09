@@ -10,9 +10,9 @@ import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ChannelType } from "../chat/channel-type";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
-import { OpenMemberType } from "../open/open-member-type";
 import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
 import { PacketChatOnRoomRes, PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
+import { OpenMemberType } from "../open/open-link-type";
 
 
 export class ChannelInfo {

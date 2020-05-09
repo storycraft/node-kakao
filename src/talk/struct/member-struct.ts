@@ -2,7 +2,7 @@ import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
-import { OpenMemberType } from "../open/open-member-type";
+import { OpenMemberType } from "../open/open-link-type";
 
 /*
  * Created on Sat Nov 02 2019

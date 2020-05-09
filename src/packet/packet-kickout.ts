@@ -24,3 +24,11 @@ export class PacketKickoutRes extends LocoBsonResponsePacket {
     }
 
 }
+
+export enum LocoKickoutType {
+
+    UNKNOWN = -1,
+    LOGIN_ANOTHER = 0,
+    ACCOUNT_DELETED = 1
+
+}

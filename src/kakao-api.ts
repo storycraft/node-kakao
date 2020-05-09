@@ -493,6 +493,7 @@ export namespace KakaoAPI {
 
         SUCCESS = 0,
         LOGIN_FAILED = 30,
+        MOBILE_UNREGISTERED = 32,
         DEVICE_NOT_REGISTERED = -100,
         ANOTHER_LOGINED = -101,
         DEVICE_REGISTER_FAILED = -102,

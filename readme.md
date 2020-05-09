@@ -19,7 +19,7 @@ Many functions that I may not know are disabled or tricked to keep this client s
 let client = new TalkClient('TEST_CLIENT');
 
 client.on('message', (chat: Chat) => {
-    if (chat.Type === MessageType.Search) {
+    if (chat.Type === ChatType.Search) {
         let attachment = chat.AttachmentList[0] as SharpAttachment;
 
         chat.replyText(`${chat.Sender.Nickname}님이 샵 검색 전송 ${attachment.Question}. 리다이렉트 경로: ${attachment.RedirectURL}`);

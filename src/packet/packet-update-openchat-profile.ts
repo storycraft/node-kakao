@@ -7,14 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { OpenMemberStruct } from "../talk/struct/open-link-struct";
-
-export enum OpenchatProfileType {
-
-    MAIN = 1, //?
-    KAKAO_ANON = 2,
-    OPEN_PROFILE = 16
-
-}
+import { OpenchatProfileType } from "../talk/open/open-link-type";
 
 export class PacketUpdateOpenchatProfileReq extends LocoBsonRequestPacket {
 

@@ -18,10 +18,10 @@ import { ChatUser } from "../user/chat-user";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
 import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite";
 import { FeedType } from "../feed/feed-type";
-import { OpenMemberType } from "./open-member-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 import { PacketJoinLinkReq } from "../../packet/packet-join-link";
-import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes, OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
+import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "../../packet/packet-update-openchat-profile";
+import { OpenchatProfileType, OpenMemberType } from "./open-link-type";
 
 export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 

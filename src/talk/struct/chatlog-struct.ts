@@ -1,5 +1,5 @@
 import { StructBase } from "./struct-base";
-import { MessageType } from "../chat/message-type";
+import { ChatType } from "../chat/chat-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
 
@@ -16,7 +16,7 @@ export class ChatlogStruct implements StructBase {
         public PrevLogId: Long = Long.ZERO,
         public SenderId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public Type: MessageType = MessageType.Text,
+        public Type: ChatType = ChatType.Text,
         public Text: string = '',
         public SendTime: number = -1,
         public RawAttachment: string = '',

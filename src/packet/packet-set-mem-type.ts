@@ -6,9 +6,9 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenMemberType } from "../talk/open/open-member-type";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { JsonUtil } from "../util/json-util";
+import { OpenMemberType } from "../talk/open/open-link-type";
 
 export class PacketSetMemTypeReq extends LocoBsonRequestPacket {
 

@@ -1,6 +1,6 @@
 import { KakaoAPI } from "../../../kakao-api";
 import { Long } from "bson";
-import { MessageType } from "../message-type";
+import { ChatType } from "../chat-type";
 import { Chat } from "../chat";
 import { JsonUtil } from "../../../util/json-util";
 import { ChatUser } from "../../user/chat-user";
@@ -17,7 +17,7 @@ export interface ChatAttachment {
 
     toJsonAttachment(): any;
 
-    readonly RequiredMessageType: MessageType;
+    readonly RequiredMessageType: ChatType;
 
 }
 
@@ -49,7 +49,7 @@ export class PhotoAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Photo;
+        return ChatType.Photo;
     }
 
     readAttachment(rawJson: any) {
@@ -112,7 +112,7 @@ export class VideoAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Video;
+        return ChatType.Video;
     }
 
     readAttachment(rawJson: any) {
@@ -156,7 +156,7 @@ export class FileAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.File;
+        return ChatType.File;
     }
 
     readAttachment(rawJson: any): void {
@@ -200,7 +200,7 @@ export class AudioAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Audio;
+        return ChatType.Audio;
     }
 
     readAttachment(rawJson: any): void {
@@ -241,8 +241,8 @@ export class EmoticonAttachment implements ChatAttachment {
         
     }
 
-    get RequiredMessageType(): MessageType {
-        return MessageType.Sticker;
+    get RequiredMessageType(): ChatType {
+        return ChatType.Sticker;
     }
 
     getEmoticonURL(region: string = 'kr') {
@@ -293,8 +293,8 @@ export class EmoticonAttachment implements ChatAttachment {
 
 export class EmoticonAniAttachment extends EmoticonAttachment {
 
-    get RequiredMessageType(): MessageType {
-        return MessageType.StickerAni;
+    get RequiredMessageType(): ChatType {
+        return ChatType.StickerAni;
     }
 
 }
@@ -313,7 +313,7 @@ export class LongTextAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Template;
+        return ChatType.Template;
     }
 
     readAttachment(rawJson: any) {
@@ -393,7 +393,7 @@ export class ChatMention implements ChatContent {
 export class ReplyAttachment implements ChatAttachment {
 
     constructor(
-        public SourceType: MessageType = MessageType.Text,
+        public SourceType: ChatType = ChatType.Text,
         public SourceLogId: Long = Long.ZERO,
         public SourceUserId: Long = Long.ZERO,
         public SourceMessage: string = '',
@@ -405,7 +405,7 @@ export class ReplyAttachment implements ChatAttachment {
     }
 
     get RequiredMessageType() {
-        return MessageType.Reply;
+        return ChatType.Reply;
     }
 
     readAttachment(rawData: any) {

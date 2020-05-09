@@ -25,16 +25,15 @@ export * from './packet/loco-packet-writer';
 
 export * from './packet/loco-packet-list';
 
-export { OpenchatProfileType } from './packet/packet-update-openchat-profile';
+export { LocoKickoutType } from './packet/packet-kickout';
 
 export * from './secure/crypto-manager';
 
-export * from './talk/chat/message-type';
+export * from './talk/chat/chat-type';
 export * from './talk/chat/channel-type';
 export * from './talk/chat/chat-builder';
 
 export * from './talk/open/open-link-type';
-export * from './talk/open/open-member-type';
 
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-feed';

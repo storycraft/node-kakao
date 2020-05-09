@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import { PacketMessageRes } from "../packet/packet-message";
 import { PacketLoginRes } from "../packet/packet-login";
 import { ChatChannel } from "../talk/channel/chat-channel";
-import { PacketKickoutRes } from "../packet/packet-kickout";
+import { PacketKickoutRes, LocoKickoutType } from "../packet/packet-kickout";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketLeftRes, PacketLeaveRes, PacketLeaveReq } from "../packet/packet-leave";
 import { PacketChanJoinRes } from "../packet/packet-chan-join";
@@ -123,12 +123,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
     private networkManager: NetworkManager;
 
-    private kickReason: number;
+    private kickReason: LocoKickoutType;
 
     constructor(networkManager: NetworkManager) {
         super();
 
-        this.kickReason = -1;
+        this.kickReason = LocoKickoutType.UNKNOWN;
 
         this.networkManager = networkManager;
 

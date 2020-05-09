@@ -1,4 +1,4 @@
-import { MessageType } from "../message-type";
+import { ChatType } from "../chat-type";
 import { ChatAttachment, EmoticonAttachment, ChatContent } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
 import { ChatBuilder } from "../chat-builder";
@@ -13,7 +13,7 @@ export interface MessageTemplate {
 
     readonly Valid: boolean;
 
-    getMessageType(): MessageType;
+    getMessageType(): ChatType;
 
     getPacketText(): string;
     getPacketExtra(): string;

@@ -15,6 +15,7 @@ import { ChatManager } from "./talk/chat/chat-manager";
 import { JsonUtil } from "./util/json-util";
 import { OpenChatManager } from "./talk/open/open-chat-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
+import { LocoKickoutType } from "./packet/packet-kickout";
 
 /*
  * Created on Fri Nov 01 2019
@@ -124,7 +125,7 @@ export class TalkClient extends EventEmitter {
     }
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;
-    on(event: 'disconnected', listener: (reason: number) => void): this;
+    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
     on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
@@ -137,7 +138,7 @@ export class TalkClient extends EventEmitter {
     }
 
     once(event: 'login', listener: (user: ClientChatUser) => void): this;
-    once(event: 'disconnected', listener: (reason: number) => void): this;
+    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
     once(event: 'message', listener: (chat: Chat) => void): this;
     once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
     once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;

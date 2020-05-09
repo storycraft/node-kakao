@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { MessageType } from "./message-type";
+import { ChatType } from "./chat-type";
 import { TextChat, Chat, SinglePhotoChat, MultiPhotoChat, VideoChat, StaticEmoticonChat, AnimatedEmoticonChat, SharpSearchChat, ReplyChat, FeedChat, CustomChat, UnknownChat } from "./chat";
 import { Long } from "bson";
 import { ChatChannel } from "../channel/chat-channel";
@@ -18,28 +18,28 @@ export namespace ChatDeserializeMap {
 
 export class ChatDeserializeMap {
     
-    private static typeMap: Map<MessageType, ChatDeserializeMap.ChatConstructor> = new Map();
+    private static typeMap: Map<ChatType, ChatDeserializeMap.ChatConstructor> = new Map();
 
     private static defaultConstructor: ChatDeserializeMap.ChatConstructor = UnknownChat;
 
     static init() {
-        this.typeMap.set(MessageType.Feed, FeedChat);
-        this.typeMap.set(MessageType.Text, TextChat);
-        this.typeMap.set(MessageType.Photo, SinglePhotoChat);
-        this.typeMap.set(MessageType.MultiPhoto, MultiPhotoChat);
-        this.typeMap.set(MessageType.Video, VideoChat);
-        this.typeMap.set(MessageType.Sticker, StaticEmoticonChat);
-        this.typeMap.set(MessageType.StickerAni, AnimatedEmoticonChat);
-        this.typeMap.set(MessageType.Search, SharpSearchChat);
-        this.typeMap.set(MessageType.Reply, ReplyChat);
-        this.typeMap.set(MessageType.Custom, CustomChat);
+        this.typeMap.set(ChatType.Feed, FeedChat);
+        this.typeMap.set(ChatType.Text, TextChat);
+        this.typeMap.set(ChatType.Photo, SinglePhotoChat);
+        this.typeMap.set(ChatType.MultiPhoto, MultiPhotoChat);
+        this.typeMap.set(ChatType.Video, VideoChat);
+        this.typeMap.set(ChatType.Sticker, StaticEmoticonChat);
+        this.typeMap.set(ChatType.StickerAni, AnimatedEmoticonChat);
+        this.typeMap.set(ChatType.Search, SharpSearchChat);
+        this.typeMap.set(ChatType.Reply, ReplyChat);
+        this.typeMap.set(ChatType.Custom, CustomChat);
     }
 
     static get DefaultConstructor() {
         return this.defaultConstructor;
     }
 
-    static getChatConstructor(type: MessageType): ChatDeserializeMap.ChatConstructor {
+    static getChatConstructor(type: ChatType): ChatDeserializeMap.ChatConstructor {
         return this.typeMap.get(type) || this.defaultConstructor;
     }
 

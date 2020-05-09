@@ -1,4 +1,4 @@
-import { MessageType } from "./message-type";
+import { ChatType } from "./chat-type";
 import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
@@ -108,10 +108,10 @@ export abstract class Chat {
         return this.getUserMentionList(userId)!.IndexList.length;
     }
 
-    abstract get Type(): MessageType;
+    abstract get Type(): ChatType;
 
     isFeed(): boolean {
-        return this.Type === MessageType.Feed;
+        return this.Type === ChatType.Feed;
     }
     
     private feed?: ChatFeed;
@@ -195,13 +195,19 @@ export abstract class Chat {
 }
 
 export class UnknownChat extends Chat {
+
+    private rawAttachment: any = {};
     
     get Type() {
-        return MessageType.Unknown;
+        return ChatType.Unknown;
+    }
+
+    get RawAttachment() {
+        return this.rawAttachment;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
+        this.rawAttachment = attachmentJson;
     }
 
 }
@@ -209,7 +215,7 @@ export class UnknownChat extends Chat {
 export class FeedChat extends Chat {
     
     get Type() {
-        return MessageType.Feed;
+        return ChatType.Feed;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -221,7 +227,7 @@ export class FeedChat extends Chat {
 export class TextChat extends Chat {
     
     get Type() {
-        return MessageType.Text;
+        return ChatType.Text;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -241,7 +247,7 @@ export abstract class PhotoChat extends Chat {
 export class SinglePhotoChat extends PhotoChat {
 
     get Type() {
-        return MessageType.Photo;
+        return ChatType.Photo;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -257,7 +263,7 @@ export class SinglePhotoChat extends PhotoChat {
 export class MultiPhotoChat extends PhotoChat {
 
     get Type() {
-        return MessageType.MultiPhoto;
+        return ChatType.MultiPhoto;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -288,7 +294,7 @@ export abstract class EmoticonChat extends Chat {
 export class StaticEmoticonChat extends EmoticonChat {
     
     get Type() {
-        return MessageType.Sticker;
+        return ChatType.Sticker;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -303,7 +309,7 @@ export class StaticEmoticonChat extends EmoticonChat {
 export class AnimatedEmoticonChat extends EmoticonChat {
     
     get Type() {
-        return MessageType.StickerAni;
+        return ChatType.StickerAni;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -318,7 +324,7 @@ export class AnimatedEmoticonChat extends EmoticonChat {
 export class VideoChat extends Chat {
     
     get Type() {
-        return MessageType.Video;
+        return ChatType.Video;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -335,7 +341,7 @@ export class VideoChat extends Chat {
 export class LongTextChat extends Chat {
     
     get Type() {
-        return MessageType.Text;
+        return ChatType.Text;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -350,7 +356,7 @@ export class LongTextChat extends Chat {
 export class SharpSearchChat extends Chat {
     
     get Type() {
-        return MessageType.Search;
+        return ChatType.Search;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -366,7 +372,7 @@ export class SharpSearchChat extends Chat {
 export class ReplyChat extends Chat {
     
     get Type() {
-        return MessageType.Reply;
+        return ChatType.Reply;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -382,7 +388,7 @@ export class ReplyChat extends Chat {
 export class CustomChat extends Chat {
     
     get Type() {
-        return MessageType.Custom;
+        return ChatType.Custom;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {

@@ -4,7 +4,7 @@ import { ChannelType } from "../chat/channel-type";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
-import { MessageType } from "../chat/message-type";
+import { ChatType } from "../chat/chat-type";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
@@ -15,8 +15,7 @@ import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { TalkClient } from "../../talk-client";
-import { OpenMemberType } from "../open/open-member-type";
-import { OpenchatProfileType } from "../../packet/packet-update-openchat-profile";
+import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -85,9 +84,9 @@ export class ChatChannel extends EventEmitter {
         
         let userId = this.client.ClientUser.Id;
         
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, MessageType.Text, false, extraText));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
 
-        let chat = await this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.id, MessageType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
+        let chat = await this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.id, ChatType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
         
         return chat;
     }
