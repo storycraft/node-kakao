@@ -4,20 +4,29 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Chat } from "./chat";
 import { FeedType } from "../feed/feed-type";
-import { Long } from "bson";
 import { JsonUtil } from "../../util/json-util";
 import { MemberStruct } from "../struct/member-struct";
+import { Long } from "bson";
 
 export class ChatFeed {
 
-    constructor(private feedType: FeedType, private text?: string, private member?: MemberStruct, private inviter?: MemberStruct, private memberList?: MemberStruct[]) {
+    constructor(private feedType: FeedType, private text?: string, private member?: MemberStruct, private inviter?: MemberStruct, private memberList?: MemberStruct[], private logId?: Long, private hidden?: boolean) {
         
     }
 
     get FeedType() {
         return this.feedType;
+    }
+
+    // for message speific feeds
+
+    get LogId() {
+        return this.logId;
+    }
+
+    get Hidden() {
+        return this.hidden;
     }
 
     // for member speific feeds
@@ -68,7 +77,13 @@ export class ChatFeed {
             }
         }
 
-        return new ChatFeed(type, obj['text'], memberStruct, inviterStruct, memberListStruct);
+        let logId: Long | undefined;
+        if (obj['logId']) logId = obj['logId'];
+
+        let hidden: boolean | undefined;
+        if (obj['hidden']) hidden = obj['hidden'];
+
+        return new ChatFeed(type, obj['text'], memberStruct, inviterStruct, memberListStruct, logId, hidden);
     }
 
     static feedToJson(feed: ChatFeed): any {
@@ -90,6 +105,18 @@ export class ChatFeed {
 
         if (feed.inviter) {
             obj['inviter'] = feed.inviter;
+        }
+
+        if (feed.inviter) {
+            obj['inviter'] = feed.inviter;
+        }
+
+        if (feed.logId) {
+            obj['logId'] = feed.logId;
+        }
+
+        if (feed.hidden) {
+            obj['hidden'] = feed.hidden;
         }
 
         return obj;

@@ -19,6 +19,7 @@ import { PacketJoinLinkRes } from "../packet/packet-join-link";
 import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
 import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
+import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message";
 
 /*
  * Created on Fri Nov 01 2019
@@ -145,6 +146,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
         this.on('SYNCJOIN', this.onChannelJoin.bind(this));
+        this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('LEAVE', this.onChannelLeave.bind(this));
         this.on('KICKOUT', this.onLocoKicked.bind(this));
@@ -242,6 +244,18 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
                 this.Client.emit('user_join', channel, user, feed);
             }
         }
+    }
+
+    async syncMessageDelete(packet: PacketSyncDeleteMessageRes) {
+        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
+
+        if (!chat.isFeed()) return;
+
+        let feed = chat.getFeed();
+
+        if (feed.FeedType !== FeedType.DELETE_TO_ALL) return;
+
+        this.Client.emit('message_deleted', feed.LogId! || Long.ZERO, feed.Hidden! || false);
     }
 
     async onChannelLeft(packet: PacketLeftRes) {

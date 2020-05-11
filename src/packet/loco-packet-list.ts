@@ -35,6 +35,7 @@ import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "
 import { PacketSyncMemberTypeRes } from "./packet-sync-member-type";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "./packet-chat-on-room";
 import { PacketSyncProfileRes } from "./packet-sync-profile";
+import { PacketSyncDeleteMessageRes } from "./packet-sync-delete-message";
 
 /*
  * Created on Wed Oct 30 2019
@@ -104,6 +105,7 @@ export class LocoPacketList {
         LocoPacketList.defaultBodyResPacketMap = new Map();
 
         LocoPacketList.defaultBodyResPacketMap.set(0, DefaultBsonResponsePacket);
+        LocoPacketList.defaultBodyResPacketMap.set(8, DefaultBsonResponsePacket); // ??
 
         LocoPacketList.responsePacketMap.set('GETCONF', PacketGetConfRes);
         LocoPacketList.responsePacketMap.set('CHECKIN', PacketCheckInRes);
@@ -152,6 +154,7 @@ export class LocoPacketList {
         LocoPacketList.responsePacketMap.set('INVOICE', PacketInvoiceRes);
 
         LocoPacketList.responsePacketMap.set('DELETEMSG', PacketDeleteChatRes);
+        LocoPacketList.responsePacketMap.set('SYNCDLMSG', PacketSyncDeleteMessageRes);
 
         LocoPacketList.responsePacketMap.set('SYNCLINKCR', PacketSyncJoinOpenchatRes);
 
