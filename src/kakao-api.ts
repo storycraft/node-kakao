@@ -483,20 +483,22 @@ export namespace KakaoAPI {
     }
     
     export enum LogonAccount {
+
         MORE_SETTINGS = 'more_settings.json',
         LESS_SETTINGS = 'less_settings.json',
         BLOCKED_LIST = 'blocked.json',
         LOGIN_TOKEN = 'login_token.json'
+
     }
 
     export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
 
         SUCCESS = 0,
-        LOGIN_FAILED_ROW = 12,
+        LOGIN_FAILED_REASON = 12,
         LOGIN_FAILED = 30,
         MOBILE_UNREGISTERED = 32,
         DEVICE_NOT_REGISTERED = -100,
-        ANOTHER_LOGINED = -101,
+        ANOTHER_LOGON = -101,
         DEVICE_REGISTER_FAILED = -102,
         PASSCODE_REQUEST_FAILED = -112,
         OPERATION_DENIED = -500,

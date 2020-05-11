@@ -128,6 +128,7 @@ export class TalkClient extends EventEmitter {
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
+    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
     on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
     on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
     on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
@@ -141,6 +142,7 @@ export class TalkClient extends EventEmitter {
     once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
     once(event: 'message', listener: (chat: Chat) => void): this;
     once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
+    once(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
     once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
     once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
     once(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
