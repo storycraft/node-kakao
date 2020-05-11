@@ -176,6 +176,7 @@ export class ChatMetaStruct implements StructBase {
 }
 
 export enum ChannelMetaType {
+    
     NOTICE = 1,
     GROUP = 2,
     TITLE = 3,

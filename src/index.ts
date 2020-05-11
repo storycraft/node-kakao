@@ -6,6 +6,8 @@
 
 export * from './kakao-api';
 
+export * from './api/api-client';
+
 export * from './loco/loco-manager';
 export * from './loco/loco-packet-handler';
 
@@ -66,3 +68,5 @@ export * from './talk-client';
 
 import { Long } from 'bson';
 export { Long };
+
+export * from './testing/test-util';

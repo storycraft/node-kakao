@@ -1,0 +1,88 @@
+/*
+ * Created on Mon May 11 2020
+ *
+ * Copyright (c) storycraft. Licensed under the MIT Licence.
+ */
+
+import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
+import { JsonUtil } from "../util/json-util";
+import { TalkClient } from "../talk-client";
+import { LocoKickoutType, PacketKickoutRes } from "../packet/packet-kickout";
+import * as Util from 'util';
+import * as Crypto from 'crypto';
+
+export namespace TestUtil {
+
+    export class VerboseHandler implements LocoPacketHandler {
+
+        private reason: LocoKickoutType;
+
+        constructor() {
+            this.reason = LocoKickoutType.UNKNOWN;
+        }
+    
+        onDisconnected(): void {
+            console.log(`!! Disconnected !! code: ${this.reason}(${LocoKickoutType[this.reason]})`);
+        }
+    
+        onRequest(packetId: number, packet: LocoRequestPacket): void {
+            console.log(`${packetId} | ${packet.PacketName} <- ${Util.inspect(packet, false, 4, true)}`);
+        }
+        
+        onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
+            if (packet instanceof PacketKickoutRes) {
+                this.reason = (packet as PacketKickoutRes).Reason;
+            }
+
+            console.log(`${packetId} | ${packet.PacketName} -> ${Util.inspect(packet, false, 4, true)}`);
+        }
+    
+    }
+
+    export class WrappedHandler implements LocoPacketHandler {
+
+        constructor(
+            private oldHandler: LocoPacketHandler,
+            private hook: LocoPacketHandler
+            ) {
+    
+        }
+
+        onDisconnected(): void {
+            this.hook.onDisconnected();
+
+            this.oldHandler.onDisconnected();
+        }
+    
+        onRequest(packetId: number, packet: LocoRequestPacket): void {
+            this.hook.onRequest(packetId, packet);
+    
+            this.oldHandler.onRequest(packetId, packet);
+        }
+        
+        onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
+            this.hook.onResponse(packetId, packet, reqPacket);
+            
+            this.oldHandler.onResponse(packetId, packet, reqPacket);
+        }
+
+    }
+
+    export class HookedClient extends TalkClient {
+
+        constructor(name: string, hook: LocoPacketHandler) {
+            super(name);
+
+            let oldHandler = this.NetworkManager.LocoManager.Handler!;
+
+            this.NetworkManager.LocoManager.Handler = new WrappedHandler(oldHandler, hook);
+        }
+
+    }
+
+    export function randomDeviceUUID() {
+        return Crypto.randomBytes(64).toString('base64');
+    }
+
+}
