@@ -3,7 +3,7 @@ import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention } from "./attachment/chat-attachment";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment } from "./attachment/chat-attachment";
 import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
@@ -367,6 +367,22 @@ export class SharpSearchChat extends Chat {
         sharpAttachment.readAttachment(attachmentJson);
 
         attachmentList.push(sharpAttachment);
+    }
+
+}
+
+export class MapChat extends Chat {
+
+    get Type() {
+        return ChatType.Map;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let mapAttachment = new MapAttachment();
+
+        mapAttachment.readAttachment(attachmentJson);
+
+        attachmentList.push(mapAttachment);
     }
 
 }

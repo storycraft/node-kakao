@@ -6,7 +6,6 @@
 
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
-import { JsonUtil } from "../util/json-util";
 import { TalkClient } from "../talk-client";
 import { LocoKickoutType, PacketKickoutRes } from "../packet/packet-kickout";
 import * as Util from 'util';
@@ -38,6 +37,28 @@ export namespace TestUtil {
             console.log(`${packetId} | ${packet.PacketName} -> ${Util.inspect(packet, false, 4, true)}`);
         }
     
+    }
+
+    export class FilteredHandler extends VerboseHandler {
+
+        constructor(
+            private filter: RegExp
+        ) {
+            super();
+        }
+        
+        onRequest(packetId: number, packet: LocoRequestPacket) {
+            if (packet.PacketName.match(this.filter) || packet.PacketName === 'KICKOUT') {
+                super.onRequest(packetId, packet);
+            }
+        }
+
+        onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) {
+            if (packet.PacketName.match(this.filter)) {
+                super.onResponse(packetId, packet, reqPacket);
+            }
+        }
+
     }
 
     export class WrappedHandler implements LocoPacketHandler {

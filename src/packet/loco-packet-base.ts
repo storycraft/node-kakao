@@ -7,6 +7,7 @@
 export enum StatusCode {
 
     SUCCESS = 0,
+    PARTIAL = -401, // is it correct?
     OPERATION_DENIED = -500
 
 }

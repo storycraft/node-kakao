@@ -41,28 +41,28 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = this.channelFromChatData(res.ChatInfo);
+        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo);
 
         this.setCache(res.ChannelId, chan);
 
         return chan;
     }
 
-    protected async fetchValue(key: Long): Promise<ChatChannel> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(key));
+    protected async fetchValue(id: Long): Promise<ChatChannel> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(id));
 
-        return this.channelFromChatData(res.ChatInfo);
+        return this.channelFromChatData(id, res.ChatInfo);
     }
 
-    protected channelFromChatData(chatData: ChatDataBase): ChatChannel {
+    protected channelFromChatData(id: Long, chatData: ChatDataBase): ChatChannel {
         let channel: ChatChannel;
 
         switch(chatData.Type) {
 
             case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, chatData.ChannelId, chatData.Type, chatData.OpenLinkId, chatData.OpenChatToken); break;
+            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.Type, chatData.OpenLinkId, chatData.OpenChatToken); break;
 
-            default: channel = new ChatChannel(this.client, chatData.ChannelId, chatData.Type); break;
+            default: channel = new ChatChannel(this.client, id, chatData.Type); break;
             
         }
 
@@ -72,7 +72,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
 
-        if (res.ChatInfo.ChannelId.equals(channelId)) {
+        if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.PARTIAL) {
             return res.ChatInfo;
         } else {
             throw new Error('Received wrong info packet');
@@ -109,7 +109,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         this.clear();
         
         for (let chatData of chatDataList) {
-            let channel: ChatChannel = this.channelFromChatData(chatData);
+            let channel: ChatChannel = this.channelFromChatData(chatData.ChannelId, chatData);
 
             this.setCache(channel.Id, channel);
         }

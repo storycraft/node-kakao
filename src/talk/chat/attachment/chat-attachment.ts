@@ -375,6 +375,40 @@ export class LongTextAttachment implements ChatAttachment {
 
 }
 
+export class MapAttachment implements ChatAttachment {
+
+    constructor(
+        public Lat: number = 0,
+        public Lng: number = 0,
+        public Name: string = '',
+        public C: boolean = false
+    ) {
+
+    }
+
+    get RequiredMessageType() {
+        return ChatType.Map;
+    }
+
+    readAttachment(rawData: any): void {
+        this.Lat = rawData['lat'];
+        this.Lng = rawData['lng'];
+        this.Name = rawData['a'];
+
+        this.C = rawData['c'];
+    }
+
+    toJsonAttachment() {
+        return {
+            'lat': this.Lat,
+            'lng': this.Lng,
+            'a': this.Name,
+            'c': this.C
+        };
+    }
+
+}
+
 export class MentionContentList implements AttachmentContent {
     
     constructor(

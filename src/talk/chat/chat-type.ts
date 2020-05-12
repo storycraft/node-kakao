@@ -22,7 +22,7 @@ export enum ChatType {
     Schedule = 13,
     Vote = 14,
     Lottery = 15,
-    Location = 16,
+    Map = 16,
     Profile = 17,
     File = 18,
     StickerAni = 20,

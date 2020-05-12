@@ -181,11 +181,15 @@ export class ChannelInfo {
         let resolver: () => void | null;
         this.pendingInfoReq = new Promise((resolve, reject) => resolver = resolve);
 
-        let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
+        try {
+            let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
 
-        await this.updateMemberInfo();
+            await this.updateMemberInfo();
 
-        this.updateFromStruct(info);
+            this.updateFromStruct(info);
+        } catch (e) {
+            this.updateFromStruct(new ChatInfoStruct());
+        }
 
         resolver!();
     }

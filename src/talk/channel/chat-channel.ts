@@ -25,7 +25,7 @@ import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 
 export class ChatChannel extends EventEmitter {
 
-    static readonly INFO_UPDATE_INTERVAL: number = 1800000;
+    static readonly INFO_UPDATE_INTERVAL: number = 300000;
 
     private lastChat: Chat | null;
 
