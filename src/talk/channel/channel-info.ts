@@ -19,8 +19,6 @@ export class ChannelInfo {
 
     private channel: ChatChannel;
 
-    private roomType: ChannelType;
-
     private lastInfoUpdated: number;
 
     private roomImageURL: string;
@@ -43,8 +41,6 @@ export class ChannelInfo {
 
     constructor(channel: ChatChannel) {
         this.channel = channel;
-
-        this.roomType = ChannelType.UNKNOWN;
 
         this.lastInfoUpdated = -1;
 
@@ -85,7 +81,7 @@ export class ChannelInfo {
     }
 
     get RoomType() {
-        return this.roomType;
+        return this.channel.Type;
     }
 
     get IsDirectChan() {
@@ -158,8 +154,6 @@ export class ChannelInfo {
         this.roomFullImageURL = chatinfoStruct.Metadata.FullImageURL;
 
         this.isFavorite = chatinfoStruct.Metadata.Favorite;
-
-        this.roomType = chatinfoStruct.Type;
 
         this.lastInfoUpdated = Date.now();
     }

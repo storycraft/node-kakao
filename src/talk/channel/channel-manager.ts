@@ -62,7 +62,13 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             case ChannelType.OPENCHAT_DIRECT:
             case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.Type, chatData.OpenLinkId, chatData.OpenChatToken); break;
 
-            default: channel = new ChatChannel(this.client, id, chatData.Type); break;
+            case ChannelType.GROUP:
+            case ChannelType.PLUSCHAT:
+            case ChannelType.DIRECT:
+            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.Type); break;
+
+
+            default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN); break;
             
         }
 
