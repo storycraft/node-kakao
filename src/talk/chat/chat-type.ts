@@ -16,7 +16,7 @@ export enum ChatType {
     DitemEmoticon = 6,
     DitemGift = 7,
     DitemImg = 8,
-    KakaoLink = 9,
+    KakaoLinkV1 = 9,
     Avatar = 11,
     Sticker = 12,
     Schedule = 13,

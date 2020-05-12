@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChatContent, MentionContentList, ChatMention } from "./attachment/chat-attachment";
+import { ChatContent, MentionContentList, ChatMention, LongTextContent } from "./attachment/chat-attachment";
 
 export namespace ChatBuilder {
     export type BuiltMessage = {
@@ -18,6 +18,8 @@ export namespace ChatBuilder {
         let mentionPrefix = '@';
         let mentionMap: Map<string, MentionContentList> = new Map();
 
+        let extra: any = {};
+
         let mentionCount = 1;
         let len = textFormat.length;
         for (let i = 0; i < len; i++) { // TODO: Better format parsing
@@ -30,6 +32,7 @@ export namespace ChatBuilder {
             } else if (type === 'object') {
                 let content = fragment as ChatContent;
                 switch (content.ContentType) {
+
                     case 'mention': {
                         let mentionContent = content as ChatMention;
 
@@ -48,6 +51,13 @@ export namespace ChatBuilder {
                         break;
                     }
 
+                    case 'longText': {
+                        let longTextContent = content as LongTextContent;
+
+                        Object.assign(extra, longTextContent.toJsonAttachment());
+                        break;
+                    }
+
                     default: throw new Error(`Unknown ChatContent ${fragment} at format index:${i}`);
                 }
 
@@ -55,8 +65,6 @@ export namespace ChatBuilder {
                 throw new Error(`Unknown type ${typeof(fragment)} at format index:${i}`);
             }
         }
-
-        let extra: any = {};
 
         let mentionMapValues = mentionMap.values();
         let mentions: any[] = [];

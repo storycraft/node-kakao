@@ -94,6 +94,12 @@ export class PhotoAttachment implements ChatAttachment {
         return obj;
     }
 
+    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<PhotoAttachment> {
+        let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.IMAGE, data, name);
+
+            return new PhotoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.IMAGE), Long.fromNumber(size));
+    }
+
 }
 
 export class VideoAttachment implements ChatAttachment {
@@ -139,6 +145,12 @@ export class VideoAttachment implements ChatAttachment {
         }
 
         return obj;
+    }
+
+    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<VideoAttachment> {
+        let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.VIDEO, data, name);
+
+        return new VideoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.VIDEO), Long.fromNumber(size));
     }
 
 }
@@ -187,6 +199,12 @@ export class FileAttachment implements ChatAttachment {
         return obj;
     }
 
+    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<FileAttachment> {
+        let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.FILE, data, name);
+
+        return new FileAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.FILE), name, Long.fromNumber(size), Long.fromNumber(Date.now() + 1209600000));
+    }
+
 }
 
 export class AudioAttachment implements ChatAttachment {
@@ -222,6 +240,12 @@ export class AudioAttachment implements ChatAttachment {
         }
 
         return obj;
+    }
+
+    static async fromBuffer(data: Buffer, name: string, size: number = data.byteLength): Promise<AudioAttachment> {
+        let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.AUDIO, data, name);
+
+        return new AudioAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.AUDIO), Long.fromNumber(size));
     }
 
 }
@@ -299,28 +323,26 @@ export class EmoticonAniAttachment extends EmoticonAttachment {
 
 }
 
-
-//unused
 export class LongTextAttachment implements ChatAttachment {
 
     constructor(
         public Path: string = '',
         public KeyPath: string = '',
         public Size: Long = Long.ZERO,
-        public SD: boolean = false//whats this
+        public TextOmitted: boolean = false
     ) {
         
     }
 
     get RequiredMessageType() {
-        return ChatType.Template;
+        return ChatType.Text;
     }
 
     readAttachment(rawJson: any) {
         this.Path = rawJson['path'];
         this.KeyPath = rawJson['k'];
         this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
-        this.SD = rawJson['sd'];
+        this.TextOmitted = rawJson['sd'];
     }
 
     toJsonAttachment() {
@@ -333,11 +355,34 @@ export class LongTextAttachment implements ChatAttachment {
             obj['s'] = obj['size'] = this.Size;
         }
 
-        if (this.SD) {
-            obj['sd'] = this.SD;
+        if (this.TextOmitted) {
+            obj['sd'] = this.TextOmitted;
         }
 
         return obj;
+    }
+
+    static async fromText(longText: string, name: string, size?: number): Promise<LongTextAttachment> {
+        let buffer = Buffer.from(longText);
+        return LongTextAttachment.fromBuffer(buffer, name, size ? size : buffer.byteLength);
+    }
+
+    static async fromBuffer(data: Buffer, name: string, size: number = data.byteLength): Promise<LongTextAttachment> {
+        let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.FILE, data, name);
+
+        return new LongTextAttachment(path, KakaoAPI.getUploadedFileKey(path), Long.fromNumber(size), true);
+    }
+
+}
+
+export class LongTextContent extends LongTextAttachment implements ChatContent {
+
+    get ContentType() {
+        return 'longText';
+    }
+
+    static fromAttachment(attachment: LongTextAttachment): LongTextContent {
+        return new LongTextContent(attachment.KeyPath, attachment.Path, attachment.Size, attachment.TextOmitted);
     }
 
 }

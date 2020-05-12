@@ -231,7 +231,9 @@ export class TextChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
+        if (attachmentJson['path'] && attachmentJson['k'] && attachmentJson['s'] && attachmentJson['cs']) { // :(
+            attachmentList.push(new LongTextAttachment(attachmentJson['path'], attachmentJson['k'], attachmentJson['s']));
+        }
     }
 
 }
