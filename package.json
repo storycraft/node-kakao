@@ -1,6 +1,6 @@
 {
   "name": "node-kakao",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Loco protocol compatible library",
   "main": "dist/index.js",
   "scripts": {
