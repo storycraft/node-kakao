@@ -122,6 +122,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
         this.onDisconnect();
 
         this.socket!.destroy();
+        this.socket = null;
         this.packetMap.clear();
 
         this.connected = false;

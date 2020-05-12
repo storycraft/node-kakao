@@ -117,11 +117,7 @@ export class TalkClient extends EventEmitter {
     }
 
     async logout() {
-        if (!this.LocoLogon) {
-            throw new Error('Not logon');
-        }
-
-        await this.networkManager.logout();
+        return this.networkManager.logout();
     }
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;

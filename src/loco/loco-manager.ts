@@ -22,6 +22,8 @@ export class LocoManager {
 
     public static readonly PING_INTERVAL = 600000;
 
+    private pingSchedulerId: NodeJS.Timeout | null;
+
     private locoSocket: LocoSocket<Socket> | null;
     private expireTime: number;
 
@@ -32,6 +34,8 @@ export class LocoManager {
 
     constructor(handler: LocoPacketHandler | null = null) {
         this.locoSocket = null;
+
+        this.pingSchedulerId = null;
 
         this.expireTime = 0;
         
@@ -125,8 +129,8 @@ export class LocoManager {
 
         let res = await ticket;
 
-        this.locoLogon = true;
         this.schedulePing();
+        this.locoLogon = true;
 
         return res;
     }
@@ -136,7 +140,7 @@ export class LocoManager {
             return;
         }
 
-        setTimeout(this.schedulePing.bind(this), LocoManager.PING_INTERVAL);
+        this.pingSchedulerId = setTimeout(this.schedulePing.bind(this), LocoManager.PING_INTERVAL);
 
         this.sendPacket(new PacketPingReq());
     }
@@ -156,6 +160,8 @@ export class LocoManager {
 
         let res = await ticket;
 
+        socket.disconnect();
+
         return new CheckinData(new HostData(res.Host, res.Port), res.CacheExpire);
     }
 
@@ -173,6 +179,8 @@ export class LocoManager {
         socket.sendPacket(packet);
 
         let res = await ticket;
+
+        socket.disconnect();
         
         if (res.HostList.length < 1 && res.PortList.length < 1) {
             throw new Error(`No server avaliable`);
@@ -219,12 +227,19 @@ export class LocoManager {
     }
 
     disconnect() {
-        if (this.locoConnected) this.LocoSocket!.disconnect();
+        if (this.locoConnected) {
+            this.locoSocket!.disconnect();
+        }
     }
 
     onDisconnect() {
         this.locoConnected = false;
         this.locoLogon = false;
+
+        this.locoSocket!.removeAllListeners();
+        this.locoSocket = null;
+
+        if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
 
         if (this.handler) this.handler.onDisconnected();
     }

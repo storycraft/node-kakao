@@ -103,9 +103,15 @@ export class NetworkManager {
             throw new Error('Not logon to loco');
         }
 
-        if (this.locoManager.LocoConnected) {
-            this.locoManager.disconnect();
+        await this.disconnect();
+    }
+
+    async disconnect() {
+        if (!this.locoManager.LocoConnected) {
+            throw new Error('Not connected to loco');
         }
+
+        this.locoManager.disconnect();
     }
 
     async sendPacket(packet: LocoRequestPacket) {

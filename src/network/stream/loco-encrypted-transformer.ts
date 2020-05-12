@@ -31,6 +31,13 @@ export class LocoEncryptedTransformer extends Transform {
         return this.socket.Crypto;
     }
 
+    _destroy(error: Error | null, callback: (error: Error | null) => void) {
+        this.currentEncryptedHeader = null;
+        this.encryptedBuffer = Buffer.allocUnsafe(0);
+
+        super._destroy(error, callback);
+    }
+
     _transform(chunk: Buffer, encoding?: string, callback?: TransformCallback) {
         this.encryptedBuffer = Buffer.concat([ this.encryptedBuffer, chunk ]);
 

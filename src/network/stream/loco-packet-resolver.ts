@@ -27,6 +27,13 @@ export class LocoPacketResolver extends Writable {
         return this.socket;
     }
 
+    _destroy(error: Error | null, callback: (error?: Error | null) => void) {
+        this.currentHeader = null;
+        this.packetBuffer = Buffer.allocUnsafe(0);
+
+        super._destroy(error, callback);
+    }
+
     _write(chunk: Buffer, encoding?: string, callback?: (e?: Error) => void) {
         this.packetBuffer = Buffer.concat([ this.packetBuffer, chunk ]);
 
