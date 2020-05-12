@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChatContent, MentionContentList, ChatMention, LongTextContent } from "./attachment/chat-attachment";
+import { ChatContent, MentionContentList, ChatMention } from "./attachment/chat-attachment";
 
 export namespace ChatBuilder {
     export type BuiltMessage = {
@@ -48,13 +48,6 @@ export namespace ChatBuilder {
                         mentionContentList.IndexList.push(mentionCount++);
 
                         text += `${mentionPrefix}${nickname}`;
-                        break;
-                    }
-
-                    case 'longText': {
-                        let longTextContent = content as LongTextContent;
-
-                        Object.assign(extra, longTextContent.toJsonAttachment());
                         break;
                     }
 

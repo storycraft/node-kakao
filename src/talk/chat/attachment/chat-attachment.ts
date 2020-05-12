@@ -375,18 +375,6 @@ export class LongTextAttachment implements ChatAttachment {
 
 }
 
-export class LongTextContent extends LongTextAttachment implements ChatContent {
-
-    get ContentType() {
-        return 'longText';
-    }
-
-    static fromAttachment(attachment: LongTextAttachment): LongTextContent {
-        return new LongTextContent(attachment.KeyPath, attachment.Path, attachment.Size, attachment.TextOmitted);
-    }
-
-}
-
 export class MentionContentList implements AttachmentContent {
     
     constructor(
