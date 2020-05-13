@@ -353,7 +353,7 @@ export class CustomFeedContent extends CustomContent {
 
     readRawContent(rawData: any): void {
         if (rawData['TI']) {
-            if (rawData['TI']['TD']) this.TextDesc.readRawContent('TD');
+            if (rawData['TI']['TD']) this.TextDesc.readRawContent(rawData['TI']['TD']);
 
             if (rawData['TI']['L']) {
                 this.TextLink = new URLFragment();
