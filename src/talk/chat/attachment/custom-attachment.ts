@@ -610,7 +610,7 @@ export class CustomCommerceContent extends CustomContent {
         if (rawData['TI']) {
             if (rawData['TI']['TD']) {
                 this.TextDesc = new TextDescFragment();
-                this.TextDesc.readRawContent('TD');
+                this.TextDesc.readRawContent(rawData['TI']['TD']);
             }
         }
 
