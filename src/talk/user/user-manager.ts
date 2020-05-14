@@ -7,14 +7,14 @@
 import { IdStore } from "../../store/store";
 import { ChatUser } from "./chat-user";
 import { Long } from "bson";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { MemberStruct } from "../struct/member-struct";
 import { PacketGetMemberRes, PacketGetMemberReq } from "../../packet/packet-get-member";
 import { PacketMemberReq } from "../../packet/packet-member";
 
 export class UserManager extends IdStore<ChatUser> {
 
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         super();
     }
 

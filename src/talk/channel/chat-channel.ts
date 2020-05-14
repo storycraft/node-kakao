@@ -14,7 +14,7 @@ import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 
 /*
@@ -31,7 +31,7 @@ export class ChatChannel extends EventEmitter {
 
     private readonly channelInfo: ChannelInfo;
 
-    constructor(private client: TalkClient, private id: Long, private type: ChannelType) {
+    constructor(private client: LocoClient, private id: Long, private type: ChannelType) {
         super();
 
         this.channelInfo = this.createChannelInfo();
@@ -135,7 +135,7 @@ export class ChatChannel extends EventEmitter {
 
 export class OpenChatChannel extends ChatChannel {
 
-    constructor(client: TalkClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
+    constructor(client: LocoClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
         super(client, channelId, type);
     }
 

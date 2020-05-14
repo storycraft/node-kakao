@@ -7,18 +7,32 @@
 import * as request from "request-promise";
 
 import { KakaoAPI } from "../kakao-api";
+import { ClientSettingsStruct } from "../talk/struct/api/client-settings-struct";
+import { JsonUtil } from "../util/json-util";
+import { StructBase } from "../talk/struct/struct-base";
+import { AccessDataProvider } from "../oauth/access-data-provider";
 
 export class ApiClient {
 
     constructor(
         private deviceUUID: string,
-        private accessToken: string
+        private provider: AccessDataProvider
     ) {
 
     }
 
+    get DeviceUUID() {
+        return this.deviceUUID;
+    }
+
+    set DeviceUUID(uuid) {
+        this.deviceUUID = uuid;
+    }
+
     protected getAuthKey(): string {
-        return `${this.accessToken}-${this.deviceUUID}`;
+        let accessData = this.provider.getLatestAccessData();
+
+        return `${accessData.AccessToken}-${this.deviceUUID}`;
     }
 
     protected getSessionHeader() {
@@ -32,20 +46,72 @@ export class ApiClient {
         };
     }
 
-    async requestAccountSettings(accessToken: string, deviceUUID: string, since: number = 0, language: string = KakaoAPI.Language) {
-        return this.createApiRequest(`${KakaoAPI.getInternalURL(KakaoAPI.LogonAccount.MORE_SETTINGS)}?since=${since}&lang=${language}`);
+    async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ApiResponse<ClientSettingsStruct>> {
+        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'more_settings.json')}?since=${since}&lang=${language}`, new ClientSettingsStruct());
     }
 
-    async requestAutoLoginToken(accessToken: string, deviceUUID: string) {
-        return this.createApiRequest(`${KakaoAPI.getInternalURL(KakaoAPI.LogonAccount.LOGIN_TOKEN)}`);
+    async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ApiResponse<ClientSettingsStruct>> {
+        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'less_settings.json')}?since=${since}&lang=${language}`, new ClientSettingsStruct());
     }
 
-    protected createApiRequest<T>(url: string): request.RequestPromise {
-        return request({
-            url: `${KakaoAPI.getInternalURL(KakaoAPI.LogonAccount.LOGIN_TOKEN)}`,
+    protected async createApiRequest<T extends StructBase>(url: string, responseStruct: T): Promise<ApiResponse<T>> {
+        let res = new ApiResponse<T>();
+
+        res.fromJson(JsonUtil.parseLoseless(await request({
+            url: url,
             headers: this.getSessionHeader(),
             method: 'GET'
-        }) as request.RequestPromise;
+        })), responseStruct);
+
+        return res;
+    }
+
+    static getApiURL(type: ApiType, api: string) {
+        return `${KakaoAPI.InternalURL}/${KakaoAPI.Agent}/${type}/${api}`;
+    }
+
+}
+
+export enum ApiType {
+
+    ACCOUNT = 'account',
+    FRIENDS = 'friends'
+
+}
+
+export class ApiResponse<T extends StructBase> implements StructBase {
+
+    constructor(
+        private status: KakaoAPI.RequestStatusCode = KakaoAPI.RequestStatusCode.SUCCESS,
+        private response: T | null = null
+        ) {
+
+    }
+
+    get Status() {
+        return this.status;
+    }
+
+    get Response() {
+        return this.response;
+    }
+
+    fromJson(rawData: any, object: T | null = null): void {
+        this.status = rawData['status'];
+
+        if (object) {
+            object.fromJson(rawData);
+
+            this.response = object;
+        }
+    }
+
+    toJson() {
+        let obj = { 'status': this.status };
+
+        if (this.response) obj = Object.assign(this.response.toJson(), obj);
+
+        return obj;
     }
 
 }

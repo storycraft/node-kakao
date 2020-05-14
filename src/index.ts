@@ -60,11 +60,15 @@ export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';
 export * from './talk/struct/channel-meta-set-struct';
 export * from './talk/struct/open-link-struct';
-export * from './talk/struct/login-access-data-struct';
+export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
-export * from './talk/struct/client-settings-struct';
+export * from './talk/struct/api/client-settings-struct';
 
-export * from './talk-client';
+export * from './api/api-client';
+
+export * from './oauth/access-data-provider';
+
+export * from './client';
 
 import { Long } from 'bson';
 export { Long };

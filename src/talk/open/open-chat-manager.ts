@@ -9,10 +9,10 @@ import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-i
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
 import { PacketSyncLinkRes, PacketSyncLinkReq } from "../../packet/packet-sync-link";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { AsyncIdStore } from "../../store/store";
 import { StatusCode } from "../../packet/loco-packet-base";
-import { OpenChatChannel, ChatChannel } from "../channel/chat-channel";
+import { OpenChatChannel } from "../channel/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
 import { ChatUser } from "../user/chat-user";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
@@ -29,7 +29,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
     private clientLinkIdList: string[];
 
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         super();
 
         this.clientLinkIdList = [];

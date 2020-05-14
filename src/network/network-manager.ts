@@ -20,6 +20,7 @@ import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
 import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message";
+import { LocoClient } from "../client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -37,7 +38,7 @@ export class NetworkManager {
 
     private locoManager: LocoManager;
 
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         this.handler = this.createPacketHandler();
         this.locoManager = new LocoManager(this.handler);
 

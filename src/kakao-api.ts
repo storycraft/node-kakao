@@ -265,11 +265,7 @@ export class KakaoAPI {
     }
 
 
-
-    static getInternalURL(type: KakaoAPI.LogonAccount) {
-        return `${KakaoAPI.InternalURL}/${KakaoAPI.Agent}/${KakaoAPI.AccountPath}/${type}`;
-    }
-
+    
     static getAccountInternalURL(type: KakaoAPI.Account) {
         return `${KakaoAPI.AccountInternalURL}/${KakaoAPI.Agent}/${KakaoAPI.AccountPath}/${type}`;
     }
@@ -445,22 +441,8 @@ export namespace KakaoAPI {
         
         LOGIN = 'login.json',
         REGISTER_DEVICE = 'register_device.json',
-        REQUEST_PASSCODE = 'request_passcode.json',
-        LOGIN_TOKEN = 'login_token.json',
-        REQUEST_VERIFY_EMAIL = 'request_verify_email.json',
-        RENEW_TOKEN = 'renew_token.json',
-        CHANGE_UUID = 'change_uuid.json',
-        CAN_CHANGE_UUID = 'can_change_uuid.json',
+        REQUEST_PASSCODE = 'request_passcode.json'
     
-    }
-    
-    export enum LogonAccount {
-
-        MORE_SETTINGS = 'more_settings.json',
-        LESS_SETTINGS = 'less_settings.json',
-        BLOCKED_LIST = 'blocked.json',
-        LOGIN_TOKEN = 'login_token.json'
-
     }
 
     export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
@@ -476,6 +458,16 @@ export namespace KakaoAPI {
         OPERATION_DENIED = -500,
         ACCOUNT_RESTRICTED = -997
 
+    }
+
+    export enum LogonAccount {
+    
+        LOGIN_TOKEN = 'login_token.json',
+        REQUEST_VERIFY_EMAIL = 'request_verify_email.json',
+        RENEW_TOKEN = 'renew_token.json',
+        CHANGE_UUID = 'change_uuid.json',
+        CAN_CHANGE_UUID = 'can_change_uuid.json'
+    
     }
 
 }

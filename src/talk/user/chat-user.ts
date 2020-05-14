@@ -1,14 +1,14 @@
-import { LoginAccessDataStruct } from "../struct/login-access-data-struct";
+import { LoginAccessDataStruct } from "../struct/auth/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
-import { ClientSettingsStruct } from "../struct/client-settings-struct";
-import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
+import { ClientSettingsStruct } from "../struct/api/client-settings-struct";
+import { OpenMemberStruct } from "../struct/open-link-struct";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
 import { ChatChannel } from "../channel/chat-channel";
 import { Chat } from "../chat/chat";
 import { ChatFeed } from "../chat/chat-feed";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -18,13 +18,13 @@ import { TalkClient } from "../../talk-client";
 
 export class ChatUser extends EventEmitter {
 
-    private client: TalkClient;
+    private client: LocoClient;
     
     private id: Long;
 
     private nickname: string;
 
-    constructor(client: TalkClient, userId: Long, nickname: string = '') {
+    constructor(client: LocoClient, userId: Long, nickname: string = '') {
         super();
         
         this.client = client;
@@ -210,10 +210,10 @@ export class ClientChatUser extends ChatUser {
 
     private mainUserInfo: ClientUserInfo;
 
-    constructor(client: TalkClient, clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct, private mainOpenToken: number) {
-        super(client, clientAccessData.UserId);
+    constructor(client: LocoClient, settings: ClientSettingsStruct, private mainOpenToken: number) {
+        super(client, settings.UserId);
 
-        this.mainUserInfo = new ClientUserInfo(clientAccessData, settings);
+        this.mainUserInfo = new ClientUserInfo(settings);
     }
 
     get MainUserInfo() {
@@ -232,16 +232,14 @@ export class ClientChatUser extends ChatUser {
 
 export class ClientUserInfo implements ChatUserInfoBase {
 
-    private clientAccessData: LoginAccessDataStruct;
     private settings: ClientSettingsStruct;
 
-    constructor(clientAccessData: LoginAccessDataStruct, settings: ClientSettingsStruct) {
-        this.clientAccessData = clientAccessData;
+    constructor(settings: ClientSettingsStruct) {
         this.settings = settings;
     }
 
     get AccountId() {
-        return this.clientAccessData.AccountId;
+        return this.settings.AccountId;
     }
 
     get ProfileImageURL() {
@@ -269,19 +267,7 @@ export class ClientUserInfo implements ChatUserInfoBase {
     }
 
     get KakaoStoryURL() {
-        return this.clientAccessData.StoryURL;
-    }
-
-    get LogonTime() {
-        return this.clientAccessData.LogonServerTime;
-    }
-
-    get MainDeviceName() {
-        return this.clientAccessData.MainDevice;
-    }
-
-    get MainDeviceAppVer() {
-        return this.clientAccessData.MainDeviceAppVersion;
+        return this.settings.StoryURL;
     }
 
     update(memberStruct: MemberStruct) {

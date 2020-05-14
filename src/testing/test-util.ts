@@ -6,7 +6,7 @@
 
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
-import { TalkClient } from "../talk-client";
+import { TalkClient } from "../client";
 import { LocoKickoutType, PacketKickoutRes } from "../packet/packet-kickout";
 import * as Util from 'util';
 import * as Crypto from 'crypto';
@@ -92,8 +92,8 @@ export namespace TestUtil {
 
     export class HookedClient extends TalkClient {
 
-        constructor(name: string, hook: LocoPacketHandler) {
-            super(name);
+        constructor(deviceUUID: string, name: string, hook: LocoPacketHandler) {
+            super(deviceUUID, name);
 
             let oldHandler = this.NetworkManager.LocoManager.Handler!;
 

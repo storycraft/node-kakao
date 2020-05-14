@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { ChatDeserializeMap } from "./chat-deserialize-map";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { Long } from "bson";
@@ -17,7 +17,7 @@ export class ChatManager {
     
     private messageId: number;
 
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         this.messageId = 0;
     }
 

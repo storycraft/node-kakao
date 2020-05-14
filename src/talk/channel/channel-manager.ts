@@ -7,7 +7,7 @@
 import { AsyncIdStore } from "../../store/store";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { Long } from "bson";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { ChatUser } from "../user/chat-user";
 import { PacketCreateChatRes, PacketCreateChatReq } from "../../packet/packet-create-chat";
 import { PacketChatInfoReq, PacketChatInfoRes } from "../../packet/packet-chatinfo";
@@ -20,7 +20,7 @@ import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-ch
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         super();
     }
 
