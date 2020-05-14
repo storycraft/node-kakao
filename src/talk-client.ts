@@ -16,6 +16,7 @@ import { JsonUtil } from "./util/json-util";
 import { OpenChatManager } from "./talk/open/open-chat-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
+import { ApiClient } from "./api/api-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -93,13 +94,15 @@ export class TalkClient extends EventEmitter {
         let loginAccessData = new LoginAccessDataStruct();
         loginAccessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, deviceUUID, this.Name, forced)));
 
+        let tempClient = new ApiClient(deviceUUID, loginAccessData.AccessToken);
+
         let statusCode = loginAccessData.Status;
         if (statusCode !== 0) {
             throw statusCode;
         }
 
         let settings = new ClientSettingsStruct();
-        settings.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestAccountSettings(loginAccessData.AccessToken, deviceUUID, 0)));
+        settings.fromJson(JsonUtil.parseLoseless(await tempClient.requestAccountSettings(loginAccessData.AccessToken, deviceUUID, 0)));
 
         if (settings.Status !== 0) {
             throw new Error(`more_settings.json ERR: ${settings.Status}`);

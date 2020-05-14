@@ -342,17 +342,6 @@ export class KakaoAPI {
         };
     }
 
-    static getSessionHeader(accessToken: string, deviceUUID: string) {
-        return {
-            'Host': KakaoAPI.InternalHost,
-            'Authorization': `${accessToken}-${deviceUUID}`,
-            'A': KakaoAPI.AuthHeaderAgent,
-            'User-Agent': KakaoAPI.AuthUserAgent,
-            'Accept': '*/*',
-            'Accept-Language': KakaoAPI.Language
-        };
-    }
-
     static getLoginData(email: string, password: string, deviceUUID: string, deviceName: string, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
         return {
             'email': email,
@@ -429,23 +418,6 @@ export class KakaoAPI {
 
         return hash.digest('hex');
     }
-
-    static requestAccountSettings(accessToken: string, deviceUUID: string, since: number = 0, language: string = KakaoAPI.Language) {
-        return request({
-            url: `${KakaoAPI.getInternalURL(KakaoAPI.LogonAccount.MORE_SETTINGS)}?since=${since}&lang=${language}`,
-            headers: KakaoAPI.getSessionHeader(accessToken, deviceUUID),
-            method: 'GET'
-        });
-    }
-
-    static requestAutoLoginToken(accessToken: string, deviceUUID: string) {
-        return request({
-            url: `${KakaoAPI.getInternalURL(KakaoAPI.LogonAccount.LOGIN_TOKEN)}`,
-            headers: KakaoAPI.getSessionHeader(accessToken, deviceUUID),
-            method: 'GET'
-        });
-    }
-
 
 
     static createSendTextURL(message: string) {
