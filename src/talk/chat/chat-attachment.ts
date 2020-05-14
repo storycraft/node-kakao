@@ -116,7 +116,7 @@ export class VideoAttachment extends ChatAttachment {
 
         private width: number = 0,
         private height: number = 0,
-    
+        private duration: number = 0,
         private videoURL: string = '',
     
         private size: number = -1
@@ -136,6 +136,10 @@ export class VideoAttachment extends ChatAttachment {
         return this.height;
     }
 
+    get Duration() {
+        return this.duration;
+    }
+    
     get VideoURL() {
         return this.videoURL;
     }
@@ -149,7 +153,7 @@ export class VideoAttachment extends ChatAttachment {
 
         this.width = rawJson['w'];
         this.height = rawJson['h'];
-
+        this.duration = rawJson['d'];
         this.videoURL = rawJson['url'];
         
         this.size = rawJson['s'];
@@ -160,7 +164,8 @@ export class VideoAttachment extends ChatAttachment {
             'url': this.videoURL,
             'tk': this.KeyPath,
             'w': this.width,
-            'h': this.height
+            'h': this.height,
+            'd': this.duration
         };
 
         if (this.size !== -1) {
