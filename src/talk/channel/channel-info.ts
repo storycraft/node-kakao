@@ -175,15 +175,8 @@ export class ChannelInfo {
         let resolver: () => void | null;
         this.pendingInfoReq = new Promise((resolve, reject) => resolver = resolve);
 
-        try {
-            let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
-
-            await this.updateMemberInfo();
-
-            this.updateFromStruct(info);
-        } catch (e) {
-            this.updateFromStruct(new ChatInfoStruct());
-        }
+        await this.updateMemberInfo();
+        await this.updateChannelInfo();
 
         resolver!();
     }
@@ -196,6 +189,16 @@ export class ChannelInfo {
             }
 
             this.initUserInfo(memberStruct);
+        }
+    }
+
+    protected async updateChannelInfo(): Promise<void> {
+        let info = await this.Channel.Client.ChannelManager.requestChannelInfo(this.channel.Id);
+
+        try {
+            this.updateFromStruct(info);
+        } catch (e) {
+            this.updateFromStruct(new ChatInfoStruct());
         }
     }
 
@@ -276,8 +279,8 @@ export class OpenChannelInfo extends ChannelInfo {
         return this.memberTypeMap.get(userId.toString())!;
     }
 
-    async updateFromStruct(chatinfoStruct: ChatInfoStruct): Promise<void> {
-        super.updateFromStruct(chatinfoStruct);
+    async updateChannelInfo(): Promise<void> {
+        await super.updateChannelInfo();
 
         let openLinkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
 
