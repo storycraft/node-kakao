@@ -14,7 +14,7 @@ export class PacketSyncMessageReq extends LocoBsonRequestPacket {
         public ChannelId: Long = Long.ZERO,
         public StartLogId: Long = Long.ZERO,
         public Count: number = 0,
-        public CurrentLogId: Long = Long.ZERO
+        public EndLogId: Long = Long.ZERO
     ) {
         super();
     }
@@ -28,7 +28,7 @@ export class PacketSyncMessageReq extends LocoBsonRequestPacket {
             'chatId': this.ChannelId,
             'cur': this.StartLogId,
             'cnt': this.Count,
-            'max': this.CurrentLogId
+            'max': this.EndLogId
         };
     }
 

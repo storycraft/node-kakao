@@ -10,6 +10,8 @@ import { ChatlogStruct } from "../struct/chatlog-struct";
 import { Long } from "bson";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketDeleteChatRes, PacketDeleteChatReq } from "../../packet/packet-delete-chat";
+import { Chat } from "./chat";
+import { PacketSyncMessageReq, PacketSyncMessageRes } from "../../packet/packet-sync-message";
 
 export class ChatManager {
     
@@ -29,6 +31,17 @@ export class ChatManager {
 
     getNextMessageId() {
         return this.messageId++;
+    }
+
+    async getChatListFrom(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<Chat[]> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
+
+        let taskList: Promise<Chat>[] = [];
+        for (let chatLog of res.ChatList) {
+            taskList.push(this.chatFromChatlog(chatLog));
+        }
+
+        return Promise.all(taskList);
     }
 
     async chatFromChatlog(chatLog: ChatlogStruct) {
