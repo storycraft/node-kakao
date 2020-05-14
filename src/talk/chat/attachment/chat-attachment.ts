@@ -109,7 +109,8 @@ export class VideoAttachment implements ChatAttachment {
 
         public Width: number = 0,
         public Height: number = 0,
-    
+        public Duration: number = 0,
+         
         public VideoURL: string = '',
     
         public Size: Long = Long.ZERO,
@@ -126,7 +127,8 @@ export class VideoAttachment implements ChatAttachment {
 
         this.Width = rawJson['w'];
         this.Height = rawJson['h'];
-
+        this.Duration = rawJson['d'];
+        
         this.VideoURL = rawJson['url'];
         
         this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
@@ -137,7 +139,8 @@ export class VideoAttachment implements ChatAttachment {
             'url': this.VideoURL,
             'tk': this.KeyPath,
             'w': this.Width,
-            'h': this.Height
+            'h': this.Height,
+            'd': this.Duration
         };
 
         if (this.Size !== Long.ZERO) {
@@ -147,10 +150,10 @@ export class VideoAttachment implements ChatAttachment {
         return obj;
     }
 
-    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<VideoAttachment> {
+    static async fromBuffer(data: Buffer, name: string, width: number, height: number, duration: number, size: number = data.byteLength): Promise<VideoAttachment> {
         let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.VIDEO, data, name);
 
-        return new VideoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.VIDEO), Long.fromNumber(size));
+        return new VideoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, duration, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.VIDEO), Long.fromNumber(size));
     }
 
 }
