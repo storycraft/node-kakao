@@ -466,6 +466,7 @@ export class ReplyAttachment implements ChatAttachment {
         public SourceType: ChatType = ChatType.Text,
         public SourceLogId: Long = Long.ZERO,
         public SourceUserId: Long = Long.ZERO,
+        public AttachOnly: boolean = false,
         public SourceMessage: string = '',
         public SourceMentionList: MentionContentList[] = [],
         public SourceLinkId: Long = Long.ZERO // ONLY ON OPENPROFILE ?!
@@ -496,6 +497,8 @@ export class ReplyAttachment implements ChatAttachment {
         this.SourceType = rawData['src_type'];
         this.SourceUserId = JsonUtil.readLong(rawData['src_userId']);
 
+        if (rawData['attach_only']) this.AttachOnly = rawData['attach_only'];
+
         if (rawData['src_linkId']) {
             this.SourceLinkId = JsonUtil.readLong(rawData['src_linkId']);
         }
@@ -514,10 +517,12 @@ export class ReplyAttachment implements ChatAttachment {
             obj['src_linkId'] = this.SourceLinkId;
         }
 
+        if (this.AttachOnly) obj['attach_only'] = this.AttachOnly;
+
         return obj;
     }
 
-    static fromChat(chat: Chat): ReplyAttachment {
-        return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.Id, chat.Text, chat.getMentionContentList());
+    static fromChat(chat: Chat, hideText: boolean = false): ReplyAttachment {
+        return new ReplyAttachment(chat.Type, chat.LogId, chat.Sender.Id, hideText, chat.Text, chat.getMentionContentList());
     }
 }

@@ -81,24 +81,14 @@ export class ReplyContentTemplate extends AttachmentTemplate {
     constructor(
         reply: ReplyAttachment,
         private content: ChatAttachment,
-        private attachOnly: boolean,
         ...textFormat: (string | ChatContent)[]
     ) {
         super(reply, ...textFormat);
     }
-
-    get AttachOnly() {
-        return this.attachOnly;
-    }
-
-    set AttachOnly(flag) {
-        this.attachOnly = flag;
-    }
-
+    
     getReplyContent() {
         return {
             'attach_type': this.content.RequiredMessageType,
-            'attach_only': this.attachOnly,
             'attach_content': this.content.toJsonAttachment()
         }
     }
