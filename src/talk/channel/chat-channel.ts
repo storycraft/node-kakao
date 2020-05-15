@@ -74,7 +74,7 @@ export class ChatChannel extends EventEmitter {
     }
 
     async markChannelRead() {
-        await this.Client.NetworkManager.sendPacket(new PacketMessageNotiReadReq(this.id));
+        await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(this.id));
     }
 
     async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
@@ -84,7 +84,7 @@ export class ChatChannel extends EventEmitter {
         
         let userId = this.client.ClientUser.Id;
         
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
 
         let chat = await this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.id, ChatType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
         
@@ -100,7 +100,7 @@ export class ChatChannel extends EventEmitter {
         let text = template.getPacketText();
         let extra = template.getPacketExtra();
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
         let chat = this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.client.ClientUser.Id, this.id, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
 

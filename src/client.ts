@@ -15,6 +15,7 @@ import { OpenChatManager } from "./talk/open/open-chat-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient, ApiResponse } from "./api/api-client";
+import { LocoInterface } from "./loco/loco-interface";
 
 /*
  * Created on Fri Nov 01 2019
@@ -22,11 +23,23 @@ import { ApiClient, ApiResponse } from "./api/api-client";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface LocoClient extends EventEmitter {
+export interface LoginClient {
+
+    readonly ApiClient: ApiClient;
+    
+    login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
+
+    relogin(): Promise<void>;
+
+    logout(): Promise<void>;
+
+}
+
+export interface LocoClient extends LoginClient, EventEmitter {
 
     readonly Name: string;
 
-    readonly NetworkManager: NetworkManager;
+    readonly LocoInterface: LocoInterface;
 
     readonly ChannelManager: ChannelManager;
 
@@ -39,10 +52,6 @@ export interface LocoClient extends EventEmitter {
     readonly ClientUser: ClientChatUser;
 
     readonly LocoLogon: boolean;
-
-    login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
-
-    logout(): Promise<void>;
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
@@ -66,13 +75,65 @@ export interface LocoClient extends EventEmitter {
 
 }
 
-export class TalkClient extends EventEmitter implements LocoClient, AccessDataProvider {
+export abstract class BaseClient extends EventEmitter implements LoginClient, AccessDataProvider {
 
     private name: string;
+
+    private currentLogin: (() => Promise<void>) | null;
 
     private readonly accessData: LoginAccessDataStruct;
 
     private apiClient: ApiClient;
+
+    constructor(deviceUUID: string, name: string) {
+        super();
+
+        this.name = name;
+
+        this.currentLogin = null;
+        this.accessData = new LoginAccessDataStruct();
+
+        this.apiClient = new ApiClient(deviceUUID, this);
+    }
+
+    get Name() {
+        return this.name;
+    }
+
+    get ApiClient() {
+        return this.apiClient;
+    }
+
+    async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
+        if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
+
+        this.currentLogin = this.login.bind(this, email, password, deviceUUID, forced);
+
+        this.accessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced)));
+
+        let statusCode = this.accessData.Status;
+        if (statusCode !== 0) {
+            throw statusCode;
+        }
+    }
+
+    async relogin() {
+        if (!this.currentLogin) throw new Error('Login data does not exist');
+
+        return this.currentLogin();
+    }
+
+    async logout() {
+        this.currentLogin = null;
+    }
+
+    getLatestAccessData() {
+        return this.accessData;
+    }
+
+}
+
+export class TalkClient extends BaseClient implements LocoClient {
 
     private networkManager: NetworkManager;
 
@@ -85,13 +146,7 @@ export class TalkClient extends EventEmitter implements LocoClient, AccessDataPr
     private openChatManager: OpenChatManager;
 
     constructor(deviceUUID: string, name: string) {
-        super();
-        
-        this.name = name;
-
-        this.accessData = new LoginAccessDataStruct();
-
-        this.apiClient = new ApiClient(deviceUUID, this);
+        super(deviceUUID, name);
 
         this.networkManager = new NetworkManager(this);
 
@@ -104,16 +159,8 @@ export class TalkClient extends EventEmitter implements LocoClient, AccessDataPr
         this.clientUser = new ClientChatUser(this, new ClientSettingsStruct(), -1); //dummy
     }
 
-    get Name() {
-        return this.name;
-    }
-
-    get ApiClient() {
-        return this.apiClient;
-    }
-
-    get NetworkManager() {
-        return this.networkManager;
+    get LocoInterface() {
+        return this.networkManager as LocoInterface;
     }
 
     get ChannelManager() {
@@ -140,25 +187,14 @@ export class TalkClient extends EventEmitter implements LocoClient, AccessDataPr
         return this.networkManager.Logon;
     }
 
-    getLatestAccessData() {
-        return this.accessData;
-    }
-
     async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
         if (this.LocoLogon) {
             throw new Error('Already logon to loco');
         }
 
-        if (deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
+        await super.login(email, password, deviceUUID, forced);
 
-        this.accessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced)));
-
-        let statusCode = this.accessData.Status;
-        if (statusCode !== 0) {
-            throw statusCode;
-        }
-
-        let res: ApiResponse<ClientSettingsStruct> = await this.apiClient.requestMoreSettings(0);
+        let res: ApiResponse<ClientSettingsStruct> = await this.ApiClient.requestMoreSettings(0);
 
         if (res.Status !== 0) {
             throw new Error(`more_settings.json ERR: ${res.Status}`);
@@ -166,7 +202,7 @@ export class TalkClient extends EventEmitter implements LocoClient, AccessDataPr
 
         let settings = res.Response!;
 
-        let loginRes = await this.networkManager.locoLogin(this.apiClient.DeviceUUID, this.clientUser.Id, this.accessData.AccessToken);
+        let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, this.clientUser.Id, this.getLatestAccessData().AccessToken);
 
         this.clientUser = new ClientChatUser(this, settings, loginRes.OpenChatToken);
 
@@ -178,7 +214,9 @@ export class TalkClient extends EventEmitter implements LocoClient, AccessDataPr
     }
 
     async logout() {
-        return this.networkManager.logout();
+        await super.logout();
+
+        return this.networkManager.disconnect();
     }
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;

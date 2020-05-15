@@ -8,12 +8,15 @@ export * from './kakao-api';
 
 export * from './api/api-client';
 
+export * from './loco/loco-interface';
 export * from './loco/loco-manager';
 export * from './loco/loco-packet-handler';
 
 export * from './network/loco-socket';
 export * from './network/loco-tls-socket';
 export * from './network/loco-secure-socket';
+
+export * from './network/network-manager';
 
 export * from './network/stream/loco-encrypted-transformer';
 export * from './network/stream/loco-packet-resolver';
@@ -35,8 +38,6 @@ export * from './talk/chat/chat-type';
 export * from './talk/chat/channel-type';
 export * from './talk/chat/chat-builder';
 
-export * from './talk/open/open-link-type';
-
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-feed';
 
@@ -48,11 +49,20 @@ export * from './talk/chat/attachment/custom-attachment';
 
 export * from './talk/chat/template/message-template';
 
+export * from './talk/chat/chat-manager';
+
 export * from './talk/channel/chat-channel';
 export * from './talk/channel/channel-info';
 
+export * from './talk/channel/channel-manager';
+
+export * from './talk/open/open-link-type';
+export * from './talk/open/open-chat-manager';
+
 export * from './talk/user/chat-user';
 export * from './talk/user/user-type';
+
+export * from './talk/user/user-manager';
 
 export * from './talk/struct/struct-base';
 export * from './talk/struct/chatdata-struct';

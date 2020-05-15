@@ -10,6 +10,7 @@ import { TalkClient } from "../client";
 import { LocoKickoutType, PacketKickoutRes } from "../packet/packet-kickout";
 import * as Util from 'util';
 import * as Crypto from 'crypto';
+import { NetworkManager } from "../network/network-manager";
 
 export namespace TestUtil {
 
@@ -95,9 +96,9 @@ export namespace TestUtil {
         constructor(deviceUUID: string, name: string, hook: LocoPacketHandler) {
             super(deviceUUID, name);
 
-            let oldHandler = this.NetworkManager.LocoManager.Handler!;
+            let networkManager = this.LocoInterface as NetworkManager;
 
-            this.NetworkManager.LocoManager.Handler = new WrappedHandler(oldHandler, hook);
+            networkManager.Handler = new WrappedHandler(networkManager.Handler, hook);
         }
 
     }

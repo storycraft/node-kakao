@@ -21,6 +21,7 @@ import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message";
 import { LocoClient } from "../client";
+import { LocoInterface, LocoReceiver } from "../loco/loco-interface";
 
 /*
  * Created on Fri Nov 01 2019
@@ -28,47 +29,47 @@ import { LocoClient } from "../client";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class NetworkManager {
+export class NetworkManager implements LocoInterface, LocoReceiver {
     
     private cachedBookingData: BookingData | null;
     private cachedCheckinData: CheckinData | null;
-    private latestCheckinReq: number;
+    private lastCheckinReq: number;
 
-    private handler: TalkPacketHandler;
+    private handler: LocoPacketHandler;
 
     private locoManager: LocoManager;
 
     constructor(private client: LocoClient) {
         this.handler = this.createPacketHandler();
-        this.locoManager = new LocoManager(this.handler);
+        this.locoManager = new LocoManager(this);
 
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
-        this.latestCheckinReq = -1;
+        this.lastCheckinReq = -1;
     }
 
     protected createPacketHandler() {
         return new TalkPacketHandler(this);
     }
 
+    get Handler() {
+        return this.handler;
+    }
+
+    set Handler(handler) {
+        this.handler = handler;
+    }
+
     get Client() {
         return this.client;
     }
 
-    get LocoManager() {
-        return this.locoManager;
-    }
-
-    get NeedReLogin() {
-        return this.locoManager.NeedRelogin;
-    }
-
     get Connected() {
-        return this.locoManager.LocoConnected;
+        return this.locoManager.Connected;
     }
 
     get Logon() {
-        return this.locoManager.LocoLogon;
+        return this.locoManager.Logon;
     }
 
     protected async getCachedBooking(forceRecache: boolean = false): Promise<BookingData> {
@@ -80,9 +81,9 @@ export class NetworkManager {
     }
 
     protected async getCachedCheckin(userId: Long, forceRecache: boolean = false): Promise<CheckinData> {
-        if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.latestCheckinReq < Date.now() || forceRecache) {
+        if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.lastCheckinReq < Date.now() || forceRecache) {
             this.cachedCheckinData = await this.locoManager.getCheckinData((await this.getCachedBooking()).CheckinHost, userId);
-            this.latestCheckinReq = Date.now();
+            this.lastCheckinReq = Date.now();
         }
 
         return this.cachedCheckinData;
@@ -95,20 +96,12 @@ export class NetworkManager {
         
         let checkinData = await this.getCachedCheckin(userId);
 
-        await this.locoManager.connectToLoco(checkinData.LocoHost, checkinData.expireTime);
+        await this.locoManager.connectToLoco(checkinData.LocoHost);
         return await this.locoManager.loginToLoco(deviceUUID, accessToken);
     }
 
-    async logout() {
-        if (!this.Logon) {
-            throw new Error('Not logon to loco');
-        }
-
-        await this.disconnect();
-    }
-
     async disconnect() {
-        if (!this.locoManager.LocoConnected) {
+        if (!this.locoManager.Connected) {
             throw new Error('Not connected to loco');
         }
 
@@ -123,6 +116,18 @@ export class NetworkManager {
         this.sendPacket(packet);
 
         return packet.submitResponseTicket<T>();
+    }
+
+    requestSent(packetId: number, packet: LocoRequestPacket): void {
+        this.Handler.onRequest(packetId, packet);
+    }
+    
+    responseReceived(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
+        this.Handler.onResponse(packetId, packet, reqPacket);
+    }
+
+    disconnected() {
+        this.Handler.onDisconnected();
     }
     
 }
@@ -180,11 +185,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     onRequest(packetId: number, packet: LocoRequestPacket): void {
-        //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
+
     }
     
     onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
-        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
         this.emit(packet.PacketName, packet, reqPacket);
     }
 

@@ -7,10 +7,10 @@ import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-bas
 import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
 import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
-import { LocoPacketHandler } from "./loco-packet-handler";
 import { LocoPacketList } from "../packet/loco-packet-list";
 import { PacketPingReq } from "../packet/packet-ping";
 import { Long } from "bson";
+import { LocoReceiver } from "./loco-interface";
 
 /*
  * Created on Thu Oct 24 2019
@@ -25,50 +25,35 @@ export class LocoManager {
     private pingSchedulerId: NodeJS.Timeout | null;
 
     private locoSocket: LocoSocket<Socket> | null;
-    private expireTime: number;
-
-    private handler: LocoPacketHandler | null;
 
     private locoConnected: boolean;
     private locoLogon: boolean;
 
-    constructor(handler: LocoPacketHandler | null = null) {
+    constructor(private receiver: LocoReceiver) {
         this.locoSocket = null;
 
         this.pingSchedulerId = null;
-
-        this.expireTime = 0;
-        
-        this.handler = handler;
 
         this.locoConnected = false;
         this.locoLogon = false;
     }
 
-    get Handler() {
-        return this.handler;
-    }
-
-    set Handler(handler) {
-        this.handler = handler;
+    get Receiver() {
+        return this.receiver;
     }
 
     get LocoSocket() {
         return this.locoSocket;
     }
 
-    get LocoConnected() {
+    get Connected() {
         return this.locoConnected;
     }
 
-    get LocoLogon() {
+    get Logon() {
         return this.locoLogon;
     }
-    
-    get NeedRelogin() {
-        return this.LocoConnected && this.expireTime < Date.now();
-    }
-    
+
     protected createBookingSocket(hostInfo: HostData) {
         return new LocoTLSSocket(hostInfo.Host, hostInfo.Port, false);
     }
@@ -85,7 +70,7 @@ export class LocoManager {
         let bookingData = await this.getBookingData();
         let checkinData = await this.getCheckinData(bookingData.CheckinHost, userId);
         
-        await this.connectToLoco(checkinData.LocoHost, checkinData.expireTime);
+        await this.connectToLoco(checkinData.LocoHost);
 
         try {
             await this.loginToLoco(deviceUUID, accessToken);
@@ -96,12 +81,10 @@ export class LocoManager {
         return true;
     }
 
-    async connectToLoco(locoHost: HostData, expireTime: number): Promise<boolean> {
+    async connectToLoco(locoHost: HostData): Promise<boolean> {
         this.locoSocket = this.createLocoSocket(locoHost);
 
         this.locoConnected = await this.locoSocket.connect();
-
-        this.expireTime = expireTime;
 
         if (!this.locoConnected) {
             throw new Error('Cannot connect to LOCO server');
@@ -191,9 +174,7 @@ export class LocoManager {
 
     protected onPacket(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket) {
         try {
-            if (this.Handler) {
-                this.Handler.onResponse(packetId, packet, reqPacket);
-            }
+            this.receiver.responseReceived(packetId, packet, reqPacket);
 
             if (packet.PacketName == 'KICKOUT') {
                 this.disconnect();
@@ -204,13 +185,11 @@ export class LocoManager {
     }
 
     protected onPacketSend(packetId: number, packet: LocoRequestPacket) {
-        if (this.Handler) {
-            this.Handler.onRequest(packetId, packet);
-        }
+        this.receiver.requestSent(packetId, packet);
     }
 
     async sendPacket(packet: LocoRequestPacket): Promise<boolean> {
-        if (!this.LocoConnected) {
+        if (!this.Connected) {
             return false;
         }
 
@@ -219,11 +198,11 @@ export class LocoManager {
             return false;
         }
 
-        let promise = this.LocoSocket!.sendPacket(packet);
+        let promise = await this.LocoSocket!.sendPacket(packet);
 
         this.onPacketSend(this.LocoSocket!.Writer.CurrentPacketId, packet);
 
-        return await promise;
+        return promise;
     }
 
     disconnect() {
@@ -241,7 +220,7 @@ export class LocoManager {
 
         if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
 
-        if (this.handler) this.handler.onDisconnected();
+        this.receiver.disconnected();
     }
 
 }

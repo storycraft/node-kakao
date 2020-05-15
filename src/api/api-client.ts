@@ -55,13 +55,15 @@ export class ApiClient {
     }
 
     protected async createApiRequest<T extends StructBase>(url: string, responseStruct: T): Promise<ApiResponse<T>> {
-        let res = new ApiResponse<T>();
+        let res = new ApiResponse<T>(responseStruct);
 
-        res.fromJson(JsonUtil.parseLoseless(await request({
+        let rawRes = await JsonUtil.parseLoseless(await request({
             url: url,
             headers: this.getSessionHeader(),
             method: 'GET'
-        })), responseStruct);
+        }));
+
+        res.fromJson(rawRes);
 
         return res;
     }
@@ -79,11 +81,11 @@ export enum ApiType {
 
 }
 
-export class ApiResponse<T extends StructBase> implements StructBase {
+export class ApiResponse<T extends StructBase> {
 
     constructor(
-        private status: KakaoAPI.RequestStatusCode = KakaoAPI.RequestStatusCode.SUCCESS,
-        private response: T | null = null
+        private response: T,
+        private status: KakaoAPI.RequestStatusCode = KakaoAPI.RequestStatusCode.SUCCESS
         ) {
 
     }
@@ -96,20 +98,16 @@ export class ApiResponse<T extends StructBase> implements StructBase {
         return this.response;
     }
 
-    fromJson(rawData: any, object: T | null = null): void {
+    fromJson(rawData: any): void {
         this.status = rawData['status'];
 
-        if (object) {
-            object.fromJson(rawData);
-
-            this.response = object;
-        }
+        this.response.fromJson(rawData);
     }
 
     toJson() {
         let obj = { 'status': this.status };
 
-        if (this.response) obj = Object.assign(this.response.toJson(), obj);
+        obj = Object.assign(this.response.toJson(), obj);
 
         return obj;
     }
