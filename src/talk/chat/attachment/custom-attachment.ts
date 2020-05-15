@@ -158,6 +158,7 @@ export class ButtonFragment extends CustomFragment {
         public Text: string = '',
         public DisplayType?: CustomButtonDisplayType,
         public Link?: URLFragment,
+        public Highlight?: boolean
     ) {
         super();
     }
@@ -166,6 +167,7 @@ export class ButtonFragment extends CustomFragment {
         if (rawData['BU']) {
             if (rawData['BU']['T']) this.Text = rawData['BU']['T'];
             if (rawData['BU']['SR']) this.DisplayType = rawData['BU']['SR'];
+            if (rawData['BU']['HL']) this.Highlight = rawData['BU']['HL'];
         }
 
         if (rawData['L']) {
@@ -180,6 +182,7 @@ export class ButtonFragment extends CustomFragment {
         };
 
         if (this.DisplayType) obj['BU']['SR'] = this.DisplayType;
+        if (this.Highlight) obj['BU']['HL'] = this.Highlight;
 
         if (this.Link) obj['L'] = this.Link.toRawContent();
 
@@ -820,7 +823,8 @@ export class CustomInfo implements CustomBaseContent {
         public ServiceLink?: URLFragment,
         public Link?: URLFragment,
         public Secure?: boolean,
-        public Fw?: boolean,
+        public KakaoVerified?: boolean,
+        public CanForward?: boolean,
         public Ref: string = '',
         public Ad?: boolean,
     ) {
@@ -845,6 +849,9 @@ export class CustomInfo implements CustomBaseContent {
         this.Ad = rawData['AD'];
         this.Secure = rawData['LOCK'];
 
+        if (typeof(rawData['KV']) !== 'undefined') this.KakaoVerified = rawData['KV'];
+        if (typeof(rawData['FW']) !== 'undefined') this.CanForward = rawData['FW'];
+
         if (rawData['L']) {
             this.Link = new URLFragment();
             this.Link.readRawContent(rawData['L']);
@@ -867,7 +874,7 @@ export class CustomInfo implements CustomBaseContent {
             'VA': this.AndroidVersion,
             'VI': this.IosVersion,
             'VW': this.WinVersion,
-            'VM': this.MacVersion
+            'VM': this.MacVersion,
         };
 
         if (this.ServiceNickname) obj['SNM'] = this.ServiceNickname;
@@ -875,7 +882,8 @@ export class CustomInfo implements CustomBaseContent {
 
         if (typeof(this.Secure) !== 'undefined') obj['LOCK'] = this.Secure;
 
-        if (typeof(this.Fw) !== 'undefined') obj['FW'] = this.Fw;
+        if (typeof(this.CanForward) !== 'undefined') obj['FW'] = this.CanForward;
+        if (typeof(this.KakaoVerified) !== 'undefined') obj['KV'] = this.KakaoVerified;
         if (typeof(this.Ad) !== 'undefined') obj['AD'] = this.Ad;
 
         if (this.Ref !== '') obj['RF'] = this.Ref;
