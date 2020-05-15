@@ -5,12 +5,11 @@
  */
 
 import { LocoClient } from "../../client";
-import { ChatDeserializeMap } from "./chat-deserialize-map";
 import { ChatlogStruct } from "../struct/chatlog-struct";
 import { Long } from "bson";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketDeleteChatRes, PacketDeleteChatReq } from "../../packet/packet-delete-chat";
-import { Chat } from "./chat";
+import { Chat, TypeMap } from "./chat";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "../../packet/packet-sync-message";
 
 export class ChatManager {
@@ -48,7 +47,8 @@ export class ChatManager {
         let channel = await this.Client.ChannelManager.get(chatLog.ChannelId);
         let sender = this.Client.UserManager.get(chatLog.SenderId);
 
-        const TypedChat = ChatDeserializeMap.getChatConstructor(chatLog.Type);
+        const TypedChat = TypeMap.getChatConstructor(chatLog.Type);
+
         return new TypedChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
     }
 

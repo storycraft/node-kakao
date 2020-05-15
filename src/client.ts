@@ -145,7 +145,7 @@ export class TalkClient extends BaseClient implements LocoClient {
     private chatManager: ChatManager;
     private openChatManager: OpenChatManager;
 
-    constructor(deviceUUID: string, name: string) {
+    constructor(name: string, deviceUUID: string = '') {
         super(deviceUUID, name);
 
         this.networkManager = new NetworkManager(this);

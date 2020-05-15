@@ -44,181 +44,173 @@ import { PacketSyncMessageReq, PacketSyncMessageRes } from "./packet-sync-messag
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoPacketList {
+export namespace LocoPacketList {
 
-    private static requestPacketMap: Map<string, new() => LocoRequestPacket>;
-    private static responsePacketMap: Map<string, new(status: number) => LocoResponsePacket>;
+    let requestPacketMap: Map<string, new() => LocoRequestPacket> = new Map();
+    let responsePacketMap: Map<string, new(status: number) => LocoResponsePacket> = new Map();
 
-    private static defaultBodyReqPacketMap: Map<number, new(packetName: string) => LocoRequestPacket>;
-    private static defaultBodyResPacketMap: Map<number, new(status: number, packetName: string) => LocoResponsePacket>;
+    let defaultBodyReqPacketMap: Map<number, new(packetName: string) => LocoRequestPacket> = new Map();
+    let defaultBodyResPacketMap: Map<number, new(status: number, packetName: string) => LocoResponsePacket>;
 
-    static init() {
-        LocoPacketList.initReqMap();
-        LocoPacketList.initResMap();
-    }
+    function initReqMap() {
+        defaultBodyReqPacketMap.set(0, DefaultBsonRequestPacket);
 
-    protected static initReqMap() {
-        LocoPacketList.requestPacketMap = new Map();
-        LocoPacketList.defaultBodyReqPacketMap = new Map();
+        requestPacketMap.set('GETCONF', PacketGetConfReq);
+        requestPacketMap.set('CHECKIN', PacketCheckInReq);
+        requestPacketMap.set('LOGINLIST', PacketLoginReq);
 
-        LocoPacketList.defaultBodyReqPacketMap.set(0, DefaultBsonRequestPacket);
+        requestPacketMap.set('WRITE', PacketMessageWriteReq);
+        requestPacketMap.set('MEMBER', PacketChatMemberReq);
+        requestPacketMap.set('CHATINFO', PacketChatInfoReq);
 
-        LocoPacketList.requestPacketMap.set('GETCONF', PacketGetConfReq);
-        LocoPacketList.requestPacketMap.set('CHECKIN', PacketCheckInReq);
-        LocoPacketList.requestPacketMap.set('LOGINLIST', PacketLoginReq);
+        requestPacketMap.set('GETMETA', PacketGetMetaReq);
+        requestPacketMap.set('GETMETAS', PacketGetMetasReq);
+        requestPacketMap.set('GETMEM', PacketGetMemberReq);
+        requestPacketMap.set('MEMBER', PacketMemberReq);
+        requestPacketMap.set('GETMOMETA', PacketGetChannelBoardMetaReq);
 
-        LocoPacketList.requestPacketMap.set('WRITE', PacketMessageWriteReq);
-        LocoPacketList.requestPacketMap.set('MEMBER', PacketChatMemberReq);
-        LocoPacketList.requestPacketMap.set('CHATINFO', PacketChatInfoReq);
-
-        LocoPacketList.requestPacketMap.set('GETMETA', PacketGetMetaReq);
-        LocoPacketList.requestPacketMap.set('GETMETAS', PacketGetMetasReq);
-        LocoPacketList.requestPacketMap.set('GETMEM', PacketGetMemberReq);
-        LocoPacketList.requestPacketMap.set('MEMBER', PacketMemberReq);
-        LocoPacketList.requestPacketMap.set('GETMOMETA', PacketGetChannelBoardMetaReq);
-
-        LocoPacketList.requestPacketMap.set('SYNCLINK', PacketSyncLinkReq);
+        requestPacketMap.set('SYNCLINK', PacketSyncLinkReq);
         
-        LocoPacketList.requestPacketMap.set('REWRITE', PacketRewriteReq);
-        
-        LocoPacketList.requestPacketMap.set('CREATE', PacketCreateChatReq);
+        requestPacketMap.set('REWRITE', PacketRewriteReq);
 
-        LocoPacketList.requestPacketMap.set('KICKMEM', PacketKickMemberReq);
-        LocoPacketList.requestPacketMap.set('DELETELINK', PacketDeleteLinkReq);
-        LocoPacketList.requestPacketMap.set('INFOLINK', PacketInfoLinkReq);
-        LocoPacketList.requestPacketMap.set('JOININFO', PacketJoinInfoReq);
-        LocoPacketList.requestPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
-        LocoPacketList.requestPacketMap.set('JOINLINK', PacketJoinLinkReq);
-        LocoPacketList.requestPacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileReq);
+        requestPacketMap.set('CREATE', PacketCreateChatReq);
 
-        LocoPacketList.requestPacketMap.set('SYNCMSG', PacketSyncMessageReq);
+        requestPacketMap.set('KICKMEM', PacketKickMemberReq);
+        requestPacketMap.set('DELETELINK', PacketDeleteLinkReq);
+        requestPacketMap.set('INFOLINK', PacketInfoLinkReq);
+        requestPacketMap.set('JOININFO', PacketJoinInfoReq);
+        requestPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
+        requestPacketMap.set('JOINLINK', PacketJoinLinkReq);
+        requestPacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileReq);
 
-        LocoPacketList.requestPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
+        requestPacketMap.set('SYNCMSG', PacketSyncMessageReq);
 
-        LocoPacketList.requestPacketMap.set('NOTIREAD', PacketMessageNotiReadReq);
-        LocoPacketList.requestPacketMap.set('CHATONROOM', PacketChatOnRoomReq);
+        requestPacketMap.set('DELETEMSG', PacketDeleteLinkReq);
 
-        LocoPacketList.requestPacketMap.set('PING', PacketPingReq);
+        requestPacketMap.set('NOTIREAD', PacketMessageNotiReadReq);
+        requestPacketMap.set('CHATONROOM', PacketChatOnRoomReq);
 
-        LocoPacketList.requestPacketMap.set('LEAVE', PacketLeaveReq);
+        requestPacketMap.set('PING', PacketPingReq);
+
+        requestPacketMap.set('LEAVE', PacketLeaveReq);
     }
 
-    protected static initResMap() {
-        LocoPacketList.responsePacketMap = new Map();
-        LocoPacketList.defaultBodyResPacketMap = new Map();
+    function initResMap() {
+        responsePacketMap = new Map();
+        defaultBodyResPacketMap = new Map();
 
-        LocoPacketList.defaultBodyResPacketMap.set(0, DefaultBsonResponsePacket);
-        LocoPacketList.defaultBodyResPacketMap.set(8, DefaultBsonResponsePacket); // ??
+        defaultBodyResPacketMap.set(0, DefaultBsonResponsePacket);
+        defaultBodyResPacketMap.set(8, DefaultBsonResponsePacket); // ??
 
-        LocoPacketList.responsePacketMap.set('GETCONF', PacketGetConfRes);
-        LocoPacketList.responsePacketMap.set('CHECKIN', PacketCheckInRes);
+        responsePacketMap.set('GETCONF', PacketGetConfRes);
+        responsePacketMap.set('CHECKIN', PacketCheckInRes);
 
-        LocoPacketList.responsePacketMap.set('LOGINLIST', PacketLoginRes);
+        responsePacketMap.set('LOGINLIST', PacketLoginRes);
 
-        LocoPacketList.responsePacketMap.set('MSG', PacketMessageRes);
-        LocoPacketList.responsePacketMap.set('WRITE', PacketMessageWriteRes);
-        LocoPacketList.responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);
-        LocoPacketList.responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
-        LocoPacketList.responsePacketMap.set('MEMBER', PacketChatMemberRes);
-        LocoPacketList.responsePacketMap.set('CHATINFO', PacketChatInfoRes);
+        responsePacketMap.set('MSG', PacketMessageRes);
+        responsePacketMap.set('WRITE', PacketMessageWriteRes);
+        responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);
+        responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
+        responsePacketMap.set('MEMBER', PacketChatMemberRes);
+        responsePacketMap.set('CHATINFO', PacketChatInfoRes);
 
-        LocoPacketList.responsePacketMap.set('GETMETA', PacketGetMetaRes);
-        LocoPacketList.responsePacketMap.set('GETMETAS', PacketGetMetasRes);
-        LocoPacketList.responsePacketMap.set('GETMEM', PacketGetMemberRes);
-        LocoPacketList.responsePacketMap.set('MEMBER', PacketMemberRes);
-        LocoPacketList.responsePacketMap.set('GETMOMETA', PacketGetMoimMetaRes);
+        responsePacketMap.set('GETMETA', PacketGetMetaRes);
+        responsePacketMap.set('GETMETAS', PacketGetMetasRes);
+        responsePacketMap.set('GETMEM', PacketGetMemberRes);
+        responsePacketMap.set('MEMBER', PacketMemberRes);
+        responsePacketMap.set('GETMOMETA', PacketGetMoimMetaRes);
 
-        LocoPacketList.responsePacketMap.set('JOININFO', PacketJoinInfoRes);
+        responsePacketMap.set('JOININFO', PacketJoinInfoRes);
 
-        LocoPacketList.responsePacketMap.set('KICKMEM', PacketKickMemberRes);
+        responsePacketMap.set('KICKMEM', PacketKickMemberRes);
 
-        LocoPacketList.responsePacketMap.set('CREATE', PacketCreateChatRes);
+        responsePacketMap.set('CREATE', PacketCreateChatRes);
 
-        LocoPacketList.responsePacketMap.set('NEWMEM', PacketNewMemberRes);
-        LocoPacketList.responsePacketMap.set('LEFT', PacketLeftRes);
-        LocoPacketList.responsePacketMap.set('LEAVE', PacketLeaveRes);
-        LocoPacketList.responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
+        responsePacketMap.set('NEWMEM', PacketNewMemberRes);
+        responsePacketMap.set('LEFT', PacketLeftRes);
+        responsePacketMap.set('LEAVE', PacketLeaveRes);
+        responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
 
-        LocoPacketList.responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
-        LocoPacketList.responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
-        LocoPacketList.responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
-        LocoPacketList.responsePacketMap.set('REWRITE', PacketRewriteRes);
-        LocoPacketList.responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
-        LocoPacketList.responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
-        LocoPacketList.responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
-        LocoPacketList.responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
+        responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
+        responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
+        responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
+        responsePacketMap.set('REWRITE', PacketRewriteRes);
+        responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
+        responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
+        responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
+        responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
 
-        LocoPacketList.responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);
+        responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);
 
-        LocoPacketList.responsePacketMap.set('CHATONROOM', PacketChatOnRoomRes);
+        responsePacketMap.set('CHATONROOM', PacketChatOnRoomRes);
 
-        LocoPacketList.responsePacketMap.set('SYNCMEMT', PacketSyncMemberTypeRes);
+        responsePacketMap.set('SYNCMEMT', PacketSyncMemberTypeRes);
 
-        LocoPacketList.responsePacketMap.set('INVOICE', PacketInvoiceRes);
+        responsePacketMap.set('INVOICE', PacketInvoiceRes);
 
-        LocoPacketList.responsePacketMap.set('DELETEMSG', PacketDeleteChatRes);
-        LocoPacketList.responsePacketMap.set('SYNCDLMSG', PacketSyncDeleteMessageRes);
+        responsePacketMap.set('DELETEMSG', PacketDeleteChatRes);
+        responsePacketMap.set('SYNCDLMSG', PacketSyncDeleteMessageRes);
 
-        LocoPacketList.responsePacketMap.set('SYNCLINKCR', PacketSyncJoinOpenchatRes);
+        responsePacketMap.set('SYNCLINKCR', PacketSyncJoinOpenchatRes);
 
-        LocoPacketList.responsePacketMap.set('SYNCMSG', PacketSyncMessageRes);
+        responsePacketMap.set('SYNCMSG', PacketSyncMessageRes);
 
-        LocoPacketList.responsePacketMap.set('DELMEM', PacketDeleteMemberRes);
+        responsePacketMap.set('DELMEM', PacketDeleteMemberRes);
 
-        LocoPacketList.responsePacketMap.set('PING', PacketPingRes);
+        responsePacketMap.set('PING', PacketPingRes);
 
-        LocoPacketList.responsePacketMap.set('KICKOUT', PacketKickoutRes);
+        responsePacketMap.set('KICKOUT', PacketKickoutRes);
     }
 
-    static hasReqPacket(name: string): boolean {
-        return LocoPacketList.requestPacketMap && LocoPacketList.requestPacketMap.has(name);
+    export function hasReqPacket(name: string): boolean {
+        return requestPacketMap && requestPacketMap.has(name);
     }
 
-    static hasResPacket(name: string): boolean {
-        return LocoPacketList.responsePacketMap && LocoPacketList.responsePacketMap.has(name);
+    export function hasResPacket(name: string): boolean {
+        return responsePacketMap && responsePacketMap.has(name);
     }
 
-    static hasReqBodyType(type: number): boolean {
-        return LocoPacketList.defaultBodyReqPacketMap && LocoPacketList.defaultBodyReqPacketMap.has(type);
+    export function hasReqBodyType(type: number): boolean {
+        return defaultBodyReqPacketMap && defaultBodyReqPacketMap.has(type);
     }
 
-    static hasResBodyType(type: number): boolean {
-        return LocoPacketList.defaultBodyResPacketMap && LocoPacketList.defaultBodyResPacketMap.has(type);
+    export function hasResBodyType(type: number): boolean {
+        return defaultBodyResPacketMap && defaultBodyResPacketMap.has(type);
     }
 
-    static getReqPacketByName(name: string): LocoRequestPacket {
+    export function getReqPacketByName(name: string): LocoRequestPacket {
         if (!LocoPacketList.hasReqPacket(name)) {
             throw new Error(`${name} is not valid loco request packet`);
         }
 
-        return new (LocoPacketList.requestPacketMap.get(name)!)();
+        return new (requestPacketMap.get(name)!)();
     }
 
-    static getResPacketByName(name: string, status: number): LocoResponsePacket {
+    export function getResPacketByName(name: string, status: number): LocoResponsePacket {
         if (!LocoPacketList.hasResPacket(name)) {
             throw new Error(`${name} is not valid loco response packet`);
         }
 
-        return new (LocoPacketList.responsePacketMap.get(name)!)(status);
+        return new (responsePacketMap.get(name)!)(status);
     }
 
-    static getDefaultReqPacket(bodyType: number, packetName: string): LocoRequestPacket {
+    export function getDefaultReqPacket(bodyType: number, packetName: string): LocoRequestPacket {
         if (!LocoPacketList.hasReqBodyType(bodyType)) {
             throw new Error(`${bodyType} is not valid loco packet type`);
         }
 
-        return new (LocoPacketList.defaultBodyReqPacketMap.get(bodyType)!)(packetName);
+        return new (defaultBodyReqPacketMap.get(bodyType)!)(packetName);
     }
 
-    static getDefaultResPacket(bodyType: number, packetName: string, status: number): LocoResponsePacket {
+    export function getDefaultResPacket(bodyType: number, packetName: string, status: number): LocoResponsePacket {
         if (!LocoPacketList.hasResBodyType(bodyType)) {
             throw new Error(`${bodyType} is not valid loco packet type`);
         }
 
-        return new (LocoPacketList.defaultBodyResPacketMap.get(bodyType)!)(status, packetName);
+        return new (defaultBodyResPacketMap.get(bodyType)!)(status, packetName);
     }
 
+    initReqMap();
+    initResMap();
 
 }
-
-LocoPacketList.init();

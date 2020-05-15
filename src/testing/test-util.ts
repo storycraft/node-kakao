@@ -93,8 +93,8 @@ export namespace TestUtil {
 
     export class HookedClient extends TalkClient {
 
-        constructor(deviceUUID: string, name: string, hook: LocoPacketHandler) {
-            super(deviceUUID, name);
+        constructor(name: string, deviceUUID: string, hook: LocoPacketHandler) {
+            super(name, deviceUUID);
 
             let networkManager = this.LocoInterface as NetworkManager;
 
