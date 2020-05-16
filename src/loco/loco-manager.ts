@@ -6,9 +6,7 @@ import { LocoTLSSocket } from "../network/loco-tls-socket";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
 import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
-import { PacketLoginReq, PacketLoginRes } from "../packet/packet-login";
 import { LocoPacketList } from "../packet/loco-packet-list";
-import { PacketPingReq } from "../packet/packet-ping";
 import { Long } from "bson";
 import { LocoReceiver, LocoInterface } from "./loco-interface";
 import { LocoPacketReader } from "../packet/loco-packet-reader";
@@ -25,8 +23,6 @@ export class LocoManager implements LocoReceiver {
 
     public static readonly PING_INTERVAL = 600000;
 
-    private pingSchedulerId: NodeJS.Timeout | null;
-
     private currentSocket: LocoSocket<Socket> | null;
 
     private locoConnected: boolean;
@@ -36,8 +32,6 @@ export class LocoManager implements LocoReceiver {
 
     constructor(private locoInterface: LocoInterface, packetWriter: LocoPacketWriter = new LocoPacketWriter(), packetReader: LocoPacketReader = new LocoPacketReader()) {
         this.currentSocket = null;
-
-        this.pingSchedulerId = null;
 
         this.locoConnected = false;
 
@@ -89,19 +83,7 @@ export class LocoManager implements LocoReceiver {
             throw new Error('Cannot connect to LOCO server');
         }
 
-        this.schedulePing();
-
         return true;
-    }
-
-    private schedulePing() {
-        if (!this.locoConnected) {
-            return;
-        }
-
-        this.pingSchedulerId = setTimeout(this.schedulePing.bind(this), LocoManager.PING_INTERVAL);
-
-        this.sendPacket(this.packetWriter.getNextPacketId(), new PacketPingReq());
     }
 
     async getCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
@@ -212,8 +194,6 @@ export class LocoManager implements LocoReceiver {
 
         this.currentSocket!.removeAllListeners();
         this.currentSocket = null;
-
-        if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
     }
     
     responseReceived(header: PacketHeader, data: Buffer): void {

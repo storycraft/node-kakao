@@ -17,6 +17,7 @@ export * from './network/loco-tls-socket';
 export * from './network/loco-secure-socket';
 
 export * from './network/network-manager';
+export * from './network/packet-handler';
 
 export * from './network/stream/loco-encrypted-transformer';
 export * from './network/stream/loco-packet-resolver';
