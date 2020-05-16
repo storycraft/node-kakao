@@ -41,6 +41,7 @@ export class ChatUser extends EventEmitter {
         return this.id;
     }
 
+    //@depreacted
     get Nickname() {
         return this.nickname;
     }
@@ -101,6 +102,8 @@ export class UserInfo implements ChatUserInfoBase {
 
     private user: ChatUser;
 
+    private nickname: string;
+
     private accountId: number;
 
     private profileImageURL: string;
@@ -117,6 +120,8 @@ export class UserInfo implements ChatUserInfoBase {
     constructor(user: ChatUser) {
         this.user = user;
 
+        this.nickname = '';
+
         this.accountId = 0;
 
         this.profileImageURL = '';
@@ -129,6 +134,10 @@ export class UserInfo implements ChatUserInfoBase {
 
     get User() {
         return this.user;
+    }
+
+    get Nickname() {
+        return this.nickname;
     }
 
     get AccountId() {
@@ -179,7 +188,10 @@ export class UserInfo implements ChatUserInfoBase {
 
     updateFromStruct(memberStruct: MemberStruct) {
         this.accountId = memberStruct.AccountId;
+        this.nickname = memberStruct.NickName;
+
         this.user.updateNickname(memberStruct.NickName);
+
         this.profileImageURL = memberStruct.ProfileImageUrl || '';
         this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
