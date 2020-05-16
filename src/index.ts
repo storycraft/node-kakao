@@ -9,7 +9,6 @@ export * from './kakao-api';
 export * from './api/api-client';
 
 export * from './loco/loco-interface';
-export * from './loco/loco-manager';
 export * from './loco/loco-packet-handler';
 
 export * from './network/loco-socket';

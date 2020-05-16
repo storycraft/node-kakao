@@ -1,9 +1,10 @@
-import { LocoSocket } from "./loco-socket";
+import { LocoBasicSocket } from "./loco-socket";
 import { CryptoManager } from "../secure/crypto-manager";
 import * as net from "net";
 import { LocoEncryptedTransformer } from "./stream/loco-encrypted-transformer";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
 import { LocoRequestPacket } from "../packet/loco-packet-base";
+import { LocoReceiver } from "../loco/loco-interface";
 
 /*
  * Created on Sun Oct 20 2019
@@ -11,14 +12,14 @@ import { LocoRequestPacket } from "../packet/loco-packet-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoSecureSocket extends LocoSocket<net.Socket> {
+export class LocoSecureSocket extends LocoBasicSocket {
 
     private crypto: CryptoManager;
     
     private handshaked: boolean;
 
-    constructor(host: string, port: number, keepAlive: boolean) {
-        super(host, port, keepAlive);
+    constructor(receiver: LocoReceiver, host: string, port: number, keepAlive: boolean) {
+        super(receiver, host, port, keepAlive);
 
         this.handshaked = false;
 

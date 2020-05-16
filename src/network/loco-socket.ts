@@ -1,10 +1,7 @@
-import { LocoPacketWriter } from "../packet/loco-packet-writer";
-import { LocoPacketReader } from "../packet/loco-packet-reader";
 import * as net from "net";
-import { EventEmitter } from "events";
-import { LocoResponsePacket, LocoRequestPacket } from "../packet/loco-packet-base";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
 import { PacketHeader } from "../packet/packet-header-struct";
+import { LocoReceiver } from "../loco/loco-interface";
 
 /*
  * Created on Sun Oct 20 2019
@@ -12,31 +9,35 @@ import { PacketHeader } from "../packet/packet-header-struct";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
+export interface LocoSocket {
 
-    private socket: T | null;
+    readonly Host: string;
+    readonly Port: number;
 
-    private host: string;
-    private port: number;
+    readonly Connected: boolean;
+    readonly KeepAlive: boolean;
+
+    connect(): Promise<boolean>;
+    disconnect(): boolean;
+
+    sendBuffer(buffer: Buffer): Promise<boolean>;
+    dataReceived(header: PacketHeader, data: Buffer): void;
+
+}
+
+export abstract class LocoBasicSocket implements LocoSocket {
+
+    private socket: net.Socket | null;
 
     private connected: boolean;
 
-    private keepAlive: boolean;
-
-    constructor(host: string, port: number, keepAlive: boolean = false) {
-        super();
-        
-        this.host = host;
-        this.port = port;
-
+    constructor(private receiver: LocoReceiver, private host: string, private port: number, private keepAlive: boolean = false) {
         this.socket = null;
 
         this.connected = false;
-
-        this.keepAlive = keepAlive;
     }
 
-    protected abstract createSocketConnection(host: string, port: number, callback: () => void): T;
+    protected abstract createSocketConnection(host: string, port: number, callback: () => void): net.Socket;
 
     get Host() {
         return this.host;
@@ -112,7 +113,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
     }
 
     protected onDisconnected() {
-        this.emit('disconnected');
+        this.receiver.disconnected();
     }
 
     protected connectionError(e: any) {
@@ -127,7 +128,7 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
     }
 
     dataReceived(header: PacketHeader, data: Buffer) {
-        this.emit('packet', header, data);
+        this.receiver.responseReceived(header, data);
 
         if (!this.keepAlive) {
             this.disconnect();
@@ -155,19 +156,5 @@ export abstract class LocoSocket<T extends net.Socket> extends EventEmitter {
     protected abstract onEnd(buffer: Buffer): void;
 
     protected abstract onError(e: any): void;
-
-    on(event: 'packet' | string, listener: (header: PacketHeader, data: Buffer) => void): this;
-    on(event: 'disconnected' | string, listener: () => void): this;
-
-    on(event: string, listener: (...args: any[]) => void) {
-        return super.on(event, listener);
-    }
-
-    once(event: 'packet' | string, listener: (header: PacketHeader, data: Buffer) => void): this;
-    once(event: 'disconnected' | string, listener: () => void): this;
-
-    once(event: string, listener: (...args: any[]) => void) {
-        return super.once(event, listener);
-    }
 
 }

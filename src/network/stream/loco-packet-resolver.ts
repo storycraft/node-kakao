@@ -16,7 +16,7 @@ export class LocoPacketResolver extends Writable {
     private currentHeader: PacketHeader | null;
     private packetBuffer: Buffer;
 
-    constructor(private socket: LocoSocket<any>) {
+    constructor(private socket: LocoSocket) {
         super();
         
         this.packetBuffer = Buffer.allocUnsafe(0);
