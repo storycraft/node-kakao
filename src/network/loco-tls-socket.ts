@@ -21,6 +21,14 @@ export class LocoTLSSocket extends LocoSocket<tls.TLSSocket> {
         }, callback);
     }
 
+    protected onConnect(): void {
+        
+    }
+    
+    protected onConnected(): void {
+        
+    }
+
     protected onEnd(buffer: Buffer) {
 
     }

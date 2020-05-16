@@ -1,7 +1,7 @@
 import { Duplex, Writable } from "stream";
 import { LocoPacketReader } from "../../packet/loco-packet-reader";
 import { LocoSocket } from "../loco-socket";
-import { LocoHeaderStruct } from "../../packet/loco-header-struct";
+import { PacketHeader } from "../../packet/packet-header-struct";
 
 /*
  * Created on Tue Oct 29 2019
@@ -13,7 +13,7 @@ export class LocoPacketResolver extends Writable {
 
     static readonly HEADER_SIZE: number = 22;
 
-    private currentHeader: LocoHeaderStruct | null;
+    private currentHeader: PacketHeader | null;
     private packetBuffer: Buffer;
 
     constructor(private socket: LocoSocket<any>) {
@@ -39,11 +39,11 @@ export class LocoPacketResolver extends Writable {
 
         if (!this.currentHeader && this.packetBuffer.length > LocoPacketResolver.HEADER_SIZE) {
             let headerBuffer = this.packetBuffer.slice(0, LocoPacketResolver.HEADER_SIZE);
-            this.currentHeader = this.socket.Reader.structHeader(headerBuffer);
+            this.currentHeader = this.structHeader(headerBuffer);
         }
 
         if (this.currentHeader) {
-            let currentPacketSize = LocoPacketResolver.HEADER_SIZE + this.currentHeader.BodySize;
+            let currentPacketSize = LocoPacketResolver.HEADER_SIZE + this.currentHeader.bodySize;
 
             if (this.packetBuffer.length >= currentPacketSize) {
                 let bodyBuffer = this.packetBuffer.slice(LocoPacketResolver.HEADER_SIZE, currentPacketSize);
@@ -51,13 +51,7 @@ export class LocoPacketResolver extends Writable {
                 let newBuf = Buffer.allocUnsafe(this.packetBuffer.length - currentPacketSize);
                 this.packetBuffer.copy(newBuf, 0, currentPacketSize);
 
-                try {
-                    let packet = this.socket.Reader.structToPacket(this.currentHeader!, bodyBuffer);
-
-                    this.Socket.packetReceived(this.currentHeader!.PacketId, packet);
-                } catch(e) {
-                    console.log(`Invalid packet. ${e}`);
-                }
+                this.Socket.dataReceived(this.currentHeader, bodyBuffer);
 
                 this.packetBuffer = Buffer.allocUnsafe(0);
                 this.currentHeader = null;
@@ -69,6 +63,16 @@ export class LocoPacketResolver extends Writable {
 
         if (callback)
             callback();
+    }
+
+    protected structHeader(buffer: Buffer, offset: number = 0): PacketHeader {
+        return {
+            packetId: buffer.readInt32LE(offset),
+            statusCode: buffer.readInt32LE(offset),
+            packetName: buffer.toString('utf8', offset + 6, offset + 16).replace(/\0/g, ''),
+            bodyType: buffer.readInt8(offset + 17),
+            bodySize: buffer.readInt32LE(offset + 18)
+        };
     }
 
 }

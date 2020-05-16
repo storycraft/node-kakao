@@ -33,23 +33,14 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
         socket.pipe(new LocoEncryptedTransformer(this)).pipe(new LocoPacketResolver(this));
     }
 
-    protected structPacketToBuffer(packet: LocoRequestPacket): Buffer {
-        let packetBuffer = this.Writer.toBuffer(packet);
-        let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(packetBuffer, this.crypto.randomCipherIV());
+    protected transformBuffer(data: Buffer): Buffer {
+        if (this.handshaked) {
+            let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(super.transformBuffer(data), this.crypto.randomCipherIV());
 
-        return encryptedPacketBuffer;
-    }
-
-    async sendPacket(packet: LocoRequestPacket) {
-        if (!this.Connected) {
-            return false;
+            return encryptedPacketBuffer;
         }
 
-        if (!this.handshaked) {
-            await this.sendHandshakePacket();
-        }
-        
-        return super.sendPacket(packet);
+        return super.transformBuffer(data);
     }
 
     async handshake() {
@@ -61,8 +52,6 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
     }
 
     protected async sendHandshakePacket() {
-        this.handshaked = true;
-
         let keyBuffer = this.Crypto.getRSAEncryptedKey();
 
         let handshakeHead = Buffer.allocUnsafe(12);
@@ -73,7 +62,9 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
 
         let handshakeBuffer = Buffer.concat([ handshakeHead, keyBuffer ]);
 
-        return this.sendBuffer(handshakeBuffer);
+        let res = await super.sendBuffer(handshakeBuffer);
+
+        return this.handshaked = res;
     }
 
     protected createSocketConnection(host: string, port: number, callback: () => void): net.Socket {
@@ -86,16 +77,32 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
         }, callback).setKeepAlive(this.KeepAlive).setNoDelay(true);
     }
 
+    async sendBuffer(buffer: Buffer): Promise<boolean> {
+        if (!this.Connected) return false;
+
+        if (!this.handshaked) await this.handshake();
+
+        return super.sendBuffer(buffer);
+    }
+
     get Crypto() {
         return this.crypto;
     }
+
+    protected onConnect() {
+        
+    }
+
+    protected onConnected() {
+        
+    }
     
     protected onEnd(buffer: Buffer): void {
-
+        
     }
 
     protected onError(e: any): void {
-        console.log('error: ' + e);
+        throw e;
     }
 
 

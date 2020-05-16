@@ -1,6 +1,6 @@
 import { Transform, TransformCallback } from "stream";
 import { LocoSecureSocket } from "../loco-secure-socket";
-import { LocoEncryptedHeaderStruct } from "../../packet/loco-header-struct";
+import { EncryptedPacketHeader } from "../../packet/packet-header-struct";
 
 /*
  * Created on Tue Oct 29 2019
@@ -13,7 +13,7 @@ export class LocoEncryptedTransformer extends Transform {
     static readonly ENCRYPTED_HEADER_SIZE: number = 4;
     static readonly IV_SIZE: number = 16;
 
-    private currentEncryptedHeader: LocoEncryptedHeaderStruct | null;
+    private currentEncryptedHeader: EncryptedPacketHeader | null;
     private encryptedBuffer: Buffer;
 
     constructor(private socket: LocoSecureSocket) {
@@ -42,13 +42,11 @@ export class LocoEncryptedTransformer extends Transform {
         this.encryptedBuffer = Buffer.concat([ this.encryptedBuffer, chunk ]);
 
         if (!this.currentEncryptedHeader && this.encryptedBuffer.length > LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE) {
-            this.currentEncryptedHeader = new LocoEncryptedHeaderStruct();
-
-            this.currentEncryptedHeader.EncryptedSize = this.encryptedBuffer.readInt32LE(0);
+            this.currentEncryptedHeader = { encryptedSize: this.encryptedBuffer.readInt32LE(0) };
         }
 
         if (this.currentEncryptedHeader) {
-            let encryptedPacketSize = LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + this.currentEncryptedHeader.EncryptedSize;
+            let encryptedPacketSize = LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + this.currentEncryptedHeader.encryptedSize;
 
             if (this.encryptedBuffer.length >= encryptedPacketSize) {
                 let iv = this.encryptedBuffer.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE, LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE);

@@ -23,7 +23,7 @@ export * from './network/stream/loco-packet-resolver';
 
 export * from './packet/loco-packet-base';
 export * from './packet/loco-bson-packet';
-export * from './packet/loco-header-struct';
+export * from './packet/packet-header-struct';
 
 export * from './packet/loco-packet-reader';
 export * from './packet/loco-packet-writer';

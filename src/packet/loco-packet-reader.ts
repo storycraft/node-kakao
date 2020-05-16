@@ -1,4 +1,4 @@
-import { LocoHeaderStruct } from "./loco-header-struct";
+import { PacketHeader } from "./packet-header-struct";
 import { LocoResponsePacket } from "./loco-packet-base";
 import { LocoPacketList } from "./loco-packet-list";
 import * as Bson from "bson";
@@ -21,40 +21,24 @@ export class LocoPacketReader {
         return this.latestReadPacketId;
     }
 
-    structHeader(buffer: Buffer, offset: number = 0): LocoHeaderStruct {
-        let header = new LocoHeaderStruct();
-
-        header.PacketId = buffer.readInt32LE(offset);
-
-        header.StatusCode = buffer.readInt16LE(offset + 4);
-        
-        header.PacketName = buffer.toString('utf8', offset + 6, offset + 16).replace(/\0/g, '');
-
-        header.BodyType = buffer.readInt8(offset + 17);
-
-        header.BodySize = buffer.readInt32LE(offset + 18);
-
-        return header;
-    }
-
-    structToPacket(header: LocoHeaderStruct, bodyBuffer: Buffer, offset: number = 0): LocoResponsePacket {
-        let bodyBuf = bodyBuffer.slice(offset, offset + header.BodySize);
+    structToPacket<T extends LocoResponsePacket>(header: PacketHeader, bodyBuffer: Buffer, offset: number = 0): T {
+        let bodyBuf = bodyBuffer.slice(offset, offset + header.bodySize);
 
         let packet: LocoResponsePacket;
 
-        if (LocoPacketList.hasResPacket(header.PacketName)) {
-            packet = LocoPacketList.getResPacketByName(header.PacketName, header.StatusCode);
+        if (LocoPacketList.hasResPacket(header.packetName)) {
+            packet = LocoPacketList.getResPacketByName(header.packetName, header.statusCode);
         } else {
-            if (LocoPacketList.hasResBodyType(header.BodyType)) {
-                packet = LocoPacketList.getDefaultResPacket(header.BodyType, header.PacketName, header.StatusCode);
+            if (LocoPacketList.hasResBodyType(header.bodyType)) {
+                packet = LocoPacketList.getDefaultResPacket(header.bodyType, header.packetName, header.statusCode);
             } else {
-                throw new Error(`Invalid packet type: ${header.BodyType}`);
+                throw new Error(`Invalid packet type: ${header.bodyType}`);
             }
         }
 
         packet.readBody(bodyBuf);
 
-        return packet;
+        return packet as T;
     }
 
 }
