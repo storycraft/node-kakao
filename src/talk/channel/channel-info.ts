@@ -30,7 +30,7 @@ export class ChannelInfo {
 
     private isDirectChan: boolean;
 
-    private chatmetaList: ChannelMetaStruct[];
+    private channelMetaList: ChannelMetaStruct[];
 
     private userInfoMap: Map<string, UserInfo>;
 
@@ -52,7 +52,7 @@ export class ChannelInfo {
         this.name = '';
         this.isFavorite = false;
 
-        this.chatmetaList = [];
+        this.channelMetaList = [];
         this.isDirectChan = false;
 
         this.pendingInfoReq = this.pendingUserInfoReq = null;
@@ -97,7 +97,7 @@ export class ChannelInfo {
     }
 
     get ChatMetaList() {
-        return this.chatmetaList;
+        return this.channelMetaList;
     }
 
     hasUserInfo(id: Long) {
@@ -142,9 +142,9 @@ export class ChannelInfo {
 
     updateFromStruct(chatinfoStruct: ChatInfoStruct) {
         this.isDirectChan = chatinfoStruct.IsDirectChat;
-        this.chatmetaList = chatinfoStruct.ChatMetaList;
+        this.channelMetaList = chatinfoStruct.ChatMetaList;
 
-        for (let meta of this.chatmetaList) {
+        for (let meta of this.channelMetaList) {
             if (meta.Type === ChannelMetaType.TITLE) {
                 this.updateRoomName(meta.Content);
             }

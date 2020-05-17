@@ -7,10 +7,9 @@
 import * as request from "request-promise";
 
 import { KakaoAPI } from "../kakao-api";
-import { ClientSettingsStruct } from "../talk/struct/api/client-settings-struct";
 import { JsonUtil } from "../util/json-util";
-import { StructBase } from "../talk/struct/struct-base";
 import { AccessDataProvider } from "../oauth/access-data-provider";
+import { ClientSettingsStruct } from "../talk/struct/api/client-settings-struct";
 
 export class ApiClient {
 
@@ -54,7 +53,7 @@ export class ApiClient {
         return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'less_settings.json')}?since=${since}&lang=${language}`, new ClientSettingsStruct());
     }
 
-    protected async createApiRequest<T extends StructBase>(url: string, responseStruct: T): Promise<ApiResponse<T>> {
+    protected async createApiRequest<T>(url: string, responseStruct: T): Promise<ApiResponse<T>> {
         let res = new ApiResponse<T>(responseStruct);
 
         let rawRes = await JsonUtil.parseLoseless(await request({
@@ -81,7 +80,7 @@ export enum ApiType {
 
 }
 
-export class ApiResponse<T extends StructBase> {
+export class ApiResponse<T> {
 
     constructor(
         private response: T,
@@ -98,16 +97,16 @@ export class ApiResponse<T extends StructBase> {
         return this.response;
     }
 
-    fromJson(rawData: any): void {
-        this.status = rawData['status'];
+    fromJson(data: any): void {
+        this.status = data['status'];
 
-        this.response.fromJson(rawData);
+        this.response = data;
     }
 
     toJson() {
         let obj = { 'status': this.status };
 
-        obj = Object.assign(this.response.toJson(), obj);
+        obj = Object.assign(this.response, obj);
 
         return obj;
     }
