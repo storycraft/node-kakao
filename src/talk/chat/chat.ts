@@ -3,7 +3,7 @@ import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
 import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
-import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment } from "./attachment/chat-attachment";
+import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment, ReplyAttachment} from "./attachment/chat-attachment";
 import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
@@ -394,11 +394,11 @@ export class ReplyChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let sharpAttachment = new SharpAttachment();
+        let replyAttachment = new ReplyAttachment();
 
-        sharpAttachment.readAttachment(attachmentJson);
+        replyAttachment.readAttachment(attachmentJson);
 
-        attachmentList.push(sharpAttachment);
+        attachmentList.push(replyAttachment);
     }
 
 }
