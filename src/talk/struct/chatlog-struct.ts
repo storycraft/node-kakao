@@ -1,7 +1,8 @@
-import { StructBase } from "./struct-base";
+import { StructBase, StructBaseOld } from "./struct-base";
 import { ChatType } from "../chat/chat-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
+import { ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Thu Oct 31 2019
@@ -9,52 +10,94 @@ import { Long } from "bson";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatlogStruct implements StructBase {
+export class ChatlogStruct implements StructBaseOld {
 
     constructor(
-        public LogId: Long = Long.ZERO,
-        public PrevLogId: Long = Long.ZERO,
-        public SenderId: Long = Long.ZERO,
-        public ChannelId: Long = Long.ZERO,
-        public Type: ChatType = ChatType.Text,
-        public Text: string = '',
-        public SendTime: number = -1,
-        public RawAttachment: string = '',
-        public MessageId: number = 0,
+        public logId: Long = Long.ZERO,
+        public prevLogId: Long = Long.ZERO,
+        public senderId: Long = Long.ZERO,
+        public channelId: Long = Long.ZERO,
+        public type: ChatType = ChatType.Text,
+        public text: string = '',
+        public sendTime: number = -1,
+        public rawAttachment: string = '',
+        public messageId: number = 0,
     ) {
 
     }
     
     fromJson(rawJson: any) {
-        this.LogId = JsonUtil.readLong(rawJson['logId']);
-        this.PrevLogId = JsonUtil.readLong(rawJson['prevId']);
+        this.logId = JsonUtil.readLong(rawJson['logId']);
+        this.prevLogId = JsonUtil.readLong(rawJson['prevId']);
 
-        this.SenderId = JsonUtil.readLong(rawJson['authorId']);
-        this.ChannelId = JsonUtil.readLong(rawJson['chatId']);
+        this.senderId = JsonUtil.readLong(rawJson['authorId']);
+        this.channelId = JsonUtil.readLong(rawJson['chatId']);
 
-        this.MessageId = parseInt(rawJson['msgId'], 10);
-        
-        this.Type = rawJson['type'];
+        this.messageId = parseInt(rawJson['msgId'], 10);
 
-        this.Text = rawJson['message'] || '';
+        this.type = rawJson['type'];
 
-        this.RawAttachment = rawJson['attachment'] || '{}';
+        this.text = rawJson['message'] || '';
 
-        this.SendTime = rawJson['sendAt'];
+        this.rawAttachment = rawJson['attachment'] || '{}';
+
+        this.sendTime = rawJson['sendAt'];
     }
 
     toJson() {
         return {
-            'logId': this.LogId,
-            'prevId': this.PrevLogId,
-            'authorId': this.SenderId,
-            'chatId': this.ChannelId,
-            'msgId': this.MessageId,
-            't': this.Type,
-            'message': this.Text,
-            'attachment': this.RawAttachment,
-            'sendAt': this.SendTime
+            'logId': this.logId,
+            'prevId': this.prevLogId,
+            'authorId': this.senderId,
+            'chatId': this.channelId,
+            'msgId': this.messageId,
+            't': this.type,
+            'message': this.text,
+            'attachment': this.rawAttachment,
+            'sendAt': this.sendTime
         };
     }
+}
 
+export interface ChatlogStructNew extends StructBase {
+
+    logId: Long;
+    prevLogId: Long;
+    senderId: Long;
+    channelId: Long;
+    type: ChatType;
+    text: string;
+    sendTime: number;
+    rawAttachment: string;
+    messageId: number;
+
+}
+
+export namespace ChatlogStruct {
+
+    let mappings = {
+
+        logId: 'logId',
+        prevLogId: 'prevId',
+        senderId: 'authorId',
+        channelId: 'chatId',
+        type: 'type',
+        text: 'message',
+        sendTime: 'sendAt',
+        rawAttachment: 'attachment',
+        messageId: 'msgId',
+
+    }
+
+    let convertMap = {
+
+        logId: JsonUtil.LongConverter,
+        prevLogId: JsonUtil.LongConverter,
+        senderId: JsonUtil.LongConverter,
+        channelId: JsonUtil.LongConverter
+
+    }
+
+    export const MAPPER = new ObjectMapper(mappings, convertMap);
+    
 }

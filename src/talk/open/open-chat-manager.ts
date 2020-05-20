@@ -132,7 +132,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     }
 
     async hideChat(channel: OpenChatChannel, logId: Long): Promise<boolean> {
-        let res = await this.Client.LocoInterface.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, Math.floor(Date.now() / 1000), FeedType.OPENLINK_REWRITE_FEED));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, 1, FeedType.OPENLINK_REWRITE_FEED));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }

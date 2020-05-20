@@ -1,4 +1,4 @@
-import { StructBase, Long } from "../..";
+import { StructBaseOld, Long } from "../..";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelMetaStruct } from "./chat-info-struct";
 
@@ -8,7 +8,7 @@ import { ChannelMetaStruct } from "./chat-info-struct";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChannelMetaSetStruct implements StructBase {
+export class ChannelMetaSetStruct implements StructBaseOld {
     
     constructor(
         public ChannelId: Long = Long.ZERO,

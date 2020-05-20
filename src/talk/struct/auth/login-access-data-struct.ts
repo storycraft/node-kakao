@@ -1,6 +1,7 @@
 import { StructBase } from "../struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../../util/json-util";
+import { NameMapping, ConvertMap, ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Fri Nov 01 2019
@@ -18,64 +19,54 @@ export enum LoginStatusCode {
 
 }
 
-export class LoginAccessDataStruct implements StructBase {
+export interface LoginAccessDataStruct extends StructBase {
 
-    constructor(
-        public Status: LoginStatusCode = 0,
-        public StoryURL: string = '',
-        public UserId: Long = Long.ZERO,
-        public CountryISO: string = '',
-        public CountryCode: string = '0',
-        public AccountId: number = 0,
-        public LogonServerTime: number = 0,
-        public ResetUserData: boolean = false,
-        public AccessToken: string = '',
-        public RefreshToken: string = '',
-        public TokenType: string = '',
-        public AutoLoginEmail: string = '',
-        public DisplayAccountId: string = '',
-        public MainDevice: string = '',
-        public MainDeviceAppVersion: string = '',
-    ) {
+    status: LoginStatusCode,
+    storyURL: string,
+    userId: Long,
+    countryISO: string,
+    countryCode: string,
+    accountId: number,
+    logonServerTime: number,
+    resetUserData: boolean,
+    accessToken: string,
+    refreshToken: string,
+    tokenType: string,
+    autoLoginEmail: string,
+    displayAccountId: string,
+    mainDevice: string,
+    mainDeviceAppVersion: string,
 
+}
+
+export namespace LoginAccessDataStruct {
+
+    let mapping: NameMapping = {
+
+        status: 'status',
+        storyURL: 'story_url',
+        userId: 'userId',
+        countryISO: 'countryIso',
+        countryCode: 'countryCode',
+        accountId: 'accountId',
+        logonServerTime: 'server_time',
+        resetUserData: 'resetUserData',
+        accessToken: 'access_token',
+        refreshToken: 'refresh_token',
+        tokenType: 'token_type',
+        autoLoginEmail: 'autoLoginAccountId',
+        displayAccountId: 'displayAccountId',
+        mainDevice: 'mainDeviceAgentName',
+        mainDeviceAppVersion: 'mainDeviceAppVersion'
+    
+    }
+    
+    let convertMap: ConvertMap = {
+    
+        userId: JsonUtil.LongConverter
+    
     }
 
-    fromJson(data: any) {
-        this.Status = data['status'];
-        this.StoryURL = data['story_url'];
-        this.UserId = JsonUtil.readLong(data['userId']),
-        this.CountryISO = data['countryIso'],
-        this.CountryCode = data['countryCode'],
-        this.AccountId = data['accountId'],
-        this.LogonServerTime = data['server_time'],
-        this.ResetUserData = data['resetUserData'],
-        this.AccessToken = data['access_token'],
-        this.RefreshToken = data['refresh_token'],
-        this.TokenType = data['token_type'],
-        this.AutoLoginEmail = data['autoLoginAccountId'],
-        this.DisplayAccountId = data['displayAccountId'],
-        this.MainDevice = data['mainDeviceAgentName'],
-        this.MainDeviceAppVersion = data['mainDeviceAppVersion']
-    }
-
-    toJson() {
-        return {
-            'status': this.Status,
-            'story_url': this.StoryURL,
-            'userId': this.UserId,
-            'countryIso': this.CountryISO,
-            'countryCode': this.CountryCode,
-            'accountId': this.AccountId,
-            'server_time': this.LogonServerTime,
-            'resetUserData': this.ResetUserData,
-            'access_token': this.AccessToken,
-            'refresh_token': this.RefreshToken,
-            'token_type': this.TokenType,
-            'autoLoginAccountId': this.AutoLoginEmail,
-            'displayAccountId': this.DisplayAccountId,
-            'mainDeviceAgentName': this.MainDevice,
-            'mainDeviceAppVersion': this.MainDeviceAppVersion
-        };
-    }
+    export const MAPPER = new ObjectMapper(mapping, convertMap);
 
 }

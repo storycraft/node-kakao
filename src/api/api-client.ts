@@ -10,7 +10,9 @@ import { KakaoAPI } from "../kakao-api";
 import { JsonUtil } from "../util/json-util";
 import { AccessDataProvider } from "../oauth/access-data-provider";
 import { ClientSettingsStruct } from "../talk/struct/api/client-settings-struct";
-import { StructBase } from "../talk/struct/struct-base";
+import { StructBaseOld } from "../talk/struct/struct-base";
+import { WrappedObject, NameMapping, ConvertMap, ObjectMapper, Serializer } from "json-proxy-mapper";
+import { ApiStruct } from "../talk/struct/api/api-struct";
 
 export class ApiClient {
 
@@ -32,7 +34,7 @@ export class ApiClient {
     protected getAuthKey(): string {
         let accessData = this.provider.getLatestAccessData();
 
-        return `${accessData.AccessToken}-${this.deviceUUID}`;
+        return `${accessData.accessToken}-${this.deviceUUID}`;
     }
 
     protected getSessionHeader() {
@@ -46,26 +48,24 @@ export class ApiClient {
         };
     }
 
-    async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ApiResponse<ClientSettingsStruct>> {
-        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'more_settings.json')}?since=${since}&lang=${language}`, new ClientSettingsStruct());
+    async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ClientSettingsStruct> {
+        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'more_settings.json')}?since=${since}&lang=${language}`);
     }
 
-    async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ApiResponse<ClientSettingsStruct>> {
-        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'less_settings.json')}?since=${since}&lang=${language}`, new ClientSettingsStruct());
+    async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<ClientSettingsStruct> {
+        return this.createApiRequest(`${ApiClient.getApiURL(ApiType.ACCOUNT, 'less_settings.json')}?since=${since}&lang=${language}`);
     }
 
-    protected async createApiRequest<T extends StructBase>(url: string, responseStruct: T): Promise<ApiResponse<T>> {
-        let res = new ApiResponse<T>(responseStruct);
-
-        let rawRes = await JsonUtil.parseLoseless(await request({
+    protected async createApiRequest<T extends ApiStruct>(url: string, mapper?: ObjectMapper): Promise<T> {
+        let rawRes = JsonUtil.parseLoseless(await request({
             url: url,
             headers: this.getSessionHeader(),
             method: 'GET'
         }));
 
-        res.fromJson(rawRes);
+        if (mapper) return Serializer.deserialize<T>(rawRes, mapper);
 
-        return res;
+        return rawRes;
     }
 
     static getApiURL(type: ApiType, api: string) {
@@ -78,38 +78,5 @@ export enum ApiType {
 
     ACCOUNT = 'account',
     FRIENDS = 'friends'
-
-}
-
-export class ApiResponse<T extends StructBase> {
-
-    constructor(
-        private response: T,
-        private status: KakaoAPI.RequestStatusCode = KakaoAPI.RequestStatusCode.SUCCESS
-        ) {
-
-    }
-
-    get Status() {
-        return this.status;
-    }
-
-    get Response() {
-        return this.response;
-    }
-
-    fromJson(data: any): void {
-        this.status = data['status'];
-
-        this.response.fromJson(data);
-    }
-
-    toJson() {
-        let obj = { 'status': this.status };
-
-        obj = Object.assign(this.response.toJson(), obj);
-
-        return obj;
-    }
 
 }

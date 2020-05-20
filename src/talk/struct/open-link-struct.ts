@@ -1,4 +1,4 @@
-import { StructBase } from "./struct-base";
+import { StructBaseOld } from "./struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../util/json-util";
 import { OpenLinkType } from "../open/open-link-type";
@@ -10,7 +10,7 @@ import { OpenLinkType } from "../open/open-link-type";
  */
 
 
-export class OpenLinkStruct implements StructBase {
+export class OpenLinkStruct implements StructBaseOld {
 
     constructor(
         public LinkId: Long = Long.ZERO,
@@ -56,7 +56,7 @@ export class OpenLinkStruct implements StructBase {
 
 }
 
-export class OpenMemberStruct implements StructBase {
+export class OpenMemberStruct implements StructBaseOld {
 
     constructor(
         public UserId: Long = Long.ZERO,

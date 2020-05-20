@@ -1,4 +1,4 @@
-import { StructBase } from "./struct-base";
+import { StructBaseOld } from "./struct-base";
 import { Long } from "bson";
 import { ChannelType } from "../chat/channel-type";
 import { ChatlogStruct } from "./chatlog-struct";
@@ -13,7 +13,7 @@ import { ChatDataBase } from "./chatdata-struct";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatInfoStruct implements ChatDataBase, StructBase {
+export class ChatInfoStruct implements ChatDataBase, StructBaseOld {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
@@ -147,7 +147,7 @@ export class ChatInfoStruct implements ChatDataBase, StructBase {
 
 }
 
-export class ChatMetaStruct implements StructBase {
+export class ChatMetaStruct implements StructBaseOld {
 
     constructor(
         public FullImageURL: string = '',
@@ -189,7 +189,7 @@ export enum ChannelMetaType {
     LIVE_TALK_COUNT = 12
 }
 
-export class ChannelMetaStruct implements StructBase {
+export class ChannelMetaStruct implements StructBaseOld {
 
     constructor(
         public Type: ChannelMetaType = 0,

@@ -112,13 +112,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onNewMember(packet: PacketNewMemberRes) {
-        let channel = await this.ChannelManager.get(packet.Chatlog.ChannelId);
+        let channel = await this.ChannelManager.get(packet.Chatlog.channelId);
 
         let channelInfo = await channel.getChannelInfo();
 
         let chatlog = packet.Chatlog;
 
-        let feed = ChatFeed.getFeedFromText(chatlog.Text);
+        let feed = ChatFeed.getFeedFromText(chatlog.text);
 
         let idList: Long[] = [];
 
@@ -271,13 +271,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.emit('left', kickedUser, feed);
         this.Client.emit('user_left', kickedUser, feed);
 
-        if (!this.Client.ClientUser.Id.equals(feed.Member.UserId)) info.removeUserInfo(feed.Member.UserId);
+        if (!this.Client.ClientUser!.Id.equals(feed.Member.UserId)) info.removeUserInfo(feed.Member.UserId);
     }
 
     async onMemberDelete(packet: PacketDeleteMemberRes) {
         let chatLog = packet.Chatlog;
 
-        let channel = await this.ChannelManager.get(chatLog.ChannelId);
+        let channel = await this.ChannelManager.get(chatLog.channelId);
         let chat = await this.ChatManager.chatFromChatlog(chatLog);
 
         if (!chat.isFeed()) return;

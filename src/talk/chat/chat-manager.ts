@@ -44,12 +44,12 @@ export class ChatManager {
     }
 
     async chatFromChatlog(chatLog: ChatlogStruct) {
-        let channel = await this.Client.ChannelManager.get(chatLog.ChannelId);
-        let sender = this.Client.UserManager.get(chatLog.SenderId);
+        let channel = await this.Client.ChannelManager.get(chatLog.channelId);
+        let sender = this.Client.UserManager.get(chatLog.senderId);
 
-        const TypedChat = TypeMap.getChatConstructor(chatLog.Type);
+        const TypedChat = TypeMap.getChatConstructor(chatLog.type);
 
-        return new TypedChat(channel, sender, chatLog.MessageId, chatLog.LogId, chatLog.PrevLogId, chatLog.SendTime, chatLog.Text, chatLog.RawAttachment);
+        return new TypedChat(channel, sender, chatLog.messageId, chatLog.logId, chatLog.prevLogId, chatLog.sendTime, chatLog.text, chatLog.rawAttachment);
     }
 
     async deleteChat(channelId: Long, logId: Long): Promise<boolean> {

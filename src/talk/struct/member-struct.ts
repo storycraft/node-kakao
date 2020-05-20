@@ -1,4 +1,4 @@
-import { StructBase } from "./struct-base";
+import { StructBaseOld } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
@@ -10,7 +10,7 @@ import { OpenMemberType } from "../open/open-link-type";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class MemberStruct implements StructBase {
+export class MemberStruct implements StructBaseOld {
 
     constructor(
         public UserId: Long = Long.ZERO,

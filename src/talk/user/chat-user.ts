@@ -222,8 +222,8 @@ export class ClientChatUser extends ChatUser {
 
     private mainUserInfo: ClientUserInfo;
 
-    constructor(client: LocoClient, settings: ClientSettingsStruct, private mainOpenToken: number) {
-        super(client, settings.UserId);
+    constructor(client: LocoClient, userId: Long, settings: ClientSettingsStruct, private mainOpenToken: number) {
+        super(client, userId);
 
         this.mainUserInfo = new ClientUserInfo(settings);
     }
@@ -251,27 +251,27 @@ export class ClientUserInfo implements ChatUserInfoBase {
     }
 
     get AccountId() {
-        return this.settings.AccountId;
+        return this.settings.accountId;
     }
 
     get ProfileImageURL() {
-        return this.settings.ProfileImageURL;
+        return this.settings.profileImageUrl || '';
     }
 
     get FullProfileImageURL() {
-        return this.settings.FullProfileImageURL;
+        return this.settings.fullProfileImageUrl || '';
     }
 
     get OriginalProfileImageURL() {
-        return this.settings.OriginalProfileImageURL;
+        return this.settings.originalProfileImageUrl || '';
     }
 
     get BackgroundImageURL() {
-        return this.settings.BackgroundImageURL;
+        return this.settings.backgroundImageURL || '';
     }
 
     get OriginalBackgroundImageURL() {
-        return this.settings.OriginalBackgroundImageURL;
+        return this.settings.originalBackgroundImageURL || '';
     }
 
     get LastInfoCache() {
@@ -279,7 +279,7 @@ export class ClientUserInfo implements ChatUserInfoBase {
     }
 
     get KakaoStoryURL() {
-        return this.settings.StoryURL;
+        return this.settings.storyURL;
     }
 
     update(memberStruct: MemberStruct) {

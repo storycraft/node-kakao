@@ -1,5 +1,5 @@
 import { ChannelType } from "../chat/channel-type";
-import { StructBase } from "./struct-base";
+import { StructBaseOld } from "./struct-base";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
 
@@ -17,7 +17,7 @@ export interface ChatDataBase {
     readonly Metadata: ChatDataMetaStruct;
 }
 
-export class ChatDataStruct implements ChatDataBase, StructBase {
+export class ChatDataStruct implements ChatDataBase, StructBaseOld {
 
     constructor(
         public ChannelId: Long = Long.ZERO,
@@ -78,7 +78,7 @@ export class ChatDataStruct implements ChatDataBase, StructBase {
 
 }
 
-export class ChatDataMetaStruct implements StructBase {
+export class ChatDataMetaStruct implements StructBaseOld {
 
     constructor(
         public ImageURL: string = '',

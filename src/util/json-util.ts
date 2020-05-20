@@ -1,4 +1,5 @@
 import { Long } from "bson";
+import { TypeConverter } from "json-proxy-mapper";
 const LosslessJSON = require('lossless-json');
 
 /*
@@ -43,6 +44,13 @@ export namespace JsonUtil {
         }
 
         return value;
+    }
+
+    export const LongConverter: TypeConverter<Long> = {
+
+        getFromRaw: (target: any, rawKey: PropertyKey, receiver?: any): Long => JsonUtil.readLong(Reflect.get(target, rawKey, receiver)),
+        setToRaw: (target: any, rawKey: PropertyKey, value: Long, receiver?: any): boolean => Reflect.set(target, rawKey, value)
+
     }
 
 }

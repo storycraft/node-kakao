@@ -1,6 +1,6 @@
 import { Long, AccessDataProvider } from ".";
 import { NetworkManager } from "./network/network-manager";
-import { LoginAccessDataStruct } from "./talk/struct/auth/login-access-data-struct";
+import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
 import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
@@ -14,8 +14,10 @@ import { JsonUtil } from "./util/json-util";
 import { OpenChatManager } from "./talk/open/open-chat-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
-import { ApiClient, ApiResponse } from "./api/api-client";
+import { ApiClient } from "./api/api-client";
 import { LocoInterface } from "./loco/loco-interface";
+import { WrappedObject, Serializer } from "json-proxy-mapper";
+import { ApiStatusCode } from "./talk/struct/api/api-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -26,6 +28,8 @@ import { LocoInterface } from "./loco/loco-interface";
 export interface LoginClient {
 
     readonly ApiClient: ApiClient;
+
+    readonly Logon: boolean;
     
     login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
 
@@ -81,7 +85,7 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
 
     private currentLogin: (() => Promise<void>) | null;
 
-    private readonly accessData: LoginAccessDataStruct;
+    private accessData: LoginAccessDataStruct | null;
 
     private apiClient: ApiClient;
 
@@ -91,7 +95,7 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
         this.name = name;
 
         this.currentLogin = null;
-        this.accessData = new LoginAccessDataStruct();
+        this.accessData = null;
 
         this.apiClient = new ApiClient(deviceUUID, this);
     }
@@ -104,15 +108,21 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
         return this.apiClient;
     }
 
+    get Logon() {
+        return this.currentLogin !== null;
+    }
+
     async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
         if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
 
         this.currentLogin = this.login.bind(this, email, password, deviceUUID, forced);
 
-        this.accessData.fromJson(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced)));
+        let rawAccessData = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced));
+        this.accessData = Serializer.deserialize<LoginAccessDataStruct>(rawAccessData, LoginAccessDataStruct.MAPPER);
 
-        let statusCode = this.accessData.Status;
-        if (statusCode !== 0) {
+        let statusCode = this.accessData.status;
+
+        if (statusCode !== LoginStatusCode.PASS) {
             throw statusCode;
         }
     }
@@ -125,10 +135,13 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
 
     async logout() {
         this.currentLogin = null;
+        this.accessData = null;
     }
 
-    getLatestAccessData() {
-        return this.accessData;
+    getLatestAccessData(): LoginAccessDataStruct {
+        if (!this.currentLogin) throw new Error('Not logon');
+
+        return this.accessData!;
     }
 
 }
@@ -137,7 +150,7 @@ export class TalkClient extends BaseClient implements LocoClient {
 
     private networkManager: NetworkManager;
 
-    private clientUser: ClientChatUser;
+    private clientUser: ClientChatUser | null;
 
     private channelManager: ChannelManager;
     private userManager: UserManager;
@@ -156,7 +169,7 @@ export class TalkClient extends BaseClient implements LocoClient {
         this.chatManager = new ChatManager(this);
         this.openChatManager = new OpenChatManager(this);
 
-        this.clientUser = new ClientChatUser(this, new ClientSettingsStruct(), -1); //dummy
+        this.clientUser = null;
     }
 
     get LocoInterface() {
@@ -179,12 +192,14 @@ export class TalkClient extends BaseClient implements LocoClient {
         return this.openChatManager;
     }
 
-    get ClientUser() {
-        return this.clientUser;
-    }
-
     get LocoLogon() {
         return this.networkManager.Logon;
+    }
+
+    get ClientUser() {
+        if (!this.LocoLogon) throw new Error('Client not logon to loco');
+
+        return this.clientUser!;
     }
 
     async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
@@ -193,18 +208,17 @@ export class TalkClient extends BaseClient implements LocoClient {
         }
 
         await super.login(email, password, deviceUUID, forced);
+        let accessData = this.getLatestAccessData();
 
-        let res: ApiResponse<ClientSettingsStruct> = await this.ApiClient.requestMoreSettings(0);
+        let res: ClientSettingsStruct = await this.ApiClient.requestMoreSettings(0);
 
-        if (res.Status !== 0) {
-            throw new Error(`more_settings.json ERR: ${res.Status}`);
+        if (res.status !== ApiStatusCode.SUCCESS) {
+            throw new Error(`more_settings.json ERR: ${res.status}`);
         }
 
-        let settings = res.Response!;
+        let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
 
-        let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, this.clientUser.Id, this.getLatestAccessData().AccessToken);
-
-        this.clientUser = new ClientChatUser(this, settings, loginRes.OpenChatToken);
+        this.clientUser = new ClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 
         this.userManager.initalizeClient();
         this.channelManager.initalizeLoginData(loginRes.ChatDataList);
