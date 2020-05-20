@@ -1,5 +1,4 @@
 # NodeKakao - Loco protocol compatible library
-[![NPM](https://nodei.co/npm/node-kakao.png)](https://nodei.co/npm/node-kakao/)
 
 Note: this implemention can stop working anytime.
 
