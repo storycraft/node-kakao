@@ -6,7 +6,7 @@ import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/channel/chat-channel";
 import { Chat } from "./talk/chat/chat";
-import { ClientSettingsStruct } from "./talk/struct/api/client-settings-struct";
+import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
 import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
@@ -210,7 +210,7 @@ export class TalkClient extends BaseClient implements LocoClient {
         await super.login(email, password, deviceUUID, forced);
         let accessData = this.getLatestAccessData();
 
-        let res: ClientSettingsStruct = await this.ApiClient.requestMoreSettings(0);
+        let res: MoreSettingsStruct = await this.ApiClient.requestMoreSettings(0);
 
         if (res.status !== ApiStatusCode.SUCCESS) {
             throw new Error(`more_settings.json ERR: ${res.status}`);

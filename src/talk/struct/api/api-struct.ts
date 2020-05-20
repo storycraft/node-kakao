@@ -8,7 +8,9 @@ import { StructBase } from "../struct-base";
 
 export enum ApiStatusCode {
 
-    SUCCESS = 0
+    SUCCESS = 0,
+    OPERATION_DENIED = -500,
+    NO_RESULT = -1002
 
 }
 

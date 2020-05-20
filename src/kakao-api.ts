@@ -67,6 +67,10 @@ export class KakaoAPI {
         return 'sb-talk.kakao.com';
     }
 
+    static get ServiceHost() {
+        return 'katalk.kakao.com';
+    }
+
     static get LocoEntry() {
         return 'booking-loco.kakao.com';
     }
@@ -258,6 +262,10 @@ export class KakaoAPI {
 
     static get InternalURL() {
         return `${KakaoAPI.InternalProtocol}://${KakaoAPI.InternalHost}`;
+    }
+
+    static get ServiceURL() {
+        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.ServiceHost}`;
     }
 
     static get AccountPath() {

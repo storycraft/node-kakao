@@ -65,6 +65,13 @@ export * from './talk/user/user-type';
 export * from './talk/user/user-manager';
 
 export * from './talk/struct/struct-base';
+
+export * from './talk/struct/auth/login-access-data-struct';
+
+export * from './talk/struct/api/api-struct';
+export * from './talk/struct/api/account/client-settings-struct';
+export * from './talk/struct/api/account/login-token-struct';
+
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';
@@ -72,7 +79,7 @@ export * from './talk/struct/channel-meta-set-struct';
 export * from './talk/struct/open-link-struct';
 export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
-export * from './talk/struct/api/client-settings-struct';
+export * from './talk/struct/api/account/client-settings-struct';
 
 export * from './api/api-client';
 

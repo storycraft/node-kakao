@@ -1,8 +1,8 @@
 import { Long } from "bson";
 import { NameMapping, ObjectMapper, ConvertMap } from "json-proxy-mapper";
-import { ApiStruct, ApiStatusCode } from "./api-struct";
-import { JsonUtil } from "../../../util/json-util";
-import { StructBase } from "../struct-base";
+import { ApiStruct, ApiStatusCode } from "../api-struct";
+import { JsonUtil } from "../../../../util/json-util";
+import { StructBase } from "../../struct-base";
 
 /*
  * Created on Sun Nov 03 2019
@@ -41,9 +41,8 @@ export interface OpenChatSettingsStruct extends StructBase {
 
 }
 
-export interface ClientSettingsStruct extends ApiStruct {
+export interface MoreSettingsStruct extends ApiStruct {
 
-    status: ApiStatusCode;
     since: number;
 
     clientConf: ClientConfigStruct;
@@ -95,5 +94,9 @@ export interface ClientSettingsStruct extends ApiStruct {
     originalProfileImageUrl: string;
 
     statusMessage: string;
+
+}
+
+export interface LessSettingsStruct extends ApiStruct {
 
 }

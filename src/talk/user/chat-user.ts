@@ -1,7 +1,7 @@
 import { LoginAccessDataStruct } from "../struct/auth/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
-import { ClientSettingsStruct } from "../struct/api/client-settings-struct";
+import { MoreSettingsStruct } from "../struct/api/account/client-settings-struct";
 import { OpenMemberStruct } from "../struct/open-link-struct";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
@@ -222,7 +222,7 @@ export class ClientChatUser extends ChatUser {
 
     private mainUserInfo: ClientUserInfo;
 
-    constructor(client: LocoClient, userId: Long, settings: ClientSettingsStruct, private mainOpenToken: number) {
+    constructor(client: LocoClient, userId: Long, settings: MoreSettingsStruct, private mainOpenToken: number) {
         super(client, userId);
 
         this.mainUserInfo = new ClientUserInfo(settings);
@@ -244,9 +244,9 @@ export class ClientChatUser extends ChatUser {
 
 export class ClientUserInfo implements ChatUserInfoBase {
 
-    private settings: ClientSettingsStruct;
+    private settings: MoreSettingsStruct;
 
-    constructor(settings: ClientSettingsStruct) {
+    constructor(settings: MoreSettingsStruct) {
         this.settings = settings;
     }
 

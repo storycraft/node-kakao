@@ -22,7 +22,6 @@ export enum LoginStatusCode {
 export interface LoginAccessDataStruct extends StructBase {
 
     status: LoginStatusCode,
-    storyURL: string,
     userId: Long,
     countryISO: string,
     countryCode: string,
@@ -41,10 +40,9 @@ export interface LoginAccessDataStruct extends StructBase {
 
 export namespace LoginAccessDataStruct {
 
-    let mapping: NameMapping = {
+    let mappings: NameMapping = {
 
         status: 'status',
-        storyURL: 'story_url',
         userId: 'userId',
         countryISO: 'countryIso',
         countryCode: 'countryCode',
@@ -67,6 +65,6 @@ export namespace LoginAccessDataStruct {
     
     }
 
-    export const MAPPER = new ObjectMapper(mapping, convertMap);
+    export const MAPPER = new ObjectMapper(mappings, convertMap);
 
 }
