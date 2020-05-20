@@ -26,9 +26,10 @@ export class ApiClient {
 
     constructor(
         private deviceUUID: string,
+        
         private provider: AccessDataProvider
     ) {
-
+        
     }
 
     get DeviceUUID() {

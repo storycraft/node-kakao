@@ -25,9 +25,7 @@ import { ApiStatusCode } from "./talk/struct/api/api-struct";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface LoginClient {
-
-    readonly ApiClient: ApiClient;
+export interface LoginBasedClient {
 
     readonly Logon: boolean;
     
@@ -39,7 +37,7 @@ export interface LoginClient {
 
 }
 
-export interface LocoClient extends LoginClient, EventEmitter {
+export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly Name: string;
 
@@ -79,7 +77,7 @@ export interface LocoClient extends LoginClient, EventEmitter {
 
 }
 
-export abstract class BaseClient extends EventEmitter implements LoginClient, AccessDataProvider {
+export class LoginClient extends EventEmitter implements LoginBasedClient, AccessDataProvider {
 
     private name: string;
 
@@ -89,7 +87,7 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
 
     private apiClient: ApiClient;
 
-    constructor(deviceUUID: string, name: string) {
+    constructor(name: string, deviceUUID: string) {
         super();
 
         this.name = name;
@@ -115,7 +113,7 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
     async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
         if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
 
-        this.currentLogin = this.login.bind(this, email, password, deviceUUID, forced);
+        this.currentLogin = this.login.bind(this, email, password, this.apiClient.DeviceUUID, forced);
 
         let rawAccessData = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced));
         this.accessData = Serializer.deserialize<LoginAccessDataStruct>(rawAccessData, LoginAccessDataStruct.MAPPER);
@@ -146,7 +144,7 @@ export abstract class BaseClient extends EventEmitter implements LoginClient, Ac
 
 }
 
-export class TalkClient extends BaseClient implements LocoClient {
+export class TalkClient extends LoginClient implements LocoClient {
 
     private networkManager: NetworkManager;
 
@@ -159,7 +157,7 @@ export class TalkClient extends BaseClient implements LocoClient {
     private openChatManager: OpenChatManager;
 
     constructor(name: string, deviceUUID: string = '') {
-        super(deviceUUID, name);
+        super(name, deviceUUID);
 
         this.networkManager = new NetworkManager(this);
 

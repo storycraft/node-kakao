@@ -9,7 +9,8 @@ import { Long } from "bson";
 
 export enum ApiUserType {
 
-    NORMAL = 0
+    NORMAL = 0,
+    PLUS = 1
 
 }
 

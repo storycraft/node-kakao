@@ -17,7 +17,8 @@ export interface FriendSearchUserListStruct extends ApiStruct {
 export interface FriendSearchStruct extends ApiStruct {
 
     query: string;
-    user: FriendSearchUserListStruct;
+    user?: FriendSearchUserListStruct;
+    plus?: FriendSearchUserListStruct;
     categories: string[];
     total_counts: number;
 
