@@ -383,8 +383,8 @@ export class MapAttachment implements ChatAttachment {
     constructor(
         public Lat: number = 0,
         public Lng: number = 0,
-        public Name: string = '',
-        public C: boolean = false
+        public Address: string = '',
+        public IsCurrent: boolean = false
     ) {
 
     }
@@ -396,9 +396,9 @@ export class MapAttachment implements ChatAttachment {
     readAttachment(rawData: any): void {
         this.Lat = rawData['lat'];
         this.Lng = rawData['lng'];
-        this.Name = rawData['a'];
+        this.Address = rawData['a'];
 
-        this.C = rawData['c'];
+        this.IsCurrent = rawData['c'];
     }
 
     toJsonAttachment() {
