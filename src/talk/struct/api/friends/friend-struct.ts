@@ -16,6 +16,16 @@ export enum ApiUserType {
 
 export interface FriendExt extends StructBase {
 
+    addible: boolean;
+    yellowid: boolean;
+    consultable: boolean;
+    friendsCount: number;
+    verificationType: string;
+    isAdult: boolean;
+    writable: boolean;
+    serviceTypeCode: number;
+    isOfficial: boolean;
+
 }
 
 export interface FriendStruct extends StructBase {
@@ -32,7 +42,7 @@ export interface FriendStruct extends StructBase {
     fullProfileImageUrl: string;
     originalProfileImageUrl: string;
     userType: ApiUserType;
-    ext: FriendExt;
+    ext: FriendExt | {};
     hidden: boolean;
     purged: boolean;
     favorite: boolean;

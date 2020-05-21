@@ -72,6 +72,14 @@ export * from './talk/struct/api/api-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 export * from './talk/struct/api/account/login-token-struct';
 
+export * from './talk/struct/api/friends/friend-struct';
+export * from './talk/struct/api/friends/friend-delete-struct';
+export * from './talk/struct/api/friends/friend-blocked-list-struct';
+export * from './talk/struct/api/friends/friend-list-struct';
+export * from './talk/struct/api/friends/friend-nickname-struct';
+export * from './talk/struct/api/friends/friend-req-struct';
+export * from './talk/struct/api/friends/friend-search-struct';
+
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';

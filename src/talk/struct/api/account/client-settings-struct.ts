@@ -10,25 +10,6 @@ import { StructBase } from "../../struct-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface ClientConfigStruct extends StructBase {
-
-    osVersion: string;
-
-}
-
-export interface MoreAppsStruct extends StructBase {
-
-    recommend: any[];
-    all: any[];
-
-}
-
-export interface ShortcutStruct extends StructBase {
-    
-    [menu: string]: number;
-
-}
-
 export interface OpenChatSettingsStruct extends StructBase {
 
     chatMemberMaxJoin: number;
@@ -45,7 +26,7 @@ export interface MoreSettingsStruct extends ApiStruct {
 
     since: number;
 
-    clientConf: ClientConfigStruct;
+    clientConf: { osVersion: string };
 
     available: number;
     available2: number;
@@ -58,8 +39,8 @@ export interface MoreSettingsStruct extends ApiStruct {
     daumMediaPollingInterval: number;
     lessSettingsPollingInterval: number;
 
-    moreApps: MoreAppsStruct;
-    shortcuts: ShortcutStruct[],
+    moreApps: { recommend: any[], all: any[] };
+    shortcuts: { [menu: string]: number }[],
 
     seasonProfileRev: number,
     seasonNoticeRev: number,
@@ -98,5 +79,17 @@ export interface MoreSettingsStruct extends ApiStruct {
 }
 
 export interface LessSettingsStruct extends ApiStruct {
+
+    kakaoAutoLoginDomain: string[];
+    daumSsoDomain: string[];
+    googleMapsApi: { key: string, signature: string };
+    chat_report_limit: { chat: number, open_chat: number, plus_chat: number };
+    externalApiList: {},
+    birthday_friends: { landing_url: string };
+    messageDeleteTime: number;
+    voiceTalk: { groupCallMaxParticipants: number };
+    profileActions: boolean;
+    postExpirationSetting: { flagOn: boolean, newPostTerm: number };
+    kakaoAlertIds: number[];
 
 }

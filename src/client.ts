@@ -115,7 +115,7 @@ export class LoginClient extends EventEmitter implements LoginBasedClient, Acces
 
         this.currentLogin = this.login.bind(this, email, password, this.apiClient.DeviceUUID, forced);
 
-        let rawAccessData = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.Name, forced));
+        let rawAccessData = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced));
         this.accessData = Serializer.deserialize<LoginAccessDataStruct>(rawAccessData, LoginAccessDataStruct.MAPPER);
 
         let statusCode = this.accessData.status;
