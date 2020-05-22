@@ -80,6 +80,10 @@ export * from './talk/struct/api/friends/friend-nickname-struct';
 export * from './talk/struct/api/friends/friend-req-struct';
 export * from './talk/struct/api/friends/friend-search-struct';
 
+export * from './talk/struct/api/profile/profile-struct';
+export * from './talk/struct/api/profile/profile-req-struct';
+export * from './talk/struct/api/profile/profile-list-struct';
+
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';

@@ -6,6 +6,7 @@ import { MemberStruct } from "./member-struct";
 import { JsonUtil } from "../../util/json-util";
 import { type } from "os";
 import { ChatDataBase } from "./chatdata-struct";
+import { ChannelMetaStruct } from "./channel-meta-set-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -173,50 +174,4 @@ export class ChatMetaStruct implements StructBaseOld {
         this.Name = rawJson['name'];
         this.Favorite = rawJson['favorite'];
     }
-}
-
-export enum ChannelMetaType {
-    
-    NOTICE = 1,
-    GROUP = 2,
-    TITLE = 3,
-    PROFILE = 4,
-    TV = 5,
-    PRIVILEGE = 6,
-    TV_LIVE = 7,
-    PLUS_BACKGROUND = 8,
-    LIVE_TALK_INFO = 11,
-    LIVE_TALK_COUNT = 12
-}
-
-export class ChannelMetaStruct implements StructBaseOld {
-
-    constructor(
-        public Type: ChannelMetaType = 0,
-        public Revision: Long = Long.ZERO,
-        public AuthorId: Long = Long.ZERO,
-        public Content: string = '',
-        public UpdatedAt: number = -1
-    ) {
-
-    }
-
-    toJson() {
-        return {
-            'type': this.Type,
-            'revision': this.Revision,
-            'authorId': this.AuthorId,
-            'content': this.Content,
-            'updateAt': this.UpdatedAt
-        }
-    }
-
-    fromJson(rawJson: any) {
-        this.Type = rawJson['type'];
-        this.Revision = JsonUtil.readLong(rawJson['revision']);
-        this.AuthorId = JsonUtil.readLong(rawJson['authorId']);
-        this.Content = rawJson['content'];
-        this.UpdatedAt = rawJson['updatedAt'];
-    }
-
 }

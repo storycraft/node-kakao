@@ -21,6 +21,7 @@ import { FriendDeleteStruct } from "../talk/struct/api/friends/friend-delete-str
 import { FriendBlockedListStruct } from "../talk/struct/api/friends/friend-blocked-list-struct";
 import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-struct";
 import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
+import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
 
 export class ApiClient {
 
@@ -127,6 +128,12 @@ export class ApiClient {
         return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('remove_favorite.json'), { id: id.toString() });
     }
 
+    // profile
+
+    async requestMyProfile(): Promise<ProfileReqStruct> {
+        return this.createApiRequest('GET', ApiClient.getProfile3ApiURL('me.json'));
+    }
+
     protected async createApiRequest<T extends ApiStruct>(method: string, url: string, mapper?: ObjectMapper): Promise<T> {
         let rawRes = JsonUtil.parseLoseless(await request({
             url: url,
@@ -159,6 +166,10 @@ export class ApiClient {
 
     static getFriendsApiURL(api: string) {
         return `${KakaoAPI.ServiceURL}/${KakaoAPI.Agent}/friends/${api}`;
+    }
+
+    static getProfile3ApiURL(api: string) {
+        return `${KakaoAPI.ServiceURL}/${KakaoAPI.Agent}/profile3/${api}`;
     }
 
 }
