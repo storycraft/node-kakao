@@ -28,7 +28,7 @@ export class KakaoAPI {
     }
 
     static get Version() {
-        return '3.1.1';
+        return '3.1.2';
     }
 
     static get InternalAppVersion() {
