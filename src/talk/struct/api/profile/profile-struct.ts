@@ -30,7 +30,36 @@ export interface ProfileFeed extends StructBase {
 export interface ProfileFeedList extends StructBase {
 
     totalCnts: number;
-     feeds: ProfileFeed[];
+    feeds: ProfileFeed[];
+
+}
+
+export interface ProfileDecoration extends StructBase {
+
+    itemKind: string;
+    itemId: string;
+    parameters: { resourceUrl: string };
+
+}
+
+export interface BgEffectDecoration extends ProfileDecoration {
+
+    itemKind: 'BgEffect';
+
+}
+
+export interface StickerDecoration extends ProfileDecoration {
+
+    itemKind: 'Sticker';
+
+    // position by percent
+    x: number;
+    y: number;
+    cx: number;
+    cy: number;
+    width: number;
+    height: number;
+    rotation: number;
 
 }
 
@@ -45,7 +74,7 @@ export interface ProfileStruct extends StructBase {
     fullProfileImageUrl: string;
     originalProfileImageUrl: string;
 
-    decoration: [];
+    decoration: ProfileDecoration[];
 
     profileFeeds: ProfileFeedList;
     backgroundFeeds: ProfileFeedList;

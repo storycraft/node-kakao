@@ -405,8 +405,8 @@ export class MapAttachment implements ChatAttachment {
         return {
             'lat': this.Lat,
             'lng': this.Lng,
-            'a': this.Name,
-            'c': this.C
+            'a': this.Address,
+            'c': this.IsCurrent
         };
     }
 

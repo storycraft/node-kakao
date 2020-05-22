@@ -134,6 +134,10 @@ export class ApiClient {
         return this.createApiRequest('GET', ApiClient.getProfile3ApiURL('me.json'));
     }
 
+    async requestProfile(id: Long): Promise<ProfileReqStruct> {
+        return this.createApiRequest('GET', `${ApiClient.getProfile3ApiURL('friend_info.json')}?id=${id}`);
+    }
+
     protected async createApiRequest<T extends ApiStruct>(method: string, url: string, mapper?: ObjectMapper): Promise<T> {
         let rawRes = JsonUtil.parseLoseless(await request({
             url: url,

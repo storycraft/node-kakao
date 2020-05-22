@@ -37,6 +37,7 @@ export interface FriendStruct extends StructBase {
     statusMessage: string;
     UUID: string;
     friendNickName: string;
+    phoneticName?: string;
     accountId: number;
     profileImageUrl: string;
     fullProfileImageUrl: string;

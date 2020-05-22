@@ -8,6 +8,7 @@ import { FeedType } from "../feed/feed-type";
 import { JsonUtil } from "../../util/json-util";
 import { MemberStruct } from "../struct/member-struct";
 import { Long } from "bson";
+import { StructBase } from "../struct/struct-base";
 
 export class ChatFeed {
 
@@ -123,3 +124,69 @@ export class ChatFeed {
     }
 
 }
+
+export namespace FeedFragment {
+
+    export interface Hidden extends StructBase {
+    
+        readonly hidden: boolean;
+    
+    }
+    
+    export interface Member extends StructBase {
+        
+        readonly member: any;
+    
+    }
+    
+    export interface MemberList extends StructBase {
+        
+        readonly members: any[];
+    
+    }
+    
+    export interface Inviter extends StructBase {
+        
+        readonly inviter: any;
+    
+    }
+    
+    export interface Message extends StructBase {
+        
+        readonly logId: Long;
+    
+    }
+    
+    export interface RichContent extends StructBase {
+        
+        readonly text: string;
+    
+    }
+
+}
+
+export interface ChatFeedNew extends StructBase {
+
+    readonly feedType: FeedType;
+
+}
+
+export namespace ChatFeedNew {
+
+    export function getFeedFromText<T extends ChatFeed = ChatFeed>(raw: string): T {
+        try {
+            return JsonUtil.parseLoseless(raw);
+        } catch (e) {
+            throw new Error(`Invalid feed`);
+        }
+    }
+
+}
+
+export type InviteFeed = ChatFeed & FeedFragment.Inviter & FeedFragment.Member & FeedFragment.MemberList;
+export type LeaveFeed = ChatFeed & FeedFragment.Member;
+export type RichContentFeed = ChatFeed & FeedFragment.RichContent;
+export type OpenJoinFeed = ChatFeed & FeedFragment.Member;
+export type OpenRewriteFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
+export type OpenKickFeed = ChatFeed & FeedFragment.Member;
+export type DeleteAllFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
