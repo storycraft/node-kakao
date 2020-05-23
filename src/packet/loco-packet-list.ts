@@ -37,6 +37,8 @@ import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "./packet-chat-on-room"
 import { PacketSyncProfileRes } from "./packet-sync-profile";
 import { PacketSyncDeleteMessageRes } from "./packet-sync-delete-message";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "./packet-sync-message";
+import { PacketGetTrailerReq } from "./packet-get-trailer";
+import { PacketShipReq } from "./packet-ship";
 
 /*
  * Created on Wed Oct 30 2019
@@ -62,6 +64,9 @@ export namespace LocoPacketList {
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
         requestPacketMap.set('CHATINFO', PacketChatInfoReq);
+
+        requestPacketMap.set('SHIP', PacketShipReq);
+        requestPacketMap.set('GETTRAILER', PacketGetTrailerReq);
 
         requestPacketMap.set('GETMETA', PacketGetMetaReq);
         requestPacketMap.set('GETMETAS', PacketGetMetasReq);

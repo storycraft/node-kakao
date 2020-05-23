@@ -2,6 +2,7 @@ import { Duplex, Writable } from "stream";
 import { LocoPacketReader } from "../../packet/loco-packet-reader";
 import { LocoSocket } from "../loco-socket";
 import { PacketHeader } from "../../packet/packet-header-struct";
+import { ChunkedBufferList } from "../chunk/chunked-buffer-list";
 
 /*
  * Created on Tue Oct 29 2019
@@ -14,12 +15,12 @@ export class LocoPacketResolver extends Writable {
     static readonly HEADER_SIZE: number = 22;
 
     private currentHeader: PacketHeader | null;
-    private packetBuffer: Buffer;
+    private chunkList: ChunkedBufferList;
 
     constructor(private socket: LocoSocket) {
         super();
         
-        this.packetBuffer = Buffer.allocUnsafe(0);
+        this.chunkList = new ChunkedBufferList();
         this.currentHeader = null;
     }
 
@@ -29,31 +30,35 @@ export class LocoPacketResolver extends Writable {
 
     _destroy(error: Error | null, callback: (error?: Error | null) => void) {
         this.currentHeader = null;
-        this.packetBuffer = Buffer.allocUnsafe(0);
+        this.chunkList.clear();
 
         super._destroy(error, callback);
     }
 
     _write(chunk: Buffer, encoding?: string, callback?: (e?: Error) => void) {
-        this.packetBuffer = Buffer.concat([ this.packetBuffer, chunk ]);
+        this.chunkList.append(chunk);
 
-        if (!this.currentHeader && this.packetBuffer.length > LocoPacketResolver.HEADER_SIZE) {
-            let headerBuffer = this.packetBuffer.slice(0, LocoPacketResolver.HEADER_SIZE);
+        let buf: Buffer | null = null;
+        if (!this.currentHeader && this.chunkList.TotalByteLength > LocoPacketResolver.HEADER_SIZE) {
+            buf = this.chunkList.toBuffer();
+
+            let headerBuffer = buf.slice(0, LocoPacketResolver.HEADER_SIZE);
             this.currentHeader = this.structHeader(headerBuffer);
         }
 
         if (this.currentHeader) {
             let currentPacketSize = LocoPacketResolver.HEADER_SIZE + this.currentHeader.bodySize;
 
-            if (this.packetBuffer.length >= currentPacketSize) {
-                let bodyBuffer = this.packetBuffer.slice(LocoPacketResolver.HEADER_SIZE, currentPacketSize);
+            if (this.chunkList.TotalByteLength >= currentPacketSize) {
+                if (!buf) buf = this.chunkList.toBuffer();
 
-                let newBuf = Buffer.allocUnsafe(this.packetBuffer.length - currentPacketSize);
-                this.packetBuffer.copy(newBuf, 0, currentPacketSize);
+                let newBuf = Buffer.allocUnsafe(buf.byteLength - currentPacketSize);
+                buf.copy(newBuf, 0, currentPacketSize);
 
+                let bodyBuffer = buf.slice(LocoPacketResolver.HEADER_SIZE, currentPacketSize);
                 this.Socket.dataReceived(this.currentHeader, bodyBuffer);
 
-                this.packetBuffer = Buffer.allocUnsafe(0);
+                this.chunkList.clear();
                 this.currentHeader = null;
 
                 this._write(newBuf);
