@@ -10,6 +10,7 @@ import { MemberStruct } from "../talk/struct/member-struct";
 import { ChannelType } from "../talk/chat/channel-type";
 import { JsonUtil } from "../util/json-util";
 import { OpenMemberStruct } from "../talk/struct/open-link-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
     
@@ -76,8 +77,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         this.OpenChatToken = rawData['otk'];
 
         if (rawData['olu']) {
-            this.ClientOpenProfile = new OpenMemberStruct();
-            this.ClientOpenProfile.fromJson(rawData['olu']);
+            this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
         } else {
             this.ClientOpenProfile = null;
         }

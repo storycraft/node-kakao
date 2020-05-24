@@ -1,7 +1,8 @@
-import { StructBaseOld } from "./struct-base";
+import { StructBase } from "./struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../util/json-util";
 import { OpenLinkType } from "../open/open-link-type";
+import { Converter, ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Fri Nov 22 2019
@@ -9,88 +10,76 @@ import { OpenLinkType } from "../open/open-link-type";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export interface OpenMemberStruct {
 
-export class OpenLinkStruct implements StructBaseOld {
-
-    constructor(
-        public LinkId: Long = Long.ZERO,
-        public OpenToken: number = 0,
-        public LinkName: string = '',
-        public LinkURL: string = '',
-        public LinkType: OpenLinkType = OpenLinkType.PROFILE,
-        public readonly Owner: OpenMemberStruct = new OpenMemberStruct(),
-        public Description: string = '',
-        public CoverURL: string = ''
-        ) {
-        
-    }
-
-    fromJson(rawData: any): void {
-        this.LinkId = JsonUtil.readLong(rawData['li']);
-        this.OpenToken = rawData['otk'];
-        this.LinkName = rawData['ln'];
-        this.LinkURL = rawData['lu'];
-
-        this.LinkType = rawData['lt'];
-
-        this.Owner.fromJson(rawData['olu']);
-
-        this.Description = rawData['desc'];
-        this.CoverURL = rawData['liu'];
-    }
-    
-    toJson() {
-        let obj: any = {
-            'li': this.LinkId,
-            'otk': this.OpenToken,
-            'ln': this.LinkName,
-            'lu': this.LinkURL,
-            'lt': this.LinkType,
-            'olu': this.Owner.toJson(),
-            'desc': this.Description,
-            'liu': this.CoverURL
-        };
-
-        return obj;
-    }
+    userId: Long;
+    nickName: string;
+    profileImageUrl: string;
+    originalProfileImageUrl: string;
+    fullProfileImageUrl: string;
+    memberType: number;
+    openToken: number;
 
 }
 
-export class OpenMemberStruct implements StructBaseOld {
+export namespace OpenMemberStruct {
 
-    constructor(
-        public UserId: Long = Long.ZERO,
-        public NickName: string = '',
-        public ProfileImageUrl: string = '',
-        public OriginalProfileImageUrl: string = '',
-        public FullProfileImageUrl: string = '',
-        public MemberType: number = 0,
-        public OpenChatToken: number = 0
-    ) {
+    export const Mappings = {
+
+        userId: 'userId',
+        nickName: 'nn',
+        profileImageUrl: 'pi',
+        originalProfileImageUrl: 'opi',
+        fullProfileImageUrl: 'fpi',
+        memberType: 'lmt',
+        openToken: 'opt'
 
     }
 
-    fromJson(rawData: any): void {
-        this.UserId = JsonUtil.readLong(rawData['userId']);
-        this.NickName = rawData['nn'];
-        this.ProfileImageUrl = rawData['pi'] || rawData['profileImageUrl'] || '';
-        this.OriginalProfileImageUrl = rawData['opi'] || rawData['originalProfileImageUrl'] || '';
-        this.FullProfileImageUrl = rawData['fpi'] || rawData['fullProfileImageUrl'] || '';
-        this.MemberType = rawData['lmt'];
-        this.OpenChatToken = rawData['opt'];
+    export const ConvertMap = {
+
+        userId: JsonUtil.LongConverter
+
     }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
     
-    toJson() {
-        let obj: any = {
-            'userId': this.UserId,
-            'nn': this.NickName,
-            'pi': this.ProfileImageUrl,
-            'opi': this.OriginalProfileImageUrl,
-            'fpi': this.FullProfileImageUrl,
-            'lmt': this.MemberType,
-            'opt': this.OpenChatToken
-        };
+}
 
-        return obj;
+export interface OpenLinkStruct extends StructBase {
+
+    linkId: Long;
+    openToken: number;
+    linkName: string;
+    linkURL: string;
+    linkType: OpenLinkType;
+    owner: OpenMemberStruct;
+    description: string;
+    coverURL: string;
+
+}
+
+export namespace OpenLinkStruct {
+
+    export const Mappings = {
+
+        linkId: 'li',
+        openToken: 'otk',
+        linkName: 'ln',
+        linkType: 'lt',
+        owner: 'olu',
+        description: 'desc',
+        coverURL: 'liu'
+
     }
+
+    export const ConvertMap = {
+
+        linkId: JsonUtil.LongConverter,
+        logId: new Converter.Object(OpenMemberStruct.Mappings, OpenMemberStruct.ConvertMap)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    
 }

@@ -10,56 +10,7 @@ import { ObjectMapper } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatlogStruct implements StructBaseOld {
-
-    constructor(
-        public logId: Long = Long.ZERO,
-        public prevLogId: Long = Long.ZERO,
-        public senderId: Long = Long.ZERO,
-        public channelId: Long = Long.ZERO,
-        public type: ChatType = ChatType.Text,
-        public text: string = '',
-        public sendTime: number = -1,
-        public rawAttachment: string = '',
-        public messageId: number = 0,
-    ) {
-
-    }
-    
-    fromJson(rawJson: any) {
-        this.logId = JsonUtil.readLong(rawJson['logId']);
-        this.prevLogId = JsonUtil.readLong(rawJson['prevId']);
-
-        this.senderId = JsonUtil.readLong(rawJson['authorId']);
-        this.channelId = JsonUtil.readLong(rawJson['chatId']);
-
-        this.messageId = parseInt(rawJson['msgId'], 10);
-
-        this.type = rawJson['type'];
-
-        this.text = rawJson['message'] || '';
-
-        this.rawAttachment = rawJson['attachment'] || '{}';
-
-        this.sendTime = rawJson['sendAt'];
-    }
-
-    toJson() {
-        return {
-            'logId': this.logId,
-            'prevId': this.prevLogId,
-            'authorId': this.senderId,
-            'chatId': this.channelId,
-            'msgId': this.messageId,
-            't': this.type,
-            'message': this.text,
-            'attachment': this.rawAttachment,
-            'sendAt': this.sendTime
-        };
-    }
-}
-
-export interface ChatlogStructNew extends StructBase {
+export interface ChatlogStruct extends StructBase {
 
     logId: Long;
     prevLogId: Long;
@@ -75,7 +26,7 @@ export interface ChatlogStructNew extends StructBase {
 
 export namespace ChatlogStruct {
 
-    let mappings = {
+    export const Mappings = {
 
         logId: 'logId',
         prevLogId: 'prevId',
@@ -89,7 +40,7 @@ export namespace ChatlogStruct {
 
     }
 
-    let convertMap = {
+    export const ConvertMap = {
 
         logId: JsonUtil.LongConverter,
         prevLogId: JsonUtil.LongConverter,
@@ -98,6 +49,6 @@ export namespace ChatlogStruct {
 
     }
 
-    export const MAPPER = new ObjectMapper(mappings, convertMap);
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
     
 }

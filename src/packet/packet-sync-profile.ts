@@ -15,7 +15,7 @@ export class PacketSyncProfileRes extends LocoBsonResponsePacket {
         status: number,
         public ChannelId: Long = Long.ZERO,
         public LinkId: Long = Long.ZERO,
-        public OpenMember: OpenMemberStruct = new OpenMemberStruct()
+        public OpenMember: OpenMemberStruct = {}
     ) {
         super(status);
     }
