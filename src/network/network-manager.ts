@@ -326,6 +326,8 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
 
     disconnected() {
         this.locoConnected = false;
+        this.locoLogon = false;
+        
         this.currentSocket = null;
 
         if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
