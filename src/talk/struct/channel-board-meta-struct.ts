@@ -19,8 +19,10 @@ export class ChannelBoardMetaStruct implements StructBaseOld {
 }
 
 export enum ChannelBoardType {
+
     NONE = 0,
     FLOATING_NOTICE = 1,
     SIDE_NOTICE = 2,
     BADGE = 3
+    
 }

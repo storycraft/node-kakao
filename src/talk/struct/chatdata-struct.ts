@@ -1,7 +1,8 @@
 import { ChannelType } from "../chat/channel-type";
-import { StructBaseOld } from "./struct-base";
+import { StructBaseOld, StructBase } from "./struct-base";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
+import { Converter, ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Thu Oct 31 2019
@@ -9,102 +10,48 @@ import { Long } from "bson";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface ChatDataBase {
-    ChannelId: Long;
-    Type: ChannelType;
-    OpenLinkId: Long;
-    OpenChatToken: number;
-    readonly Metadata: ChatDataMetaStruct;
-}
+export interface ChatDataStruct extends StructBase {
 
-export class ChatDataStruct implements ChatDataBase, StructBaseOld {
-
-    constructor(
-        public ChannelId: Long = Long.ZERO,
-        public Type: ChannelType = ChannelType.GROUP,
-        public OpenLinkId: Long = Long.ZERO,
-        public OpenChatToken: number = -1,
-        public MemberCount: number = 0,
-        public PushAlert: boolean = false,
-        public readonly Metadata: ChatDataMetaStruct = new ChatDataMetaStruct(),
-    ) {
-
-    }
-
-    fromJson(rawData: any) {
-        this.ChannelId = JsonUtil.readLong(rawData['c']);
-        this.Type = rawData['t'];
-        this.MemberCount = rawData['a'];
-        this.PushAlert = rawData['p'];
-        if (rawData['m']) {
-            this.Metadata.fromJson(rawData['m']);
-        }
-
-        this.OpenLinkId = Long.ZERO;
-        if (rawData['li']) {
-            this.OpenLinkId = JsonUtil.readLong(rawData['li']);
-        }
-
-        this.OpenChatToken = -1;
-        if (rawData['otk']) {
-            this.OpenChatToken = rawData['otk'];
-        }
-    }
-
-    toJson() {
-        let obj: any = {
-            'c': this.ChannelId,
-            't': this.Type,
-            'a': this.MemberCount,
-            'p': this.PushAlert,
-            'm': null
-        };
-
-        if (this.Metadata) {
-            obj['m'] = this.Metadata.toJson();
-        }
-
-        if (this.OpenLinkId !== Long.ZERO) {
-            obj['li'] = this.OpenLinkId;
-        }
-
-        this.OpenChatToken = -1;
-        if (this.OpenChatToken !== -1) {
-            obj['otk'] = this.OpenChatToken;
-        }
-
-        return obj;
-    }
+    channelId: Long;
+    type: ChannelType,
+    memberCount: number,
+    pushAlert: boolean,
+    linkId?: Long,
+    openToken?: number,
+    metadata: ChatDataMetaStruct
 
 }
 
-export class ChatDataMetaStruct implements StructBaseOld {
+export namespace ChatDataStruct {
 
-    constructor(
-        public ImageURL: string = '',
-        public FullImageURL: string = '',
-        public Name: string = '',
-        public Favorite: boolean = false
-    ) {
+    export const Mappings = {
+
+        channelId: 'c',
+        type: 't',
+        memberCount: 'a',
+        pushAlert: 'p',
+        linkId: 'li',
+        openToken: 'otk',
+        metadata: 'm'
 
     }
 
-    fromJson(rawData: any) {
-        let data = new ChatDataMetaStruct();
+    export const ConvertMap = {
 
-        data.ImageURL = rawData['imageUrl'];
-        data.FullImageURL = rawData['fullImageUrl'];
-        data.Name = rawData['name'];
-        data.Favorite = rawData['favorite'];
+        channelId: JsonUtil.LongConverter,
+        linkId: JsonUtil.LongConverter
+
     }
 
-    toJson() {
-        return {
-            'imageUrl': this.ImageURL,
-            'fullImageUrl': this.FullImageURL,
-            'name': this.Name,
-            'favorite': this.Favorite
-        };
-    }
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+
+}
+
+export interface ChatDataMetaStruct extends StructBase {
+
+    imageUrl: string;
+    fullImageUrl: string;
+    name: string;
+    favorite: boolean;
 
 }
