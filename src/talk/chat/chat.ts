@@ -86,6 +86,10 @@ export abstract class Chat {
         return this.mentionMap;
     }
 
+    async markChatRead() {
+        await this.channel.markChannelRead(this.logId);
+    }
+
     getMentionContentList() {
         return Array.from(this.mentionMap.values());
     }

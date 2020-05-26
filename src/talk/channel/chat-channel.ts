@@ -10,7 +10,7 @@ import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatBuilder } from "../chat/chat-builder";
-import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
+import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
@@ -73,8 +73,8 @@ export class ChatChannel extends EventEmitter {
         this.client.emit('message', chat);
     }
 
-    async markChannelRead() {
-        await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(this.id));
+    async markChannelRead(lastWatermark: Long) {
+        await this.Client.ChannelManager.markRead(this, lastWatermark);
     }
 
     async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {

@@ -26,7 +26,7 @@ import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
 import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
-import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./loco-noti-read";
+import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./packet-noti-read";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "./packet-join-info";
 import { PacketSetMemTypeRes, PacketSetMemTypeReq } from "./packet-set-mem-type";
 import { PacketLinkKickedRes } from "./packet-link-kicked";

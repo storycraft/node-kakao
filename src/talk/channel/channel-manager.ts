@@ -17,6 +17,7 @@ import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
 import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
+import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -99,6 +100,14 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         let res = await this.client.LocoInterface.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
 
         return res.StatusCode !== StatusCode.SUCCESS;
+    }
+
+    async markRead(channel: ChatChannel, lastWatermark: Long): Promise<void> {
+        if (channel.isOpenChat()) {
+            await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(channel.Id, lastWatermark, (channel as OpenChatChannel).LinkId));
+        } else {
+            await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(channel.Id, lastWatermark));
+        }
     }
 
     removeChannel(channel: ChatChannel) {

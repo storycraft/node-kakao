@@ -73,8 +73,8 @@ export class LocoPacketResolver extends Writable {
     protected structHeader(buffer: Buffer, offset: number = 0): PacketHeader {
         return {
             packetId: buffer.readInt32LE(offset),
-            statusCode: buffer.readInt32LE(offset),
-            packetName: buffer.toString('utf8', offset + 6, offset + 16).replace(/\0/g, ''),
+            statusCode: buffer.readInt16LE(offset + 4),
+            packetName: buffer.toString('utf8', offset + 6, offset + 17).replace(/\0/g, ''),
             bodyType: buffer.readInt8(offset + 17),
             bodySize: buffer.readInt32LE(offset + 18)
         };
