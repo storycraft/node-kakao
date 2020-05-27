@@ -11,6 +11,7 @@ import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketDeleteChatRes, PacketDeleteChatReq } from "../../packet/packet-delete-chat";
 import { Chat, TypeMap } from "./chat";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "../../packet/packet-sync-message";
+import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "../../packet/packet-multi-chatlog";
 
 export class ChatManager {
     
@@ -32,7 +33,20 @@ export class ChatManager {
         return this.messageId++;
     }
 
-    async getChatListFrom(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<Chat[]> {
+    async getChatListFrom(channelId: Long, since: number): Promise<Chat[]> {
+        let res = await this.client.LocoInterface.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ since ]));
+
+        if (res.StatusCode !== StatusCode.SUCCESS) return [];
+
+        let taskList: Promise<Chat>[] = [];
+        for (let chatLog of res.ChatlogList) {
+            taskList.push(this.chatFromChatlog(chatLog));
+        }
+
+        return Promise.all(taskList);
+    }
+
+    async getChatListBetween(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<Chat[]> {
         let res = await this.client.LocoInterface.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
 
         let taskList: Promise<Chat>[] = [];

@@ -39,6 +39,8 @@ import { PacketSyncDeleteMessageRes } from "./packet-sync-delete-message";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "./packet-sync-message";
 import { PacketGetTrailerReq } from "./packet-get-trailer";
 import { PacketShipReq, PacketShipRes } from "./packet-ship";
+import { PacketGetToken } from "./packet-get-token";
+import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "./packet-multi-chatlog";
 
 /*
  * Created on Wed Oct 30 2019
@@ -60,6 +62,10 @@ export namespace LocoPacketList {
         requestPacketMap.set('GETCONF', PacketGetConfReq);
         requestPacketMap.set('CHECKIN', PacketCheckInReq);
         requestPacketMap.set('LOGINLIST', PacketLoginReq);
+
+        requestPacketMap.set('GETTOKEN', PacketGetToken);
+
+        requestPacketMap.set('MCHATLOGS', PacketMultiChatlogReq);
 
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
@@ -111,6 +117,8 @@ export namespace LocoPacketList {
         responsePacketMap.set('CHECKIN', PacketCheckInRes);
 
         responsePacketMap.set('LOGINLIST', PacketLoginRes);
+
+        responsePacketMap.set('MCHATLOGS', PacketMultiChatlogRes);
 
         responsePacketMap.set('MSG', PacketMessageRes);
         responsePacketMap.set('WRITE', PacketMessageWriteRes);
