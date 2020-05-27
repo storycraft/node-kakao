@@ -26,7 +26,7 @@ import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
 import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
-import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./loco-noti-read";
+import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./packet-noti-read";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "./packet-join-info";
 import { PacketSetMemTypeRes, PacketSetMemTypeReq } from "./packet-set-mem-type";
 import { PacketLinkKickedRes } from "./packet-link-kicked";
@@ -38,7 +38,9 @@ import { PacketSyncProfileRes } from "./packet-sync-profile";
 import { PacketSyncDeleteMessageRes } from "./packet-sync-delete-message";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "./packet-sync-message";
 import { PacketGetTrailerReq } from "./packet-get-trailer";
-import { PacketShipReq } from "./packet-ship";
+import { PacketShipReq, PacketShipRes } from "./packet-ship";
+import { PacketGetToken } from "./packet-get-token";
+import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "./packet-multi-chatlog";
 
 /*
  * Created on Wed Oct 30 2019
@@ -60,6 +62,10 @@ export namespace LocoPacketList {
         requestPacketMap.set('GETCONF', PacketGetConfReq);
         requestPacketMap.set('CHECKIN', PacketCheckInReq);
         requestPacketMap.set('LOGINLIST', PacketLoginReq);
+
+        requestPacketMap.set('GETTOKEN', PacketGetToken);
+
+        requestPacketMap.set('MCHATLOGS', PacketMultiChatlogReq);
 
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
@@ -112,8 +118,11 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('LOGINLIST', PacketLoginRes);
 
+        responsePacketMap.set('MCHATLOGS', PacketMultiChatlogRes);
+
         responsePacketMap.set('MSG', PacketMessageRes);
         responsePacketMap.set('WRITE', PacketMessageWriteRes);
+        responsePacketMap.set('SHIP', PacketShipRes);
         responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);
         responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
         responsePacketMap.set('MEMBER', PacketChatMemberRes);

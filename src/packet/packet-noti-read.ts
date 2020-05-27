@@ -10,7 +10,9 @@ import { Long } from "bson";
 export class PacketMessageNotiReadReq extends LocoBsonRequestPacket {
 
     constructor(
-        public ChannelId: Long = Long.ZERO
+        public ChannelId: Long = Long.ZERO,
+        public Watermark: Long = Long.ZERO,
+        public LinkId?: Long
     ) {
         super();
     }
@@ -20,9 +22,14 @@ export class PacketMessageNotiReadReq extends LocoBsonRequestPacket {
     }
     
     toBodyJson() {
-        return {
-            'chatId': this.ChannelId
+        let obj: any = {
+            'chatId': this.ChannelId,
+            'watermark': this.Watermark
         };
+
+        if (this.LinkId) obj['li'] = this.LinkId;
+        
+        return obj;
     }
     
 }

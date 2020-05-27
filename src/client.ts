@@ -30,6 +30,7 @@ export interface LoginBasedClient {
     readonly Logon: boolean;
     
     login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
+    loginToken(email: string, token: string, deviceUUID?: string, forced?: boolean): Promise<void>;
 
     relogin(): Promise<void>;
 
@@ -115,8 +116,19 @@ export class LoginClient extends EventEmitter implements LoginBasedClient, Acces
 
         this.currentLogin = this.login.bind(this, email, password, this.apiClient.DeviceUUID, forced);
 
-        let rawAccessData = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced));
-        this.accessData = Serializer.deserialize<LoginAccessDataStruct>(rawAccessData, LoginAccessDataStruct.MAPPER);
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
+    }
+
+    async loginToken(email: string, token: string, deviceUUID?: string, forced: boolean = false, locked: boolean = true) {
+        if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
+
+        this.currentLogin = this.loginToken.bind(this, email, token, this.apiClient.DeviceUUID, forced);
+
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestAutoLogin(locked, email, token, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
+    }
+
+    protected async loginAccessData(accessData: LoginAccessDataStruct) {
+        this.accessData = accessData;
 
         let statusCode = this.accessData.status;
 
@@ -206,6 +218,23 @@ export class TalkClient extends LoginClient implements LocoClient {
         }
 
         await super.login(email, password, deviceUUID, forced);
+    }
+
+    async loginToken(email: string, token: string, deviceUUID?: string, forced: boolean = false, locked: boolean = false) {
+        if (this.LocoLogon) {
+            throw new Error('Already logon to loco');
+        }
+
+        await super.loginToken(email, token, deviceUUID, forced, locked);
+    }
+
+    protected async loginAccessData(accessData: LoginAccessDataStruct) {
+        super.loginAccessData(accessData);
+
+        await this.locoLogin();
+    }
+
+    protected async locoLogin() {
         let accessData = this.getLatestAccessData();
 
         let res: MoreSettingsStruct = await this.ApiClient.requestMoreSettings(0);

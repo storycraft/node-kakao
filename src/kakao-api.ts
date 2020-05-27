@@ -358,6 +358,20 @@ export class KakaoAPI {
         }
     }
 
+    static getAutoLoginData(email: string, token: string, deviceUUID: string, deviceName: string, locked: boolean, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
+        return {
+            'email': email,
+            'password': token,
+            'device_uuid': deviceUUID,
+            'permanent': permanent,
+            'os_version': osVersion,
+            'device_name': deviceName,
+            'forced': forced,
+            'autowithlock': locked,
+            'auto_login': true
+        }
+    }
+
     static getDeviceRegisterData(email: string, password: string, deviceUUID: string, deviceName: string, passcode: string, permanent = true, osVersion: string = KakaoAPI.OSVersion) {
         return {
             'email': email,
@@ -372,6 +386,19 @@ export class KakaoAPI {
     
     static requestLogin(email: string, password: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
         let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion, forced);
+
+        let queryData = querystring.stringify(loginData);
+        
+        return request({
+            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.LOGIN),
+            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
+            body: queryData,
+            method: 'POST'
+        });
+    }
+
+    static requestAutoLogin(locked: boolean, email: string, token: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
+        let loginData = KakaoAPI.getAutoLoginData(email, token, deviceUUID, deviceName, locked, permanent, osVersion, forced);
 
         let queryData = querystring.stringify(loginData);
         
