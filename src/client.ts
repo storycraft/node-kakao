@@ -1,23 +1,23 @@
-import {AccessDataProvider, Long} from ".";
-import {NetworkManager} from "./network/network-manager";
-import {LoginAccessDataStruct, LoginStatusCode} from "./talk/struct/auth/login-access-data-struct";
-import {KakaoAPI} from "./kakao-api";
-import {ChatUser, ClientChatUser} from "./talk/user/chat-user";
-import {EventEmitter} from "events";
-import {ChatChannel} from "./talk/channel/chat-channel";
-import {Chat} from "./talk/chat/chat";
-import {MoreSettingsStruct} from "./talk/struct/api/account/client-settings-struct";
-import {UserManager} from "./talk/user/user-manager";
-import {ChannelManager} from "./talk/channel/channel-manager";
-import {ChatManager} from "./talk/chat/chat-manager";
-import {JsonUtil} from "./util/json-util";
-import {OpenChatManager} from "./talk/open/open-chat-manager";
-import {ChatFeed} from "./talk/chat/chat-feed";
-import {LocoKickoutType} from "./packet/packet-kickout";
-import {ApiClient} from "./api/api-client";
-import {LocoInterface} from "./loco/loco-interface";
-import {Serializer} from "json-proxy-mapper";
-import {ApiStatusCode} from "./talk/struct/api/api-struct";
+import { Long, AccessDataProvider } from ".";
+import { NetworkManager } from "./network/network-manager";
+import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login-access-data-struct";
+import { KakaoAPI } from "./kakao-api";
+import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
+import { EventEmitter } from "events";
+import { ChatChannel } from "./talk/channel/chat-channel";
+import { Chat } from "./talk/chat/chat";
+import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
+import { UserManager } from "./talk/user/user-manager";
+import { ChannelManager } from "./talk/channel/channel-manager";
+import { ChatManager } from "./talk/chat/chat-manager";
+import { JsonUtil } from "./util/json-util";
+import { OpenChatManager } from "./talk/open/open-chat-manager";
+import { ChatFeed } from "./talk/chat/chat-feed";
+import { LocoKickoutType } from "./packet/packet-kickout";
+import { ApiClient } from "./api/api-client";
+import { LocoInterface } from "./loco/loco-interface";
+import { WrappedObject, Serializer } from "json-proxy-mapper";
+import { ApiStatusCode } from "./talk/struct/api/api-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -116,12 +116,7 @@ export class LoginClient extends EventEmitter implements LoginBasedClient, Acces
 
         this.currentLogin = this.login.bind(this, email, password, this.apiClient.DeviceUUID, forced);
 
-        const requestResult = JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced));
-        try {
-            await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(requestResult, LoginAccessDataStruct.MAPPER));
-        } catch (err) {
-            throw requestResult;
-        }
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
     }
 
     async loginToken(email: string, token: string, deviceUUID?: string, forced: boolean = false, locked: boolean = true) {
@@ -129,12 +124,7 @@ export class LoginClient extends EventEmitter implements LoginBasedClient, Acces
 
         this.currentLogin = this.loginToken.bind(this, email, token, this.apiClient.DeviceUUID, forced);
 
-        const requestResult = JsonUtil.parseLoseless(await KakaoAPI.requestAutoLogin(locked, email, token, this.apiClient.DeviceUUID, this.name, forced));
-        try {
-            await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(requestResult, LoginAccessDataStruct.MAPPER));
-        } catch (err) {
-            throw requestResult;
-        }
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestAutoLogin(locked, email, token, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
     }
 
     protected async loginAccessData(accessData: LoginAccessDataStruct) {
@@ -239,8 +229,7 @@ export class TalkClient extends LoginClient implements LocoClient {
     }
 
     protected async loginAccessData(accessData: LoginAccessDataStruct) {
-        super.loginAccessData(accessData);
-
+        await super.loginAccessData(accessData);
         await this.locoLogin();
     }
 
