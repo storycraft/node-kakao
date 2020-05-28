@@ -9,10 +9,10 @@ import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-i
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
 import { PacketSyncLinkRes, PacketSyncLinkReq } from "../../packet/packet-sync-link";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { AsyncIdStore } from "../../store/store";
 import { StatusCode } from "../../packet/loco-packet-base";
-import { OpenChatChannel, ChatChannel } from "../channel/chat-channel";
+import { OpenChatChannel } from "../channel/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
 import { ChatUser } from "../user/chat-user";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
@@ -29,7 +29,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
     private clientLinkIdList: string[];
 
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         super();
 
         this.clientLinkIdList = [];
@@ -39,8 +39,8 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         return this.client;
     }
 
-    get NetworkManager() {
-        return this.client.NetworkManager;
+    get Interface() {
+        return this.client.LocoInterface;
     }
 
     get ClientUser() {
@@ -56,7 +56,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     }
 
     async fetchInfoFromIdList(linkId: Long[]): Promise<OpenLinkStruct[]> {
-        let res = await this.NetworkManager.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq(linkId));
+        let res = await this.Interface.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq(linkId));
 
         return res.LinkList;
     }
@@ -64,10 +64,12 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     async fetchInfoFromURL(openLinkURL: string): Promise<OpenLinkStruct | null> {
         if (!openLinkURL.match(OpenChatManager.LINK_REGEX)) return null;
 
-        let res = await this.NetworkManager.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
+        let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
+
+        if (!res.OpenLink) return null;
 
         if (res.StatusCode === StatusCode.SUCCESS) {
-            this.setCache(res.OpenLink.LinkId, res.OpenLink);
+            this.setCache(res.OpenLink.linkId, res.OpenLink);
 
             return res.OpenLink;
         }
@@ -82,7 +84,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     async requestClientProfile(): Promise<OpenLinkStruct[]> {
         let openChatToken = this.ClientUser.MainOpenToken;
 
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketSyncLinkRes>(new PacketSyncLinkReq(openChatToken));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketSyncLinkRes>(new PacketSyncLinkReq(openChatToken));
 
         return res.LinkList;
     }
@@ -95,22 +97,22 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         let list = await this.requestClientProfile();
 
         for (let profile of list) {
-            this.setCache(profile.LinkId, profile);
-            this.clientLinkIdList.push(profile.LinkId.toString());
+            this.setCache(profile.linkId, profile);
+            this.clientLinkIdList.push(profile.linkId.toString());
         }
     }
 
     async getLinkOwner(linkId: Long): Promise<ChatUser> {
         let info = await this.get(linkId);
         
-        return this.client.UserManager.get(info.Owner.UserId);
+        return this.client.UserManager.get(info.owner.userId);
     }
 
     async kickMember(channel: OpenChatChannel, userId: Long): Promise<boolean> {
         let info = await channel.getChannelInfo();
 
         if (info.hasUserInfo(userId)) {
-            let res = await this.Client.NetworkManager.requestPacketRes<PacketKickMemberRes>(new PacketKickMemberReq(channel.LinkId, channel.Id, userId));
+            let res = await this.Client.LocoInterface.requestPacketRes<PacketKickMemberRes>(new PacketKickMemberReq(channel.LinkId, channel.Id, userId));
 
             return res.StatusCode === StatusCode.SUCCESS;
         }
@@ -121,7 +123,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     async deleteLink(linkId: Long): Promise<boolean> {
         if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;
 
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketDeleteLinkRes>(new PacketDeleteLinkReq(linkId));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketDeleteLinkRes>(new PacketDeleteLinkReq(linkId));
 
         this.delete(linkId);
 
@@ -132,7 +134,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     }
 
     async hideChat(channel: OpenChatChannel, logId: Long): Promise<boolean> {
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, Math.floor(Date.now() / 1000), FeedType.OPENLINK_REWRITE_FEED));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, 1, FeedType.OPENLINK_REWRITE_FEED));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }
@@ -142,7 +144,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
         if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;
         
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, Array.from(idTypeSet.keys()), Array.from(idTypeSet.values())));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, Array.from(idTypeSet.keys()), Array.from(idTypeSet.values())));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }
@@ -152,7 +154,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
         if ((await this.getLinkOwner(linkId)) !== this.ClientUser) return false;
         
-        let res = await this.Client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, [userId], [type]));
+        let res = await this.Client.LocoInterface.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, [userId], [type]));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }
@@ -163,20 +165,20 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     async joinOpenLink(linkId: Long, profileType: OpenchatProfileType, passcode: string = ''): Promise<OpenChatChannel | null> {
         let packet: PacketJoinLinkReq;
         if (profileType === OpenchatProfileType.MAIN) {
-            packet = new PacketJoinLinkReq(linkId, 'EW', passcode, profileType);
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType);
         } else if (profileType === OpenchatProfileType.KAKAO_ANON) {
-            packet = new PacketJoinLinkReq(linkId, 'EW', passcode, profileType, arguments[3], arguments[4]);
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, arguments[3], arguments[4]);
         } else if (profileType === OpenchatProfileType.OPEN_PROFILE) {
-            packet = new PacketJoinLinkReq(linkId, 'EW', passcode, profileType, '', '', arguments[3]);
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, '', '', arguments[3]);
         } else {
             return null;
         }
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
+        let res = await this.client.LocoInterface.requestPacketRes<PacketJoinLinkRes>(packet);
 
-        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+        if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
 
-        return this.client.ChannelManager.get(res.ChatInfo.ChannelId) as Promise<OpenChatChannel>; 
+        return this.client.ChannelManager.get(res.ChatInfo.channelId) as Promise<OpenChatChannel>; 
     }
 
     async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.MAIN): Promise<boolean>;
@@ -194,7 +196,9 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
             return false;
         }
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(packet);
+        let res = await this.client.LocoInterface.requestPacketRes<PacketUpdateOpenchatProfileRes>(packet);
+
+        if (!res.UpdatedProfile) return false;
 
         let info = await channel.getChannelInfo();
         let userInfo = info.getUserInfo(this.client.ClientUser);

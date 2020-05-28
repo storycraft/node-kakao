@@ -7,20 +7,21 @@
 import { AsyncIdStore } from "../../store/store";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { Long } from "bson";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { ChatUser } from "../user/chat-user";
 import { PacketCreateChatRes, PacketCreateChatReq } from "../../packet/packet-create-chat";
 import { PacketChatInfoReq, PacketChatInfoRes } from "../../packet/packet-chatinfo";
 import { ChatInfoStruct } from "../struct/chat-info-struct";
-import { ChatDataStruct, ChatDataBase } from "../struct/chatdata-struct";
+import { ChatDataStruct } from "../struct/chatdata-struct";
 import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
 import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
+import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
-    constructor(private client: TalkClient) {
+    constructor(private client: LocoClient) {
         super();
     }
 
@@ -37,11 +38,11 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     }
 
     async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id), nickname, profileURL));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id), nickname, profileURL));
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo);
+        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo!);
 
         this.setCache(res.ChannelId, chan);
 
@@ -49,23 +50,23 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     }
 
     protected async fetchValue(id: Long): Promise<ChatChannel> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(id));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(id));
 
-        return this.channelFromChatData(id, res.ChatInfo);
+        return this.channelFromChatData(id, res.ChatInfo!);
     }
 
-    protected channelFromChatData(id: Long, chatData: ChatDataBase): ChatChannel {
+    protected channelFromChatData(id: Long, chatData: ChatDataStruct): ChatChannel {
         let channel: ChatChannel;
 
-        switch(chatData.Type) {
+        switch(chatData.type) {
 
             case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.Type, chatData.OpenLinkId, chatData.OpenChatToken); break;
+            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.type, chatData.linkId!, chatData.openToken!); break;
 
             case ChannelType.GROUP:
             case ChannelType.PLUSCHAT:
             case ChannelType.DIRECT:
-            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.Type); break;
+            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type); break;
 
 
             default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN); break;
@@ -76,10 +77,10 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     }
 
     async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
 
         if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.PARTIAL) {
-            return res.ChatInfo;
+            return res.ChatInfo!;
         } else {
             throw new Error('Received wrong info packet');
         }
@@ -92,13 +93,21 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             packet.OpenChatToken = (<OpenChatChannel> channel).OpenToken;
         }
 
-        return await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(packet);
+        return await this.client.LocoInterface.requestPacketRes<PacketChatOnRoomRes>(packet);
     }
 
     async leave(channel: ChatChannel, block: boolean = false): Promise<boolean> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
 
         return res.StatusCode !== StatusCode.SUCCESS;
+    }
+
+    async markRead(channel: ChatChannel, lastWatermark: Long): Promise<void> {
+        if (channel.isOpenChat()) {
+            await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(channel.Id, lastWatermark, (channel as OpenChatChannel).LinkId));
+        } else {
+            await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(channel.Id, lastWatermark));
+        }
     }
 
     removeChannel(channel: ChatChannel) {
@@ -115,7 +124,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         this.clear();
         
         for (let chatData of chatDataList) {
-            let channel: ChatChannel = this.channelFromChatData(chatData.ChannelId, chatData);
+            let channel: ChatChannel = this.channelFromChatData(chatData.channelId, chatData);
 
             this.setCache(channel.Id, channel);
         }

@@ -1,4 +1,4 @@
-import { StructBase } from "./struct-base";
+import { StructBaseOld } from "./struct-base";
 
 /*
  * Created on Tue Nov 05 2019
@@ -6,7 +6,7 @@ import { StructBase } from "./struct-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChannelBoardMetaStruct implements StructBase {
+export class ChannelBoardMetaStruct implements StructBaseOld {
     
     fromJson(rawData: any): void {
         throw new Error("Method not implemented.");
@@ -19,8 +19,10 @@ export class ChannelBoardMetaStruct implements StructBase {
 }
 
 export enum ChannelBoardType {
+
     NONE = 0,
     FLOATING_NOTICE = 1,
     SIDE_NOTICE = 2,
     BADGE = 3
+    
 }

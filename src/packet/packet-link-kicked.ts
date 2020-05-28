@@ -7,13 +7,14 @@
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketLinkKickedRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public Chatlog: ChatlogStruct = new ChatlogStruct()
+        public Chatlog?: ChatlogStruct
     ) {
         super(status);
     }
@@ -26,7 +27,7 @@ export class PacketLinkKickedRes extends LocoBsonResponsePacket {
         this.ChannelId = body['c'];
 
         if (body['chatLog']) {
-            this.Chatlog.fromJson(body['chatLog']);
+            this.Chatlog = Serializer.deserialize<ChatlogStruct>(body['chatLog'], ChatlogStruct.MAPPER);
         }
     }
 

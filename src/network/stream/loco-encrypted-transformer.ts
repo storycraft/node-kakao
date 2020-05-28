@@ -1,6 +1,7 @@
 import { Transform, TransformCallback } from "stream";
 import { LocoSecureSocket } from "../loco-secure-socket";
-import { LocoEncryptedHeaderStruct } from "../../packet/loco-header-struct";
+import { EncryptedPacketHeader } from "../../packet/packet-header-struct";
+import { ChunkedBufferList } from "../chunk/chunked-buffer-list";
 
 /*
  * Created on Tue Oct 29 2019
@@ -13,14 +14,16 @@ export class LocoEncryptedTransformer extends Transform {
     static readonly ENCRYPTED_HEADER_SIZE: number = 4;
     static readonly IV_SIZE: number = 16;
 
-    private currentEncryptedHeader: LocoEncryptedHeaderStruct | null;
-    private encryptedBuffer: Buffer;
+    private currentEncryptedHeader: EncryptedPacketHeader | null;
+
+    private chunkList: ChunkedBufferList;
 
     constructor(private socket: LocoSecureSocket) {
         super();
-
-        this.encryptedBuffer = Buffer.allocUnsafe(0);
+        
         this.currentEncryptedHeader = null;
+
+        this.chunkList = new ChunkedBufferList();
     }
 
     get Socket() {
@@ -33,34 +36,36 @@ export class LocoEncryptedTransformer extends Transform {
 
     _destroy(error: Error | null, callback: (error: Error | null) => void) {
         this.currentEncryptedHeader = null;
-        this.encryptedBuffer = Buffer.allocUnsafe(0);
+        this.chunkList.clear();
 
         super._destroy(error, callback);
     }
 
     _transform(chunk: Buffer, encoding?: string, callback?: TransformCallback) {
-        this.encryptedBuffer = Buffer.concat([ this.encryptedBuffer, chunk ]);
+        this.chunkList.append(chunk);
 
-        if (!this.currentEncryptedHeader && this.encryptedBuffer.length > LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE) {
-            this.currentEncryptedHeader = new LocoEncryptedHeaderStruct();
-
-            this.currentEncryptedHeader.EncryptedSize = this.encryptedBuffer.readInt32LE(0);
+        let buf: Buffer | null = null;
+        if (!this.currentEncryptedHeader && this.chunkList.TotalByteLength > LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE) {
+            buf = this.chunkList.toBuffer();
+            this.currentEncryptedHeader = { encryptedSize: buf.readInt32LE(0) };
         }
 
         if (this.currentEncryptedHeader) {
-            let encryptedPacketSize = LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + this.currentEncryptedHeader.EncryptedSize;
+            let encryptedPacketSize = LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + this.currentEncryptedHeader.encryptedSize;
 
-            if (this.encryptedBuffer.length >= encryptedPacketSize) {
-                let iv = this.encryptedBuffer.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE, LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE);
-                let encryptedBodyBuffer = this.encryptedBuffer.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE, encryptedPacketSize);
+            if (this.chunkList.TotalByteLength >= encryptedPacketSize) {
+                if (!buf) buf = this.chunkList.toBuffer();
+
+                let iv = buf.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE, LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE);
+                let encryptedBodyBuffer = buf.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE, encryptedPacketSize);
                 
                 let decrypted = this.Crypto.toDecryptedPacketBuffer(encryptedBodyBuffer, iv);
 
-                let newBuf = Buffer.allocUnsafe(this.encryptedBuffer.length - encryptedPacketSize);
+                let newBuf = Buffer.allocUnsafe(buf.byteLength - encryptedPacketSize);
 
-                this.encryptedBuffer.copy(newBuf, 0, encryptedPacketSize);
+                buf.copy(newBuf, 0, encryptedPacketSize);
 
-                this.encryptedBuffer = Buffer.allocUnsafe(0);
+                this.chunkList.clear();
                 this.currentEncryptedHeader = null;
 
                 this.push(decrypted);

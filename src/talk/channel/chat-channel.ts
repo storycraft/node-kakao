@@ -10,11 +10,11 @@ import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatBuilder } from "../chat/chat-builder";
-import { PacketMessageNotiReadReq } from "../../packet/loco-noti-read";
+import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
-import { TalkClient } from "../../talk-client";
+import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 
 /*
@@ -31,7 +31,7 @@ export class ChatChannel extends EventEmitter {
 
     private readonly channelInfo: ChannelInfo;
 
-    constructor(private client: TalkClient, private id: Long, private type: ChannelType) {
+    constructor(private client: LocoClient, private id: Long, private type: ChannelType) {
         super();
 
         this.channelInfo = this.createChannelInfo();
@@ -73,8 +73,8 @@ export class ChatChannel extends EventEmitter {
         this.client.emit('message', chat);
     }
 
-    async markChannelRead() {
-        await this.Client.NetworkManager.sendPacket(new PacketMessageNotiReadReq(this.id));
+    async markChannelRead(lastWatermark: Long) {
+        await this.Client.ChannelManager.markRead(this, lastWatermark);
     }
 
     async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
@@ -82,13 +82,19 @@ export class ChatChannel extends EventEmitter {
 
         let extraText = JsonUtil.stringifyLoseless(extra);
         
-        let userId = this.client.ClientUser.Id;
+        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
         
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
-
-        let chat = await this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.id, ChatType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
-        
-        return chat;
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: this.id,
+            type: ChatType.Text,
+            text: text,
+            sendTime: Math.floor(Date.now() / 1000),
+            rawAttachment: extraText,
+            messageId: res.MessageId
+        });
     }
     
     async sendTemplate(template: MessageTemplate): Promise<Chat> {
@@ -100,11 +106,19 @@ export class ChatChannel extends EventEmitter {
         let text = template.getPacketText();
         let extra = template.getPacketExtra();
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
+        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
-        let chat = this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.client.ClientUser.Id, this.id, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
-
-        return chat;
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: this.id,
+            type: ChatType.Text,
+            text: text,
+            sendTime: Math.floor(Date.now() / 1000),
+            rawAttachment: extra,
+            messageId: res.MessageId
+        });
     }
 
     async leave(block: boolean = false): Promise<boolean> {
@@ -135,7 +149,7 @@ export class ChatChannel extends EventEmitter {
 
 export class OpenChatChannel extends ChatChannel {
 
-    constructor(client: TalkClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
+    constructor(client: LocoClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
         super(client, channelId, type);
     }
 

@@ -1,6 +1,7 @@
-import { StructBase, Long } from "../..";
+import { StructBaseOld, Long } from "../..";
 import { JsonUtil } from "../../util/json-util";
-import { ChannelMetaStruct } from "./chat-info-struct";
+import { StructBase } from "./struct-base";
+import { ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Tue Nov 05 2019
@@ -8,43 +9,53 @@ import { ChannelMetaStruct } from "./chat-info-struct";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChannelMetaSetStruct implements StructBase {
+export enum ChannelMetaType {
     
-    constructor(
-        public ChannelId: Long = Long.ZERO,
-        public MetaList: ChannelMetaStruct[] = []
-    ) {
+    NOTICE = 1,
+    GROUP = 2,
+    TITLE = 3,
+    PROFILE = 4,
+    TV = 5,
+    PRIVILEGE = 6,
+    TV_LIVE = 7,
+    PLUS_BACKGROUND = 8,
+    LIVE_TALK_INFO = 11,
+    LIVE_TALK_COUNT = 12
+
+}
+
+export interface ChannelMetaStruct extends StructBase {
+
+    type: ChannelMetaType,
+    revision: Long,
+    authorId: Long,
+    content: string,
+    updatedAt: number
+
+}
+
+export interface ChannelMetaSetStruct extends StructBase {
+
+    channelId: Long,
+    metaList: ChannelMetaStruct[]
+
+}
+
+export namespace ChannelMetaSetStruct {
+
+    export const Mappings = {
+
+        channelId: 'c',
+        metaList: 'ms',
 
     }
 
-    fromJson(rawData: any): void {
-        this.ChannelId = JsonUtil.readLong(rawData['c']);
+    export const ConvertMap = {
 
-        this.MetaList = [];
-        if (rawData['ms']) {
-            let list: any[] = rawData['ms'];
+        channelId: JsonUtil.LongConverter
 
-            for (let rawMeta of list) {
-                let meta = new ChannelMetaStruct();
-
-                meta.fromJson(rawMeta);
-
-                this.MetaList.push(meta);
-            }
-        }
     }
-    
-    toJson() {
-        let rawMetaList: any[] = [];
 
-        for (let meta of this.MetaList) {
-            rawMetaList.push(meta.toJson());
-        }
-
-        return {
-            'c': this.ChannelId,
-            'ms': rawMetaList
-        }
-    }
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }

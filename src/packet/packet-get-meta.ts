@@ -1,7 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "..";
 import { JsonUtil } from "../util/json-util";
-import { ChannelMetaStruct, ChannelMetaType } from "../talk/struct/chat-info-struct";
+import { ChannelMetaStruct, ChannelMetaType } from "../talk/struct/channel-meta-set-struct";
 
 /*
  * Created on Tue Nov 05 2019
@@ -53,7 +53,7 @@ export class PacketGetMetaRes extends LocoBsonResponsePacket {
             let list: any[] = rawJson['metas'];
 
             for (let rawMeta of list) {
-
+                this.MetaList.push(rawMeta);
             }
         }
     }

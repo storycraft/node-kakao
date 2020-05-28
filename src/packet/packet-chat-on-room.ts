@@ -10,6 +10,7 @@ import { MemberStruct } from "../talk/struct/member-struct";
 import { ChannelType } from "../talk/chat/channel-type";
 import { JsonUtil } from "../util/json-util";
 import { OpenMemberStruct } from "../talk/struct/open-link-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
     
@@ -47,7 +48,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         public Type: ChannelType = ChannelType.UNKNOWN,
         public WatermarkList: Long[] = [],
         public OpenChatToken: number = 0,
-        public ClientOpenProfile: OpenMemberStruct | null = null
+        public ClientOpenProfile?: OpenMemberStruct
     ) {
         super(status);
     }
@@ -62,11 +63,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         if (rawData['m']) {
             this.MemberList = [];
             for (let rawMem of rawData['m']) {
-                let memberStruct = new MemberStruct();
-
-                memberStruct.fromJson(rawMem);
-
-                this.MemberList.push(memberStruct);
+                this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
             }
         }
 
@@ -75,12 +72,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
 
         this.OpenChatToken = rawData['otk'];
 
-        if (rawData['olu']) {
-            this.ClientOpenProfile = new OpenMemberStruct();
-            this.ClientOpenProfile.fromJson(rawData['olu']);
-        } else {
-            this.ClientOpenProfile = null;
-        }
+        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
     }
 
 }

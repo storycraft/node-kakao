@@ -1,7 +1,6 @@
 import { KakaoAPI } from "../kakao-api";
 import { LocoRequestPacket } from "./loco-packet-base";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { HostData } from "../loco/loco-manager";
 
 /*
  * Created on Fri Oct 18 2019

@@ -1,9 +1,10 @@
-import { LocoSocket } from "./loco-socket";
+import { LocoBasicSocket } from "./loco-socket";
 import { CryptoManager } from "../secure/crypto-manager";
 import * as net from "net";
 import { LocoEncryptedTransformer } from "./stream/loco-encrypted-transformer";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
 import { LocoRequestPacket } from "../packet/loco-packet-base";
+import { LocoReceiver } from "../loco/loco-interface";
 
 /*
  * Created on Sun Oct 20 2019
@@ -11,14 +12,14 @@ import { LocoRequestPacket } from "../packet/loco-packet-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class LocoSecureSocket extends LocoSocket<net.Socket> {
+export class LocoSecureSocket extends LocoBasicSocket {
 
     private crypto: CryptoManager;
     
     private handshaked: boolean;
 
-    constructor(host: string, port: number, keepAlive: boolean) {
-        super(host, port, keepAlive);
+    constructor(receiver: LocoReceiver, host: string, port: number, keepAlive: boolean) {
+        super(receiver, host, port, keepAlive);
 
         this.handshaked = false;
 
@@ -33,23 +34,14 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
         socket.pipe(new LocoEncryptedTransformer(this)).pipe(new LocoPacketResolver(this));
     }
 
-    protected structPacketToBuffer(packet: LocoRequestPacket): Buffer {
-        let packetBuffer = this.Writer.toBuffer(packet);
-        let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(packetBuffer, this.crypto.randomCipherIV());
+    protected transformBuffer(data: Buffer): Buffer {
+        if (this.handshaked) {
+            let encryptedPacketBuffer = this.Crypto.toEncryptedPacket(super.transformBuffer(data), this.crypto.randomCipherIV());
 
-        return encryptedPacketBuffer;
-    }
-
-    async sendPacket(packet: LocoRequestPacket) {
-        if (!this.Connected) {
-            return false;
+            return encryptedPacketBuffer;
         }
 
-        if (!this.handshaked) {
-            await this.sendHandshakePacket();
-        }
-        
-        return super.sendPacket(packet);
+        return super.transformBuffer(data);
     }
 
     async handshake() {
@@ -61,19 +53,19 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
     }
 
     protected async sendHandshakePacket() {
-        this.handshaked = true;
-
         let keyBuffer = this.Crypto.getRSAEncryptedKey();
 
-        let handshakeHead = Buffer.allocUnsafe(12);
+        let handshakeBuffer = Buffer.allocUnsafe(12 + keyBuffer.byteLength);
 
-        handshakeHead.writeUInt32LE(keyBuffer.length, 0);
-        handshakeHead.writeUInt32LE(12, 4); // RSA OAEP SHA1 MGF1 SHA1
-        handshakeHead.writeUInt32LE(2, 8); // AES_CFB128 NOPADDING
+        handshakeBuffer.writeUInt32LE(keyBuffer.length, 0);
+        handshakeBuffer.writeUInt32LE(12, 4); // RSA OAEP SHA1 MGF1 SHA1
+        handshakeBuffer.writeUInt32LE(2, 8); // AES_CFB128 NOPADDING
 
-        let handshakeBuffer = Buffer.concat([ handshakeHead, keyBuffer ]);
+        keyBuffer.copy(handshakeBuffer, 12);
 
-        return this.sendBuffer(handshakeBuffer);
+        let res = await super.sendBuffer(handshakeBuffer);
+
+        return this.handshaked = res;
     }
 
     protected createSocketConnection(host: string, port: number, callback: () => void): net.Socket {
@@ -86,16 +78,32 @@ export class LocoSecureSocket extends LocoSocket<net.Socket> {
         }, callback).setKeepAlive(this.KeepAlive).setNoDelay(true);
     }
 
+    async sendBuffer(buffer: Buffer): Promise<boolean> {
+        if (!this.Connected) return false;
+
+        if (!this.handshaked) await this.handshake();
+
+        return super.sendBuffer(buffer);
+    }
+
     get Crypto() {
         return this.crypto;
     }
+
+    protected onConnect() {
+        
+    }
+
+    protected onConnected() {
+        
+    }
     
     protected onEnd(buffer: Buffer): void {
-
+        
     }
 
     protected onError(e: any): void {
-        console.log('error: ' + e);
+        throw e;
     }
 
 

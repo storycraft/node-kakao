@@ -7,15 +7,16 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long, OpenchatProfileType } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
-import { OpenLinkStruct } from "../talk/struct/open-link-struct";
+import { OpenLinkStruct, OpenMemberStruct } from "../talk/struct/open-link-struct";
 import { ChatInfoStruct } from "../talk/struct/chat-info-struct";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketJoinLinkReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
-        public Ref: string = '',
+        public Referer: string = '',
         public ChannelKey: string = '',
         
         public ProfileType: OpenchatProfileType = OpenchatProfileType.MAIN,
@@ -35,7 +36,7 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
     toBodyJson() {
         let obj: any = {
             'li': this.LinkId,
-            'ref': this.Ref,
+            'ref': this.Referer,
             'tk': this.ChannelKey,
             'ptp': this.ProfileType
         };
@@ -57,10 +58,10 @@ export class PacketJoinLinkRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public LinkInfo: OpenLinkStruct = new OpenLinkStruct(),
-        public OpenMember: MemberStruct = new MemberStruct(),
-        public ChatInfo: ChatInfoStruct = new ChatInfoStruct(),
-        public Chatlog: ChatlogStruct = new ChatlogStruct()
+        public LinkInfo?: OpenLinkStruct,
+        public OpenMember?: OpenMemberStruct,
+        public ChatInfo?: ChatInfoStruct,
+        public Chatlog?: ChatlogStruct
     ) {
         super(status);
     }
@@ -70,10 +71,10 @@ export class PacketJoinLinkRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        if (rawData['ol']) this.LinkInfo.fromJson(rawData['ol']);
-        if (rawData['olu']) this.OpenMember.fromJson(rawData['olu']);
-        if (rawData['chatRoom']) this.ChatInfo.fromJson(rawData['chatRoom']);
-        if (rawData['chatLog']) this.Chatlog.fromJson(rawData['chatLog']);
+        if (rawData['ol']) this.LinkInfo = Serializer.deserialize<OpenLinkStruct>(rawData['ol'], OpenLinkStruct.MAPPER);
+        if (rawData['olu']) this.OpenMember = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
+        if (rawData['chatRoom']) this.ChatInfo = Serializer.deserialize<ChatInfoStruct>(rawData['chatRoom'], ChatInfoStruct.MAPPER);
+        if (rawData['chatLog']) this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawData['chatLog'], ChatlogStruct.MAPPER);
     }
 
 }

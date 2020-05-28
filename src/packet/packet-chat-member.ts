@@ -2,6 +2,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 import { MemberStruct } from "../talk/struct/member-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Sat Nov 02 2019
@@ -53,10 +54,7 @@ export class PacketChatMemberRes extends LocoBsonResponsePacket {
             let memberList: any[] = rawData['members'];
 
             for (let rawMemberStruct of memberList) {
-                let memberStruct = new MemberStruct();
-                memberStruct.fromJson(rawMemberStruct);
-
-                this.MemberList.push(memberStruct);
+                this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMemberStruct, MemberStruct.MAPPER));
             }
         }
     }

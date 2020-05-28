@@ -1,4 +1,5 @@
 import { LocoRequestPacket } from "./loco-packet-base";
+import { PacketHeader } from "./packet-header-struct";
 
 /*
  * Created on Thu Oct 17 2019
@@ -26,27 +27,27 @@ export class LocoPacketWriter {
         return ++this.packetCount;
     }
 
-    createHeaderBuffer(packet: LocoRequestPacket, bodySize: number) {
+    protected createHeaderBuffer(header: PacketHeader) {
         let buffer = Buffer.allocUnsafe(22);
 
-        buffer.writeUInt32LE(this.getNextPacketId(), 0);
-        buffer.writeUInt16LE(packet.StatusCode, 4);
+        buffer.writeUInt32LE(header.packetId, 0);
+        buffer.writeUInt16LE(header.statusCode, 4);
         
-        let written = buffer.write(packet.PacketName, 6, 'utf8');
+        let written = buffer.write(header.packetName, 6, 'utf8');
         buffer.fill(0, 6 + written, 17);
 
-        buffer.writeInt8(packet.BodyType, 17);
-        buffer.writeUInt32LE(bodySize, 18);
+        buffer.writeInt8(header.bodyType, 17);
+        buffer.writeUInt32LE(header.bodySize, 18);
 
         return buffer;
     }
 
-    toBuffer(packet: LocoRequestPacket, buffer?: Buffer, offset = 0): Buffer {
+    toBuffer(header: PacketHeader, packet: LocoRequestPacket, buffer?: Buffer, offset = 0): Buffer {
         let bodyBuffer = packet.writeBody();
 
-        let bodySize = bodyBuffer.length;
+        header.bodySize = bodyBuffer.byteLength;
 
-        let size = 22 + bodySize;
+        let size = 22 + header.bodySize;
 
         if (buffer && buffer.length < offset + size) {
             throw new Error(`Provided buffer is smaller than required. Size: ${buffer.length}, Required: ${offset + size}`);
@@ -54,7 +55,7 @@ export class LocoPacketWriter {
             buffer = Buffer.allocUnsafe(size + offset);
         }
 
-        let headerBuffer = this.createHeaderBuffer(packet, bodySize);
+        let headerBuffer = this.createHeaderBuffer(header);
 
         headerBuffer.copy(buffer, offset, 0);
         bodyBuffer.copy(buffer, offset + 22, 0);

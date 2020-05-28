@@ -3,6 +3,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 import { ChatDataStruct } from "../talk/struct/chatdata-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Fri Oct 18 2019
@@ -95,10 +96,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
             let chatDataList: any[] = body['chatDatas'];
 
             for (let rawChatData of chatDataList) {
-                let dataStruct = new ChatDataStruct();
-                dataStruct.fromJson(rawChatData);
-
-                this.ChatDataList.push(dataStruct);
+                this.ChatDataList.push(Serializer.deserialize<ChatDataStruct>(rawChatData, ChatDataStruct.MAPPER));
             }
         }
     }

@@ -2,6 +2,7 @@ import { JsonUtil } from "../util/json-util";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Fri Nov 22 2019
@@ -51,9 +52,7 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
 
         if (body['ols']) {
             for (let rawStruct of body['ols']) {
-                let linkStruct = new OpenLinkStruct();
-                linkStruct.fromJson(rawStruct);
-                this.LinkList.push(linkStruct);
+                this.LinkList.push(Serializer.deserialize<OpenLinkStruct>(rawStruct, OpenLinkStruct.MAPPER));
             }
         }
         

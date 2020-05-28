@@ -47,7 +47,7 @@ export class PacketCheckInRes extends LocoBsonResponsePacket {
         status: number,
         public Host: string = '',
         public Port: number = 0,
-        public CacheExpire: number = -1) { // true because we are attempting to login with sub device
+        public CacheExpire: number = -1) {
             super(status);
     }
     

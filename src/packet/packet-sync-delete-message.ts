@@ -6,13 +6,14 @@
 
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketSyncDeleteMessageRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
         public TraceId: number = 0,
-        public Chatlog: ChatlogStruct = new ChatlogStruct()
+        public Chatlog?: ChatlogStruct
     ) {
         super(status);
     }
@@ -24,7 +25,7 @@ export class PacketSyncDeleteMessageRes extends LocoBsonResponsePacket {
     readBodyJson(rawData: any): void {
         this.TraceId = rawData['traceId'];
 
-        if (rawData['chatLog']) this.Chatlog.fromJson(rawData['chatLog']);
+        if (rawData['chatLog']) this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawData['chatLog'], ChatlogStruct.MAPPER);
     }
 
 

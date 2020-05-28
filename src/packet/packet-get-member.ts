@@ -1,6 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Sun Nov 03 2019
@@ -47,10 +48,7 @@ export class PacketGetMemberRes extends LocoBsonResponsePacket {
             let memberList: any[] = json['members'];
 
             for (let rawMemberStruct of memberList) {
-                let memberStruct = new MemberStruct();
-                memberStruct.fromJson(rawMemberStruct);
-
-                this.MemberList.push(memberStruct);
+                this.MemberList.push(Serializer.deserialize(rawMemberStruct, MemberStruct.MAPPER));
             }
         }
     }

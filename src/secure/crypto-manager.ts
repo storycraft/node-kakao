@@ -74,7 +74,7 @@ export class CryptoManager {
     toEncryptedPacket(packetBuffer: Buffer, cipherIV: Buffer): Buffer {
         let encryptedBuf = this.toAESEncrypted(packetBuffer, cipherIV);
 
-        let buffer = Buffer.allocUnsafe(encryptedBuf.length + 20);
+        let buffer = Buffer.allocUnsafe(encryptedBuf.byteLength + 20);
 
         buffer.writeUInt32LE(encryptedBuf.length + 16, 0);
         cipherIV.copy(buffer, 4);

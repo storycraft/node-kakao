@@ -1,25 +1,14 @@
-import { LocoPacketHandler, TalkClient, LocoRequestPacket, LocoResponsePacket, Long } from "..";
-import { LocoManager, BookingData, CheckinData } from "../loco/loco-manager";
-import { EventEmitter } from "events";
-import { PacketMessageRes } from "../packet/packet-message";
-import { PacketLoginRes } from "../packet/packet-login";
-import { ChatChannel } from "../talk/channel/chat-channel";
-import { PacketKickoutRes, LocoKickoutType } from "../packet/packet-kickout";
-import { PacketNewMemberRes } from "../packet/packet-new-member";
-import { PacketLeftRes, PacketLeaveRes, PacketLeaveReq } from "../packet/packet-leave";
-import { PacketChanJoinRes } from "../packet/packet-chan-join";
-import { PacketMessageReadRes } from "../packet/packet-message-read";
-import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
-import { PacketDeleteMemberRes } from "../packet/packet-delmem";
-import { FeedType } from "../talk/feed/feed-type";
-import { ChatFeed } from "../talk/chat/chat-feed";
-import { PacketKickMemberRes } from "../packet/packet-kick-member";
-import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
-import { PacketJoinLinkRes } from "../packet/packet-join-link";
-import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
-import { OpenChannelInfo } from "../talk/channel/channel-info";
-import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
-import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message";
+import { PacketLoginRes, PacketLoginReq } from "../packet/packet-login";
+import { LocoClient } from "../client";
+import { LocoInterface, LocoReceiver } from "../loco/loco-interface";
+import { PacketPingReq } from "../packet/packet-ping";
+import { TalkPacketHandler } from "./packet-handler";
+import { Socket } from "net";
+import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
+import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
+import { StatusCode, LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
+import { LocoPacketWriter, LocoPacketReader, LocoPacketHandler, LocoTLSSocket, LocoSecureSocket, Long, LocoPacketList, PacketHeader, KakaoAPI } from "..";
+import { LocoSocket } from "./loco-socket";
 
 /*
  * Created on Fri Nov 01 2019
@@ -27,61 +16,175 @@ import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class NetworkManager {
+export class NetworkManager implements LocoInterface, LocoReceiver {
+
+    public static readonly PING_INTERVAL = 600000;
+
+    private currentSocket: LocoSocket | null;
+
+    private locoConnected: boolean;
+    private locoLogon: boolean;
+
+    private packetWriter: LocoPacketWriter;
+    private packetReader: LocoPacketReader;
     
     private cachedBookingData: BookingData | null;
     private cachedCheckinData: CheckinData | null;
-    private latestCheckinReq: number;
+    private lastCheckinReq: number;
 
-    private handler: TalkPacketHandler;
+    private packetMap: Map<number, LocoRequestPacket>;
 
-    private locoManager: LocoManager;
+    private handler: LocoPacketHandler;
 
-    constructor(private client: TalkClient) {
+    private pingSchedulerId: NodeJS.Timeout | null;
+
+    constructor(private client: LocoClient, packetWriter: LocoPacketWriter = new LocoPacketWriter(), packetReader: LocoPacketReader = new LocoPacketReader()) {
+        this.packetMap = new Map();
+        
+        this.pingSchedulerId = null;
+
         this.handler = this.createPacketHandler();
-        this.locoManager = new LocoManager(this.handler);
+
+        this.locoConnected = false;
+        this.locoLogon = false;
 
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
-        this.latestCheckinReq = -1;
+        this.lastCheckinReq = -1;
+
+        this.currentSocket = null;
+
+        this.packetWriter = packetWriter;
+        this.packetReader = packetReader;
     }
 
     protected createPacketHandler() {
         return new TalkPacketHandler(this);
     }
 
+    get CurrentSocket() {
+        return this.currentSocket;
+    }
+
+    get Writer() {
+        return this.packetWriter;
+    }
+
+    get Reader() {
+        return this.packetReader;
+    }
+
+    get Handler() {
+        return this.handler;
+    }
+
+    set Handler(handler) {
+        this.handler = handler;
+    }
+
     get Client() {
         return this.client;
     }
 
-    get LocoManager() {
-        return this.locoManager;
-    }
-
-    get NeedReLogin() {
-        return this.locoManager.NeedRelogin;
-    }
-
     get Connected() {
-        return this.locoManager.LocoConnected;
+        return this.locoConnected;
     }
 
     get Logon() {
-        return this.locoManager.LocoLogon;
+        return this.locoLogon;
     }
 
-    protected async getCachedBooking(forceRecache: boolean = false): Promise<BookingData> {
+    protected createBookingSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
+        return new LocoTLSSocket(receiver, hostInfo.Host, hostInfo.Port, false);
+    }
+
+    protected createCheckinSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
+        return new LocoSecureSocket(receiver, hostInfo.Host, hostInfo.Port, false);
+    }
+
+    protected createLocoSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
+        return new LocoSecureSocket(receiver, hostInfo.Host, hostInfo.Port, true);
+    }
+
+    protected async fetchCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
+        let socket = this.createCheckinSocket({
+            responseReceived: this.responseReceived.bind(this),
+            disconnected: () => {}
+        }, checkinHost);
+
+        let connected = await socket.connect();
+
+        if (!connected) {
+            throw new Error('Cannot contact to checkin server');
+        }
+
+        let packet = new PacketCheckInReq(userId);
+
+        let ticket = packet.submitResponseTicket<PacketCheckInRes>();
+
+        let packetId = this.packetWriter.getNextPacketId();
+
+        socket.sendBuffer(this.packetWriter.toBuffer({ packetId: packetId, statusCode: 0, packetName: packet.PacketName, bodyType: 0, bodySize: 0 }, packet));
+        this.packetMap.set(packetId, packet);
+
+        let res = await ticket;
+
+        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
+
+        return new CheckinData(new HostData(res.Host, res.Port), res.CacheExpire);
+    }
+
+    protected async fetchBookingData(bookingHost: HostData = HostData.BookingHost): Promise<BookingData> {
+        let socket = this.createBookingSocket({
+            responseReceived: this.responseReceived.bind(this),
+            disconnected: () => {}
+        }, bookingHost);
+
+        let connected = await socket.connect();
+
+        if (!connected) {
+            throw new Error('Cannot contact to booking server');
+        }
+
+        let packet = new PacketGetConfReq();
+        let ticket = packet.submitResponseTicket<PacketGetConfRes>();
+
+        let packetId = this.packetWriter.getNextPacketId();
+
+        socket.sendBuffer(this.packetWriter.toBuffer({ packetId: packetId, statusCode: 0, packetName: packet.PacketName, bodyType: 0, bodySize: 0 }, packet));
+        this.packetMap.set(packetId, packet);
+
+        let res = await ticket;
+
+        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
+        
+        if (res.HostList.length < 1 && res.PortList.length < 1) {
+            throw new Error(`No server avaliable`);
+        }
+
+        return new BookingData(new HostData(res.HostList[0], res.PortList[0]));
+    }
+
+    async getBookingData(forceRecache: boolean = false): Promise<BookingData> {
         if (!this.cachedBookingData || forceRecache) {
-            this.cachedBookingData = await this.locoManager.getBookingData();
+            try {
+                this.cachedBookingData = await this.fetchBookingData();
+            } catch (statusCode) {
+                throw new Error(`Booking failed. code: ${statusCode}`);
+            }
         }
 
         return this.cachedBookingData;
     }
 
-    protected async getCachedCheckin(userId: Long, forceRecache: boolean = false): Promise<CheckinData> {
-        if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.latestCheckinReq < Date.now() || forceRecache) {
-            this.cachedCheckinData = await this.locoManager.getCheckinData((await this.getCachedBooking()).CheckinHost, userId);
-            this.latestCheckinReq = Date.now();
+    async getCheckinData(userId: Long, forceRecache: boolean = false): Promise<CheckinData> {
+        if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.lastCheckinReq < Date.now() || forceRecache) {
+            try {
+                this.cachedCheckinData = await this.fetchCheckinData((await this.getBookingData()).CheckinHost, userId);
+                this.lastCheckinReq = Date.now();
+            } catch (statusCode) {
+                throw new Error(`Checkin failed. code: ${statusCode}`);
+            }
         }
 
         return this.cachedCheckinData;
@@ -92,30 +195,95 @@ export class NetworkManager {
             throw new Error('Already logon to loco');
         }
         
-        let checkinData = await this.getCachedCheckin(userId);
+        let checkinData = await this.getCheckinData(userId);
 
-        await this.locoManager.connectToLoco(checkinData.LocoHost, checkinData.expireTime);
-        return await this.locoManager.loginToLoco(deviceUUID, accessToken);
+        await this.connectToLoco(checkinData.LocoHost);
+
+        let res = await this.loginToLoco(deviceUUID, accessToken);
+        
+        this.locoLogon = true;
+
+        return res;
     }
 
-    async logout() {
-        if (!this.Logon) {
-            throw new Error('Not logon to loco');
+    protected async connectToLoco(locoHost: HostData): Promise<boolean> {
+        this.currentSocket = this.createLocoSocket(this, locoHost);
+
+        this.locoConnected = await this.currentSocket.connect();
+
+        if (!this.locoConnected) {
+            throw new Error('Cannot connect to LOCO server');
         }
 
-        await this.disconnect();
+        return true;
+    }
+
+    async loginToLoco(deviceUUID: string, accessToken: string): Promise<PacketLoginRes> {
+        if (!this.locoConnected) {
+            throw new Error('Not connected to LOCO');
+        }
+
+        if (this.locoLogon) {
+            throw new Error('Already logon to LOCO');
+        }
+
+        let packet = new PacketLoginReq(deviceUUID, accessToken);
+
+        let res = await this.requestPacketRes<PacketLoginRes>(packet);
+
+        this.locoLogon = true;
+        this.schedulePing();
+
+        return res;
+    }
+
+    private schedulePing() {
+        if (!this.locoConnected) {
+            return;
+        }
+
+        this.pingSchedulerId = setTimeout(this.schedulePing.bind(this), NetworkManager.PING_INTERVAL);
+
+        this.sendPacket(new PacketPingReq());
     }
 
     async disconnect() {
-        if (!this.locoManager.LocoConnected) {
+        if (!this.locoConnected) {
             throw new Error('Not connected to loco');
         }
 
-        this.locoManager.disconnect();
+        this.currentSocket!.disconnect();
     }
 
     async sendPacket(packet: LocoRequestPacket) {
-        return this.locoManager.sendPacket(packet);
+        if (!this.locoConnected) {
+            return false;
+        }
+        
+        let packetId = this.packetWriter.getNextPacketId();
+
+        this.packetMap.set(packetId, packet);
+
+        if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
+            throw new Error(`Tried to send invalid packet ${packet.PacketName}`);
+        }
+        
+        let header: PacketHeader = {
+            packetId: packetId,
+            statusCode: 0,
+            packetName: packet.PacketName,
+            bodyType: 0,
+            bodySize: 0
+        };
+
+        let buffer = this.packetWriter.toBuffer(header, packet);
+        header.bodyType = buffer.byteLength;
+
+        let res = await this.CurrentSocket!.sendBuffer(buffer);
+
+        this.packetSent(packetId, packet);
+
+        return res;
     }
 
     async requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket) {
@@ -123,289 +291,82 @@ export class NetworkManager {
 
         return packet.submitResponseTicket<T>();
     }
+
+    packetSent(packetId: number, packet: LocoRequestPacket): void {
+        if (this.Handler) this.Handler.onRequest(packetId, packet);
+    }
+
+    packetReceived(packetId: number, packet: LocoResponsePacket): void {
+        if (this.packetMap.has(packetId)) {
+            let requestPacket = this.packetMap.get(packetId)!;
+
+            this.packetMap.delete(packetId);
+
+            requestPacket.onResponse(packet);
+
+            if (this.Handler) this.Handler.onResponse(packetId, packet, requestPacket);
+        } else {
+            if (this.Handler) this.Handler.onResponse(packetId, packet);
+        }
+    }
+
+    responseReceived(header: PacketHeader, data: Buffer): void {
+        try {
+            let packet = this.packetReader.structToPacket(header, data);
+
+            this.packetReceived(header.packetId, packet);
+
+            if (header.packetName == 'KICKOUT') {
+                this.disconnect();
+            }
+        } catch(e) {
+            throw new Error(`Error while processing packet#${header.packetId} ${header.packetName}: ${e}`);
+        }
+    }
+
+    disconnected() {
+        this.locoConnected = false;
+        this.locoLogon = false;
+        
+        this.currentSocket = null;
+
+        if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
+
+       if (this.Handler) this.Handler.onDisconnected();
+    }
     
 }
 
-export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
+export class HostData {
 
-    private networkManager: NetworkManager;
-
-    private kickReason: LocoKickoutType;
-
-    constructor(networkManager: NetworkManager) {
-        super();
-
-        this.kickReason = LocoKickoutType.UNKNOWN;
-
-        this.networkManager = networkManager;
-
-        this.setMaxListeners(1000);
-
-        this.on('MSG', this.onMessagePacket.bind(this));
-        this.on('NEWMEM', this.onNewMember.bind(this));
-        this.on('DECUNREAD', this.onMessageRead.bind(this));
-        this.on('JOINLINK', this.onOpenChannelJoin.bind(this));
-        this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
-        this.on('SYNCMEMT', this.syncMemberTypeChange.bind(this));
-        this.on('SYNCLINKPF', this.syncProfileUpdate.bind(this));
-        this.on('KICKMEM', this.onOpenChannelKick.bind(this));
-        this.on('DELMEM', this.onMemberDelete.bind(this));
-        this.on('LINKKICKED', this.onLinkKicked.bind(this));
-        this.on('SYNCJOIN', this.onChannelJoin.bind(this));
-        this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
-        this.on('LEFT', this.onChannelLeft.bind(this));
-        this.on('LEAVE', this.onChannelLeave.bind(this));
-        this.on('KICKOUT', this.onLocoKicked.bind(this));
-    }
-
-    get NetworkManager() {
-        return this.networkManager;
-    }
-
-    get Client() {
-        return this.networkManager.Client;
-    }
-
-    get ChatManager() {
-        return this.Client.ChatManager;
-    }
-
-    get ChannelManager() {
-        return this.Client.ChannelManager;
-    }
+    static readonly BookingHost: HostData = new HostData(KakaoAPI.LocoEntry, KakaoAPI.LocoEntryPort);
     
-    get UserManager() {
-        return this.Client.UserManager;
+    constructor(
+        public Host: string,
+        public Port: number
+    ) {
+
     }
 
-    onRequest(packetId: number, packet: LocoRequestPacket): void {
-        //console.log(`${packet.PacketName} <- ${JSON.stringify(packet)}`);
-    }
-    
-    onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
-        //console.log(`${packet.PacketName} -> ${JSON.stringify(packet)}`);
-        this.emit(packet.PacketName, packet, reqPacket);
-    }
+}
 
-    onDisconnected(): void {
-        this.Client.emit('disconnected', this.kickReason);
+export class BookingData {
+
+    constructor(
+        public CheckinHost: HostData
+    ) {
+
     }
 
-    async onMessagePacket(packet: PacketMessageRes) {
-        let channel: ChatChannel = await this.ChannelManager.get(packet.ChannelId);
+}
 
-        let chatLog = packet.Chatlog;
-        let chat = await this.ChatManager.chatFromChatlog(chatLog);
+export class CheckinData {
 
-        let userInfo = (await chat.Channel.getChannelInfo()).getUserInfo(chat.Sender);
+    constructor(
+        public LocoHost: HostData,
+        public expireTime: number
+    ) {
 
-        if (userInfo) chat.Sender.updateNickname(packet.SenderNickname);
-
-        channel.chatReceived(chat);
     }
 
-    async onMessageRead(packet: PacketMessageReadRes) {
-        let channel = await this.ChannelManager.get(packet.ChannelId);
-
-        let channelInfo = await channel.getChannelInfo();
-
-        let reader = this.UserManager.get(packet.ReaderId);
-
-        let watermark = packet.Watermark;
-
-        reader.emit('message_read', channel, watermark);
-        this.Client.emit('message_read', channel, reader, watermark);
-    }
-
-    async onNewMember(packet: PacketNewMemberRes) {
-        let channel = await this.ChannelManager.get(packet.Chatlog.ChannelId);
-
-        let channelInfo = await channel.getChannelInfo();
-
-        let chatlog = packet.Chatlog;
-
-        let feed = ChatFeed.getFeedFromText(chatlog.Text);
-
-        let idList: Long[] = [];
-
-        if (feed.FeedType === FeedType.INVITE && feed.MemberList) {
-            for (let member of feed.MemberList) {
-                idList.push(member.UserId);
-            }
-        } else if (feed.FeedType === FeedType.OPENLINK_JOIN && feed.Member) {
-            idList.push(feed.Member.UserId);
-        }
-
-        for(let id of idList) {
-            let user = this.UserManager.get(id);
-
-            if (user.isClientUser()) {
-                user.emit('join', channel, feed);
-                this.Client.emit('join_channel', channel);
-            } else {
-                await channelInfo.addUserInfo(id);
-
-                user.emit('join', channel, feed);
-                channel.emit('join', user, feed);
-                this.Client.emit('user_join', channel, user, feed);
-            }
-        }
-    }
-
-    async syncMessageDelete(packet: PacketSyncDeleteMessageRes) {
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
-
-        if (!chat.isFeed()) return;
-
-        let feed = chat.getFeed();
-
-        if (feed.FeedType !== FeedType.DELETE_TO_ALL) return;
-
-        this.Client.emit('message_deleted', feed.LogId! || Long.ZERO, feed.Hidden! || false);
-    }
-
-    async onChannelLeft(packet: PacketLeftRes) {
-        let channel = await this.ChannelManager.get(packet.ChannelId);
-
-        this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
-    }
-
-    async onChannelLeave(packet: PacketLeaveRes, reqPacket?: PacketLeaveReq) {
-        if (!reqPacket) return;
-
-        let chanId = reqPacket.ChannelId;
-
-        if (!this.ChannelManager.has(chanId)) return;
-
-        let channel = await this.ChannelManager.get(chanId);
-
-        this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
-    }
-
-    async onLinkKicked(packet: PacketLinkKickedRes) {
-        let channel = await this.ChannelManager.get(packet.ChannelId);
-
-        this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
-    }
-
-    async onChannelJoin(packet: PacketChanJoinRes) {
-        let chanId = packet.ChannelId;
-
-        let newChan = await this.ChannelManager.get(chanId);
-
-        this.Client.emit('join_channel', newChan);
-    }
-
-    async onOpenChannelJoin(packet: PacketJoinLinkRes) {
-        if (!packet.ChatInfo) return;
-
-        let chanId = packet.ChatInfo.ChannelId;
-
-        if (this.ChannelManager.has(chanId)) return;
-        
-        let newChan = await this.ChannelManager.get(chanId);
-
-        this.Client.emit('join_channel', newChan);
-    }
-
-    async syncOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
-        if (!packet.ChatInfo) return; // DO NOTHING IF ITS NOT CREATING CHAT CHANNEL
-
-        let chanId = packet.ChatInfo.ChannelId;
-
-        if (this.ChannelManager.has(chanId)) return;
-        
-        let newChan = await this.ChannelManager.get(chanId);
-
-        this.Client.emit('join_channel', newChan);
-    }
-
-    async syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
-        let chanId = packet.ChannelId;
-
-        let channel = await this.ChannelManager.get(chanId);
-        
-        if (!channel.isOpenChat()) return;
-
-        let info = (await channel.getChannelInfo()) as OpenChannelInfo;
-
-        let len = packet.MemberIdList.length;
-        for (let i = 0; i < len; i++) {
-            info.updateMemberType(packet.MemberIdList[i], packet.MemberTypeList[i]);
-        }
-    }
-    
-    async syncProfileUpdate(packet: PacketSyncProfileRes) {
-        let chanId = packet.ChannelId;
-
-        if (chanId.equals(Long.ZERO)) return;
-
-        let channel = await this.ChannelManager.get(chanId);
-
-        let info = await channel.getChannelInfo();
-
-        let userInfo = info.getUserInfoId(packet.OpenMember.UserId);
-
-        if (!userInfo) return;
-
-        userInfo.updateFromOpenStruct(packet.OpenMember);
-    }
-
-    async onOpenChannelKick(packet: PacketKickMemberRes) {
-        let chanId = packet.ChannelId;
-
-        if (!this.ChannelManager.has(chanId)) return;
-        
-        let channel = await this.ChannelManager.get(chanId);
-
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
-
-        if (!chat.isFeed()) return;
-
-        let feed = chat.getFeed();
-
-        if (!feed.Member) return;
-
-        let info = await chat.Channel.getChannelInfo();
-
-        let kickedUser = this.UserManager.get(feed.Member.UserId);
-
-        kickedUser.emit('left', channel, feed);
-        channel.emit('left', kickedUser, feed);
-        this.Client.emit('user_left', kickedUser, feed);
-
-        if (!this.Client.ClientUser.Id.equals(feed.Member.UserId)) info.removeUserInfo(feed.Member.UserId);
-    }
-
-    async onMemberDelete(packet: PacketDeleteMemberRes) {
-        let chatLog = packet.Chatlog;
-
-        let channel = await this.ChannelManager.get(chatLog.ChannelId);
-        let chat = await this.ChatManager.chatFromChatlog(chatLog);
-
-        if (!chat.isFeed()) return;
-
-        let feed = chat.getFeed();
-
-        if (!feed.Member) return;
-        
-        let info = await chat.Channel.getChannelInfo();
-            
-        let leftUser = this.UserManager.get(feed.Member.UserId);
-
-        leftUser.emit('left', channel, feed);
-        channel.emit('left', leftUser, feed);
-        this.Client.emit('user_left', leftUser, feed);
-
-        info.removeUserInfo(feed.Member.UserId);
-    }
-
-    onLocoKicked(packet: PacketKickoutRes) {
-        let reason = packet.Reason;
-
-        this.kickReason = reason;
-    }
 }

@@ -7,6 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketSyncMessageReq extends LocoBsonRequestPacket {
 
@@ -14,7 +15,7 @@ export class PacketSyncMessageReq extends LocoBsonRequestPacket {
         public ChannelId: Long = Long.ZERO,
         public StartLogId: Long = Long.ZERO,
         public Count: number = 0,
-        public CurrentLogId: Long = Long.ZERO
+        public EndLogId: Long = Long.ZERO
     ) {
         super();
     }
@@ -28,7 +29,7 @@ export class PacketSyncMessageReq extends LocoBsonRequestPacket {
             'chatId': this.ChannelId,
             'cur': this.StartLogId,
             'cnt': this.Count,
-            'max': this.CurrentLogId
+            'max': this.EndLogId
         };
     }
 
@@ -55,11 +56,7 @@ export class PacketSyncMessageRes extends LocoBsonResponsePacket {
 
         if (rawJson['chatLogs']) {
             for (let rawChatlog of rawJson['chatLogs']) {
-                let log = new ChatlogStruct();
-
-                log.fromJson(rawChatlog);
-
-                this.ChatList.push(log);
+                this.ChatList.push(Serializer.deserialize<ChatlogStruct>(rawChatlog, ChatlogStruct.MAPPER));
             }
         }
         
