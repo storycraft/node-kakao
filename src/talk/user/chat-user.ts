@@ -187,10 +187,11 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromStruct(memberStruct: MemberStruct) {
+        // wtf kakao
         if (memberStruct.openToken) {
             this.updateFromOpenStruct({
                 userId: memberStruct.userId,
-                nickname: memberStruct.openNickname!,
+                nickname: memberStruct.openNickname || memberStruct.nickname,
 
                 linkId: memberStruct.openLinkId!,
                 openToken: memberStruct.openToken!,
@@ -202,6 +203,7 @@ export class UserInfo implements ChatUserInfoBase {
 
                 memberType: memberStruct.openMemberType!
             });
+
             return;
         }
 
