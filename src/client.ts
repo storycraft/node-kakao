@@ -41,7 +41,7 @@ export interface LoginBasedClient {
 export interface LoginError {
 
     status: number;
-    message: string;
+    message?: string;
 
 }
 

@@ -23,7 +23,6 @@ export interface MemberStruct extends StructBase {
     linkedService: string;
     statusMessage: string;
 
-    openNickname?: string;
     openProfileImageUrl?: string;
     openOriginalProfileImageUrl?: string;
     openFullProfileImageUrl?: string;
@@ -47,7 +46,6 @@ export namespace MemberStruct {
         linkedService: 'linkedService',
         statusMessage: 'statusMessage',
 
-        openNickname: 'nn',
         openProfileImageUrl: 'pi',
         openOriginalProfileImageUrl: 'opi',
         openFullProfileImageUrl: 'fpi',

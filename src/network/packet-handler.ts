@@ -5,7 +5,6 @@
  */
 
 import { EventEmitter } from "events";
-import { LocoPacketHandler, NetworkManager, LocoKickoutType, LocoRequestPacket, LocoResponsePacket, ChatChannel, ChatFeed, Long, FeedType, OpenChannelInfo, OpenKickFeed } from "..";
 import { PacketMessageRes } from "../packet/packet-message";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
@@ -19,8 +18,14 @@ import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
 import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
 import { PacketDeleteMemberRes } from "../packet/packet-delmem";
-import { PacketKickoutRes } from "../packet/packet-kickout";
-import { InviteFeed, OpenJoinFeed, DeleteAllFeed } from "../talk/chat/chat-feed";
+import { PacketKickoutRes, LocoKickoutType } from "../packet/packet-kickout";
+import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed } from "../talk/chat/chat-feed";
+import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { NetworkManager } from "./network-manager";
+import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
+import { FeedType } from "../talk/feed/feed-type";
+import { Long } from "bson";
+import { OpenChannelInfo } from "../talk/channel/channel-info";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -87,7 +92,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
-        let channel: ChatChannel = await this.ChannelManager.get(packet.ChannelId);
+        let channel = await this.ChannelManager.get(packet.ChannelId);
 
         let chatLog = packet.Chatlog!;
         let chat = await this.ChatManager.chatFromChatlog(chatLog);
@@ -140,13 +145,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         for(let id of idList) {
             let user = this.UserManager.get(id);
 
+            user.emit('join', channel, feed);
+
             if (user.isClientUser()) {
-                user.emit('join', channel, feed);
                 this.Client.emit('join_channel', channel);
             } else {
                 await channelInfo.addUserInfo(id);
-
-                user.emit('join', channel, feed);
                 channel.emit('join', user, feed);
                 this.Client.emit('user_join', channel, user, feed);
             }
@@ -164,9 +168,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let feed = chat.getFeed() as DeleteAllFeed;
 
-        if (feed.feedType !== FeedType.DELETE_TO_ALL) return;
-
-        this.Client.emit('message_deleted', feed.logId! || Long.ZERO, feed.hidden! || false);
+        this.Client.emit('message_deleted', feed.logId || Long.ZERO, feed.hidden || false);
         this.Client.emit('feed', chat, feed);
     }
 
@@ -191,12 +193,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onLinkKicked(packet: PacketLinkKickedRes) {
+        if (!packet.Chatlog) return;
+
         let channel = await this.ChannelManager.get(packet.ChannelId);
 
         this.Client.emit('left_channel', channel);
         this.ChannelManager.removeChannel(channel);
-
-        if (!packet.Chatlog) return;
 
         let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
         if (!chat.isFeed()) return;
@@ -304,7 +306,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('user_left', kickedUser, feed);
         this.Client.emit('feed', chat, feed);
 
-        if (!this.Client.ClientUser!.Id.equals(feed.member.userId)) info.removeUserInfo(feed.member.userId);
+        if (!this.Client.ClientUser.Id.equals(feed.member.userId)) info.removeUserInfo(feed.member.userId);
     }
 
     async onMemberDelete(packet: PacketDeleteMemberRes) {
@@ -312,8 +314,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let chatLog = packet.Chatlog;
 
-        let channel = await this.ChannelManager.get(chatLog.channelId);
         let chat = await this.ChatManager.chatFromChatlog(chatLog);
+        let channel = chat.Channel;
 
         if (!chat.isFeed()) return;
 

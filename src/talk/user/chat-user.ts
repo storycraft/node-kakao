@@ -191,7 +191,7 @@ export class UserInfo implements ChatUserInfoBase {
         if (memberStruct.openToken) {
             this.updateFromOpenStruct({
                 userId: memberStruct.userId,
-                nickname: memberStruct.openNickname || memberStruct.nickname,
+                nickname: memberStruct.nickname,
 
                 linkId: memberStruct.openLinkId!,
                 openToken: memberStruct.openToken!,

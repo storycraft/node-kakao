@@ -55,13 +55,13 @@ export class LocoSecureSocket extends LocoBasicSocket {
     protected async sendHandshakePacket() {
         let keyBuffer = this.Crypto.getRSAEncryptedKey();
 
-        let handshakeHead = Buffer.allocUnsafe(12);
+        let handshakeBuffer = Buffer.allocUnsafe(12 + keyBuffer.byteLength);
 
-        handshakeHead.writeUInt32LE(keyBuffer.length, 0);
-        handshakeHead.writeUInt32LE(12, 4); // RSA OAEP SHA1 MGF1 SHA1
-        handshakeHead.writeUInt32LE(2, 8); // AES_CFB128 NOPADDING
+        handshakeBuffer.writeUInt32LE(keyBuffer.length, 0);
+        handshakeBuffer.writeUInt32LE(12, 4); // RSA OAEP SHA1 MGF1 SHA1
+        handshakeBuffer.writeUInt32LE(2, 8); // AES_CFB128 NOPADDING
 
-        let handshakeBuffer = Buffer.concat([ handshakeHead, keyBuffer ]);
+        keyBuffer.copy(handshakeBuffer, 12);
 
         let res = await super.sendBuffer(handshakeBuffer);
 
