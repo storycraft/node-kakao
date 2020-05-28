@@ -47,7 +47,7 @@ export class PacketGetMoimMetaRes extends LocoBsonResponsePacket {
     readBodyJson(rawData: any) {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
 
-        console.log(JSON.stringify(rawData));
+        // TODO::
     }
 
 }

@@ -1,7 +1,7 @@
 import { StructBase } from "./struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../util/json-util";
-import { OpenLinkType } from "../open/open-link-type";
+import { OpenLinkType, OpenMemberType } from "../open/open-link-type";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 
 /*
@@ -13,11 +13,11 @@ import { Converter, ObjectMapper } from "json-proxy-mapper";
 export interface OpenMemberStruct {
 
     userId: Long;
-    nickName: string;
+    nickname: string;
     profileImageUrl: string;
     originalProfileImageUrl: string;
     fullProfileImageUrl: string;
-    memberType: number;
+    memberType: OpenMemberType;
     openToken: number;
 
 }
@@ -27,7 +27,7 @@ export namespace OpenMemberStruct {
     export const Mappings = {
 
         userId: 'userId',
-        nickName: 'nn',
+        nickname: 'nn',
         profileImageUrl: 'pi',
         originalProfileImageUrl: 'opi',
         fullProfileImageUrl: 'fpi',

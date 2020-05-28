@@ -9,6 +9,7 @@ import { Long } from "bson";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { JsonUtil } from "../util/json-util";
 import { OpenMemberType } from "../talk/open/open-link-type";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketSetMemTypeReq extends LocoBsonRequestPacket {
 
@@ -42,7 +43,7 @@ export class PacketSetMemTypeRes extends LocoBsonResponsePacket {
         status: number,
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public Chatlog: ChatlogStruct = new ChatlogStruct(),
+        public Chatlog?: ChatlogStruct,
         public MemberIdList: Long[] = [],
         public MemberTypeList: OpenMemberType[] = [],
         public Unknown1: Long[] = []
@@ -67,7 +68,7 @@ export class PacketSetMemTypeRes extends LocoBsonResponsePacket {
         }
 
         if (rawData['chatLog']) {
-            this.Chatlog.fromJson(rawData['chatLog']);
+            this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawData['chatLog'], ChatlogStruct.MAPPER);
         }
 
         if (rawData['pvs']) {

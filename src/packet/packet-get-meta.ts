@@ -53,7 +53,7 @@ export class PacketGetMetaRes extends LocoBsonResponsePacket {
             let list: any[] = rawJson['metas'];
 
             for (let rawMeta of list) {
-
+                this.MetaList.push(rawMeta);
             }
         }
     }

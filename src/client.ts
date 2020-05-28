@@ -16,7 +16,7 @@ import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient } from "./api/api-client";
 import { LocoInterface } from "./loco/loco-interface";
-import { WrappedObject, Serializer } from "json-proxy-mapper";
+import { Serializer } from "json-proxy-mapper";
 import { ApiStatusCode } from "./talk/struct/api/api-struct";
 
 /*
@@ -35,6 +35,13 @@ export interface LoginBasedClient {
     relogin(): Promise<void>;
 
     logout(): Promise<void>;
+
+}
+
+export interface LoginError {
+
+    status: number;
+    message: string;
 
 }
 
@@ -130,10 +137,8 @@ export class LoginClient extends EventEmitter implements LoginBasedClient, Acces
     protected async loginAccessData(accessData: LoginAccessDataStruct) {
         this.accessData = accessData;
 
-        let statusCode = this.accessData.status;
-
-        if (statusCode !== LoginStatusCode.PASS) {
-            throw statusCode;
+        if (this.accessData.status !== LoginStatusCode.PASS) {
+            throw accessData as LoginError;
         }
     }
 

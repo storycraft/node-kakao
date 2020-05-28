@@ -5,7 +5,7 @@
  */
 
 import { EventEmitter } from "events";
-import { LocoPacketHandler, NetworkManager, LocoKickoutType, LocoRequestPacket, LocoResponsePacket, ChatChannel, ChatFeed, Long, FeedType, OpenChannelInfo } from "..";
+import { LocoPacketHandler, NetworkManager, LocoKickoutType, LocoRequestPacket, LocoResponsePacket, ChatChannel, ChatFeed, Long, FeedType, OpenChannelInfo, OpenKickFeed } from "..";
 import { PacketMessageRes } from "../packet/packet-message";
 import { PacketMessageReadRes } from "../packet/packet-message-read";
 import { PacketNewMemberRes } from "../packet/packet-new-member";
@@ -20,6 +20,7 @@ import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
 import { PacketDeleteMemberRes } from "../packet/packet-delmem";
 import { PacketKickoutRes } from "../packet/packet-kickout";
+import { InviteFeed, OpenJoinFeed } from "../talk/chat/chat-feed";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -88,7 +89,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onMessagePacket(packet: PacketMessageRes) {
         let channel: ChatChannel = await this.ChannelManager.get(packet.ChannelId);
 
-        let chatLog = packet.Chatlog;
+        let chatLog = packet.Chatlog!;
         let chat = await this.ChatManager.chatFromChatlog(chatLog);
 
         let userInfo = (await chat.Channel.getChannelInfo()).getUserInfo(chat.Sender);
@@ -112,22 +113,24 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onNewMember(packet: PacketNewMemberRes) {
-        let channel = await this.ChannelManager.get(packet.Chatlog.channelId);
-
-        let channelInfo = await channel.getChannelInfo();
+        if (!packet.Chatlog) return;
 
         let chatlog = packet.Chatlog;
+
+        let channel = await this.ChannelManager.get(chatlog.channelId);
+
+        let channelInfo = await channel.getChannelInfo();
 
         let feed = ChatFeed.getFeedFromText(chatlog.text);
 
         let idList: Long[] = [];
 
         if (feed.FeedType === FeedType.INVITE && feed.MemberList) {
-            for (let member of feed.MemberList) {
-                idList.push(member.UserId);
+            for (let member of (feed as InviteFeed).members) {
+                idList.push(member.userId);
             }
         } else if (feed.FeedType === FeedType.OPENLINK_JOIN && feed.Member) {
-            idList.push(feed.Member.UserId);
+            idList.push((feed as OpenJoinFeed).member.userId);
         }
 
         for(let id of idList) {
@@ -147,6 +150,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async syncMessageDelete(packet: PacketSyncDeleteMessageRes) {
+        if (!packet.Chatlog) return;
+
         let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
 
         if (!chat.isFeed()) return;
@@ -196,7 +201,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onOpenChannelJoin(packet: PacketJoinLinkRes) {
         if (!packet.ChatInfo) return;
 
-        let chanId = packet.ChatInfo.ChannelId;
+        let chanId = packet.ChatInfo.channelId;
 
         if (this.ChannelManager.has(chanId)) return;
         
@@ -208,7 +213,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async syncOpenChannelJoin(packet: PacketSyncJoinOpenchatRes) {
         if (!packet.ChatInfo) return; // DO NOTHING IF ITS NOT CREATING CHAT CHANNEL
 
-        let chanId = packet.ChatInfo.ChannelId;
+        let chanId = packet.ChatInfo.channelId;
 
         if (this.ChannelManager.has(chanId)) return;
         
@@ -241,14 +246,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let info = await channel.getChannelInfo();
 
-        let userInfo = info.getUserInfoId(packet.OpenMember.UserId);
+        let userInfo = info.getUserInfoId(packet.OpenMember!.userId);
 
         if (!userInfo) return;
 
-        userInfo.updateFromOpenStruct(packet.OpenMember);
+        userInfo.updateFromOpenStruct(packet.OpenMember!);
     }
 
     async onOpenChannelKick(packet: PacketKickMemberRes) {
+        if (!packet.Chatlog) return;
+
         let chanId = packet.ChannelId;
 
         if (!this.ChannelManager.has(chanId)) return;
@@ -259,22 +266,24 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!chat.isFeed()) return;
 
-        let feed = chat.getFeed();
+        let feed = chat.getFeed() as OpenKickFeed;
 
         if (!feed.Member) return;
 
         let info = await chat.Channel.getChannelInfo();
 
-        let kickedUser = this.UserManager.get(feed.Member.UserId);
+        let kickedUser = this.UserManager.get(feed.member.userId);
 
         kickedUser.emit('left', channel, feed);
         channel.emit('left', kickedUser, feed);
         this.Client.emit('user_left', kickedUser, feed);
 
-        if (!this.Client.ClientUser!.Id.equals(feed.Member.UserId)) info.removeUserInfo(feed.Member.UserId);
+        if (!this.Client.ClientUser!.Id.equals(feed.member.userId)) info.removeUserInfo(feed.member.userId);
     }
 
     async onMemberDelete(packet: PacketDeleteMemberRes) {
+        if (!packet.Chatlog) return;
+
         let chatLog = packet.Chatlog;
 
         let channel = await this.ChannelManager.get(chatLog.channelId);
@@ -282,19 +291,19 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!chat.isFeed()) return;
 
-        let feed = chat.getFeed();
+        let feed = chat.getFeed() as OpenKickFeed;
 
         if (!feed.Member) return;
         
         let info = await chat.Channel.getChannelInfo();
             
-        let leftUser = this.UserManager.get(feed.Member.UserId);
+        let leftUser = this.UserManager.get(feed.member.userId);
 
         leftUser.emit('left', channel, feed);
         channel.emit('left', leftUser, feed);
         this.Client.emit('user_left', leftUser, feed);
 
-        info.removeUserInfo(feed.Member.UserId);
+        info.removeUserInfo(feed.member.userId);
     }
 
     onLocoKicked(packet: PacketKickoutRes) {

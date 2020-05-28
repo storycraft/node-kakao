@@ -7,6 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketMultiChatlogReq extends LocoBsonRequestPacket {
 
@@ -48,10 +49,7 @@ export class PacketMultiChatlogRes extends LocoBsonResponsePacket {
             this.ChatlogList = [];
 
             for (let rawChatlog of rawData['chatLogs']) {
-                let chatLog = new ChatlogStruct();
-                chatLog.fromJson(rawChatlog);
-
-                this.ChatlogList.push(chatLog);
+                this.ChatlogList.push(Serializer.deserialize<ChatlogStruct>(rawChatlog, ChatlogStruct.MAPPER));
             }
         }
     }

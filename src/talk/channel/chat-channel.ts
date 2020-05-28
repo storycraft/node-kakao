@@ -82,13 +82,19 @@ export class ChatChannel extends EventEmitter {
 
         let extraText = JsonUtil.stringifyLoseless(extra);
         
-        let userId = this.client.ClientUser.Id;
-        
         let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
-
-        let chat = await this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, userId, this.id, ChatType.Text, text, Math.floor(Date.now() / 1000), extraText, res.MessageId));
         
-        return chat;
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: this.id,
+            type: ChatType.Text,
+            text: text,
+            sendTime: Math.floor(Date.now() / 1000),
+            rawAttachment: extraText,
+            messageId: res.MessageId
+        });
     }
     
     async sendTemplate(template: MessageTemplate): Promise<Chat> {
@@ -102,9 +108,17 @@ export class ChatChannel extends EventEmitter {
 
         let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
-        let chat = this.client.ChatManager.chatFromChatlog(new ChatlogStruct(res.LogId, res.PrevLogId, this.client.ClientUser.Id, this.id, sentType, template.getPacketText(), Math.floor(Date.now() / 1000), extra, res.MessageId));
-
-        return chat;
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: this.id,
+            type: ChatType.Text,
+            text: text,
+            sendTime: Math.floor(Date.now() / 1000),
+            rawAttachment: extra,
+            messageId: res.MessageId
+        });
     }
 
     async leave(block: boolean = false): Promise<boolean> {

@@ -2,6 +2,7 @@ import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { Long } from "..";
 import { JsonUtil } from "../util/json-util";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Sat Nov 02 2019
@@ -14,7 +15,7 @@ export class PacketChanJoinRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public readonly Chatlog: ChatlogStruct = new ChatlogStruct()
+        public Chatlog?: ChatlogStruct
         ) {
         super(status);
     }
@@ -27,7 +28,7 @@ export class PacketChanJoinRes extends LocoBsonResponsePacket {
         this.ChannelId = JsonUtil.readLong(rawJson['c']);
 
         if (rawJson['chatLog']) {
-            this.Chatlog.fromJson(rawJson['chatLog']);
+            this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawJson['chatLog'], ChatlogStruct.MAPPER);
         }
     }
 

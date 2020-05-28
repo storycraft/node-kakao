@@ -13,12 +13,12 @@ import { Converter, ObjectMapper } from "json-proxy-mapper";
 export interface ChatDataStruct extends StructBase {
 
     channelId: Long;
-    type: ChannelType,
-    memberCount: number,
-    pushAlert: boolean,
-    linkId?: Long,
-    openToken?: number,
-    metadata: ChatDataMetaStruct
+    type: ChannelType;
+    memberCount: number;
+    pushAlert: boolean;
+    linkId?: Long;
+    openToken?: number;
+    metadata: ChatMetaStruct;
 
 }
 
@@ -47,10 +47,10 @@ export namespace ChatDataStruct {
 
 }
 
-export interface ChatDataMetaStruct extends StructBase {
+export interface ChatMetaStruct extends StructBase {
 
-    imageUrl: string;
-    fullImageUrl: string;
+    fullImageURL: string;
+    imageURL: string;
     name: string;
     favorite: boolean;
 

@@ -8,6 +8,7 @@ import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { OpenMemberStruct } from "../talk/struct/open-link-struct";
 import { JsonUtil } from "../util/json-util";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketSyncProfileRes extends LocoBsonResponsePacket {
 
@@ -15,7 +16,7 @@ export class PacketSyncProfileRes extends LocoBsonResponsePacket {
         status: number,
         public ChannelId: Long = Long.ZERO,
         public LinkId: Long = Long.ZERO,
-        public OpenMember: OpenMemberStruct = {}
+        public OpenMember?: OpenMemberStruct
     ) {
         super(status);
     }
@@ -30,7 +31,7 @@ export class PacketSyncProfileRes extends LocoBsonResponsePacket {
         this.LinkId = JsonUtil.readLong(rawData['li']);
         
         if (rawData['olu']) {
-            this.OpenMember.fromJson(rawData['olu']);
+            this.OpenMember = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
         }
     }
 

@@ -6,6 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { OpenLinkStruct } from "../talk/struct/open-link-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketJoinInfoReq extends LocoBsonRequestPacket {
 
@@ -33,7 +34,7 @@ export class PacketJoinInfoRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public OpenLink: OpenLinkStruct = new OpenLinkStruct()
+        public OpenLink?: OpenLinkStruct
     ) {
         super(status);
     }
@@ -43,7 +44,7 @@ export class PacketJoinInfoRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(body: any): void {
-        if (body['ol']) this.OpenLink.fromJson(body['ol']);
+        if (body['ol']) this.OpenLink = Serializer.deserialize<OpenLinkStruct>(body['ol'], OpenLinkStruct.MAPPER);
     }
 
 }

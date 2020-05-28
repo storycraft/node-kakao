@@ -6,6 +6,7 @@ import { MemberStruct } from "./member-struct";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelMetaStruct } from "./channel-meta-set-struct";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
+import { ChatDataStruct, ChatMetaStruct } from "./chatdata-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -13,12 +14,8 @@ import { ObjectMapper, Converter } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface ChatInfoStruct extends StructBase {
+export interface ChatInfoStruct extends ChatDataStruct {
 
-    channelId: Long;
-    type: ChannelType;
-    openLinkId: Long;
-    openChatToken: number;
     activeMemberCount: number;
     newMessageCount: number;
     lastUpdatedAt: string;
@@ -26,14 +23,9 @@ export interface ChatInfoStruct extends StructBase {
     lastLogId: Long;
     lastSeenLogId: Long;
     lastChatLog: ChatlogStruct;
-    metadata: ChatMetaStruct;
     displayMemberList: MemberStruct[];
-    pushAlert: boolean;
     chatMetaList: ChannelMetaStruct[];
     isDirectChat: boolean;
-
-    linkId?: Long,
-    openToken: number
 
 }
 
@@ -73,14 +65,5 @@ export namespace ChatInfoStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
-
-}
-
-export interface ChatMetaStruct extends StructBase {
-
-    fullImageURL: string;
-    omageURL: string;
-    name: string;
-    favorite: boolean;
 
 }

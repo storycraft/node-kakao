@@ -187,33 +187,25 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromStruct(memberStruct: MemberStruct) {
-        this.accountId = memberStruct.AccountId;
-        this.nickname = memberStruct.NickName;
+        this.accountId = memberStruct.accountId;
+        this.nickname = memberStruct.nickname;
 
-        this.user.updateNickname(memberStruct.NickName);
+        this.user.updateNickname(memberStruct.nickname);
 
-        this.profileImageURL = memberStruct.ProfileImageUrl || '';
-        this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
-        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
-        
-        if (memberStruct.OpenProfileToken !== 0) {
-            this.openProfileToken = memberStruct.OpenProfileToken;
-        }
+        this.profileImageURL = memberStruct.profileImageUrl || '';
+        this.fullProfileImageURL = memberStruct.fullProfileImageUrl || '';
+        this.originalProfileImageURL = memberStruct.originalProfileImageUrl || '';
 
-        if (memberStruct.ProfileLinkId !== Long.ZERO) {
-            this.profileLinkId = memberStruct.ProfileLinkId;
-        }
-
-        this.userType = memberStruct.Type;
+        this.userType = memberStruct.type;
     }
 
     updateFromOpenStruct(memberStruct: OpenMemberStruct) {
-        this.user.updateNickname(memberStruct.NickName);
-        this.profileImageURL = memberStruct.ProfileImageUrl || '';
-        this.fullProfileImageURL = memberStruct.FullProfileImageUrl || '';
-        this.originalProfileImageURL = memberStruct.OriginalProfileImageUrl || '';
+        this.user.updateNickname(memberStruct.nickname);
+        this.profileImageURL = memberStruct.profileImageUrl || '';
+        this.fullProfileImageURL = memberStruct.fullProfileImageUrl || '';
+        this.originalProfileImageURL = memberStruct.originalProfileImageUrl || '';
         
-        this.openProfileToken = memberStruct.OpenChatToken;
+        this.openProfileToken = memberStruct.openToken;
     }
 
 }
