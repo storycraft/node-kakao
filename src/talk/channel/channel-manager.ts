@@ -58,15 +58,15 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     protected channelFromChatData(id: Long, chatData: ChatDataStruct): ChatChannel {
         let channel: ChatChannel;
 
-        switch(chatData.Type) {
+        switch(chatData.type) {
 
             case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.Type, chatData.linkId!, chatData.openToken!); break;
+            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.type, chatData.linkId!, chatData.openToken!); break;
 
             case ChannelType.GROUP:
             case ChannelType.PLUSCHAT:
             case ChannelType.DIRECT:
-            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.Type); break;
+            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type); break;
 
 
             default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN); break;
