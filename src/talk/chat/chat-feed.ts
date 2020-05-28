@@ -20,13 +20,13 @@ export namespace FeedFragment {
     
     export interface Member extends StructBase {
         
-        readonly member: MemberStruct;
+        readonly member: FeedMemberStruct;
     
     }
     
     export interface MemberList extends StructBase {
         
-        readonly members: MemberStruct[];
+        readonly members: FeedMemberStruct[];
     
     }
     
@@ -47,6 +47,13 @@ export namespace FeedFragment {
         readonly text: string;
     
     }
+
+}
+
+export interface FeedMemberStruct extends StructBase {
+
+    userId: Long,
+    nickName: string
 
 }
 

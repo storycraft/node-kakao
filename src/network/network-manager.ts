@@ -320,7 +320,7 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
                 this.disconnect();
             }
         } catch(e) {
-            throw new Error(`Error while processing packet#${header.packetId} ${header.packetName}`);
+            throw new Error(`Error while processing packet#${header.packetId} ${header.packetName}: ${e}`);
         }
     }
 
