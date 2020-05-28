@@ -18,6 +18,7 @@ export interface OpenMemberStruct {
     originalProfileImageUrl: string;
     fullProfileImageUrl: string;
     memberType: OpenMemberType;
+    linkId: Long,
     openToken: number;
 
 }
@@ -32,13 +33,15 @@ export namespace OpenMemberStruct {
         originalProfileImageUrl: 'opi',
         fullProfileImageUrl: 'fpi',
         memberType: 'lmt',
+        linkId: 'li',
         openToken: 'opt'
 
     }
 
     export const ConvertMap = {
 
-        userId: JsonUtil.LongConverter
+        userId: JsonUtil.LongConverter,
+        linkId: JsonUtil.LongConverter
 
     }
 

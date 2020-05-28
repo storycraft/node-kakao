@@ -235,6 +235,7 @@ export class OpenChannelInfo extends ChannelInfo {
             originalProfileImageUrl: '',
             fullProfileImageUrl: '',
             memberType: OpenMemberType.UNKNOWN,
+            linkId: Long.ZERO,
             openToken: -1
         },
         description: '',

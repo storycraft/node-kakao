@@ -23,6 +23,14 @@ export interface MemberStruct extends StructBase {
     linkedService: string;
     statusMessage: string;
 
+    openNickname?: string;
+    openProfileImageUrl?: string;
+    openOriginalProfileImageUrl?: string;
+    openFullProfileImageUrl?: string;
+    openMemberType?: OpenMemberType;
+    openLinkId?: Long,
+    openToken?: number;
+
 }
 
 export namespace MemberStruct {
@@ -37,13 +45,22 @@ export namespace MemberStruct {
         type: 'type',
         accountId: 'accountId',
         linkedService: 'linkedService',
-        statusMessage: 'statusMessage'
+        statusMessage: 'statusMessage',
+
+        openNickname: 'nn',
+        openProfileImageUrl: 'pi',
+        openOriginalProfileImageUrl: 'opi',
+        openFullProfileImageUrl: 'fpi',
+        openMemberType: 'lmt',
+        openLinkId: 'li',
+        openToken: 'opt'
 
     }
 
     export const ConvertMap = {
 
-        userId: JsonUtil.LongConverter
+        userId: JsonUtil.LongConverter,
+        openLinkId: JsonUtil.LongConverter
 
     }
 

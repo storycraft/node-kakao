@@ -187,6 +187,24 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromStruct(memberStruct: MemberStruct) {
+        if (memberStruct.openToken) {
+            this.updateFromOpenStruct({
+                userId: memberStruct.userId,
+                nickname: memberStruct.openNickname!,
+
+                linkId: memberStruct.openLinkId!,
+                openToken: memberStruct.openToken!,
+                
+
+                profileImageUrl: memberStruct.openProfileImageUrl!,
+                fullProfileImageUrl: memberStruct.openFullProfileImageUrl!,
+                originalProfileImageUrl: memberStruct.openOriginalProfileImageUrl!,
+
+                memberType: memberStruct.openMemberType!
+            });
+            return;
+        }
+
         this.accountId = memberStruct.accountId;
         this.nickname = memberStruct.nickname;
 
@@ -200,7 +218,11 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromOpenStruct(memberStruct: OpenMemberStruct) {
+        this.nickname = memberStruct.nickname;
+
+        this.profileLinkId = memberStruct.linkId;
         this.user.updateNickname(memberStruct.nickname);
+
         this.profileImageURL = memberStruct.profileImageUrl || '';
         this.fullProfileImageURL = memberStruct.fullProfileImageUrl || '';
         this.originalProfileImageURL = memberStruct.originalProfileImageUrl || '';
