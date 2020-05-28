@@ -229,8 +229,7 @@ export class TalkClient extends LoginClient implements LocoClient {
     }
 
     protected async loginAccessData(accessData: LoginAccessDataStruct) {
-        super.loginAccessData(accessData);
-
+        await super.loginAccessData(accessData);
         await this.locoLogin();
     }
 
