@@ -23,7 +23,7 @@ export class PacketNewMemberRes extends LocoBsonResponsePacket {
 
     readBodyJson(body: any) {
         if (body['chatLog']) {
-            this.Chatlog = Serializer.deserialize<ChatlogStruct>(this.Chatlog, ChatlogStruct.MAPPER);
+            this.Chatlog = Serializer.deserialize<ChatlogStruct>(body['chatLog'], ChatlogStruct.MAPPER);
         }
     }
 
