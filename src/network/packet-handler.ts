@@ -97,6 +97,9 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (userInfo) chat.Sender.updateNickname(packet.SenderNickname);
 
         channel.chatReceived(chat);
+
+        if (!chat.isFeed()) return;
+        this.Client.emit('feed', chat, chat.getFeed());
     }
 
     async onMessageRead(packet: PacketMessageReadRes) {

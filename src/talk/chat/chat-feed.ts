@@ -32,7 +32,7 @@ export namespace FeedFragment {
     
     export interface Inviter extends StructBase {
         
-        readonly inviter: any;
+        readonly inviter: FeedMemberStruct;
     
     }
     
