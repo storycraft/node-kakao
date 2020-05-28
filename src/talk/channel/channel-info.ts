@@ -14,6 +14,7 @@ import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
 import { PacketChatOnRoomRes, PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
 import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
 import { ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-set-struct";
+import { JsonUtil } from "../../util/json-util";
 
 
 export class ChannelInfo {
@@ -278,6 +279,10 @@ export class OpenChannelInfo extends ChannelInfo {
 
     protected initUserInfo(memberStruct: MemberStruct) {
         super.initUserInfo(memberStruct);
+
+        if (memberStruct.openMemberType) {
+            this.updateMemberType(memberStruct.userId, memberStruct.openMemberType);
+        }
     }
 
     updateMemberType(userId: Long, memberType: OpenMemberType) {

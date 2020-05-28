@@ -49,7 +49,7 @@ export namespace MemberStruct {
         openProfileImageUrl: 'pi',
         openOriginalProfileImageUrl: 'opi',
         openFullProfileImageUrl: 'fpi',
-        openMemberType: 'lmt',
+        openMemberType: 'mt',
         openLinkId: 'li',
         openToken: 'opt'
 
