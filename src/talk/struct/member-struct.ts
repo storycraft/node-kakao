@@ -55,13 +55,6 @@ export namespace MemberStruct {
 
     }
 
-    export const ConvertMap = {
-
-        userId: JsonUtil.LongConverter,
-        openLinkId: JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }

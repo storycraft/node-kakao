@@ -50,12 +50,6 @@ export namespace ChannelMetaSetStruct {
 
     }
 
-    export const ConvertMap = {
-
-        channelId: JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }

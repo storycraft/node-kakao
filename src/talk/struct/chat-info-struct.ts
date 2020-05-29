@@ -55,12 +55,7 @@ export namespace ChatInfoStruct {
 
     export const ConvertMap = {
 
-        displayMemberList: new Converter.Array(MemberStruct.Mappings, MemberStruct.ConvertMap),
-
-        channelId: JsonUtil.LongConverter,
-        lastLogId: JsonUtil.LongConverter,
-        lastSeenLogId: JsonUtil.LongConverter,
-        linkId: JsonUtil.LongConverter
+        displayMemberList: new Converter.Array(MemberStruct.Mappings),
 
     }
 

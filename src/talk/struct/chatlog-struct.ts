@@ -40,15 +40,6 @@ export namespace ChatlogStruct {
 
     }
 
-    export const ConvertMap = {
-
-        logId: JsonUtil.LongConverter,
-        prevLogId: JsonUtil.LongConverter,
-        senderId: JsonUtil.LongConverter,
-        channelId: JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
     
 }

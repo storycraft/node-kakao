@@ -101,4 +101,5 @@ export * from './client';
 import { Long } from 'bson';
 export { Long };
 
+export * from './util/json-util';
 export * from './testing/test-util';

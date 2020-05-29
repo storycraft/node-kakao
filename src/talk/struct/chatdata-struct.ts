@@ -36,14 +36,7 @@ export namespace ChatDataStruct {
 
     }
 
-    export const ConvertMap = {
-
-        channelId: JsonUtil.LongConverter,
-        linkId: JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
