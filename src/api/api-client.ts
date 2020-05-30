@@ -68,7 +68,7 @@ export class ApiClient {
         return this.createApiRequest('GET', `${ApiClient.getAccountApiURL('less_settings.json')}?since=${since}&lang=${language}`);
     }
 
-    async requestLoginToken(): Promise<LoginTokenStruct> {
+    async requestWebLoginToken(): Promise<LoginTokenStruct> {
         return this.createApiRequest('GET', ApiClient.getAccountApiURL('login_token.json'));
     }
 

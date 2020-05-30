@@ -75,7 +75,7 @@ export namespace ChatFeed {
 
 }
 
-export type InviteFeed = ChatFeed & FeedFragment.Inviter & FeedFragment.Member & FeedFragment.MemberList;
+export type InviteFeed = ChatFeed & FeedFragment.Inviter & FeedFragment.MemberList;
 export type LeaveFeed = ChatFeed & FeedFragment.Member;
 export type RichContentFeed = ChatFeed & FeedFragment.RichContent;
 export type OpenJoinFeed = ChatFeed & FeedFragment.Member;
