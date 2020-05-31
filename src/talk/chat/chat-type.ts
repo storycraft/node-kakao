@@ -33,6 +33,7 @@ export enum ChatType {
     MultiPhoto = 27,
     Mvoip = 51,
     Custom = 71,
+    Alim = 72,
     PlusFriend = 81,
     PlusFriendViral = 83,
     Template = 90,

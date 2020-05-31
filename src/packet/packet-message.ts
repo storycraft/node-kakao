@@ -18,7 +18,8 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
         public Text: string = '',
         public Type: ChatType = ChatType.Text,
         public NoSeen: boolean = false,
-        public Extra: string = ''
+        public Extra: string = '',
+        public Supplement: string = ''
     ) {
         super();
     }
@@ -36,9 +37,9 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
             'noSeen': this.NoSeen
         };
 
-        if (this.Extra !== '') {
-            obj.extra = this.Extra;
-        }
+        if (this.Extra !== '') obj['extra'] = this.Extra;
+
+        if (this.Supplement !== '') obj['supplement'] = this.Supplement;
 
         return obj;
     }
@@ -53,6 +54,7 @@ export class PacketMessageWriteRes extends LocoBsonResponsePacket {
         public LogId: Long = Long.ZERO,
         public PrevLogId: Long = Long.ZERO,
         public SenderNickname: string = '',
+        public Chatlog?: ChatlogStruct,
         public SendTime: number = -1
     ) {
         super(status);
@@ -68,6 +70,10 @@ export class PacketMessageWriteRes extends LocoBsonResponsePacket {
         this.LogId = JsonUtil.readLong(body['logId']);
         this.PrevLogId = JsonUtil.readLong(body['prevId']);
         this.SendTime = body['sendAt'];
+
+        if (body['chatLog']) {
+            this.Chatlog = Serializer.deserialize<ChatlogStruct>(body['chatLog'], ChatlogStruct.MAPPER);
+        }
     }
 }
 
