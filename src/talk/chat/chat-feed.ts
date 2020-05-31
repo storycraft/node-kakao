@@ -11,12 +11,6 @@ import { StructBase } from "../struct/struct-base";
 import { MemberStruct } from "../struct/member-struct";
 
 export namespace FeedFragment {
-
-    export interface Hidden extends StructBase {
-    
-        readonly hidden: boolean;
-    
-    }
     
     export interface Member extends StructBase {
         
@@ -41,12 +35,6 @@ export namespace FeedFragment {
         readonly logId: Long;
     
     }
-    
-    export interface RichContent extends StructBase {
-        
-        readonly text: string;
-    
-    }
 
 }
 
@@ -60,6 +48,7 @@ export interface FeedMemberStruct extends StructBase {
 export interface ChatFeed extends StructBase {
 
     readonly feedType: FeedType;
+    readonly hidden?: boolean;
 
 }
 
@@ -77,8 +66,8 @@ export namespace ChatFeed {
 
 export type InviteFeed = ChatFeed & FeedFragment.Inviter & FeedFragment.MemberList;
 export type LeaveFeed = ChatFeed & FeedFragment.Member;
-export type RichContentFeed = ChatFeed & FeedFragment.RichContent;
+export type RichContentFeed = ChatFeed;
 export type OpenJoinFeed = ChatFeed & FeedFragment.Member;
-export type OpenRewriteFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
+export type OpenRewriteFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message;
 export type OpenKickFeed = ChatFeed & FeedFragment.Member;
-export type DeleteAllFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
+export type DeleteAllFeed = ChatFeed & FeedFragment.Message;

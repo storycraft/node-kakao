@@ -97,7 +97,7 @@ export class PhotoAttachment implements ChatAttachment {
     static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<PhotoAttachment> {
         let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.IMAGE, data, name);
 
-            return new PhotoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.IMAGE), Long.fromNumber(size));
+        return new PhotoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.IMAGE), Long.fromNumber(size));
     }
 
 }
