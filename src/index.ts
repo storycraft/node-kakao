@@ -46,6 +46,7 @@ export * from './talk/feed/feed-type';
 export * from './talk/chat/attachment/chat-attachment';
 export * from './talk/chat/attachment/sharp-attachment';
 export * from './talk/chat/attachment/custom-attachment';
+export * from './talk/chat/attachment/rich-feed-attachment';
 
 export * from './talk/chat/template/message-template';
 
@@ -101,4 +102,5 @@ export * from './client';
 import { Long } from 'bson';
 export { Long };
 
+export * from './util/json-util';
 export * from './testing/test-util';

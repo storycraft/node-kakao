@@ -18,8 +18,9 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         public OAuthToken: string = '',
         public Appver: string = KakaoAPI.InternalAppVersion,
         public Os: string = KakaoAPI.Agent,
+        public DeviceType: number = 2,
         public NetType: number = 0,
-        public NetworkMccMnc: string = '',
+        public NetworkMccMnc: string = '999',
         public Language: string = 'ko',
         public Revision: number = 0, //Always 0 since I didnt implement revision data and dunno what
         public RevisionData: null | Buffer = null, // idk
@@ -47,7 +48,7 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'lang': this.Language,
             'duuid': this.DeviceUUID,
             'oauthToken': this.OAuthToken,
-            'dtype': 1,
+            'dtype': this.DeviceType,
             'ntype': this.NetType,
             'MCCMNC': this.NetworkMccMnc,
             'revision': this.Revision,
@@ -59,7 +60,7 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'bg': this.Bg
         };
 
-        if (this.LastChatId.toNumber() !== 0) {
+        if (this.LastChatId !== Long.ZERO) {
             obj['lastChatId'] = this.LastChatId;
         }
 
@@ -90,8 +91,8 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         this.Revision = body['revision'];
         this.RevisionDetail = body['revisionInfo'];
         this.OpenChatToken = body['ltk'];
+        
         this.ChatDataList = [];
-
         if (body['chatDatas']) {
             let chatDataList: any[] = body['chatDatas'];
 

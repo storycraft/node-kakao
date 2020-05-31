@@ -2,7 +2,7 @@ import { ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "../chat/channel-type";
 import { EventEmitter } from "events";
-import { Chat } from "../chat/chat";
+import { Chat, UnknownChat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { ChatType } from "../chat/chat-type";
 import { MessageTemplate } from "../chat/template/message-template";
@@ -16,6 +16,7 @@ import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
+import { StatusCode } from "../../packet/loco-packet-base";
 
 /*
  * Created on Fri Nov 01 2019
@@ -77,27 +78,19 @@ export class ChatChannel extends EventEmitter {
         await this.Client.ChannelManager.markRead(this, lastWatermark);
     }
 
-    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat> {
+    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
         let { text, extra } = ChatBuilder.buildMessage(...textFormat);
 
         let extraText = JsonUtil.stringifyLoseless(extra);
         
         let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
         
-        return this.client.ChatManager.chatFromChatlog({
-            logId: res.LogId,
-            prevLogId: res.PrevLogId,
-            senderId: this.client.ClientUser.Id,
-            channelId: this.id,
-            type: ChatType.Text,
-            text: text,
-            sendTime: Math.floor(Date.now() / 1000),
-            rawAttachment: extraText,
-            messageId: res.MessageId
-        });
+        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+
+        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
     }
     
-    async sendTemplate(template: MessageTemplate): Promise<Chat> {
+    async sendTemplate(template: MessageTemplate): Promise<Chat | null> {
         if (!template.Valid) {
             throw new Error('Invalid template');
         }
@@ -108,17 +101,9 @@ export class ChatChannel extends EventEmitter {
 
         let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
-        return this.client.ChatManager.chatFromChatlog({
-            logId: res.LogId,
-            prevLogId: res.PrevLogId,
-            senderId: this.client.ClientUser.Id,
-            channelId: this.id,
-            type: ChatType.Text,
-            text: text,
-            sendTime: Math.floor(Date.now() / 1000),
-            rawAttachment: extra,
-            messageId: res.MessageId
-        });
+        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+
+        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
     }
 
     async leave(block: boolean = false): Promise<boolean> {

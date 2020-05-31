@@ -8,15 +8,8 @@ import { FeedType } from "../feed/feed-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
 import { StructBase } from "../struct/struct-base";
-import { MemberStruct } from "../struct/member-struct";
 
 export namespace FeedFragment {
-
-    export interface Hidden extends StructBase {
-    
-        readonly hidden: boolean;
-    
-    }
     
     export interface Member extends StructBase {
         
@@ -41,11 +34,12 @@ export namespace FeedFragment {
         readonly logId: Long;
     
     }
-    
-    export interface RichContent extends StructBase {
-        
-        readonly text: string;
-    
+
+    export interface OpenHandOver extends StructBase {
+
+        readonly prevHost: FeedMemberStruct;
+        readonly newHost: FeedMemberStruct;
+
     }
 
 }
@@ -57,9 +51,10 @@ export interface FeedMemberStruct extends StructBase {
 
 }
 
-export interface ChatFeed extends StructBase {
+export interface ChatFeed<T extends FeedType = FeedType> extends StructBase {
 
-    readonly feedType: FeedType;
+    readonly feedType: T;
+    readonly hidden?: boolean;
 
 }
 
@@ -75,10 +70,19 @@ export namespace ChatFeed {
 
 }
 
-export type InviteFeed = ChatFeed & FeedFragment.Inviter & FeedFragment.Member & FeedFragment.MemberList;
-export type LeaveFeed = ChatFeed & FeedFragment.Member;
-export type RichContentFeed = ChatFeed & FeedFragment.RichContent;
-export type OpenJoinFeed = ChatFeed & FeedFragment.Member;
-export type OpenRewriteFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
-export type OpenKickFeed = ChatFeed & FeedFragment.Member;
-export type DeleteAllFeed = ChatFeed & FeedFragment.Member & FeedFragment.Message & FeedFragment.Hidden;
+export type InviteFeed = ChatFeed<FeedType.INVITE> & FeedFragment.Inviter & FeedFragment.MemberList;
+export type LeaveFeed = ChatFeed<FeedType.LEAVE> & FeedFragment.Member;
+
+export type RichContentFeed = ChatFeed<FeedType.RICH_CONTENT>;
+
+export type OpenJoinFeed = ChatFeed<FeedType.OPENLINK_JOIN> & FeedFragment.Member;
+export type OpenLinkDeletedFeed = ChatFeed<FeedType.OPENLINK_DELETE_LINK>;
+export type OpenRewriteFeed = ChatFeed<FeedType.OPENLINK_REWRITE_FEED> & FeedFragment.Member & FeedFragment.Message;
+export type OpenKickFeed = ChatFeed<FeedType.OPENLINK_KICKED> & FeedFragment.Member;
+export type OpenHandOverHostFeed = ChatFeed<FeedType.OPENLINK_HAND_OVER_HOST> & FeedFragment.OpenHandOver;
+
+export type OpenManagerGrantFeed = ChatFeed<FeedType.OPEN_MANAGER_GRANT> & FeedFragment.Member;
+export type OpenManagerRevokeFeed = ChatFeed<FeedType.OPEN_MANAGER_REVOKE> & FeedFragment.Member;
+
+export type ChannelDeletedFeed = ChatFeed<FeedType.CHANNEL_DELETED>;
+export type DeleteAllFeed = ChatFeed<FeedType.DELETE_TO_ALL> & FeedFragment.Message;

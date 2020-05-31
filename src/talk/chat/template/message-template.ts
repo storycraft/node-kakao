@@ -2,6 +2,8 @@ import { ChatType } from "../chat-type";
 import { ChatAttachment, EmoticonAttachment, ChatContent, ReplyAttachment } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
 import { ChatBuilder } from "../chat-builder";
+import { RichFeedAttachment } from "../attachment/rich-feed-attachment";
+import { ChatFeed } from "../chat-feed";
 
 /*
  * Created on Fri Jan 03 2020
@@ -95,6 +97,33 @@ export class ReplyContentTemplate extends AttachmentTemplate {
 
     protected getRawExtra() {
         return Object.assign(super.getRawExtra(), this.getReplyContent());
+    }
+
+}
+
+export class FeedTemplate implements MessageTemplate {
+
+    constructor(
+        private feed: ChatFeed,
+        private extraContent?: RichFeedAttachment
+    ) {
+
+    }
+    
+    get Valid() {
+        return !!this.feed;
+    }
+
+    getMessageType(): ChatType {
+        return ChatType.Feed;
+    }
+
+    getPacketText(): string {
+        return JsonUtil.stringifyLoseless(this.feed);
+    }
+
+    getPacketExtra(): string {
+        return this.extraContent && JsonUtil.stringifyLoseless(this.extraContent.toJsonAttachment());
     }
 
 }

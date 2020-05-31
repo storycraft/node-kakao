@@ -38,14 +38,7 @@ export namespace OpenMemberStruct {
 
     }
 
-    export const ConvertMap = {
-
-        userId: JsonUtil.LongConverter,
-        linkId: JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
     
 }
 
@@ -78,8 +71,7 @@ export namespace OpenLinkStruct {
 
     export const ConvertMap = {
 
-        linkId: JsonUtil.LongConverter,
-        logId: new Converter.Object(OpenMemberStruct.Mappings, OpenMemberStruct.ConvertMap)
+        logId: new Converter.Object(OpenMemberStruct.Mappings)
 
     }
 

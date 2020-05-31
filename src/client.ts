@@ -18,6 +18,8 @@ import { ApiClient } from "./api/api-client";
 import { LocoInterface } from "./loco/loco-interface";
 import { Serializer } from "json-proxy-mapper";
 import { ApiStatusCode } from "./talk/struct/api/api-struct";
+import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
+import { StatusCode } from "./packet/loco-packet-base";
 
 /*
  * Created on Fri Nov 01 2019
@@ -45,6 +47,13 @@ export interface LoginError {
 
 }
 
+export enum ClientStatus {
+
+    UNLOCKED = 1,
+    LOCKED = 2
+
+}
+
 export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly Name: string;
@@ -62,26 +71,6 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
     readonly ClientUser: ClientChatUser;
 
     readonly LocoLogon: boolean;
-
-    on(event: 'login', listener: (user: ClientChatUser) => void): this;
-    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
-    on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
-
-    once(event: 'login', listener: (user: ClientChatUser) => void): this;
-    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    once(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    once(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
-    once(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
 
 }
 
@@ -173,6 +162,8 @@ export class TalkClient extends LoginClient implements LocoClient {
     private chatManager: ChatManager;
     private openChatManager: OpenChatManager;
 
+    private status: ClientStatus;
+
     constructor(name: string, deviceUUID: string = '') {
         super(name, deviceUUID);
 
@@ -185,6 +176,8 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.openChatManager = new OpenChatManager(this);
 
         this.clientUser = null;
+
+        this.status = ClientStatus.UNLOCKED;
     }
 
     get LocoInterface() {
@@ -256,6 +249,23 @@ export class TalkClient extends LoginClient implements LocoClient {
         await this.openChatManager.initOpenSession();
 
         this.emit('login', this.clientUser);
+
+        await this.setStatus(this.status);
+    }
+
+    async setStatus(status: ClientStatus): Promise<boolean> {
+        let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(status));
+
+        if (res.StatusCode === StatusCode.SUCCESS) {
+            if (status !== this.status) this.status = status;
+            return true;
+        }
+
+        return false;
+    }
+
+    async getStatus(): Promise<ClientStatus> {
+        return this.status;
     }
 
     async logout() {
@@ -278,16 +288,6 @@ export class TalkClient extends LoginClient implements LocoClient {
         return super.on(event, listener);
     }
 
-    once(event: 'login', listener: (user: ClientChatUser) => void): this;
-    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'feed', listener: (chat: Chat, feed: ChatFeed) => void): this;
-    once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    once(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    once(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
-    once(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
     once(event: string, listener: (...args: any[]) => void): this {
         return super.on(event, listener);
     }

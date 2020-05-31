@@ -9,6 +9,8 @@ import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { CustomAttachment } from "./attachment/custom-attachment";
 import { ChannelType } from "./channel-type";
+import { FeedType } from "../feed/feed-type";
+import { RichFeedAttachment } from "./attachment/rich-feed-attachment";
 
 /*
  * Created on Fri Nov 01 2019
@@ -223,7 +225,13 @@ export class FeedChat extends Chat {
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        
+        try {
+            if (this.getFeed().feedType === FeedType.RICH_CONTENT) {
+                attachmentList.push(new RichFeedAttachment(attachmentJson['text'], attachmentJson['icon'], attachmentJson['action']));
+            }
+        } catch (e) {
+            // SKIP if invalid
+        }
     }
 
 }

@@ -458,6 +458,10 @@ export class KakaoAPI {
     static createJoinLinkURL(code: string, ref: string = 'EW') {
         return `kakaoopen://join?l=${code}&r=${ref}`;
     }
+
+    static createSessionURL(token: string, redirectURL: string) {
+        return `https://accounts.kakao.com/weblogin/login_redirect?continue=${encodeURIComponent(redirectURL)}&token=${token}`;
+    }
 }
 
 
