@@ -15,12 +15,12 @@ export enum VoipType {
     MAINTENANCE = 'maintenance',
     BUSY = 'busy',
     ADD = 'add',
-    V_INVITE = 'v_invite',
-    V_CANCELED = 'v_canceled',
-    V_BYE = 'v_bye',
-    V_NO_ANSWER = 'v_noanswer',
-    V_DENY = 'v_deny',
-    V_BUSY = 'v_busy',
+    FACE_INVITE = 'v_invite',
+    FACE_CANCELED = 'v_canceled',
+    FACE_BYE = 'v_bye',
+    FACE_NO_ANSWER = 'v_noanswer',
+    FACE_DENY = 'v_deny',
+    FACE_BUSY = 'v_busy',
     TRANSFERRED = 'transferred'
 
 }
