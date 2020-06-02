@@ -15,7 +15,7 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
         public Os: string = KakaoAPI.Agent,
         public NetType: number = 0,
         public Appver: string = KakaoAPI.InternalAppVersion,
-        public NetworkMccMnc: string = '',
+        public NetworkMccMnc: string = '999',
         public language: string = 'ko',
         public CountryIso: string = 'KR',
         public UseSub: boolean = true) { // true because we are attempting to login with sub device
@@ -27,7 +27,7 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
-        return {
+        let obj: any = {
             userId: this.UserId,
             os: this.Os,
             ntype: this.NetType,
@@ -36,6 +36,10 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
             lang: this.language,
             useSub: this.UseSub
         };
+
+        if (this.CountryIso) obj['countryISO'] = this.CountryIso;
+
+        return obj;
     }
 
     

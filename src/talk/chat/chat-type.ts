@@ -32,7 +32,7 @@ export enum ChatType {
     Post = 24,
     Reply = 26,
     MultiPhoto = 27,
-    Mvoip = 51,
+    Voip = 51,
     LiveTalk = 52,
     Custom = 71,
     Alim = 72,

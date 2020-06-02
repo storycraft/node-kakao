@@ -9,6 +9,7 @@ import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { StatusCode, LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
 import { LocoPacketWriter, LocoPacketReader, LocoPacketHandler, LocoTLSSocket, LocoSecureSocket, Long, LocoPacketList, PacketHeader, KakaoAPI } from "..";
 import { LocoSocket } from "./loco-socket";
+import { PacketBuyCallServerReq, PacketBuyCallServerRes } from "../packet/packet-buy-call-server";
 
 /*
  * Created on Fri Nov 01 2019
@@ -132,6 +133,34 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
         return new CheckinData(new HostData(res.Host, res.Port), res.CacheExpire);
+    }
+
+    protected async fetchCallServerData(checkinHost: HostData, userId: Long): Promise<PacketBuyCallServerRes> {
+        let socket = this.createCheckinSocket({
+            responseReceived: this.responseReceived.bind(this),
+            disconnected: () => {}
+        }, checkinHost);
+
+        let connected = await socket.connect();
+
+        if (!connected) {
+            throw new Error('Cannot contact to checkin server');
+        }
+
+        let packet = new PacketBuyCallServerReq(userId);
+
+        let ticket = packet.submitResponseTicket<PacketBuyCallServerRes>();
+
+        let packetId = this.packetWriter.getNextPacketId();
+
+        socket.sendBuffer(this.packetWriter.toBuffer({ packetId: packetId, statusCode: 0, packetName: packet.PacketName, bodyType: 0, bodySize: 0 }, packet));
+        this.packetMap.set(packetId, packet);
+
+        let res = await ticket;
+
+        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
+
+        return res;
     }
 
     protected async fetchBookingData(bookingHost: HostData = HostData.BookingHost): Promise<BookingData> {

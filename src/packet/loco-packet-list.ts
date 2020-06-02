@@ -43,6 +43,7 @@ import { PacketGetToken } from "./packet-get-token";
 import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "./packet-multi-chatlog";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet-set-status";
 import { PacketUpdateChannelReq, PacketUpdateChannelRes } from "./packet-update-channel";
+import { PacketBuyCallServerReq, PacketBuyCallServerRes } from "./packet-buy-call-server";
 
 /*
  * Created on Wed Oct 30 2019
@@ -62,7 +63,10 @@ export namespace LocoPacketList {
         defaultBodyReqPacketMap.set(0, DefaultBsonRequestPacket);
 
         requestPacketMap.set('GETCONF', PacketGetConfReq);
+
         requestPacketMap.set('CHECKIN', PacketCheckInReq);
+        requestPacketMap.set('BUYCS', PacketBuyCallServerReq);
+
         requestPacketMap.set('LOGINLIST', PacketLoginReq);
         requestPacketMap.set('SETST', PacketSetStatusReq);
 
@@ -119,7 +123,9 @@ export namespace LocoPacketList {
         defaultBodyResPacketMap.set(8, DefaultBsonResponsePacket); // ??
 
         responsePacketMap.set('GETCONF', PacketGetConfRes);
+
         responsePacketMap.set('CHECKIN', PacketCheckInRes);
+        responsePacketMap.set('BUYCS', PacketBuyCallServerRes);
 
         responsePacketMap.set('LOGINLIST', PacketLoginRes);
         responsePacketMap.set('SETST', PacketSetStatusRes);
