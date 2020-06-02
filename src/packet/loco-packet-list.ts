@@ -42,6 +42,7 @@ import { PacketShipReq, PacketShipRes } from "./packet-ship";
 import { PacketGetToken } from "./packet-get-token";
 import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "./packet-multi-chatlog";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet-set-status";
+import { PacketUpdateChannelReq, PacketUpdateChannelRes } from "./packet-update-channel";
 
 /*
  * Created on Wed Oct 30 2019
@@ -72,6 +73,8 @@ export namespace LocoPacketList {
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
         requestPacketMap.set('CHATINFO', PacketChatInfoReq);
+
+        requestPacketMap.set('UPDATECHAT', PacketUpdateChannelReq);
 
         requestPacketMap.set('SHIP', PacketShipReq);
         requestPacketMap.set('GETTRAILER', PacketGetTrailerReq);
@@ -130,6 +133,8 @@ export namespace LocoPacketList {
         responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
         responsePacketMap.set('MEMBER', PacketChatMemberRes);
         responsePacketMap.set('CHATINFO', PacketChatInfoRes);
+
+        responsePacketMap.set('UPDATECHAT', PacketUpdateChannelRes);
 
         responsePacketMap.set('GETMETA', PacketGetMetaRes);
         responsePacketMap.set('GETMETAS', PacketGetMetasRes);

@@ -18,6 +18,7 @@ import { ChannelType } from "../chat/channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
+import { PacketUpdateChannelRes, PacketUpdateChannelReq } from "../../packet/packet-update-channel";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -61,15 +62,15 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         switch(chatData.type) {
 
             case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.type, chatData.linkId!, chatData.openToken!); break;
+            case ChannelType.OPENCHAT_GROUP: channel = new OpenChatChannel(this.client, id, chatData.type, chatData.pushAlert, chatData.linkId!, chatData.openToken!); break;
 
             case ChannelType.GROUP:
             case ChannelType.PLUSCHAT:
             case ChannelType.DIRECT:
-            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type); break;
+            case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type, chatData.pushAlert); break;
 
 
-            default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN); break;
+            default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN, chatData.pushAlert); break;
             
         }
 
@@ -108,6 +109,17 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         } else {
             await this.Client.LocoInterface.sendPacket(new PacketMessageNotiReadReq(channel.Id, lastWatermark));
         }
+    }
+
+    async updateChannelSettings(channel: ChatChannel, pushAlert: boolean): Promise<boolean> {
+        let res = await this.client.LocoInterface.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, pushAlert));
+
+        if (res.StatusCode === StatusCode.SUCCESS) {
+            channel.updateChannel(pushAlert);
+            return true;
+        }
+
+        return false;
     }
 
     removeChannel(channel: ChatChannel) {

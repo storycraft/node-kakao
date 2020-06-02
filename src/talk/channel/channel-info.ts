@@ -8,13 +8,11 @@ import { ChatUser, UserInfo } from "../user/chat-user";
 import { ChatInfoStruct } from "../struct/chat-info-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
-import { ChannelType } from "../chat/channel-type";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
-import { OpenLinkStruct, OpenMemberStruct } from "../struct/open-link-struct";
-import { PacketChatOnRoomRes, PacketChatOnRoomReq } from "../../packet/packet-chat-on-room";
+import { OpenLinkStruct } from "../struct/open-link-struct";
+import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
 import { ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-set-struct";
-import { JsonUtil } from "../../util/json-util";
 
 
 export class ChannelInfo {

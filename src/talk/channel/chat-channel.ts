@@ -6,11 +6,9 @@ import { Chat, UnknownChat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { ChatType } from "../chat/chat-type";
 import { MessageTemplate } from "../chat/template/message-template";
-import { ChatlogStruct } from "../struct/chatlog-struct";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatBuilder } from "../chat/chat-builder";
-import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
@@ -32,7 +30,7 @@ export class ChatChannel extends EventEmitter {
 
     private readonly channelInfo: ChannelInfo;
 
-    constructor(private client: LocoClient, private id: Long, private type: ChannelType) {
+    constructor(private client: LocoClient, private id: Long, private type: ChannelType, private pushAlert: boolean) {
         super();
 
         this.channelInfo = this.createChannelInfo();
@@ -57,6 +55,10 @@ export class ChatChannel extends EventEmitter {
 
     get Type() {
         return this.type;
+    }
+
+    get PushAlert() {
+        return this.pushAlert;
     }
 
     async getChannelInfo(forceUpdate: boolean = false) {
@@ -110,6 +112,14 @@ export class ChatChannel extends EventEmitter {
         return this.client.ChannelManager.leave(this, block);
     }
 
+    async updateChannelSettings(pushAlert: boolean): Promise<boolean> {
+        return this.client.ChannelManager.updateChannelSettings(this, pushAlert);
+    }
+
+    updateChannel(pushAlert: boolean) {
+        this.pushAlert = pushAlert;
+    }
+
     isOpenChat(): boolean {
         return false;
     }
@@ -134,8 +144,8 @@ export class ChatChannel extends EventEmitter {
 
 export class OpenChatChannel extends ChatChannel {
 
-    constructor(client: LocoClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
-        super(client, channelId, type);
+    constructor(client: LocoClient, channelId: Long, type: ChannelType, pushAlert: boolean, private linkId: Long, private openToken: number) {
+        super(client, channelId, type, pushAlert);
     }
 
     protected createChannelInfo(): OpenChannelInfo {
