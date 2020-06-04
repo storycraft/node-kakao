@@ -33,12 +33,12 @@ export class UserManager extends IdStore<ChatUser> {
     }
 
     async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
         return res.MemberList;
     }
 
     async requestSpecificMemberInfo(channelId: Long, idList: Long[]): Promise<MemberStruct[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channelId, idList));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channelId, idList));
         
         return res.MemberList;
     }

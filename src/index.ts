@@ -11,6 +11,8 @@ export * from './api/api-client';
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
 
+export * from './network/host-data';
+
 export * from './network/loco-socket';
 export * from './network/loco-tls-socket';
 export * from './network/loco-secure-socket';
@@ -24,9 +26,6 @@ export * from './network/stream/loco-packet-resolver';
 export * from './packet/loco-packet-base';
 export * from './packet/loco-bson-packet';
 export * from './packet/packet-header-struct';
-
-export * from './packet/loco-packet-reader';
-export * from './packet/loco-packet-writer';
 
 export * from './packet/loco-packet-list';
 
@@ -98,6 +97,7 @@ export * from './api/api-client';
 
 export * from './oauth/access-data-provider';
 
+export * from './client-status';
 export * from './client';
 
 import { Long } from 'bson';

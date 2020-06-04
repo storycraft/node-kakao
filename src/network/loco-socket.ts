@@ -20,7 +20,7 @@ export interface LocoSocket {
     connect(): Promise<boolean>;
     disconnect(): boolean;
 
-    sendBuffer(buffer: Buffer): Promise<boolean>;
+    sendPacket(header: PacketHeader, data: Buffer): Promise<boolean>;
     dataReceived(header: PacketHeader, data: Buffer): void;
 
 }
@@ -139,18 +139,56 @@ export abstract class LocoBasicSocket implements LocoSocket {
         return data;
     }
 
-    async sendBuffer(buffer: Buffer): Promise<boolean> {
+    async sendPacket(header: PacketHeader, bodyBuffer: Buffer): Promise<boolean> {
+        return this.sendRawBuffer(this.transformBuffer(this.toPacketBuffer(header, bodyBuffer)));
+    }
+
+    protected async sendRawBuffer(buffer: Buffer): Promise<boolean> {
         if (!this.connected) {
             return false;
         }
-        
-        return new Promise<boolean>((resolve, reject) => this.socket!.write(this.transformBuffer(buffer), (e) => {
+
+        return new Promise<boolean>((resolve, reject) => this.socket!.write((buffer), (e) => {
             if (e) {
                 reject(e);
             } else {
                 resolve(true);
             }
         }));
+    }
+
+    protected toPacketBuffer(header: PacketHeader, bodyBuffer: Buffer, buffer?: Buffer, offset = 0): Buffer {
+        header.bodySize = bodyBuffer.byteLength;
+
+        let size = 22 + header.bodySize;
+
+        if (buffer && buffer.length < offset + size) {
+            throw new Error(`Provided buffer is smaller than required. Size: ${buffer.length}, Required: ${offset + size}`);
+        } else {
+            buffer = Buffer.allocUnsafe(size + offset);
+        }
+
+        let headerBuffer = this.createHeaderBuffer(header);
+
+        headerBuffer.copy(buffer, offset, 0);
+        bodyBuffer.copy(buffer, offset + 22, 0);
+        
+        return buffer;
+    }
+
+    protected createHeaderBuffer(header: PacketHeader) {
+        let buffer = Buffer.allocUnsafe(22);
+
+        buffer.writeUInt32LE(header.packetId, 0);
+        buffer.writeUInt16LE(header.statusCode, 4);
+        
+        let written = buffer.write(header.packetName, 6, 'utf8');
+        buffer.fill(0, 6 + written, 17);
+
+        buffer.writeInt8(header.bodyType, 17);
+        buffer.writeUInt32LE(header.bodySize, 18);
+
+        return buffer;
     }
 
     protected abstract onEnd(buffer: Buffer): void;

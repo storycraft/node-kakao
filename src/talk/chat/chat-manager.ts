@@ -34,7 +34,7 @@ export class ChatManager {
     }
 
     async getChatListFrom(channelId: Long, since: number): Promise<Chat[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ since ]));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ since ]));
 
         if (res.StatusCode !== StatusCode.SUCCESS) return [];
 
@@ -47,7 +47,7 @@ export class ChatManager {
     }
 
     async getChatListBetween(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<Chat[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
 
         let taskList: Promise<Chat>[] = [];
         for (let chatLog of res.ChatList) {
@@ -67,7 +67,7 @@ export class ChatManager {
     }
 
     async deleteChat(channelId: Long, logId: Long): Promise<boolean> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketDeleteChatRes>(new PacketDeleteChatReq(channelId, logId));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketDeleteChatRes>(new PacketDeleteChatReq(channelId, logId));
 
         return res.StatusCode === StatusCode.SUCCESS;
     }

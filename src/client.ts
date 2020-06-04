@@ -15,11 +15,11 @@ import { OpenChatManager } from "./talk/open/open-chat-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient } from "./api/api-client";
-import { LocoInterface } from "./loco/loco-interface";
 import { Serializer } from "json-proxy-mapper";
 import { ApiStatusCode } from "./talk/struct/api/api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
+import { ClientStatus } from "./client-status";
 
 /*
  * Created on Fri Nov 01 2019
@@ -47,18 +47,11 @@ export interface LoginError {
 
 }
 
-export enum ClientStatus {
-
-    UNLOCKED = 1,
-    LOCKED = 2
-
-}
-
 export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly Name: string;
 
-    readonly LocoInterface: LocoInterface;
+    readonly NetworkManager: NetworkManager;
 
     readonly ChannelManager: ChannelManager;
 
@@ -180,8 +173,8 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.status = ClientStatus.UNLOCKED;
     }
 
-    get LocoInterface() {
-        return this.networkManager as LocoInterface;
+    get NetworkManager() {
+        return this.networkManager;
     }
 
     get ChannelManager() {
@@ -270,8 +263,8 @@ export class TalkClient extends LoginClient implements LocoClient {
 
     async logout() {
         await super.logout();
-
-        return this.networkManager.disconnect();
+        
+        await this.networkManager.disconnect();
     }
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;

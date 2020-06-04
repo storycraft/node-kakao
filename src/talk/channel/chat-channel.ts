@@ -85,7 +85,7 @@ export class ChatChannel extends EventEmitter {
 
         let extraText = JsonUtil.stringifyLoseless(extra);
         
-        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
         
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
@@ -101,7 +101,7 @@ export class ChatChannel extends EventEmitter {
         let text = template.getPacketText();
         let extra = template.getPacketExtra();
 
-        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
 
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 

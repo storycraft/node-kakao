@@ -12,7 +12,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 export class PacketGetConfReq extends LocoBsonRequestPacket {
 
     constructor(
-        public NetworkMccMnc: string = '',
+        public NetworkMccMnc: string = '999',
         public Os: string = KakaoAPI.Agent,
         public model: string = ''
     ) {

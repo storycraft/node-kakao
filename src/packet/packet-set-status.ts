@@ -5,7 +5,7 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ClientStatus } from "../client";
+import { ClientStatus } from "../client-status";
 
 export class PacketSetStatusReq extends LocoBsonRequestPacket {
 
