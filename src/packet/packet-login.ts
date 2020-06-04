@@ -24,8 +24,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         public Language: string = 'ko',
         public Revision: number = 0, //Always 0 since I didnt implement revision data and dunno what
         public RevisionData: null | Buffer = null, // idk
-        public ChatIds: Long[] = [],
-        public MaxIds: Long[] = [],
+        public ChannelIdList: Long[] = [],
+        public MaxIdList: Long[] = [],
         public LastTokenId: Long = Long.ZERO,
         public LastChatId: Long = Long.ZERO,
         public Lbk: number = 0, // ?
@@ -53,8 +53,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'MCCMNC': this.NetworkMccMnc,
             'revision': this.Revision,
             'rp': null,
-            'chatIds': this.ChatIds,
-            'maxIds': this.MaxIds,
+            'chatIds': this.ChannelIdList,
+            'maxIds': this.MaxIdList,
             'lastTokenId': this.LastTokenId,
             'lbk': this.Lbk,
             'bg': this.Bg

@@ -36,7 +36,7 @@ export class KakaoAPI {
     }
 
     static get InternalAppSubVersion() {
-        return '2441';
+        return '2478';
     }
 
     static get OSVersion() {
