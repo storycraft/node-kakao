@@ -91,16 +91,8 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return new MainInterface(hostInfo, listener);
     }
 
-    async requestCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
-        let checkinInterface = this.createCheckinInterface(checkinHost);
-
-        if (!(await checkinInterface.connect())) {
-            throw new Error('Cannot contact to checkin server');
-        }
-
-        let packet = new PacketCheckInReq(userId);
-
-        let res = await checkinInterface.requestPacketRes<PacketCheckInRes>(packet);
+    async requestCheckinData(userId: Long): Promise<CheckinData> {
+        let res = await this.requestCheckinRes<PacketCheckInRes>(new PacketCheckInReq(userId));
 
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
@@ -111,16 +103,8 @@ export class NetworkManager implements LocoListener, LocoInterface {
         }, res.CacheExpire);
     }
 
-    async requestCallServerData(checkinHost: HostData, userId: Long): Promise<PacketBuyCallServerRes> {
-        let checkinInterface = this.createCheckinInterface(checkinHost);
-
-        if (!await checkinInterface.connect()) {
-            throw new Error('Cannot contact to checkin server');
-        }
-
-        let packet = new PacketBuyCallServerReq(userId);
-
-        let res = await checkinInterface.requestPacketRes<PacketBuyCallServerRes>(packet);
+    async requestCallServerData(userId: Long): Promise<PacketBuyCallServerRes> {
+        let res = await this.requestCheckinRes<PacketBuyCallServerRes>(new PacketBuyCallServerReq(userId));
 
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
@@ -128,27 +112,33 @@ export class NetworkManager implements LocoListener, LocoInterface {
     }
 
     async requestBookingData(): Promise<BookingData> {
-        let bookingInterface = this.createBookingInterface(HostData.BookingHost);
-
-        if (!(await bookingInterface.connect())) {
-            throw new Error('Cannot contact to booking server');
-        }
-
-        let packet = new PacketGetConfReq();
-
-        let res = await bookingInterface.requestPacketRes<PacketGetConfRes>(packet);
-
-        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
-        
-        if (res.HostList.length < 1 && res.PortList.length < 1) {
-            throw new Error(`No server avaliable`);
-        }
+        let res = await this.requestBookingRes<PacketGetConfRes>(new PacketGetConfReq());
 
         return new BookingData({
             host: res.HostList[0],
             port: res.PortList[0],
             keepAlive: false
         });
+    }
+
+    async requestBookingRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
+        let bookingInterface = this.createBookingInterface(HostData.BookingHost);
+
+        if (!(await bookingInterface.connect())) {
+            throw new Error('Cannot contact to booking server');
+        }
+
+        return bookingInterface.requestPacketRes<T>(packet);
+    }
+
+    async requestCheckinRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
+        let checkinInterface = this.createCheckinInterface((await this.getBookingData()).CheckinHost);
+
+        if (!(await checkinInterface.connect())) {
+            throw new Error('Cannot contact to checkin server');
+        }
+
+        return checkinInterface.requestPacketRes<T>(packet);
     }
 
     async getBookingData(forceRecache: boolean = false): Promise<BookingData> {
@@ -166,7 +156,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
     async getCheckinData(userId: Long, forceRecache: boolean = false): Promise<CheckinData> {
         if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.lastCheckinReq < Date.now() || forceRecache) {
             try {
-                this.cachedCheckinData = await this.requestCheckinData((await this.getBookingData()).CheckinHost, userId);
+                this.cachedCheckinData = await this.requestCheckinData(userId);
                 this.lastCheckinReq = Date.now();
             } catch (statusCode) {
                 throw new Error(`Checkin failed. code: ${statusCode}`);
