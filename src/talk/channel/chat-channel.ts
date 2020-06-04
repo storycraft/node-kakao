@@ -85,11 +85,23 @@ export class ChatChannel extends EventEmitter {
 
         let extraText = JsonUtil.stringifyLoseless(extra);
         
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, true, extraText));
         
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
-        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
+        if (res.Chatlog) return this.client.ChatManager.chatFromChatlog(res.Chatlog);
+
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: res.ChannelId,
+            type: ChatType.Text,
+            text: text,
+            sendTime: res.SendTime,
+            rawAttachment: extraText,
+            messageId: res.MessageId
+        });
     }
     
     async sendTemplate(template: MessageTemplate): Promise<Chat | null> {
@@ -101,11 +113,23 @@ export class ChatChannel extends EventEmitter {
         let text = template.getPacketText();
         let extra = template.getPacketExtra();
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, true, extra));
 
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
-        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
+        if (res.Chatlog) return this.client.ChatManager.chatFromChatlog(res.Chatlog);
+
+        return this.client.ChatManager.chatFromChatlog({
+            logId: res.LogId,
+            prevLogId: res.PrevLogId,
+            senderId: this.client.ClientUser.Id,
+            channelId: res.ChannelId,
+            type: sentType,
+            text: text,
+            sendTime: res.SendTime,
+            rawAttachment: extra,
+            messageId: res.MessageId
+        });
     }
 
     async leave(block: boolean = false): Promise<boolean> {
