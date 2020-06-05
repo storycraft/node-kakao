@@ -87,6 +87,7 @@ export * from './talk/struct/api/profile/profile-req-struct';
 export * from './talk/struct/chatdata-struct';
 export * from './talk/struct/chat-info-struct';
 export * from './talk/struct/chatlog-struct';
+export * from './talk/struct/channel-meta-struct';
 export * from './talk/struct/channel-meta-set-struct';
 export * from './talk/struct/open-link-struct';
 export * from './talk/struct/auth/login-access-data-struct';

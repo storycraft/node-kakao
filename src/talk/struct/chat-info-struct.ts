@@ -1,10 +1,7 @@
-import { StructBase } from "./struct-base";
 import { Long } from "bson";
-import { ChannelType } from "../chat/channel-type";
 import { ChatlogStruct } from "./chatlog-struct";
 import { MemberStruct } from "./member-struct";
-import { JsonUtil } from "../../util/json-util";
-import { ChannelMetaStruct } from "./channel-meta-set-struct";
+import { ChannelMetaStruct } from "./channel-meta-struct";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
 import { ChatDataStruct, ChatMetaStruct } from "./chatdata-struct";
 

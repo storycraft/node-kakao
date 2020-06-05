@@ -12,7 +12,7 @@ import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
-import { ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-set-struct";
+import { ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-struct";
 
 
 export class ChannelInfo {
@@ -96,7 +96,7 @@ export class ChannelInfo {
         return Array.from(this.userInfoMap.keys()).map(strLong => Long.fromString(strLong));
     }
 
-    get ChatMetaList() {
+    get ChannelMetaList() {
         return this.channelMetaList;
     }
 
@@ -156,6 +156,20 @@ export class ChannelInfo {
         this.isFavorite = chatinfoStruct.metadata.favorite;
 
         this.lastInfoUpdated = Date.now();
+    }
+
+    updateChannelMeta(changed: ChannelMetaStruct) {
+        let len = this.channelMetaList.length;
+        for (let i = 0; i < len; i++) {
+            let meta = this.channelMetaList[i];
+            
+            if (meta.type === changed.type) {
+                this.channelMetaList[i] = changed;
+                return;
+            }
+        }
+
+        this.channelMetaList.push(changed);
     }
 
     protected updateRoomName(name: string) {
