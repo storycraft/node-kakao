@@ -142,12 +142,10 @@ export class ChannelInfo {
 
     updateFromStruct(chatinfoStruct: ChatInfoStruct) {
         this.isDirectChan = chatinfoStruct.isDirectChat;
-        this.channelMetaList = chatinfoStruct.chatMetaList;
 
+        this.channelMetaList = [];
         for (let meta of this.channelMetaList) {
-            if (meta.Type === ChannelMetaType.TITLE) {
-                this.updateRoomName(meta.content);
-            }
+            this.addChannelMeta(meta);
         }
 
         this.roomImageURL = chatinfoStruct.metadata.imageURL;
@@ -164,12 +162,20 @@ export class ChannelInfo {
             let meta = this.channelMetaList[i];
             
             if (meta.type === changed.type) {
-                this.channelMetaList[i] = changed;
-                return;
+                this.channelMetaList.splice(i, 1);
+                break;
             }
         }
 
-        this.channelMetaList.push(changed);
+        this.addChannelMeta(changed);
+    }
+
+    protected addChannelMeta(meta: ChannelMetaStruct) {
+        this.channelMetaList.push(meta);
+
+        if (meta.type === ChannelMetaType.TITLE) {
+            this.updateRoomName(meta.content);
+        }
     }
 
     protected updateRoomName(name: string) {
