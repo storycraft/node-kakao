@@ -1,20 +1,12 @@
-import { StructBaseOld } from "./struct-base";
-
 /*
  * Created on Tue Nov 05 2019
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChannelBoardMetaStruct implements StructBaseOld {
-    
-    fromJson(rawData: any): void {
-        throw new Error("Method not implemented.");
-    }
-    
-    toJson() {
-        throw new Error("Method not implemented.");
-    }
+import { StructBase } from "./struct-base";
+
+export interface ChannelBoardMetaStruct extends StructBase {
 
 }
 

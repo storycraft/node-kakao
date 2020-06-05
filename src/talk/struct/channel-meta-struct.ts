@@ -23,7 +23,7 @@ export enum ChannelMetaType {
 
 }
 
-export enum ChannelPrivateMetaType {
+export enum ChannelClientMetaType {
     
     UNDEFINED = 'undefined',
     NAME = 'name',
@@ -43,5 +43,11 @@ export interface ChannelMetaStruct extends StructBase {
     authorId: Long,
     content: string,
     updatedAt: number
+
+}
+
+export interface ChannelClientMetaStruct extends StructBase {
+
+    
 
 }

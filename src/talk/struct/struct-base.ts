@@ -6,14 +6,6 @@
 
 import { Long } from "bson";
 
-export interface StructBaseOld {
-
-    fromJson(rawData: any): void;
-
-    toJson(): any;
-
-}
-
 export type StructPrimitive = number | string | boolean | Long | null | undefined;
 export type StructType = StructPrimitive | StructPrimitive[] | StructBase | StructBase[];
 

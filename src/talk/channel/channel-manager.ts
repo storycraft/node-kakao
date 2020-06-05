@@ -19,6 +19,11 @@ import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { PacketUpdateChannelRes, PacketUpdateChannelReq } from "../../packet/packet-update-channel";
+import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta";
+import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct } from "../struct/channel-meta-struct";
+import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
+import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
+import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "../../packet/packet-get-client-meta";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -120,6 +125,30 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         }
 
         return false;
+    }
+
+    async requestChannelMeta(channel: ChatChannel, type: ChannelMetaType): Promise<ChannelMetaStruct | null> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMetaRes>(new PacketGetMetaReq(channel.Id, [ type ]));
+
+        return res.MetaList[0] || null;
+    }
+
+    async requestChannelMetaList(channel: ChatChannel): Promise<ChannelMetaStruct[]> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMetaListRes>(new PacketGetMetaListReq([ channel.Id ]));
+
+        return res.MetaSetList[0] && res.MetaSetList[0].metaList || null;
+    }
+
+    async updateChannelMeta(channel: ChatChannel, type: ChannelMetaType, content: string): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketSetMetaRes>(new PacketSetMetaReq(channel.Id, type, content));
+
+        return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async updateChannelClientMeta(channel: ChatChannel, type: ChannelClientMetaType, content: string): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketSetClientMetaRes>(new PacketSetClientMetaReq(channel.Id, type, content));
+
+        return res.StatusCode === StatusCode.SUCCESS;
     }
 
     removeChannel(channel: ChatChannel) {

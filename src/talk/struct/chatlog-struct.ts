@@ -1,6 +1,5 @@
-import { StructBase, StructBaseOld } from "./struct-base";
+import { StructBase } from "./struct-base";
 import { ChatType } from "../chat/chat-type";
-import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
 import { ObjectMapper } from "json-proxy-mapper";
 

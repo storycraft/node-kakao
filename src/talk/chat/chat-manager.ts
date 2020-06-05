@@ -33,8 +33,8 @@ export class ChatManager {
         return this.messageId++;
     }
 
-    async getChatListFrom(channelId: Long, since: number): Promise<Chat[]> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ since ]));
+    async getChatListFrom(channelId: Long, sinceLogId: number): Promise<Chat[]> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ sinceLogId ]));
 
         if (res.StatusCode !== StatusCode.SUCCESS) return [];
 

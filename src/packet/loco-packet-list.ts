@@ -13,7 +13,7 @@ import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
 import { PacketChanJoinRes } from "./packet-chan-join";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
-import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetasReq, PacketGetMetasRes } from "./packet-get-meta";
+import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetaListReq, PacketGetMetaListRes } from "./packet-get-meta";
 import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
 import { PacketRewriteReq, PacketRewriteRes } from "./packet-rewrite";
@@ -46,8 +46,9 @@ import { PacketUpdateChannelReq, PacketUpdateChannelRes } from "./packet-update-
 import { PacketBuyCallServerReq, PacketBuyCallServerRes } from "./packet-buy-call-server";
 import { PacketChannelListReq, PacketChannelListRes } from "./packet-channel-list";
 import { PacketSetMetaReq, PacketSetMetaRes } from "./packet-set-meta";
-import { PacketSetPrivateMetaReq, PacketSetPrivateMetaRes } from "./packet-set-private-meta";
+import { PacketSetClientMetaReq, PacketSetClientMetaRes } from "./packet-set-client-meta";
 import { PacketMetaChangeRes } from "./packet-meta-change";
+import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "./packet-get-client-meta";
 
 /*
  * Created on Wed Oct 30 2019
@@ -90,9 +91,10 @@ export namespace LocoPacketList {
         requestPacketMap.set('GETTRAILER', PacketGetTrailerReq);
 
         requestPacketMap.set('GETMETA', PacketGetMetaReq);
-        requestPacketMap.set('GETMETAS', PacketGetMetasReq);
+        requestPacketMap.set('GETMCMETA', PacketGetClientMetaReq);
+        requestPacketMap.set('GETMETAS', PacketGetMetaListReq);
         requestPacketMap.set('SETMETA', PacketSetMetaReq);
-        requestPacketMap.set('SETMCMETA', PacketSetPrivateMetaReq);
+        requestPacketMap.set('SETMCMETA', PacketSetClientMetaReq);
         requestPacketMap.set('GETMEM', PacketGetMemberReq);
         requestPacketMap.set('MEMBER', PacketMemberReq);
         requestPacketMap.set('GETMOMETA', PacketGetChannelBoardMetaReq);
@@ -153,9 +155,10 @@ export namespace LocoPacketList {
         responsePacketMap.set('UPDATECHAT', PacketUpdateChannelRes);
 
         responsePacketMap.set('GETMETA', PacketGetMetaRes);
-        responsePacketMap.set('GETMETAS', PacketGetMetasRes);
+        responsePacketMap.set('GETMCMETA', PacketGetClientMetaRes);
+        responsePacketMap.set('GETMETAS', PacketGetMetaListRes);
         responsePacketMap.set('SETMETA', PacketSetMetaRes);
-        responsePacketMap.set('SETMCMETA', PacketSetPrivateMetaRes);
+        responsePacketMap.set('SETMCMETA', PacketSetClientMetaRes);
         responsePacketMap.set('CHGMETA', PacketMetaChangeRes);
         responsePacketMap.set('GETMEM', PacketGetMemberRes);
         responsePacketMap.set('MEMBER', PacketMemberRes);

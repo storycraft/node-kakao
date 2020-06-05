@@ -1,4 +1,4 @@
-import { StructBaseOld, Long } from "../..";
+import { Long } from "bson";
 import { StructBase } from "./struct-base";
 import { ObjectMapper } from "json-proxy-mapper";
 import { ChannelMetaStruct } from "./channel-meta-struct";

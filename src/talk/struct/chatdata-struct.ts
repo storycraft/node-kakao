@@ -1,8 +1,7 @@
 import { ChannelType } from "../chat/channel-type";
-import { StructBaseOld, StructBase } from "./struct-base";
-import { JsonUtil } from "../../util/json-util";
+import { StructBase } from "./struct-base";
 import { Long } from "bson";
-import { Converter, ObjectMapper } from "json-proxy-mapper";
+import { ObjectMapper } from "json-proxy-mapper";
 
 /*
  * Created on Thu Oct 31 2019
