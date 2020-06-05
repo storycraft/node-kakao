@@ -27,6 +27,7 @@ import { FeedType } from "../talk/feed/feed-type";
 import { Long } from "bson";
 import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketMetaChangeRes } from "../packet/packet-meta-change";
+import { PacketSetMetaRes } from "../packet/packet-set-meta";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -50,6 +51,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
         this.on('SYNCMEMT', this.syncMemberTypeChange.bind(this));
         this.on('SYNCLINKPF', this.syncProfileUpdate.bind(this));
+        this.on('SETMETA', this.onMetaChange.bind(this));
         this.on('CHGMETA', this.onMetaChange.bind(this));
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
@@ -122,7 +124,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('message_read', channel, reader, watermark);
     }
 
-    async onMetaChange(packet: PacketMetaChangeRes) {
+    async onMetaChange(packet: PacketMetaChangeRes | PacketSetMetaRes) {
         if (!packet.Meta) return;
 
         let channel = await this.ChannelManager.get(packet.ChannelId);
