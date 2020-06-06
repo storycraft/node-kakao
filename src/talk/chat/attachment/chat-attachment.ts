@@ -202,10 +202,10 @@ export class FileAttachment implements ChatAttachment {
         return obj;
     }
 
-    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<FileAttachment> {
+    static async fromBuffer(data: Buffer, name: string, size: number = data.byteLength, expire: Long = Long.fromNumber(1209600)): Promise<FileAttachment> {
         let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.FILE, data, name);
 
-        return new FileAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.FILE), name, Long.fromNumber(size), Long.fromNumber(Date.now() + 1209600000));
+        return new FileAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.FILE), name, Long.fromNumber(size), expire);
     }
 
 }

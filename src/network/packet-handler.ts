@@ -28,6 +28,7 @@ import { Long } from "bson";
 import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketMetaChangeRes } from "../packet/packet-meta-change";
 import { PacketSetMetaRes } from "../packet/packet-set-meta";
+import { PacketChangeServerRes } from "../packet/packet-change-server";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -60,6 +61,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('LEAVE', this.onChannelLeave.bind(this));
+        this.on('CHANGESVR', this.onSwitchServerReq.bind(this));
         this.on('KICKOUT', this.onLocoKicked.bind(this));
     }
 
@@ -346,6 +348,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat, feed);
 
         info.removeUserInfo(feed.member.userId);
+    }
+
+    onSwitchServerReq(packet: PacketChangeServerRes) {
+        
     }
 
     onLocoKicked(packet: PacketKickoutRes) {

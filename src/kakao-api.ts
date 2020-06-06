@@ -440,8 +440,8 @@ export class KakaoAPI {
         return this.calculateFullXVCKey(aHeader, email, deviceUUID).substring(0, 16);
     }
 
-    static calculateFullXVCKey(aHeader: string, email: string, deviceUUID: string): string {
-        let res = `HEATH|${aHeader}|DEMIAN|${email}|${deviceUUID}`;
+    static calculateFullXVCKey(userAgent: string, email: string, deviceUUID: string): string {
+        let res = `HEATH|${userAgent}|DEMIAN|${email}|${deviceUUID}`;
 
         let hash = Crypto.createHash('sha512');
 

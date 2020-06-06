@@ -13,7 +13,9 @@ export enum CustomType {
     FEED = 'Feed',
     LIST = 'List',
     COMMERCE = 'Commerce',
-    CAROUSEL = 'Carousel'
+    CAROUSEL = 'Carousel',
+
+    
 
 }
 

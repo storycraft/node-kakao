@@ -49,6 +49,7 @@ import { PacketSetMetaReq, PacketSetMetaRes } from "./packet-set-meta";
 import { PacketSetClientMetaReq, PacketSetClientMetaRes } from "./packet-set-client-meta";
 import { PacketMetaChangeRes } from "./packet-meta-change";
 import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "./packet-get-client-meta";
+import { PacketChangeServerRes } from "./packet-change-server";
 
 /*
  * Created on Wed Oct 30 2019
@@ -203,6 +204,7 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('PING', PacketPingRes);
 
+        responsePacketMap.set('CHANGESVR', PacketChangeServerRes);
         responsePacketMap.set('KICKOUT', PacketKickoutRes);
     }
 
