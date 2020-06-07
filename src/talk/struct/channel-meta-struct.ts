@@ -40,7 +40,7 @@ export interface ChannelMetaStruct extends StructBase {
 
     type: ChannelMetaType,
     revision: Long,
-    authorId: Long,
+    authorId?: Long,
     content: string,
     updatedAt: number
 
@@ -49,5 +49,52 @@ export interface ChannelMetaStruct extends StructBase {
 export interface ChannelClientMetaStruct extends StructBase {
 
     
+
+}
+
+export interface MetaContent extends StructBase {
+
+
+
+}
+
+export interface PrivilegeMetaContent extends StructBase {
+
+    pin_notice: boolean;
+
+}
+
+export interface ProfileMetaContent extends StructBase {
+
+    imageUrl: string;
+    fullImageUrl: string;
+
+}
+
+export interface TvMetaContent extends StructBase {
+
+    url: string;
+
+}
+
+export interface TvLiveMetaContent extends StructBase {
+
+    url: string;
+    live: string;
+
+}
+
+export interface LiveTalkCountMetaContent extends StructBase {
+
+    count: number;
+
+}
+
+export interface GroupMetaContent extends StructBase {
+
+    group_id: number;
+    group_name: string;
+    group_profile_thumbnail_url: string;
+    group_profile_url: string;
 
 }

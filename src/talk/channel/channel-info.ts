@@ -12,7 +12,7 @@ import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
-import { ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-struct";
+import { ChannelMetaStruct, ChannelMetaType, ProfileMetaContent } from "../struct/channel-meta-struct";
 
 
 export class ChannelInfo {
@@ -175,6 +175,17 @@ export class ChannelInfo {
 
         if (meta.type === ChannelMetaType.TITLE) {
             this.updateRoomName(meta.content);
+        }
+
+        if (meta.type === ChannelMetaType.PROFILE) {
+            try {
+                let content = JSON.parse(meta.content) as ProfileMetaContent;
+                
+                this.roomImageURL = content.imageUrl;
+                this.roomFullImageURL = content.fullImageUrl;
+            } catch (e) {
+
+            }
         }
     }
 

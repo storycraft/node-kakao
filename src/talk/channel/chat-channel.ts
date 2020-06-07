@@ -15,6 +15,7 @@ import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 import { StatusCode } from "../../packet/loco-packet-base";
+import { ChannelMetaType, PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -138,6 +139,38 @@ export class ChatChannel extends EventEmitter {
 
     async updateChannelSettings(pushAlert: boolean): Promise<boolean> {
         return this.client.ChannelManager.updateChannelSettings(this, pushAlert);
+    }
+
+    async setTitleMeta(title: string): Promise<boolean> {
+        return this.client.ChannelManager.setTitleMeta(this, title);
+    }
+
+    async setNoticeMeta(notice: string): Promise<boolean> {
+        return this.client.ChannelManager.setNoticeMeta(this, notice);
+    }
+
+    async setPrivilegeMeta(content: PrivilegeMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setPrivilegeMeta(this, content);
+    }
+
+    async setProfileMeta(content: ProfileMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setProfileMeta(this, content);
+    }
+
+    async setTvMeta(content: TvMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setTvMeta(this, content);
+    }
+
+    async setTvLiveMeta(content: TvLiveMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setTvLiveMeta(this, content);
+    }
+
+    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setLiveTalkCountMeta(this, content);
+    }
+
+    async setGroupMeta(content: GroupMetaContent): Promise<boolean> {
+        return this.client.ChannelManager.setGroupMeta(this, content);
     }
 
     updateChannel(pushAlert: boolean) {

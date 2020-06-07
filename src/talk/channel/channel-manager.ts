@@ -20,7 +20,7 @@ import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-ch
 import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { PacketUpdateChannelRes, PacketUpdateChannelReq } from "../../packet/packet-update-channel";
 import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta";
-import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct } from "../struct/channel-meta-struct";
+import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
 import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "../../packet/packet-get-client-meta";
@@ -149,6 +149,38 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSetClientMetaRes>(new PacketSetClientMetaReq(channel.Id, type, content));
 
         return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async setTitleMeta(channel: ChatChannel, title: string): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.TITLE, title);
+    }
+
+    async setNoticeMeta(channel: ChatChannel, notice: string): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.NOTICE, notice);
+    }
+
+    async setPrivilegeMeta(channel: ChatChannel, content: PrivilegeMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.PRIVILEGE, JSON.stringify(content));
+    }
+
+    async setProfileMeta(channel: ChatChannel, content: ProfileMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.PROFILE, JSON.stringify(content));
+    }
+
+    async setTvMeta(channel: ChatChannel, content: TvMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.TV, JSON.stringify(content));
+    }
+
+    async setTvLiveMeta(channel: ChatChannel, content: TvLiveMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.TV_LIVE, JSON.stringify(content));
+    }
+
+    async setLiveTalkCountMeta(channel: ChatChannel, content: LiveTalkCountMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.LIVE_TALK_COUNT, JSON.stringify(content));
+    }
+
+    async setGroupMeta(channel: ChatChannel, content: GroupMetaContent): Promise<boolean> {
+        return this.updateChannelMeta(channel, ChannelMetaType.GROUP, JSON.stringify(content));
     }
 
     removeChannel(channel: ChatChannel) {
