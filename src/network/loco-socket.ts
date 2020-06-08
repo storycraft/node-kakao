@@ -140,15 +140,17 @@ export abstract class LocoBasicSocket implements LocoSocket {
     }
 
     async sendPacket(header: PacketHeader, bodyBuffer: Buffer): Promise<boolean> {
-        return this.sendRawBuffer(this.transformBuffer(this.toPacketBuffer(header, bodyBuffer)));
+        if (!this.connected) return false;
+
+        return this.sendBuffer(this.toPacketBuffer(header, bodyBuffer));
     }
 
-    protected async sendRawBuffer(buffer: Buffer): Promise<boolean> {
+    async sendBuffer(buffer: Buffer): Promise<boolean> {
         if (!this.connected) {
             return false;
         }
 
-        return new Promise<boolean>((resolve, reject) => this.socket!.write((buffer), (e) => {
+        return new Promise<boolean>((resolve, reject) => this.socket!.write(this.transformBuffer(buffer), (e) => {
             if (e) {
                 reject(e);
             } else {

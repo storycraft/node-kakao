@@ -20,6 +20,7 @@ import { ApiStatusCode } from "./talk/struct/api/api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
 import { ClientStatus } from "./client-status";
+import { MediaManager } from "./talk/media/media-manager";
 
 /*
  * Created on Fri Nov 01 2019
@@ -60,6 +61,8 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
     readonly ChatManager: ChatManager;
 
     readonly OpenChatManager: OpenChatManager;
+
+    readonly MediaManager: MediaManager;
 
     readonly ClientUser: ClientChatUser;
 
@@ -155,6 +158,8 @@ export class TalkClient extends LoginClient implements LocoClient {
     private chatManager: ChatManager;
     private openChatManager: OpenChatManager;
 
+    private mediaManager: MediaManager;
+
     private status: ClientStatus;
 
     constructor(name: string, deviceUUID: string = '') {
@@ -167,6 +172,8 @@ export class TalkClient extends LoginClient implements LocoClient {
 
         this.chatManager = new ChatManager(this);
         this.openChatManager = new OpenChatManager(this);
+
+        this.mediaManager = new MediaManager(this);
 
         this.clientUser = null;
 
@@ -191,6 +198,10 @@ export class TalkClient extends LoginClient implements LocoClient {
 
     get OpenChatManager() {
         return this.openChatManager;
+    }
+
+    get MediaManager() {
+        return this.mediaManager;
     }
 
     get LocoLogon() {

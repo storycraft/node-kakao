@@ -37,6 +37,7 @@ export class PhotoAttachment implements ChatAttachment {
         public Height: number = 0,
         public ImageURL: string = '',
         public Size: Long = Long.ZERO,
+        public MediaType: string = '',
 
         //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
@@ -60,6 +61,8 @@ export class PhotoAttachment implements ChatAttachment {
 
         this.ImageURL = rawJson['url'];
         this.ThumbnailURL = rawJson['thumbnailUrl'];
+
+        this.MediaType = rawJson['mt'];
         
         this.ThumbnailWidth = rawJson['thumbnailWidth'];
         this.ThumbnailHeight = rawJson['thumbnailHeight'];
@@ -77,6 +80,10 @@ export class PhotoAttachment implements ChatAttachment {
 
         if (this.ThumbnailURL !== '') {
             obj['thumbnailUrl'] = this.ThumbnailURL;
+        }
+
+        if (this.MediaType !== '') {
+            obj['mt'] = this.MediaType;
         }
 
         if (this.ThumbnailWidth !== -1) {

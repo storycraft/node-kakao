@@ -17,7 +17,7 @@ export interface LocoInterface {
     readonly Connected: boolean;
 
     connect(): Promise<boolean>;
-    disconnect(): Promise<boolean>;
+    disconnect(): boolean;
 
     sendPacket(packet: LocoRequestPacket): Promise<boolean>;
     requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T>;
@@ -63,6 +63,10 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
 
     protected abstract createSocket(hostData: HostData): LocoSocket;
 
+    protected get Socket() {
+        return this.socket;
+    }
+
     get Connected() {
         return this.socket.Connected;
     }
@@ -73,7 +77,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         return this.socket.connect();
     }
 
-    async disconnect(): Promise<boolean> {
+    disconnect(): boolean {
         return this.socket.disconnect();
     }
 

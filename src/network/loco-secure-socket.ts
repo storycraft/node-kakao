@@ -44,6 +44,15 @@ export class LocoSecureSocket extends LocoBasicSocket {
         return super.transformBuffer(data);
     }
 
+    async connect() {
+        let res = await super.connect();
+        let handshaked = await this.handshake();
+
+        if (!handshaked) throw new Error('Handshake failed');
+
+        return res;
+    }
+
     async handshake() {
         if (!this.Connected || this.handshaked) {
             return false;
@@ -63,7 +72,7 @@ export class LocoSecureSocket extends LocoBasicSocket {
 
         keyBuffer.copy(handshakeBuffer, 12);
 
-        let res = await super.sendRawBuffer(handshakeBuffer);
+        let res = await super.sendBuffer(handshakeBuffer);
 
         return this.handshaked = res;
     }
@@ -76,14 +85,6 @@ export class LocoSecureSocket extends LocoBasicSocket {
             port: port,
             timeout: 15000
         }, callback).setKeepAlive(this.KeepAlive).setNoDelay(true);
-    }
-
-    async sendPacket(header: PacketHeader, bodyBuffer: Buffer): Promise<boolean> {
-        if (!this.Connected) return false;
-
-        if (!this.handshaked) await this.handshake();
-
-        return super.sendPacket(header, bodyBuffer);
     }
 
     get Crypto() {

@@ -6,7 +6,7 @@
 
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { TalkPacketHandler } from "./packet-handler";
-import { LocoCommandInterface, LocoListener, LocoInterface, LocoTLSCommandInterface, LocoSecureCommandInterface } from "../loco/loco-interface";
+import { LocoCommandInterface, LocoListener, LocoInterface, LocoTLSCommandInterface, LocoSecureCommandInterface, LocoReceiver } from "../loco/loco-interface";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet/loco-packet-base";
 import { PacketLoginRes, PacketLoginReq } from "../packet/packet-login";
 import { PacketPingReq } from "../packet/packet-ping";
@@ -16,6 +16,7 @@ import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
 import { PacketBuyCallServerRes, PacketBuyCallServerReq } from "../packet/packet-buy-call-server";
 import { Long } from "bson";
 import { HostData } from "./host-data";
+import { MediaUploadInterface } from "../talk/media/media-upload-interface";
 
 export class NetworkManager implements LocoListener, LocoInterface {
 
@@ -25,7 +26,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
     private cachedCheckinData: CheckinData | null;
     private lastCheckinReq: number;
     
-    private mainInterface: MainInterface | null;
+    private mainInterface: LocoMainInterface | null;
 
     private handler: LocoPacketHandler;
 
@@ -63,7 +64,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return this.mainInterface && this.mainInterface.connect() || false;
     }
 
-    async disconnect(): Promise<boolean> {
+    disconnect(): boolean {
         return this.mainInterface && this.mainInterface.disconnect() || false;
     }
 
@@ -87,8 +88,12 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return new LocoSecureCommandInterface(hostInfo, listener);
     }
 
-    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this): MainInterface {
+    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this): LocoMainInterface {
         return new MainInterface(hostInfo, listener);
+    }
+
+    createUploadInterface(hostInfo: HostData): MediaUploadInterface {
+        return new MediaUploadInterface(hostInfo, this);
     }
 
     async requestCheckinData(userId: Long): Promise<CheckinData> {
@@ -221,7 +226,15 @@ export class CheckinData {
 
 }
 
-export class MainInterface extends LocoSecureCommandInterface {
+export interface LocoMainInterface extends LocoInterface, LocoReceiver {
+
+    readonly Logon: boolean;
+
+    login(deviceUUID: string, accessToken: string): Promise<PacketLoginRes>;
+
+}
+
+export class MainInterface extends LocoSecureCommandInterface implements LocoMainInterface {
 
     private locoLogon: boolean = false;
 
