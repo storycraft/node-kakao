@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { LocoBsonResponsePacket } from "../loco-bson-packet";
+import { ChatlogStruct } from "../../talk/struct/chatlog-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketCompleteRes extends LocoBsonResponsePacket {

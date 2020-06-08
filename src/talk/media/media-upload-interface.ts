@@ -8,8 +8,8 @@ import { LocoSecureCommandInterface, LocoListener } from "../../loco/loco-interf
 import { HostData } from "../../network/host-data";
 import { LocoResponsePacket, StatusCode } from "../../packet/loco-packet-base";
 import { PacketHeader } from "../../packet/packet-header-struct";
-import { PacketCompleteRes } from "../../packet/packet-complete";
-import { PacketPostReq, PacketPostRes } from "../../packet/packet-post";
+import { PacketCompleteRes } from "../../packet/media/packet-complete";
+import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
 import { LocoSecureSocket } from "../../network/loco-secure-socket";
 import { ChatType } from "../chat/chat-type";
 import { Long } from "bson";
@@ -60,6 +60,8 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         if (this.uploading) {
             throw new Error(`Uploading already started`);
         }
+
+        if (!this.Connected) await this.connect();
 
         let postRes = await this.requestPacketRes<PacketPostRes>(new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false, clientUserId));
 

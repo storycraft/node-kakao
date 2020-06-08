@@ -62,8 +62,6 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly OpenChatManager: OpenChatManager;
 
-    readonly MediaManager: MediaManager;
-
     readonly ClientUser: ClientChatUser;
 
     readonly LocoLogon: boolean;
@@ -158,8 +156,6 @@ export class TalkClient extends LoginClient implements LocoClient {
     private chatManager: ChatManager;
     private openChatManager: OpenChatManager;
 
-    private mediaManager: MediaManager;
-
     private status: ClientStatus;
 
     constructor(name: string, deviceUUID: string = '') {
@@ -172,8 +168,6 @@ export class TalkClient extends LoginClient implements LocoClient {
 
         this.chatManager = new ChatManager(this);
         this.openChatManager = new OpenChatManager(this);
-
-        this.mediaManager = new MediaManager(this);
 
         this.clientUser = null;
 
@@ -198,10 +192,6 @@ export class TalkClient extends LoginClient implements LocoClient {
 
     get OpenChatManager() {
         return this.openChatManager;
-    }
-
-    get MediaManager() {
-        return this.mediaManager;
     }
 
     get LocoLogon() {

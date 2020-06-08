@@ -224,6 +224,10 @@ export class FeedChat extends Chat {
         return ChatType.Feed;
     }
 
+    get RichFeed(): RichFeedAttachment | null {
+        return this.AttachmentList[0] as RichFeedAttachment || null;
+    }
+
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         try {
             if (this.getFeed().feedType === FeedType.RICH_CONTENT) {
@@ -240,6 +244,10 @@ export class TextChat extends Chat {
     
     get Type() {
         return ChatType.Text;
+    }
+
+    get LongText(): LongTextAttachment | null {
+        return this.AttachmentList[0] as LongTextAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -262,6 +270,10 @@ export class SinglePhotoChat extends PhotoChat {
 
     get Type() {
         return ChatType.Photo;
+    }
+
+    get Photo(): PhotoAttachment | null {
+        return this.AttachmentList[0] as PhotoAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -303,6 +315,10 @@ export class MultiPhotoChat extends PhotoChat {
 
 export abstract class EmoticonChat extends Chat {
 
+    get Emoticon(): EmoticonAttachment | null {
+        return this.AttachmentList[0] as EmoticonAttachment || null;
+    }
+
 }
 
 export class StaticEmoticonChat extends EmoticonChat {
@@ -341,6 +357,10 @@ export class VideoChat extends Chat {
         return ChatType.Video;
     }
 
+    get Video(): VideoAttachment | null {
+        return this.AttachmentList[0] as VideoAttachment || null;
+    }
+
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let attachment = new VideoAttachment();
         attachment.readAttachment(attachmentJson);
@@ -350,27 +370,14 @@ export class VideoChat extends Chat {
 
 }
 
-
-//Unused
-export class LongTextChat extends Chat {
-    
-    get Type() {
-        return ChatType.Text;
-    }
-
-    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let textAttachment = new LongTextAttachment();
-        textAttachment.readAttachment(attachmentJson);
-
-        attachmentList.push(textAttachment);
-    }
-
-}
-
 export class SharpSearchChat extends Chat {
     
     get Type() {
         return ChatType.Search;
+    }
+
+    get Sharp(): SharpAttachment | null {
+        return this.AttachmentList[0] as SharpAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -387,6 +394,10 @@ export class MapChat extends Chat {
 
     get Type() {
         return ChatType.Map;
+    }
+
+    get Map(): MapAttachment | null {
+        return this.AttachmentList[0] as MapAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -411,6 +422,10 @@ export class ReplyChat extends Chat {
         return this.contentOnly;
     }
 
+    get Reply(): ReplyAttachment | null {
+        return this.AttachmentList[0] as ReplyAttachment || null;
+    }
+
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let replyAttachment = new ReplyAttachment();
 
@@ -432,6 +447,10 @@ export class CustomChat extends Chat {
     
     get Type() {
         return ChatType.Custom;
+    }
+
+    get Custom(): CustomAttachment | null {
+        return this.AttachmentList[0] as CustomAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {

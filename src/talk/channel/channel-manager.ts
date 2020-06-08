@@ -23,7 +23,6 @@ import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta
 import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
-import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "../../packet/packet-get-client-meta";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     

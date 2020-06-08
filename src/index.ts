@@ -43,6 +43,10 @@ export * from './talk/chat/chat-feed';
 export * from './talk/feed/feed-type';
 export * from './talk/voip/voip-type';
 
+export * from './talk/media/media-download-interface';
+export * from './talk/media/media-upload-interface';
+export * from './talk/media/media-manager';
+
 export * from './talk/chat/attachment/chat-attachment';
 export * from './talk/chat/attachment/sharp-attachment';
 export * from './talk/chat/attachment/custom-attachment';

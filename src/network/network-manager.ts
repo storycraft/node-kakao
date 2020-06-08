@@ -11,12 +11,13 @@ import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet/loc
 import { PacketLoginRes, PacketLoginReq } from "../packet/packet-login";
 import { PacketPingReq } from "../packet/packet-ping";
 import { LocoClient } from "../client";
-import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
-import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
-import { PacketBuyCallServerRes, PacketBuyCallServerReq } from "../packet/packet-buy-call-server";
+import { PacketCheckInReq, PacketCheckInRes } from "../packet/checkin/packet-check-in";
+import { PacketGetConfReq, PacketGetConfRes } from "../packet/booking/packet-get-conf";
+import { PacketBuyCallServerRes, PacketBuyCallServerReq } from "../packet/checkin/packet-buy-call-server";
 import { Long } from "bson";
 import { HostData } from "./host-data";
 import { MediaUploadInterface } from "../talk/media/media-upload-interface";
+import { MediaDownloadInterface } from "../talk/media/media-download-interface";
 
 export class NetworkManager implements LocoListener, LocoInterface {
 
@@ -94,6 +95,10 @@ export class NetworkManager implements LocoListener, LocoInterface {
 
     createUploadInterface(hostInfo: HostData): MediaUploadInterface {
         return new MediaUploadInterface(hostInfo, this);
+    }
+
+    createDownloadInterface(hostInfo: HostData): MediaDownloadInterface {
+        return new MediaDownloadInterface(hostInfo, this);
     }
 
     async requestCheckinData(userId: Long): Promise<CheckinData> {

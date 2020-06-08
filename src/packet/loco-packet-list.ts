@@ -1,6 +1,6 @@
 import { LocoRequestPacket, LocoResponsePacket } from "./loco-packet-base";
-import { PacketGetConfReq, PacketGetConfRes } from "./packet-get-conf";
-import { PacketCheckInReq, PacketCheckInRes } from "./packet-check-in";
+import { PacketGetConfReq, PacketGetConfRes } from "./booking/packet-get-conf";
+import { PacketCheckInReq, PacketCheckInRes } from "./checkin/packet-check-in";
 import { PacketLoginReq, PacketLoginRes } from "./packet-login";
 import { PacketMessageRes, PacketMessageWriteReq, PacketMessageWriteRes } from "./packet-message";
 import { PacketMessageReadRes } from "./packet-message-read";
@@ -37,21 +37,21 @@ import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "./packet-chat-on-room"
 import { PacketSyncProfileRes } from "./packet-sync-profile";
 import { PacketSyncDeleteMessageRes } from "./packet-sync-delete-message";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "./packet-sync-message";
-import { PacketGetTrailerReq } from "./packet-get-trailer";
+import { PacketGetTrailerReq, PacketGetTrailerRes } from "./packet-get-trailer";
 import { PacketShipReq, PacketShipRes } from "./packet-ship";
 import { PacketGetToken } from "./packet-get-token";
 import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "./packet-multi-chatlog";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet-set-status";
 import { PacketUpdateChannelReq, PacketUpdateChannelRes } from "./packet-update-channel";
-import { PacketBuyCallServerReq, PacketBuyCallServerRes } from "./packet-buy-call-server";
+import { PacketBuyCallServerReq, PacketBuyCallServerRes } from "./checkin/packet-buy-call-server";
 import { PacketChannelListReq, PacketChannelListRes } from "./packet-channel-list";
 import { PacketSetMetaReq, PacketSetMetaRes } from "./packet-set-meta";
 import { PacketSetClientMetaReq, PacketSetClientMetaRes } from "./packet-set-client-meta";
 import { PacketMetaChangeRes } from "./packet-meta-change";
 import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "./packet-get-client-meta";
 import { PacketChangeServerRes } from "./packet-change-server";
-import { PacketCompleteRes } from "./packet-complete";
-import { PacketPostReq, PacketPostRes } from "./packet-post";
+import { PacketCompleteRes } from "./media/packet-complete";
+import { PacketPostReq, PacketPostRes } from "./media/packet-post";
 
 /*
  * Created on Wed Oct 30 2019
@@ -90,9 +90,10 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('UPDATECHAT', PacketUpdateChannelReq);
 
+        requestPacketMap.set('GETTRAILER', PacketGetTrailerReq);
+
         requestPacketMap.set('SHIP', PacketShipReq);
         requestPacketMap.set('POST', PacketPostReq);
-        requestPacketMap.set('GETTRAILER', PacketGetTrailerReq);
 
         requestPacketMap.set('GETMETA', PacketGetMetaReq);
         requestPacketMap.set('GETMCMETA', PacketGetClientMetaReq);
@@ -150,6 +151,8 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('MSG', PacketMessageRes);
         responsePacketMap.set('WRITE', PacketMessageWriteRes);
+
+        responsePacketMap.set('GETTRAILER', PacketGetTrailerRes);
 
         responsePacketMap.set('SHIP', PacketShipRes);
         responsePacketMap.set('POST', PacketPostRes);

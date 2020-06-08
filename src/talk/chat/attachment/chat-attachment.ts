@@ -29,7 +29,19 @@ export interface AttachmentContent {
 
 }
 
-export class PhotoAttachment implements ChatAttachment {
+export interface MediaAttachment extends ChatAttachment {
+
+    KeyPath: string;
+
+}
+
+export interface MediaHasThumbnail extends MediaAttachment {
+
+    readonly HasThumbnail: boolean;
+
+}
+
+export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
 
     constructor(
         public KeyPath: string = '',
@@ -51,6 +63,10 @@ export class PhotoAttachment implements ChatAttachment {
 
     get RequiredMessageType() {
         return ChatType.Photo;
+    }
+
+    get HasThumbnail() {
+        return true;
     }
 
     readAttachment(rawJson: any) {
@@ -109,7 +125,7 @@ export class PhotoAttachment implements ChatAttachment {
 
 }
 
-export class VideoAttachment implements ChatAttachment {
+export class VideoAttachment implements ChatAttachment, MediaHasThumbnail {
 
     constructor(
         public KeyPath: string = '',
@@ -127,6 +143,10 @@ export class VideoAttachment implements ChatAttachment {
 
     get RequiredMessageType() {
         return ChatType.Video;
+    }
+
+    get HasThumbnail() {
+        return true;
     }
 
     readAttachment(rawJson: any) {
@@ -165,7 +185,7 @@ export class VideoAttachment implements ChatAttachment {
 
 }
 
-export class FileAttachment implements ChatAttachment {
+export class FileAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public KeyPath: string = '',
@@ -217,7 +237,7 @@ export class FileAttachment implements ChatAttachment {
 
 }
 
-export class AudioAttachment implements ChatAttachment {
+export class AudioAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public KeyPath: string = '',
@@ -333,7 +353,7 @@ export class EmoticonAniAttachment extends EmoticonAttachment {
 
 }
 
-export class LongTextAttachment implements ChatAttachment {
+export class LongTextAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public Path: string = '',

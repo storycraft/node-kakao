@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
 import { Long } from "bson";
-import { KakaoAPI } from "../kakao-api";
-import { ChatType } from "../talk/chat/chat-type";
-import { JsonUtil } from "../util/json-util";
+import { KakaoAPI } from "../../kakao-api";
+import { ChatType } from "../../talk/chat/chat-type";
+import { JsonUtil } from "../../util/json-util";
 
 export class PacketPostReq extends LocoBsonRequestPacket {
     

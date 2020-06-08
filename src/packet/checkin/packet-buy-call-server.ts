@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { KakaoAPI } from "../kakao-api";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
+import { KakaoAPI } from "../../kakao-api";
 import { Long } from "bson";
 
 export class PacketBuyCallServerReq extends LocoBsonRequestPacket {
