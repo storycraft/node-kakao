@@ -29,6 +29,7 @@ import { OpenChannelInfo } from "../talk/channel/channel-info";
 import { PacketMetaChangeRes } from "../packet/packet-meta-change";
 import { PacketSetMetaRes } from "../packet/packet-set-meta";
 import { PacketChangeServerRes } from "../packet/packet-change-server";
+import { PacketLoginRes } from "../packet/packet-login";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -45,6 +46,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         this.setMaxListeners(1000);
 
+        this.on('LOGINLIST', this.onLogin.bind(this));
         this.on('MSG', this.onMessagePacket.bind(this));
         this.on('NEWMEM', this.onNewMember.bind(this));
         this.on('DECUNREAD', this.onMessageRead.bind(this));
@@ -95,6 +97,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
     onDisconnected(): void {
         this.Client.emit('disconnected', this.kickReason);
+    }
+
+    async onLogin(packet: PacketLoginRes) {
+        await this.Client.updateStatus();
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
@@ -350,8 +356,15 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         info.removeUserInfo(feed.member.userId);
     }
 
-    onSwitchServerReq(packet: PacketChangeServerRes) {
-        
+    async onSwitchServerReq(packet: PacketChangeServerRes) {
+        this.networkManager.disconnect();
+
+        let accessData = this.Client.getLatestAccessData();
+
+        // recache data
+        await this.networkManager.getCheckinData(accessData.userId, true);
+
+        await this.networkManager.locoLogin(this.Client.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
     }
 
     onLocoKicked(packet: PacketKickoutRes) {

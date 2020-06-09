@@ -189,7 +189,9 @@ export class NetworkManager implements LocoListener, LocoInterface {
 
         this.mainInterface = this.createMainInterface(checkinData.LocoHost);
 
-        await this.mainInterface.connect();
+        if (!(await this.mainInterface.connect())) {
+            throw new Error(`Loco Login failed`);
+        }
 
         let res = await this.mainInterface.login(deviceUUID, accessToken);
         

@@ -28,9 +28,10 @@ import { MediaManager } from "./talk/media/media-manager";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface LoginBasedClient {
+export interface LoginBasedClient extends AccessDataProvider {
 
     readonly Logon: boolean;
+    readonly ApiClient: ApiClient;
     
     login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
     loginToken(email: string, token: string, deviceUUID?: string, forced?: boolean): Promise<void>;
@@ -66,9 +67,13 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly LocoLogon: boolean;
 
+    setStatus(status: ClientStatus): Promise<boolean>;
+    getStatus(): ClientStatus;
+    updateStatus(): Promise<boolean>;
+
 }
 
-export class LoginClient extends EventEmitter implements LoginBasedClient, AccessDataProvider {
+export class LoginClient extends EventEmitter implements LoginBasedClient {
 
     private name: string;
 
@@ -243,29 +248,28 @@ export class TalkClient extends LoginClient implements LocoClient {
         await this.openChatManager.initOpenSession();
 
         this.emit('login', this.clientUser);
-
-        await this.setStatus(this.status);
     }
 
     async setStatus(status: ClientStatus): Promise<boolean> {
-        let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(status));
+        if (this.status !== status) this.status = status;
 
-        if (res.StatusCode === StatusCode.SUCCESS) {
-            if (status !== this.status) this.status = status;
-            return true;
-        }
-
-        return false;
+        return this.updateStatus();
     }
 
-    async getStatus(): Promise<ClientStatus> {
+    async updateStatus(): Promise<boolean> {
+        let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(this.status));
+
+        return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    getStatus(): ClientStatus {
         return this.status;
     }
 
     async logout() {
         await super.logout();
         
-        await this.networkManager.disconnect();
+        this.networkManager.disconnect();
     }
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;
