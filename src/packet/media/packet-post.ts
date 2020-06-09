@@ -9,8 +9,9 @@ import { Long } from "bson";
 import { KakaoAPI } from "../../kakao-api";
 import { ChatType } from "../../talk/chat/chat-type";
 import { JsonUtil } from "../../util/json-util";
+import { MediaRequestBasePacket } from "./media-request-base-packet";
 
-export class PacketPostReq extends LocoBsonRequestPacket {
+export class PacketPostReq extends MediaRequestBasePacket {
     
     constructor(
         public Key: string = '',
@@ -24,14 +25,13 @@ export class PacketPostReq extends LocoBsonRequestPacket {
         public MessageId: Long = Long.ZERO,
         public NoSeen: boolean = false,
 
-        public UserId: Long = Long.ZERO,
-        public Os: string = KakaoAPI.Agent,
-        public Version: string = KakaoAPI.Version,
-        public NetworkType: number = 0,
-        public NetworkMccMnc: string = '999',
-
+        userId: Long = Long.ZERO,
+        os: string = KakaoAPI.Agent,
+        version: string = KakaoAPI.Version,
+        networkType: number = 0,
+        networkMccMnc: string = '999',
     ) {
-        super();
+        super(userId, os, version, networkType, networkMccMnc);
     }
 
     get PacketName() {
@@ -50,15 +50,9 @@ export class PacketPostReq extends LocoBsonRequestPacket {
             't': this.Type,
             'mid': this.MessageId,
             'ns': this.NoSeen,
-
-            'u': this.UserId,
-            'os': this.Os,
-            'av': this.Version,
-            'nt': this.NetworkType,
-            'mm': this.NetworkMccMnc
         };
 
-        return obj;
+        return Object.assign(obj, super.toBodyJson());
     }
 
 }

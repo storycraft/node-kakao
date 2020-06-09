@@ -51,9 +51,11 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         return res;
     }
 
-    protected setupCompleteRes(resolve: (value: PacketCompleteRes) => void, reject: (reason: any) => void) {
-        this.completeRes = resolve;
-        this.completeErr = reject;
+    protected createCompleteTicket() {
+        return new Promise<PacketCompleteRes>((resolve, reject) => {
+            this.completeRes = resolve;
+            this.completeErr = reject;
+        });
     }
 
     async upload(clientUserId: Long, key: string, channelId: Long, type: ChatType, name: string, data: Buffer, width: number, height: number): Promise<PacketCompleteRes> {
@@ -64,6 +66,7 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         if (!this.Connected) await this.connect();
 
         let postRes = await this.requestPacketRes<PacketPostRes>(new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false, clientUserId));
+        this.uploading = true;
 
         // ok so destroying structure makes the transaction secure?
         let rawSocket = this.Socket as LocoSecureSocket;
@@ -72,7 +75,7 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
         rawSocket.sendBuffer(data);
         
-        return new Promise(this.setupCompleteRes.bind(this));
+        return this.createCompleteTicket();
     }
 
 }

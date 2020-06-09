@@ -52,6 +52,8 @@ import { PacketGetClientMetaRes, PacketGetClientMetaReq } from "./packet-get-cli
 import { PacketChangeServerRes } from "./packet-change-server";
 import { PacketCompleteRes } from "./media/packet-complete";
 import { PacketPostReq, PacketPostRes } from "./media/packet-post";
+import { PacketMiniReq, PacketMiniRes } from "./media/packet-mini";
+import { PacketDownReq, PacketDownRes } from "./media/packet-down";
 
 /*
  * Created on Wed Oct 30 2019
@@ -94,6 +96,9 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('SHIP', PacketShipReq);
         requestPacketMap.set('POST', PacketPostReq);
+
+        requestPacketMap.set('MINI', PacketMiniReq);
+        requestPacketMap.set('DOWN', PacketDownReq);
 
         requestPacketMap.set('GETMETA', PacketGetMetaReq);
         requestPacketMap.set('GETMCMETA', PacketGetClientMetaReq);
@@ -156,6 +161,10 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('SHIP', PacketShipRes);
         responsePacketMap.set('POST', PacketPostRes);
+
+        responsePacketMap.set('MINI', PacketMiniRes);
+        responsePacketMap.set('DOWN', PacketDownRes);
+
         responsePacketMap.set('COMPLETE', PacketCompleteRes);
 
         responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);

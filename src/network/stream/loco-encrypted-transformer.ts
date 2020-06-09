@@ -43,7 +43,7 @@ export class LocoEncryptedTransformer extends Transform {
 
     _transform(chunk: Buffer, encoding?: string, callback?: TransformCallback) {
         this.chunkList.append(chunk);
-
+        
         let buf: Buffer | null = null;
         if (!this.currentEncryptedHeader && this.chunkList.TotalByteLength > LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE) {
             buf = this.chunkList.toBuffer();

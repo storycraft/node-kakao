@@ -49,27 +49,23 @@ export class MediaManager {
         return null;
     }
 
-    async requestThumbnail(mediaAttachment: MediaHasThumbnail): Promise<Buffer | null> {
+    async requestThumbnail(channel: ChatChannel, mediaAttachment: MediaHasThumbnail): Promise<Buffer | null> {
         if (!mediaAttachment.HasThumbnail) return null;
 
-        let downloader = this.createDownloaderFor(mediaAttachment);
+        let downloader = await this.createDownloaderFor(mediaAttachment);
 
-        
-
-        return null;
+        return downloader.downloadThumbnail(this.ClientUser.Id, mediaAttachment.KeyPath, channel.Id);
     }
 
-    async requestMedia(mediaAttachment: MediaAttachment): Promise<Buffer | null> {
-        let downloader = this.createDownloaderFor(mediaAttachment);
-
-
+    async requestMedia(channel: ChatChannel, mediaAttachment: MediaAttachment): Promise<Buffer | null> {
+        let downloader = await this.createDownloaderFor(mediaAttachment);
     
-        return null;
+        return downloader.download(this.ClientUser.Id, mediaAttachment.KeyPath, channel.Id);
     }
 
     protected async createDownloaderFor(mediaAttachment: MediaAttachment): Promise<MediaDownloadInterface> {
         let trailerRes = await this.NetworkManager.requestPacketRes<PacketGetTrailerRes>(new PacketGetTrailerReq(mediaAttachment.KeyPath, mediaAttachment.RequiredMessageType));
-        let downloadInterface = await this.NetworkManager.createDownloadInterface({ host: trailerRes.VHost, port: trailerRes.Port, keepAlive: true });
+        let downloadInterface = this.NetworkManager.createDownloadInterface({ host: trailerRes.VHost, port: trailerRes.Port, keepAlive: true });
 
         return downloadInterface;
     }
