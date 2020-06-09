@@ -11,6 +11,4 @@ export type StructType = StructPrimitive | StructPrimitive[] | StructBase | Stru
 
 export interface StructBase {
 
-    [key: string]: StructType
-
 }

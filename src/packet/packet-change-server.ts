@@ -8,10 +8,18 @@ import { LocoBsonResponsePacket } from "./loco-bson-packet";
 
 export class PacketChangeServerRes extends LocoBsonResponsePacket {
 
+    constructor(
+        status: number,
+    ) {
+        super(status);
+    }
+
     get PacketName() {
         return 'CHANGESVR';
     }
 
-    readBodyJson() { }
+    readBodyJson(rawData: any) {
+        
+    }
 
 }

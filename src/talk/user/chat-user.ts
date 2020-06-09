@@ -282,20 +282,8 @@ export class ClientUserInfo implements ChatUserInfoBase {
         return this.settings.originalProfileImageUrl || '';
     }
 
-    get BackgroundImageURL() {
-        return this.settings.backgroundImageURL || '';
-    }
-
-    get OriginalBackgroundImageURL() {
-        return this.settings.originalBackgroundImageURL || '';
-    }
-
     get LastInfoCache() {
         return Date.now();
-    }
-
-    get KakaoStoryURL() {
-        return this.settings.storyURL;
     }
 
     update(memberStruct: MemberStruct) {

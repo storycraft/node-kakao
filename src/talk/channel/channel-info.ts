@@ -279,11 +279,11 @@ export class OpenChannelInfo extends ChannelInfo {
     }
 
     get CoverURL() {
-        return this.linkInfo.CoverURL;
+        return this.linkInfo.coverURL;
     }
 
     get LinkURL() {
-        return this.linkInfo.LinkURL;
+        return this.linkInfo.linkURL;
     }
 
     get LinkOwner(): ChatUser {
