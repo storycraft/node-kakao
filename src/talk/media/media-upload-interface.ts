@@ -70,8 +70,13 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
         // ok so destroying structure makes the transaction secure?
         let rawSocket = this.Socket as LocoSecureSocket;
-        let buf = Buffer.alloc(data.byteLength + postRes.Offset.toNumber());
-        data.copy(buf, postRes.Offset.toNumber());
+        let buf: Buffer;
+        if (postRes.Offset.toNumber() > 0) {
+            buf = Buffer.alloc(data.byteLength + postRes.Offset.toNumber());
+            data.copy(buf, postRes.Offset.toNumber());
+        } else {
+            buf = data;
+        }
 
         rawSocket.sendBuffer(data);
         
