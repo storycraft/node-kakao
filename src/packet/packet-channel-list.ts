@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { ChatDataStruct } from "../talk/struct/chatdata-struct";
+import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChannelListReq extends LocoBsonRequestPacket {
@@ -39,7 +39,7 @@ export class PacketChannelListRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChatDataList: ChatDataStruct[] = []
+        public ChatDataList: ChannelDataStruct[] = []
     ) {
         super(status);
     }
@@ -52,7 +52,7 @@ export class PacketChannelListRes extends LocoBsonResponsePacket {
         this.ChatDataList = [];
         if (rawData['chatDatas']) {
             for (let chatData of rawData['chatDatas']) {
-                this.ChatDataList.push(Serializer.deserialize(chatData, ChatDataStruct.MAPPER));
+                this.ChatDataList.push(Serializer.deserialize(chatData, ChannelDataStruct.MAPPER));
             }
         }
 

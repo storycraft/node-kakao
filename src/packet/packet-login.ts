@@ -1,6 +1,6 @@
 import { KakaoAPI } from "../kakao-api";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChatDataStruct } from "../talk/struct/chatdata-struct";
+import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";
@@ -76,7 +76,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         public Revision: number = 0,
         public OpenChatToken: number = 0,
         public RevisionDetail: string = '',
-        public ChatDataList: ChatDataStruct[] = []
+        public ChatDataList: ChannelDataStruct[] = []
     ) {
         super(status);
 
@@ -97,7 +97,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
             let chatDataList: any[] = body['chatDatas'];
 
             for (let rawChatData of chatDataList) {
-                this.ChatDataList.push(Serializer.deserialize<ChatDataStruct>(rawChatData, ChatDataStruct.MAPPER));
+                this.ChatDataList.push(Serializer.deserialize<ChannelDataStruct>(rawChatData, ChannelDataStruct.MAPPER));
             }
         }
     }

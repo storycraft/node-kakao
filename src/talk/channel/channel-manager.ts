@@ -11,10 +11,10 @@ import { LocoClient } from "../../client";
 import { ChatUser } from "../user/chat-user";
 import { PacketCreateChatRes, PacketCreateChatReq } from "../../packet/packet-create-chat";
 import { PacketChatInfoReq, PacketChatInfoRes } from "../../packet/packet-chatinfo";
-import { ChatInfoStruct } from "../struct/chat-info-struct";
-import { ChatDataStruct } from "../struct/chatdata-struct";
+import { ChannelInfoStruct } from "../struct/channel-info-struct";
+import { ChannelDataStruct } from "../struct/channel-data-struct";
 import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
-import { ChannelType } from "../chat/channel-type";
+import { ChannelType } from "./channel-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
@@ -60,7 +60,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return this.channelFromChatData(id, res.ChatInfo!);
     }
 
-    protected channelFromChatData(id: Long, chatData: ChatDataStruct): ChatChannel {
+    protected channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
         let channel: ChatChannel;
 
         switch(chatData.type) {
@@ -81,7 +81,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return channel;
     }
 
-    async requestChannelInfo(channelId: Long): Promise<ChatInfoStruct> {
+    async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
 
         if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.PARTIAL) {
@@ -192,7 +192,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return true;
     }
 
-    initalizeLoginData(chatDataList: ChatDataStruct[]) {
+    initalizeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
         
         for (let chatData of chatDataList) {

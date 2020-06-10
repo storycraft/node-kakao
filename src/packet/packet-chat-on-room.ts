@@ -7,7 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { MemberStruct } from "../talk/struct/member-struct";
-import { ChannelType } from "../talk/chat/channel-type";
+import { ChannelType } from "../talk/channel/channel-type";
 import { JsonUtil } from "../util/json-util";
 import { OpenMemberStruct } from "../talk/struct/open-link-struct";
 import { Serializer } from "json-proxy-mapper";

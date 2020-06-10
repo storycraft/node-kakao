@@ -34,7 +34,7 @@ export { LocoKickoutType } from './packet/packet-kickout';
 export * from './secure/crypto-manager';
 
 export * from './talk/chat/chat-type';
-export * from './talk/chat/channel-type';
+export * from './talk/channel/channel-type';
 export * from './talk/chat/chat-builder';
 
 export * from './talk/chat/chat';
@@ -88,8 +88,8 @@ export * from './talk/struct/api/friends/friend-search-struct';
 export * from './talk/struct/api/profile/profile-struct';
 export * from './talk/struct/api/profile/profile-req-struct';
 
-export * from './talk/struct/chatdata-struct';
-export * from './talk/struct/chat-info-struct';
+export * from './talk/struct/channel-data-struct';
+export * from './talk/struct/channel-info-struct';
 export * from './talk/struct/chatlog-struct';
 export * from './talk/struct/channel-meta-struct';
 export * from './talk/struct/channel-meta-set-struct';

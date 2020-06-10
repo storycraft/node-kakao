@@ -48,7 +48,13 @@ export interface ChannelMetaStruct extends StructBase {
 
 export interface ChannelClientMetaStruct extends StructBase {
 
-    
+    name?: string;
+    image_path?: string;
+    favorite?: boolean,
+    push_sound?: boolean,
+    chat_hide?: boolean,
+    full_image_url?: string;
+    imageUrl?: string;
 
 }
 

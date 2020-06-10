@@ -1,6 +1,6 @@
 import { ChatUser } from "../user/chat-user";
 import { Long } from "bson";
-import { ChannelType } from "../chat/channel-type";
+import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
 import { Chat, UnknownChat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";

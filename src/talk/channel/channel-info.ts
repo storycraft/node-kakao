@@ -5,7 +5,7 @@
  */
 
 import { ChatUser, UserInfo } from "../user/chat-user";
-import { ChatInfoStruct } from "../struct/chat-info-struct";
+import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
@@ -140,7 +140,7 @@ export class ChannelInfo {
         return this.userInfoMap.delete(id.toString());
     }
 
-    updateFromStruct(chatinfoStruct: ChatInfoStruct) {
+    updateFromStruct(chatinfoStruct: ChannelInfoStruct) {
         this.isDirectChan = chatinfoStruct.isDirectChat;
 
         this.channelMetaList = [];
@@ -148,10 +148,10 @@ export class ChannelInfo {
             this.addChannelMeta(meta);
         }
 
-        this.roomImageURL = chatinfoStruct.metadata.imageURL;
-        this.roomFullImageURL = chatinfoStruct.metadata.fullImageURL;
+        if (chatinfoStruct.metadata.imageUrl) this.roomImageURL = chatinfoStruct.metadata.imageUrl;
+        if (chatinfoStruct.metadata.full_image_url) this.roomFullImageURL = chatinfoStruct.metadata.full_image_url;
 
-        this.isFavorite = chatinfoStruct.metadata.favorite;
+        if (chatinfoStruct.metadata.favorite) this.isFavorite = chatinfoStruct.metadata.favorite;
 
         this.lastInfoUpdated = Date.now();
     }
