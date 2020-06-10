@@ -96,7 +96,9 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     onDisconnected(): void {
-        this.Client.emit('disconnected', this.kickReason);
+        if (this.kickReason !== LocoKickoutType.CHANGE_SERVER) {
+            this.Client.emit('disconnected', this.kickReason);
+        }
     }
 
     async onLogin(packet: PacketLoginRes) {
@@ -357,6 +359,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onSwitchServerReq(packet: PacketChangeServerRes) {
+        this.kickReason = LocoKickoutType.CHANGE_SERVER;
+
         this.networkManager.disconnect();
 
         let accessData = this.Client.getLatestAccessData();
@@ -365,6 +369,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         await this.networkManager.getCheckinData(accessData.userId, true);
 
         await this.networkManager.locoLogin(this.Client.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
+        this.kickReason = LocoKickoutType.UNKNOWN;
     }
 
     onLocoKicked(packet: PacketKickoutRes) {
