@@ -54,6 +54,8 @@ import { PacketCompleteRes } from "./media/packet-complete";
 import { PacketPostReq, PacketPostRes } from "./media/packet-post";
 import { PacketMiniReq, PacketMiniRes } from "./media/packet-mini";
 import { PacketDownReq, PacketDownRes } from "./media/packet-down";
+import { PacketCreateOpenChannelReq, PacketCreateOpenChannelRes } from "../packet/packet-create-openchat-channel";
+
 
 /*
  * Created on Wed Oct 30 2019
@@ -133,6 +135,8 @@ export namespace LocoPacketList {
         requestPacketMap.set('PING', PacketPingReq);
 
         requestPacketMap.set('LEAVE', PacketLeaveReq);
+
+        requestPacketMap.set('CREATELINK', PacketCreateOpenChannelReq);
     }
 
     function initResMap() {
@@ -225,6 +229,8 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('CHANGESVR', PacketChangeServerRes);
         responsePacketMap.set('KICKOUT', PacketKickoutRes);
+
+        responsePacketMap.set('CREATELINK', PacketCreateOpenChannelRes);
     }
 
     export function hasReqPacket(name: string): boolean {

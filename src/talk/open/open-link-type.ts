@@ -26,3 +26,9 @@ export enum OpenchatProfileType {
     OPEN_PROFILE = 16
 
 }
+
+export enum OpenChannelType {
+    UNKNOWN = 0,
+    DIRECT = 1,
+    GROUP = 2
+}
