@@ -47,7 +47,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo!);
+        let chan = this.channelFromData(res.ChannelId, res.ChatInfo!);
 
         this.setCache(res.ChannelId, chan);
 
@@ -57,10 +57,10 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     protected async fetchValue(id: Long): Promise<ChatChannel> {
         let chatInfo = await this.requestChannelInfo(id);
 
-        return this.channelFromChatData(id, chatInfo);
+        return this.channelFromData(id, chatInfo);
     }
 
-    protected channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
+    protected channelFromData(id: Long, chatData: ChannelDataStruct): ChatChannel {
         let channel: ChatChannel;
 
         switch(chatData.type) {
@@ -196,7 +196,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         this.clear();
         
         for (let chatData of chatDataList) {
-            let channel: ChatChannel = this.channelFromChatData(chatData.channelId, chatData);
+            let channel: ChatChannel = this.channelFromData(chatData.channelId, chatData);
 
             this.setCache(channel.Id, channel);
         }

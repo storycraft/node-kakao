@@ -2,26 +2,101 @@ import { ChatUser } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
-import { Chat, UnknownChat } from "../chat/chat";
-import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
-import { ChatType } from "../chat/chat-type";
+import { Chat } from "../chat/chat";
 import { MessageTemplate } from "../chat/template/message-template";
 import { OpenLinkStruct } from "../struct/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
-import { ChatBuilder } from "../chat/chat-builder";
 import { ChatFeed } from "../chat/chat-feed";
-import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
-import { StatusCode } from "../../packet/loco-packet-base";
-import { ChannelMetaType, PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 
 /*
  * Created on Fri Nov 01 2019
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
+
+export interface ChatChannel {
+
+    readonly Client: LocoClient;
+
+    readonly LastChat: Chat | null;
+
+    readonly Id: Long;
+
+    readonly Type: ChannelType;
+
+    readonly PushAlert: boolean;
+
+    isOpenChat(): boolean;
+
+    markChannelRead(lastWatermark: Long): Promise<void>;
+
+    sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null>;
+    
+    sendTemplate(template: MessageTemplate): Promise<Chat | null>;
+
+    leave(block?: boolean): Promise<boolean>;
+
+    updateChannelSettings(pushAlert: boolean): Promise<boolean>;
+
+    setTitleMeta(title: string): Promise<boolean>;
+
+    setNoticeMeta(notice: string): Promise<boolean>;
+
+    setPrivilegeMeta(content: PrivilegeMetaContent): Promise<boolean>;
+
+    setProfileMeta(content: ProfileMetaContent): Promise<boolean>;
+
+    setTvMeta(content: TvMetaContent): Promise<boolean>;
+
+    setTvLiveMeta(content: TvLiveMetaContent): Promise<boolean>;
+
+    setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<boolean>;
+
+    setGroupMeta(content: GroupMetaContent): Promise<boolean>;
+
+    on(event: 'message', listener: (chat: Chat) => void): this;
+    on(event: 'join', listener: (newUser: ChatUser, feed: ChatFeed) => void): this;
+    on(event: 'left', listener: (leftUser: ChatUser, feed: ChatFeed) => void): this;
+
+    once(event: 'message', listener: (chat: Chat) => void): this;
+    once(event: 'join', listener: (newUser: ChatUser, feed: ChatFeed) => void): this;
+    once(event: 'left', listener: (leftUser: ChatUser, feed: ChatFeed) => void): this;
+
+}
+
+export interface OpenChatChannel extends ChatChannel {
+
+    readonly LinkId: Long;
+
+    readonly OpenToken: number;
+
+    async kickMember(user: ChatUser): Promise<boolean>;
+
+    kickMemberId(userId: Long): Promise<boolean>;
+
+    deleteLink(): Promise<boolean>;
+
+    hideChat(chat: Chat): Promise<boolean>;
+
+    hideChatId(logId: Long): Promise<boolean>;
+
+    changeToMainProfile(): Promise<boolean>;
+
+    changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean>;
+
+    changeToLinkProfile(profileLinkId: Long): Promise<boolean>;
+
+    setOpenMemberType(user: ChatUser, memberType: OpenMemberType): Promise<boolean>;
+
+    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean>;
+
+    getOpenProfile(): Promise<OpenLinkStruct>;
+
+}
 
 export class ChatChannel extends EventEmitter {
 
