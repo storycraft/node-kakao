@@ -13,7 +13,7 @@ import { ChatFeed } from "../chat/chat-feed";
 import { JsonUtil } from "../../util/json-util";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
-import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
+import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { ChannelMetaType, PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 import { ChannelSettings } from "./channel-settings";
@@ -209,15 +209,15 @@ export class OpenChatChannel extends ChatChannel {
     }
 
     async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.MAIN);
+        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.MAIN);
     }
 
     async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
+        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
     async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
+        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
     }
 
     async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {

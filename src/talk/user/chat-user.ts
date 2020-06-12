@@ -9,6 +9,7 @@ import { ChatChannel } from "../channel/chat-channel";
 import { Chat } from "../chat/chat";
 import { ChatFeed } from "../chat/chat-feed";
 import { LocoClient } from "../../client";
+import { OpenProfileType } from "../open/open-link-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -201,7 +202,9 @@ export class UserInfo implements ChatUserInfoBase {
                 fullProfileImageUrl: memberStruct.openFullProfileImageUrl!,
                 originalProfileImageUrl: memberStruct.openOriginalProfileImageUrl!,
 
-                memberType: memberStruct.openMemberType!
+                memberType: memberStruct.openMemberType!,
+                profileType: OpenProfileType.MAIN,
+                pv: Long.ZERO
             });
 
             return;

@@ -11,7 +11,7 @@ import { MemberStruct } from "../struct/member-struct";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
 import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
-import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
+import { OpenMemberType, OpenLinkType, OpenProfileType } from "../open/open-link-type";
 import { ChannelMetaStruct, ChannelMetaType, ProfileMetaContent } from "../struct/channel-meta-struct";
 
 
@@ -258,6 +258,7 @@ export class OpenChannelInfo extends ChannelInfo {
         linkName: '',
         linkURL: '',
         linkType: OpenLinkType.CHATROOM,
+        createdAt: 0,
         owner: {
             userId: Long.ZERO,
             nickname: '',
@@ -265,15 +266,18 @@ export class OpenChannelInfo extends ChannelInfo {
             originalProfileImageUrl: '',
             fullProfileImageUrl: '',
             memberType: OpenMemberType.UNKNOWN,
+            profileType: OpenProfileType.MAIN,
             linkId: Long.ZERO,
-            openToken: -1
+            openToken: -1,
+            pv: Long.ZERO
         },
         UNKNOWN1: false,
         UNKNOWN2: false,
-        maxUser: 1500,
+        maxUser: 0,
+        maxChannelLimit: 0,
         canSearchLink: false,
         description: '',
-        coverURL: ''
+        linkCoverURL: ''
     };
 
     private memberTypeMap: Map<string, OpenMemberType> = new Map();
@@ -283,7 +287,7 @@ export class OpenChannelInfo extends ChannelInfo {
     }
 
     get CoverURL() {
-        return this.linkInfo.coverURL;
+        return this.linkInfo.linkCoverURL;
     }
 
     get LinkURL() {

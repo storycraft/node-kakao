@@ -1,6 +1,6 @@
 import { StructBase } from "../struct-base";
 import { Long } from "bson";
-import { OpenLinkType, OpenMemberType } from "../../open/open-link-type";
+import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open/open-link-type";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkSettings } from "../../open/open-link-settings";
 
@@ -17,9 +17,14 @@ export interface OpenMemberStruct {
     profileImageUrl: string;
     originalProfileImageUrl: string;
     fullProfileImageUrl: string;
+
     memberType: OpenMemberType;
-    linkId: Long,
+    profileType: OpenProfileType;
+
+    linkId: Long;
     openToken: number;
+
+    pv: Long;
 
 }
 
@@ -33,8 +38,10 @@ export namespace OpenMemberStruct {
         originalProfileImageUrl: 'opi',
         fullProfileImageUrl: 'fpi',
         memberType: 'lmt',
+        profileType: 'ptp',
         linkId: 'li',
-        openToken: 'opt'
+        openToken: 'opt',
+        pv: 'pv'
 
     }
 
@@ -44,9 +51,18 @@ export namespace OpenMemberStruct {
 
 export interface OpenLinkStruct extends OpenLinkSettings, StructBase {
 
-    linkName: string;
+    linkId: Long;
+    openToken: number;
 
-    maxUser: number;
+    linkName: string;
+    linkURL: string;
+    linkType: OpenLinkType;
+
+    createdAt: number,
+
+    maxUser?: number;
+    maxChannelLimit?: number;
+
     passcode?: string; // '' === passcode disabled
     canSearchLink: boolean;
     UNKNOWN1: boolean;
@@ -54,13 +70,7 @@ export interface OpenLinkStruct extends OpenLinkSettings, StructBase {
 
     description: string;
 
-    coverURL: string;
-
-    linkId: Long;
-    openToken: number;
-    
-    linkURL: string;
-    linkType: OpenLinkType;
+    linkCoverURL: string;
 
     owner: OpenMemberStruct;
 
@@ -75,15 +85,19 @@ export namespace OpenLinkStruct {
 
         linkName: 'ln',
         linkType: 'lt',
+        linkURL: 'lu',
+        linkCoverURL: 'liu',
+
+        createdAt: 'ca',
 
         maxUser: 'ml',
+        maxChannelLimit: 'dcl',
         UNKNOWN1: 'ac',
         UNKNOWN2: 'pa',
 
         passcode: 'pc',
         owner: 'olu',
         description: 'desc',
-        coverURL: 'liu',
         
         canSearchLink: 'sc'
 
@@ -91,7 +105,7 @@ export namespace OpenLinkStruct {
 
     export const ConvertMap = {
 
-        logId: new Converter.Object(OpenMemberStruct.Mappings)
+        owner: new Converter.Object(OpenMemberStruct.Mappings)
 
     }
 

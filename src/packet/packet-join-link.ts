@@ -5,7 +5,7 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { Long, OpenchatProfileType } from "..";
+import { Long, OpenProfileType } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { OpenLinkStruct, OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
@@ -19,7 +19,7 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
         public Referer: string = '',
         public ChannelKey: string = '',
         
-        public ProfileType: OpenchatProfileType = OpenchatProfileType.MAIN,
+        public ProfileType: OpenProfileType = OpenProfileType.MAIN,
 
         public Nickname: string = '',           // KAKAO_ANON
         public ProfilePath: string = '', 
@@ -41,11 +41,11 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
             'ptp': this.ProfileType
         };
 
-        if (this.ProfileType === OpenchatProfileType.KAKAO_ANON) {
+        if (this.ProfileType === OpenProfileType.KAKAO_ANON) {
             if (this.Nickname !== '') obj['nn'] = this.Nickname;
 
             if (this.ProfilePath !== '') obj['pp'] = this.ProfilePath;
-        } else if (this.ProfileType === OpenchatProfileType.OPEN_PROFILE) {
+        } else if (this.ProfileType === OpenProfileType.OPEN_PROFILE) {
             obj['pli'] = this.ProfileLinkId;
         }
 

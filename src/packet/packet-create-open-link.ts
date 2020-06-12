@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenchatProfileType, OpenChannelType } from "../talk/open/open-link-type";
+import { OpenProfileType, OpenChannelType } from "../talk/open/open-link-type";
 import { KakaoAnonProfile } from "../talk/open/open-chat-profile";
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
 import { Serializer } from "json-proxy-mapper";
@@ -25,7 +25,7 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
         public Name: string = '',
         public LinkImagePath: string = '',
         public LinkType: OpenChannelType = OpenChannelType.GROUP,
-        public ProfileType: OpenchatProfileType = OpenchatProfileType.MAIN,
+        public ProfileType: OpenProfileType = OpenProfileType.MAIN,
         public Description: (string | any) = null,
 
         public Nickname: string = '',           // KAKAO_ANON
@@ -59,12 +59,12 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
 
         switch ( this.ProfileType ) {
 
-            case OpenchatProfileType.KAKAO_ANON:
+            case OpenProfileType.KAKAO_ANON:
                 obj['nn'] = this.Nickname;
                 obj['pp'] = this.ProfilePath;
                 break;
 
-            case OpenchatProfileType.OPEN_PROFILE:
+            case OpenProfileType.OPEN_PROFILE:
                 obj['pli'] = this.ProfileLinkId;
                 break;
 
