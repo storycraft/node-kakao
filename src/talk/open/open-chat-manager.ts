@@ -228,6 +228,14 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
 
         const res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenChannelRes>(packet);
 
+        switch ( res.StatusCode ) {
+            case -804:
+                throw new Error('The number of possible openings channel exceeds.');
+            case -326:
+                throw new Error('Usage restrictions./Protection meansures.');
+                break;
+        }
+
         let channelType: ChannelType = ChannelType.OPENCHAT_DIRECT;
         if ( channelTemplate.linkType === OpenChannelType.DIRECT ) {
             channelType = ChannelType.OPENCHAT_DIRECT;
