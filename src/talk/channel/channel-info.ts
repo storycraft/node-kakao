@@ -271,7 +271,7 @@ export class OpenChannelInfo extends ChannelInfo {
             openToken: -1,
             pv: Long.ZERO
         },
-        UNKNOWN1: false,
+        activated: false,
         UNKNOWN2: false,
         maxUser: 0,
         maxChannelLimit: 0,
