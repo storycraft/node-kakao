@@ -23,6 +23,7 @@ import { PacketJoinLinkReq, PacketJoinLinkRes } from "../../packet/packet-join-l
 import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "../../packet/packet-update-openchat-profile";
 import { OpenchatProfileType, OpenMemberType, OpenChannelType } from "./open-link-type";
 import { PacketCreateOpenChannelReq, PacketCreateOpenChannelRes } from "../../packet/packet-create-openchat-channel";
+import { PacketUpdateOpenChannelReq, PacketUpdateOpenChannelRes } from "../../packet/packet-update-openchat-info";
 import { KakaoAnonProfile } from "./open-chat-profile";
 import { ChannelType } from "../channel/channel-type";
 
@@ -239,6 +240,23 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         return chan;
     }
 
+    async updateOpenChannel(channelUpdateTemplate: OpenChatChannelUpdateTemplate) {
+        const packet = new PacketUpdateOpenChannelReq(
+            channelUpdateTemplate.channelId,
+            channelUpdateTemplate.title,
+            channelUpdateTemplate.maxPeople,
+            channelUpdateTemplate.password,
+            channelUpdateTemplate.description,
+            channelUpdateTemplate.canSearchLink,
+            channelUpdateTemplate.UNKNOWN1,
+            channelUpdateTemplate.UNKNOWN2,
+        );
+
+        const res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenChannelRes>(packet);
+
+        return res.StatusCode === StatusCode.SUCCESS;
+    }
+
 }
 
 export class OpenChatChannelTemplate {
@@ -332,5 +350,67 @@ export class OpenChatChannelTemplate {
         }
 
         return obj;
+    }
+}
+
+export class OpenChatChannelUpdateTemplate {
+    constructor(
+        public channelId: Long,
+        public title: string,
+        public maxPeople: number,
+        public password: string, // '' is disable password
+        public description: string,
+        public canSearchLink: boolean = true,
+        public UNKNOWN1: boolean = true,
+        public UNKNOWN2: boolean = true,
+    ) {
+
+    }
+
+    readRawContent(rawData: any) {
+        if ( rawData['li'] ) {
+            this.channelId = rawData['li'];
+        }
+
+        if ( rawData['ln'] ) {
+            this.title = rawData['ln'];
+        }
+
+        if ( rawData['ml'] ) {
+            this.maxPeople = rawData['ml'];
+        }
+
+        if ( rawData['pc'] ) {
+            this.password = rawData['pc'];
+        }
+
+        if ( rawData['desc'] ) {
+            this.description = rawData['desc'];
+        }
+
+        if ( rawData['sc'] ) {
+            this.canSearchLink = rawData['sc'];
+        }
+
+        if ( rawData['ac'] ) {
+            this.UNKNOWN1 = rawData['ac'];
+        }
+        
+        if ( rawData['pa'] ) {
+            this.UNKNOWN2 = rawData['pa'];
+        }
+    }
+
+    toRawContent() {
+        return {
+            'li': this.channelId,
+            'ln': this.title,
+            'ml': this.maxPeople,
+            'ac': this.UNKNOWN1,
+            'pa': this.UNKNOWN2,
+            'pc': this.password,
+            'desc': this.description,
+            'sc': this.canSearchLink,
+        };
     }
 }
