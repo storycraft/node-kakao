@@ -6,6 +6,8 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
+import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
+import { Serializer } from "json-proxy-mapper";
 
 
 /*
@@ -18,12 +20,12 @@ export class PacketUpdateOpenChannelReq extends LocoBsonRequestPacket {
 
 
     constructor(
-        public channelId: Long = Long.ZERO,
-        public title: string = '',
-        public maxPeople: number = 100,
-        public password: string = '', // '' is disable password
-        public description: string = '',
-        public canSearchLink: boolean = true,
+        public LinkId: Long = Long.ZERO,
+        public LinkName: string = '',
+        public MaxUser: number = 100,
+        public Passcode: string = '',
+        public Description: string = '',
+        public CanSearchLink: boolean = true,
         public UNKNOWN1: boolean = true,
         public UNKNOWN2: boolean = true,
     ) {
@@ -36,23 +38,24 @@ export class PacketUpdateOpenChannelReq extends LocoBsonRequestPacket {
 
     toBodyJson() {
         return {
-            'li': this.channelId,
-            'ln': this.title,
-            'ml': this.maxPeople,
+            'li': this.LinkId,
+            'ln': this.LinkName,
+            'ml': this.MaxUser,
             'ac': this.UNKNOWN1,
             'pa': this.UNKNOWN2,
-            'pc': this.password,
-            'desc': this.description,
-            'sc': this.canSearchLink,
+            'pc': this.Passcode,
+            'desc': this.Description,
+            'sc': this.CanSearchLink,
         };
     }
 
 }
 
 export class PacketUpdateOpenChannelRes extends LocoBsonResponsePacket {
+
     constructor(
         status: number,
-        public ol: any = null,
+        public OpenLink?: OpenLinkStruct
     ) {
         super(status);
     }
@@ -62,7 +65,7 @@ export class PacketUpdateOpenChannelRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        this.ol = rawData['ol'];
+        if (rawData['ol']) this.OpenLink = Serializer.deserialize<OpenLinkStruct>(rawData, OpenLinkStruct.MAPPER);
     }
 
 }

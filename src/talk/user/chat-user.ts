@@ -2,7 +2,7 @@ import { LoginAccessDataStruct } from "../struct/auth/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { MoreSettingsStruct } from "../struct/api/account/client-settings-struct";
-import { OpenMemberStruct } from "../struct/open-link-struct";
+import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
 import { ChatChannel } from "../channel/chat-channel";

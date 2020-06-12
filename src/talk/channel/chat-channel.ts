@@ -6,7 +6,7 @@ import { Chat, UnknownChat } from "../chat/chat";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { ChatType } from "../chat/chat-type";
 import { MessageTemplate } from "../chat/template/message-template";
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatBuilder } from "../chat/chat-builder";
 import { ChatFeed } from "../chat/chat-feed";
@@ -16,6 +16,7 @@ import { LocoClient } from "../../client";
 import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { ChannelMetaType, PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
+import { ChannelSettings } from "./channel-settings";
 
 /*
  * Created on Fri Nov 01 2019
@@ -93,8 +94,8 @@ export class ChatChannel extends EventEmitter {
         return this.client.ChannelManager.leave(this, block);
     }
 
-    async updateChannelSettings(pushAlert: boolean): Promise<boolean> {
-        return this.client.ChannelManager.updateChannelSettings(this, pushAlert);
+    async updateChannelSettings(settings: ChannelSettings): Promise<boolean> {
+        return this.client.ChannelManager.updateChannelSettings(this, settings);
     }
 
     async setTitleMeta(title: string): Promise<boolean> {
@@ -129,8 +130,8 @@ export class ChatChannel extends EventEmitter {
         return this.client.ChannelManager.setGroupMeta(this, content);
     }
 
-    updateChannel(pushAlert: boolean) {
-        this.pushAlert = pushAlert;
+    updateChannel(settings: ChannelSettings) {
+        this.pushAlert = settings.pushAlert || false;
     }
 
     isOpenChat(): boolean {

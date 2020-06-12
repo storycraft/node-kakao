@@ -6,7 +6,7 @@
 
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenMemberStruct } from "../talk/struct/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { JsonUtil } from "../util/json-util";
 import { Serializer } from "json-proxy-mapper";
 

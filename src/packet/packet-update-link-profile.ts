@@ -6,11 +6,11 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenMemberStruct } from "../talk/struct/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { OpenchatProfileType } from "../talk/open/open-link-type";
 import { Serializer } from "json-proxy-mapper";
 
-export class PacketUpdateOpenchatProfileReq extends LocoBsonRequestPacket {
+export class PacketUpdateLinkProfileReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
@@ -46,7 +46,7 @@ export class PacketUpdateOpenchatProfileReq extends LocoBsonRequestPacket {
     }
 }
 
-export class PacketUpdateOpenchatProfileRes extends LocoBsonResponsePacket {
+export class PacketUpdateLinkProfileRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,

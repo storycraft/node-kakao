@@ -9,7 +9,7 @@ import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
 import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
 import { ChannelMetaStruct, ChannelMetaType, ProfileMetaContent } from "../struct/channel-meta-struct";
@@ -268,6 +268,10 @@ export class OpenChannelInfo extends ChannelInfo {
             linkId: Long.ZERO,
             openToken: -1
         },
+        UNKNOWN1: false,
+        UNKNOWN2: false,
+        maxUser: 1500,
+        canSearchLink: false,
         description: '',
         coverURL: ''
     };

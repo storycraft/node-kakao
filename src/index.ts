@@ -58,12 +58,14 @@ export * from './talk/chat/chat-manager';
 
 export * from './talk/channel/chat-channel';
 export * from './talk/channel/channel-info';
+export * from './talk/channel/channel-settings';
 
 export * from './talk/channel/channel-manager';
 
 export * from './talk/open/open-link-type';
 export * from './talk/open/open-chat-manager';
 export * from './talk/open/open-chat-profile';
+export * from './talk/open/open-link-settings';
 
 export * from './talk/user/chat-user';
 export * from './talk/user/user-type';
@@ -94,7 +96,9 @@ export * from './talk/struct/channel-info-struct';
 export * from './talk/struct/chatlog-struct';
 export * from './talk/struct/channel-meta-struct';
 export * from './talk/struct/channel-meta-set-struct';
-export * from './talk/struct/open-link-struct';
+
+export * from './talk/struct/open/open-link-struct';
+
 export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';

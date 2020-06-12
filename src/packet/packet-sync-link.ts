@@ -1,5 +1,5 @@
 import { JsonUtil } from "../util/json-util";
-import { OpenLinkStruct } from "../talk/struct/open-link-struct";
+import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";

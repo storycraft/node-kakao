@@ -31,7 +31,7 @@ import { PacketJoinInfoReq, PacketJoinInfoRes } from "./packet-join-info";
 import { PacketSetMemTypeRes, PacketSetMemTypeReq } from "./packet-set-mem-type";
 import { PacketLinkKickedRes } from "./packet-link-kicked";
 import { PacketJoinLinkRes, PacketJoinLinkReq } from "./packet-join-link";
-import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "./packet-update-openchat-profile";
+import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "./packet-update-link-profile";
 import { PacketSyncMemberTypeRes } from "./packet-sync-member-type";
 import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "./packet-chat-on-room";
 import { PacketSyncProfileRes } from "./packet-sync-profile";
@@ -54,8 +54,8 @@ import { PacketCompleteRes } from "./media/packet-complete";
 import { PacketPostReq, PacketPostRes } from "./media/packet-post";
 import { PacketMiniReq, PacketMiniRes } from "./media/packet-mini";
 import { PacketDownReq, PacketDownRes } from "./media/packet-down";
-import { PacketCreateOpenChannelReq, PacketCreateOpenChannelRes } from "../packet/packet-create-openchat-channel";
-import { PacketUpdateOpenChannelReq, PacketUpdateOpenChannelRes } from "../packet/packet-update-openchat-info";
+import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "./packet-create-open-link";
+import { PacketUpdateOpenChannelReq, PacketUpdateOpenChannelRes } from "./packet-update-link-info";
 
 
 /*
@@ -124,7 +124,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('JOININFO', PacketJoinInfoReq);
         requestPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
         requestPacketMap.set('JOINLINK', PacketJoinLinkReq);
-        requestPacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileReq);
+        requestPacketMap.set('UPLINKPROF', PacketUpdateLinkProfileReq);
 
         requestPacketMap.set('SYNCMSG', PacketSyncMessageReq);
 
@@ -137,7 +137,7 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('LEAVE', PacketLeaveReq);
 
-        requestPacketMap.set('CREATELINK', PacketCreateOpenChannelReq);
+        requestPacketMap.set('CREATELINK', PacketCreateOpenLinkReq);
         requestPacketMap.set('UPDATELINK', PacketUpdateOpenChannelReq);
     }
 
@@ -208,7 +208,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
         responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
         responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
-        responsePacketMap.set('UPLINKPROF', PacketUpdateOpenchatProfileRes);
+        responsePacketMap.set('UPLINKPROF', PacketUpdateLinkProfileRes);
 
         responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);
 
@@ -232,7 +232,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('CHANGESVR', PacketChangeServerRes);
         responsePacketMap.set('KICKOUT', PacketKickoutRes);
 
-        responsePacketMap.set('CREATELINK', PacketCreateOpenChannelRes);
+        responsePacketMap.set('CREATELINK', PacketCreateOpenLinkRes);
         responsePacketMap.set('UPDATELINK', PacketUpdateOpenChannelRes);
     }
 

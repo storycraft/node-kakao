@@ -23,6 +23,7 @@ import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta
 import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
+import { ChannelSettings } from "./channel-settings";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -42,12 +43,14 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return super.get(id, true);
     }
 
-    async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel> {
+    async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel | null> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id), nickname, profileURL));
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo!);
+        if (!res.ChatInfo) return null;
+
+        let chan = this.channelFromChatData(res.ChannelId, res.ChatInfo);
 
         this.setCache(res.ChannelId, chan);
 
@@ -60,7 +63,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return this.channelFromChatData(id, chatInfo);
     }
 
-    protected channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
+    channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
         let channel: ChatChannel;
 
         switch(chatData.type) {
@@ -115,11 +118,11 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         }
     }
 
-    async updateChannelSettings(channel: ChatChannel, pushAlert: boolean): Promise<boolean> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, pushAlert));
+    async updateChannelSettings(channel: ChatChannel, settings: ChannelSettings): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, settings.pushAlert));
 
         if (res.StatusCode === StatusCode.SUCCESS) {
-            channel.updateChannel(pushAlert);
+            channel.updateChannel(settings);
             return true;
         }
 

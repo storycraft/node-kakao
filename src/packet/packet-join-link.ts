@@ -7,7 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long, OpenchatProfileType } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
-import { OpenLinkStruct, OpenMemberStruct } from "../talk/struct/open-link-struct";
+import { OpenLinkStruct, OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { Serializer } from "json-proxy-mapper";
