@@ -65,7 +65,8 @@ export interface OpenLinkStruct extends OpenLinkSettings, StructBase {
 
     passcode?: string; // '' === passcode disabled
     canSearchLink: boolean;
-    UNKNOWN1: boolean;
+
+    activated: boolean;
     UNKNOWN2: boolean;
 
     description: string;
@@ -92,7 +93,7 @@ export namespace OpenLinkStruct {
 
         maxUser: 'ml',
         maxChannelLimit: 'dcl',
-        UNKNOWN1: 'ac',
+        activated: 'ac',
         UNKNOWN2: 'pa',
 
         passcode: 'pc',
