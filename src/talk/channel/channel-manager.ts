@@ -24,6 +24,9 @@ import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMet
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
 import { ChannelSettings } from "./channel-settings";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
+import { PacketJoinLinkReq, PacketJoinLinkRes } from "../../packet/packet-join-link";
+import { OpenProfileType } from "../open/open-link-type";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -57,13 +60,41 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return chan;
     }
 
+    /* async createOpenChannel(profile: OpenLinkStruct): Promise<OpenChatChannel | null> {
+
+
+
+    } */
+
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.MAIN, passcode?: string): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.KAKAO_ANON, passcode: string, nickname: string, profilePath: string): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.OPEN_PROFILE, passcode: string, profileLinkId: Long): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType, passcode: string = ''): Promise<OpenChatChannel | null> {
+        let packet: PacketJoinLinkReq;
+        if (profileType === OpenProfileType.MAIN) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType);
+        } else if (profileType === OpenProfileType.KAKAO_ANON) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, arguments[3], arguments[4]);
+        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, '', '', arguments[3]);
+        } else {
+            return null;
+        }
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
+
+        if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
+
+        return this.client.ChannelManager.channelFromChatData(res.ChatInfo.channelId, res.ChatInfo) as OpenChatChannel;
+    }
+
     protected async fetchValue(id: Long): Promise<ChatChannel> {
         let chatInfo = await this.requestChannelInfo(id);
 
         return this.channelFromChatData(id, chatInfo);
     }
 
-    channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
+    protected channelFromChatData(id: Long, chatData: ChannelDataStruct): ChatChannel {
         let channel: ChatChannel;
 
         switch(chatData.type) {
@@ -75,7 +106,6 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             case ChannelType.PLUSCHAT:
             case ChannelType.DIRECT:
             case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type, chatData.pushAlert); break;
-
 
             default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN, chatData.pushAlert); break;
             

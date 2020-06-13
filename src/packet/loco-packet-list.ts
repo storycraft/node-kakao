@@ -55,7 +55,7 @@ import { PacketPostReq, PacketPostRes } from "./media/packet-post";
 import { PacketMiniReq, PacketMiniRes } from "./media/packet-mini";
 import { PacketDownReq, PacketDownRes } from "./media/packet-down";
 import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "./packet-create-open-link";
-import { PacketUpdateOpenChannelReq, PacketUpdateOpenChannelRes } from "./packet-update-link-info";
+import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "./packet-update-link";
 
 
 /*
@@ -138,7 +138,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('LEAVE', PacketLeaveReq);
 
         requestPacketMap.set('CREATELINK', PacketCreateOpenLinkReq);
-        requestPacketMap.set('UPDATELINK', PacketUpdateOpenChannelReq);
+        requestPacketMap.set('UPDATELINK', PacketUpdateOpenLinkReq);
     }
 
     function initResMap() {
@@ -233,7 +233,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('KICKOUT', PacketKickoutRes);
 
         responsePacketMap.set('CREATELINK', PacketCreateOpenLinkRes);
-        responsePacketMap.set('UPDATELINK', PacketUpdateOpenChannelRes);
+        responsePacketMap.set('UPDATELINK', PacketUpdateOpenLinkRes);
     }
 
     export function hasReqPacket(name: string): boolean {

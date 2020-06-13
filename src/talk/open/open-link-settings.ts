@@ -4,12 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkType } from "./open-link-type";
-
 export interface OpenLinkSettings {
 
     linkName: string;
-    linkType: OpenLinkType;
+    linkCoverPath: string;
 
     maxUser?: number;
     maxChannelLimit?: number;
@@ -18,7 +16,8 @@ export interface OpenLinkSettings {
     canSearchLink: boolean;
 
     description: string;
-    linkURL: string;
-    linkCoverURL: string;
+
+    activated: boolean;
+    UNKNOWN2: true;
 
 }

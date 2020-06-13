@@ -6,8 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenProfileType, OpenChannelType } from "../talk/open/open-link-type";
-import { KakaoAnonProfile } from "../talk/open/open-chat-profile";
+import { OpenProfileType, OpenChannelType, OpenLinkType } from "../talk/open/open-link-type";
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
 import { Serializer } from "json-proxy-mapper";
 import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
@@ -24,7 +23,7 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
     constructor(
         public Name: string = '',
         public LinkImagePath: string = '',
-        public LinkType: OpenChannelType = OpenChannelType.GROUP,
+        public LinkType: OpenLinkType = OpenLinkType.PROFILE,
         public ProfileType: OpenProfileType = OpenProfileType.MAIN,
         public Description: (string | any) = null,
 
@@ -70,9 +69,7 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
 
         }
 
-        if ( this.Description ) {
-            obj['desc'] = this.Description;
-        }
+        if ( this.Description ) obj['desc'] = this.Description;
 
         return obj;
     }

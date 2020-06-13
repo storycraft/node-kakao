@@ -13,21 +13,21 @@ import { Serializer } from "json-proxy-mapper";
 /*
  *  TODO:
  *    - What is 'pa'?
- *    - What is 'ac'?
  */
 
-export class PacketUpdateOpenChannelReq extends LocoBsonRequestPacket {
-
+export class PacketUpdateOpenLinkReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
         public LinkName: string = '',
-        public MaxUser: number = 100,
+        public LinkImagePath?: string,
+        public UserLimit?: number,
+        public ChannelLimit?: number,
         public Passcode: string = '',
         public Description: string = '',
-        public CanSearchLink: boolean = true,
-        public UNKNOWN1: boolean = true,
-        public UNKNOWN2: boolean = true,
+        public CanSearchLink: boolean = false,
+        public Activated: boolean = false,
+        public UNKNOWN2: boolean = false,
     ) {
         super();
     }
@@ -37,21 +37,29 @@ export class PacketUpdateOpenChannelReq extends LocoBsonRequestPacket {
     }
 
     toBodyJson() {
-        return {
+        let obj: any = {
             'li': this.LinkId,
             'ln': this.LinkName,
-            'ml': this.MaxUser,
-            'ac': this.UNKNOWN1,
+            'ml': this.UserLimit,
+            'ac': this.Activated,
             'pa': this.UNKNOWN2,
             'pc': this.Passcode,
             'desc': this.Description,
             'sc': this.CanSearchLink,
         };
+
+        if (typeof(this.LinkImagePath) === 'string') obj['lip'] = this.LinkImagePath;
+
+        if (typeof(this.ChannelLimit) === 'number') obj['dcl'] = this.ChannelLimit;
+        if (typeof(this.UserLimit) === 'number') obj['ml'] = this.UserLimit;
+
+
+        return obj;
     }
 
 }
 
-export class PacketUpdateOpenChannelRes extends LocoBsonResponsePacket {
+export class PacketUpdateOpenLinkRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,

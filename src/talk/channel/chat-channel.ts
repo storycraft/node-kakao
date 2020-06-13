@@ -189,13 +189,13 @@ export class OpenChatChannel extends ChatChannel {
     async kickMemberId(userId: Long): Promise<boolean> {
         if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
 
-        return this.Client.OpenChatManager.kickMember(this, userId);
+        return this.Client.OpenLinkManager.kickMember(this, userId);
     }
 
     async deleteLink(): Promise<boolean> {
         if (!(await this.getChannelInfo()).LinkOwner.isClientUser()) return false;
 
-        return this.Client.OpenChatManager.deleteLink(this.linkId);
+        return this.Client.OpenLinkManager.deleteLink(this.linkId);
     }
 
     async hideChat(chat: Chat) {
@@ -205,19 +205,19 @@ export class OpenChatChannel extends ChatChannel {
     async hideChatId(logId: Long) {
         if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
 
-        return this.Client.OpenChatManager.hideChat(this, logId);
+        return this.Client.OpenLinkManager.hideChat(this, logId);
     }
 
     async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.MAIN);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.MAIN);
     }
 
     async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
     async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
     }
 
     async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
@@ -227,11 +227,11 @@ export class OpenChatChannel extends ChatChannel {
     async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
         if (!(await this.getChannelInfo()).hasUserInfo(userId)) return false;
 
-        return this.Client.OpenChatManager.setOpenMemberType(this, userId, memberType);
+        return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
     }
 
     async getOpenProfile(): Promise<OpenLinkStruct> {
-        return this.Client.OpenChatManager.get(this.linkId);
+        return this.Client.OpenLinkManager.get(this.linkId);
     }
 
 }

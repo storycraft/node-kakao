@@ -49,7 +49,7 @@ export namespace OpenMemberStruct {
     
 }
 
-export interface OpenLinkStruct extends OpenLinkSettings, StructBase {
+export interface OpenLinkStruct extends StructBase {
 
     linkId: Long;
     openToken: number;
@@ -67,7 +67,7 @@ export interface OpenLinkStruct extends OpenLinkSettings, StructBase {
     canSearchLink: boolean;
 
     activated: boolean;
-    UNKNOWN2: boolean;
+    UNKNOWN2: true;
 
     description: string;
 

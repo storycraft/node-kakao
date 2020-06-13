@@ -272,7 +272,7 @@ export class OpenChannelInfo extends ChannelInfo {
             pv: Long.ZERO
         },
         activated: false,
-        UNKNOWN2: false,
+        UNKNOWN2: true,
         maxUser: 0,
         maxChannelLimit: 0,
         canSearchLink: false,
@@ -341,7 +341,7 @@ export class OpenChannelInfo extends ChannelInfo {
     async updateChannelInfo(): Promise<void> {
         await super.updateChannelInfo();
 
-        let openLinkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
+        let openLinkInfo = await this.Channel.Client.OpenLinkManager.get(this.Channel.LinkId);
 
         this.updateRoomName(openLinkInfo.linkName);
         
@@ -355,7 +355,7 @@ export class OpenChannelInfo extends ChannelInfo {
             this.ClientUserInfo.updateFromOpenStruct(res.ClientOpenProfile);
             this.updateMemberType(this.ClientUserInfo.User.Id, res.ClientOpenProfile.memberType);
         } else {
-            let linkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
+            let linkInfo = await this.Channel.Client.OpenLinkManager.get(this.Channel.LinkId);
 
             if (linkInfo.owner.userId.equals(this.ClientUserInfo.User.Id)) this.ClientUserInfo.updateFromOpenStruct(linkInfo.owner);
         }
