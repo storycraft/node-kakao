@@ -4,13 +4,15 @@ import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
 import { Chat } from "../chat/chat";
 import { MessageTemplate } from "../chat/template/message-template";
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { ChatFeed } from "../chat/chat-feed";
 import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
-import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
+import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
+import { StatusCode } from "../../packet/loco-packet-base";
+import { ChannelMetaType, PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
+import { ChannelSettings } from "./channel-settings";
 
 /*
  * Created on Fri Nov 01 2019
@@ -168,8 +170,8 @@ export class ChatChannel extends EventEmitter {
         return this.client.ChannelManager.leave(this, block);
     }
 
-    async updateChannelSettings(pushAlert: boolean): Promise<boolean> {
-        return this.client.ChannelManager.updateChannelSettings(this, pushAlert);
+    async updateChannelSettings(settings: ChannelSettings): Promise<boolean> {
+        return this.client.ChannelManager.updateChannelSettings(this, settings);
     }
 
     async setTitleMeta(title: string): Promise<boolean> {
@@ -204,8 +206,8 @@ export class ChatChannel extends EventEmitter {
         return this.client.ChannelManager.setGroupMeta(this, content);
     }
 
-    updateChannel(pushAlert: boolean) {
-        this.pushAlert = pushAlert;
+    updateChannel(settings: ChannelSettings) {
+        this.pushAlert = settings.pushAlert || false;
     }
 
     isOpenChat(): boolean {
@@ -263,13 +265,13 @@ export class OpenChatChannel extends ChatChannel {
     async kickMemberId(userId: Long): Promise<boolean> {
         if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
 
-        return this.Client.OpenChatManager.kickMember(this, userId);
+        return this.Client.OpenLinkManager.kickMember(this, userId);
     }
 
     async deleteLink(): Promise<boolean> {
         if (!(await this.getChannelInfo()).LinkOwner.isClientUser()) return false;
 
-        return this.Client.OpenChatManager.deleteLink(this.linkId);
+        return this.Client.OpenLinkManager.deleteLink(this.linkId);
     }
 
     async hideChat(chat: Chat) {
@@ -279,19 +281,19 @@ export class OpenChatChannel extends ChatChannel {
     async hideChatId(logId: Long) {
         if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
 
-        return this.Client.OpenChatManager.hideChat(this, logId);
+        return this.Client.OpenLinkManager.hideChat(this, logId);
     }
 
     async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.MAIN);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.MAIN);
     }
 
     async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
     async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
+        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
     }
 
     async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
@@ -301,11 +303,11 @@ export class OpenChatChannel extends ChatChannel {
     async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
         if (!(await this.getChannelInfo()).hasUserInfo(userId)) return false;
 
-        return this.Client.OpenChatManager.setOpenMemberType(this, userId, memberType);
+        return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
     }
 
     async getOpenProfile(): Promise<OpenLinkStruct> {
-        return this.Client.OpenChatManager.get(this.linkId);
+        return this.Client.OpenLinkManager.get(this.linkId);
     }
 
 }

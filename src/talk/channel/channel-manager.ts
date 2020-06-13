@@ -23,6 +23,12 @@ import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta
 import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
+import { ChannelSettings } from "./channel-settings";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
+import { PacketJoinLinkReq, PacketJoinLinkRes } from "../../packet/packet-join-link";
+import { OpenProfileType, OpenLinkType } from "../open/open-link-type";
+import { OpenLinkTemplate } from "../open/open-link-template";
+import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "../../packet/packet-create-open-link";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
     
@@ -42,7 +48,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return super.get(id, true);
     }
 
-    async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel> {
+    async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel | null> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChatRes>(new PacketCreateChatReq(users.map((user) => user.Id), nickname, profileURL));
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
@@ -52,6 +58,67 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         this.setCache(res.ChannelId, chan);
 
         return chan;
+    }
+
+    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.MAIN): Promise<OpenChatChannel | null>;
+    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<OpenChatChannel | null>;
+    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<OpenChatChannel | null>;
+    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType): Promise<OpenChatChannel | null> {
+        let packet = new PacketCreateOpenLinkReq(
+            template.linkName,
+            template.linkCoverPath,
+            OpenLinkType.CHATROOM,
+            template.description,
+            template.limitProfileType,
+            template.canSearchLink,
+
+            1,
+            true,
+            0,
+
+            profileType,
+
+            '',
+            '',
+            Long.ZERO,
+            template.maxUserLimit);
+
+        if (profileType === OpenProfileType.KAKAO_ANON) {
+            packet.Nickname = arguments[2];
+            packet.ProfilePath = arguments[3];
+        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
+            packet.ProfileLinkId = arguments[2];
+        } else {
+            return null;
+        }
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
+
+        if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
+
+        return this.client.ChannelManager.channelFromChatData(res.ChatInfo.channelId, res.ChatInfo) as OpenChatChannel;
+    }
+
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.MAIN, passcode?: string): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.KAKAO_ANON, passcode: string, nickname: string, profilePath: string): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType.OPEN_PROFILE, passcode: string, profileLinkId: Long): Promise<OpenChatChannel | null>;
+    async joinOpenChat(linkId: Long, profileType: OpenProfileType, passcode: string = ''): Promise<OpenChatChannel | null> {
+        let packet: PacketJoinLinkReq;
+        if (profileType === OpenProfileType.MAIN) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType);
+        } else if (profileType === OpenProfileType.KAKAO_ANON) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, arguments[3], arguments[4]);
+        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
+            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, '', '', arguments[3]);
+        } else {
+            return null;
+        }
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
+
+        if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
+
+        return this.client.ChannelManager.channelFromChatData(res.ChatInfo.channelId, res.ChatInfo) as OpenChatChannel;
     }
 
     protected async fetchValue(id: Long): Promise<ChatChannel> {
@@ -72,7 +139,6 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             case ChannelType.PLUSCHAT:
             case ChannelType.DIRECT:
             case ChannelType.SELFCHAT: channel = new ChatChannel(this.client, id, chatData.type, chatData.pushAlert); break;
-
 
             default: channel = new ChatChannel(this.client, id, ChannelType.UNKNOWN, chatData.pushAlert); break;
             
@@ -115,11 +181,11 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         }
     }
 
-    async updateChannelSettings(channel: ChatChannel, pushAlert: boolean): Promise<boolean> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, pushAlert));
+    async updateChannelSettings(channel: ChatChannel, settings: ChannelSettings): Promise<boolean> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, settings.pushAlert));
 
         if (res.StatusCode === StatusCode.SUCCESS) {
-            channel.updateChannel(pushAlert);
+            channel.updateChannel(settings);
             return true;
         }
 

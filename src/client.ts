@@ -11,7 +11,7 @@ import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { JsonUtil } from "./util/json-util";
-import { OpenChatManager } from "./talk/open/open-chat-manager";
+import { OpenLinkManager } from "./talk/open/open-link-manager";
 import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient } from "./api/api-client";
@@ -61,7 +61,7 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly ChatManager: ChatManager;
 
-    readonly OpenChatManager: OpenChatManager;
+    readonly OpenLinkManager: OpenLinkManager;
 
     readonly ClientUser: ClientChatUser;
 
@@ -70,6 +70,17 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
     setStatus(status: ClientStatus): Promise<boolean>;
     getStatus(): ClientStatus;
     updateStatus(): Promise<boolean>;
+
+    on(event: 'login', listener: (user: ClientChatUser) => void): this;
+    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
+    on(event: 'message', listener: (chat: Chat) => void): this;
+    on(event: 'feed', listener: (chat: Chat, feed: ChatFeed) => void): this;
+    on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
+    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
+    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
+    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
+    on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
+    on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
 
 }
 
@@ -159,7 +170,7 @@ export class TalkClient extends LoginClient implements LocoClient {
     private userManager: UserManager;
 
     private chatManager: ChatManager;
-    private openChatManager: OpenChatManager;
+    private openLinkManager: OpenLinkManager;
 
     private status: ClientStatus;
 
@@ -172,7 +183,7 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.userManager = new UserManager(this);
 
         this.chatManager = new ChatManager(this);
-        this.openChatManager = new OpenChatManager(this);
+        this.openLinkManager = new OpenLinkManager(this);
 
         this.clientUser = null;
 
@@ -195,8 +206,8 @@ export class TalkClient extends LoginClient implements LocoClient {
         return this.chatManager;
     }
 
-    get OpenChatManager() {
-        return this.openChatManager;
+    get OpenLinkManager() {
+        return this.openLinkManager;
     }
 
     get LocoLogon() {
@@ -245,7 +256,7 @@ export class TalkClient extends LoginClient implements LocoClient {
 
         this.userManager.initalizeClient();
         this.channelManager.initalizeLoginData(loginRes.ChatDataList);
-        await this.openChatManager.initOpenSession();
+        await this.openLinkManager.initOpenSession();
 
         this.emit('login', this.clientUser);
     }
@@ -282,6 +293,7 @@ export class TalkClient extends LoginClient implements LocoClient {
     on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
     on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
     on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
+
     on(event: string, listener: (...args: any[]) => void): this {
         return super.on(event, listener);
     }

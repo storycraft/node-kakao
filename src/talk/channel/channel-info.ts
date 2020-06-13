@@ -9,9 +9,9 @@ import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { ChatChannel, OpenChatChannel } from "./chat-channel";
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { PacketChatOnRoomRes } from "../../packet/packet-chat-on-room";
-import { OpenMemberType, OpenLinkType } from "../open/open-link-type";
+import { OpenMemberType, OpenLinkType, OpenProfileType } from "../open/open-link-type";
 import { ChannelMetaStruct, ChannelMetaType, ProfileMetaContent } from "../struct/channel-meta-struct";
 
 
@@ -258,6 +258,7 @@ export class OpenChannelInfo extends ChannelInfo {
         linkName: '',
         linkURL: '',
         linkType: OpenLinkType.CHATROOM,
+        createdAt: 0,
         owner: {
             userId: Long.ZERO,
             nickname: '',
@@ -265,11 +266,18 @@ export class OpenChannelInfo extends ChannelInfo {
             originalProfileImageUrl: '',
             fullProfileImageUrl: '',
             memberType: OpenMemberType.UNKNOWN,
+            profileType: OpenProfileType.MAIN,
             linkId: Long.ZERO,
-            openToken: -1
+            openToken: -1,
+            pv: Long.ZERO
         },
+        activated: false,
+        UNKNOWN2: true,
+        maxUser: 0,
+        maxChannelLimit: 0,
+        canSearchLink: false,
         description: '',
-        coverURL: ''
+        linkCoverURL: ''
     };
 
     private memberTypeMap: Map<string, OpenMemberType> = new Map();
@@ -279,7 +287,7 @@ export class OpenChannelInfo extends ChannelInfo {
     }
 
     get CoverURL() {
-        return this.linkInfo.coverURL;
+        return this.linkInfo.linkCoverURL;
     }
 
     get LinkURL() {
@@ -333,7 +341,7 @@ export class OpenChannelInfo extends ChannelInfo {
     async updateChannelInfo(): Promise<void> {
         await super.updateChannelInfo();
 
-        let openLinkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
+        let openLinkInfo = await this.Channel.Client.OpenLinkManager.get(this.Channel.LinkId);
 
         this.updateRoomName(openLinkInfo.linkName);
         
@@ -347,7 +355,7 @@ export class OpenChannelInfo extends ChannelInfo {
             this.ClientUserInfo.updateFromOpenStruct(res.ClientOpenProfile);
             this.updateMemberType(this.ClientUserInfo.User.Id, res.ClientOpenProfile.memberType);
         } else {
-            let linkInfo = await this.Channel.Client.OpenChatManager.get(this.Channel.LinkId);
+            let linkInfo = await this.Channel.Client.OpenLinkManager.get(this.Channel.LinkId);
 
             if (linkInfo.owner.userId.equals(this.ClientUserInfo.User.Id)) this.ClientUserInfo.updateFromOpenStruct(linkInfo.owner);
         }

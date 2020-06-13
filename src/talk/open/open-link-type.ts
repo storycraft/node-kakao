@@ -19,10 +19,18 @@ export enum OpenMemberType {
 
 }
 
-export enum OpenchatProfileType {
+export enum OpenProfileType {
 
     MAIN = 1, //?
     KAKAO_ANON = 2,
     OPEN_PROFILE = 16
 
+}
+
+export enum OpenChannelType {
+
+    UNKNOWN = 0,
+    DIRECT = 1,
+    GROUP = 2
+    
 }

@@ -2,13 +2,14 @@ import { LoginAccessDataStruct } from "../struct/auth/login-access-data-struct";
 import { Long } from "bson";
 import { MemberStruct } from "../struct/member-struct";
 import { MoreSettingsStruct } from "../struct/api/account/client-settings-struct";
-import { OpenMemberStruct } from "../struct/open-link-struct";
+import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
 import { ChatChannel } from "../channel/chat-channel";
 import { Chat } from "../chat/chat";
 import { ChatFeed } from "../chat/chat-feed";
 import { LocoClient } from "../../client";
+import { OpenProfileType } from "../open/open-link-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -187,26 +188,6 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromStruct(memberStruct: MemberStruct) {
-        // wtf kakao
-        if (memberStruct.openToken) {
-            this.updateFromOpenStruct({
-                userId: memberStruct.userId,
-                nickname: memberStruct.nickname,
-
-                linkId: memberStruct.openLinkId!,
-                openToken: memberStruct.openToken!,
-                
-
-                profileImageUrl: memberStruct.openProfileImageUrl!,
-                fullProfileImageUrl: memberStruct.openFullProfileImageUrl!,
-                originalProfileImageUrl: memberStruct.openOriginalProfileImageUrl!,
-
-                memberType: memberStruct.openMemberType!
-            });
-
-            return;
-        }
-
         this.accountId = memberStruct.accountId;
         this.nickname = memberStruct.nickname;
 

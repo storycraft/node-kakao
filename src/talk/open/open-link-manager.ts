@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct } from "../struct/open-link-struct";
+import { OpenLinkStruct } from "../struct/open/open-link-struct";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-info";
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
@@ -20,10 +20,15 @@ import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite"
 import { FeedType } from "../feed/feed-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 import { PacketJoinLinkReq, PacketJoinLinkRes } from "../../packet/packet-join-link";
-import { PacketUpdateOpenchatProfileReq, PacketUpdateOpenchatProfileRes } from "../../packet/packet-update-openchat-profile";
-import { OpenchatProfileType, OpenMemberType } from "./open-link-type";
+import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "../../packet/packet-update-link-profile";
+import { OpenProfileType, OpenMemberType, OpenChannelType, OpenLinkType } from "./open-link-type";
+import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "../../packet/packet-create-open-link";
+import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "../../packet/packet-update-link";
+import { ChannelType } from "../channel/channel-type";
+import { OpenLinkSettings } from "./open-link-settings";
+import { OpenLinkTemplate } from "./open-link-template";
 
-export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
+export class OpenLinkManager extends AsyncIdStore<OpenLinkStruct> {
 
     private static readonly LINK_REGEX: RegExp = /(http(s)?:\/\/(open.kakao.com\/o)?\/)/g;
 
@@ -62,7 +67,7 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
     }
     
     async fetchInfoFromURL(openLinkURL: string): Promise<OpenLinkStruct | null> {
-        if (!openLinkURL.match(OpenChatManager.LINK_REGEX)) return null;
+        if (!openLinkURL.match(OpenLinkManager.LINK_REGEX)) return null;
 
         let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
 
@@ -159,44 +164,22 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         return res.StatusCode === StatusCode.SUCCESS;
     }
 
-    async joinOpenLink(linkId: Long, profileType: OpenchatProfileType.MAIN, passcode?: string): Promise<OpenChatChannel | null>;
-    async joinOpenLink(linkId: Long, profileType: OpenchatProfileType.KAKAO_ANON, passcode: string, nickname: string, profilePath: string): Promise<OpenChatChannel | null>;
-    async joinOpenLink(linkId: Long, profileType: OpenchatProfileType.OPEN_PROFILE, passcode: string, profileLinkId: Long): Promise<OpenChatChannel | null>;
-    async joinOpenLink(linkId: Long, profileType: OpenchatProfileType, passcode: string = ''): Promise<OpenChatChannel | null> {
-        let packet: PacketJoinLinkReq;
-        if (profileType === OpenchatProfileType.MAIN) {
-            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType);
-        } else if (profileType === OpenchatProfileType.KAKAO_ANON) {
-            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, arguments[3], arguments[4]);
-        } else if (profileType === OpenchatProfileType.OPEN_PROFILE) {
-            packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType, '', '', arguments[3]);
-        } else {
-            return null;
-        }
-
-        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
-
-        if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
-
-        return this.client.ChannelManager.get(res.ChatInfo.channelId) as Promise<OpenChatChannel>; 
-    }
-
-    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.MAIN): Promise<boolean>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<boolean>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<boolean>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenchatProfileType): Promise<boolean> {
-        let packet: PacketUpdateOpenchatProfileReq;
-        if (profileType === OpenchatProfileType.MAIN) {
-            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType);
-        } else if (profileType === OpenchatProfileType.KAKAO_ANON) {
-            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType, arguments[2], arguments[3]);
-        } else if (profileType === OpenchatProfileType.OPEN_PROFILE) {
-            packet = new PacketUpdateOpenchatProfileReq(channel.LinkId, profileType, '', '', arguments[2]);
+    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.MAIN): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<boolean>;
+    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType): Promise<boolean> {
+        let packet: PacketUpdateLinkProfileReq;
+        if (profileType === OpenProfileType.MAIN) {
+            packet = new PacketUpdateLinkProfileReq(channel.LinkId, profileType);
+        } else if (profileType === OpenProfileType.KAKAO_ANON) {
+            packet = new PacketUpdateLinkProfileReq(channel.LinkId, profileType, arguments[2], arguments[3]);
+        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
+            packet = new PacketUpdateLinkProfileReq(channel.LinkId, profileType, '', '', arguments[2]);
         } else {
             return false;
         }
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenchatProfileRes>(packet);
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateLinkProfileRes>(packet);
 
         if (!res.UpdatedProfile) return false;
 
@@ -206,6 +189,56 @@ export class OpenChatManager extends AsyncIdStore<OpenLinkStruct> {
         if (userInfo) userInfo.updateFromOpenStruct(res.UpdatedProfile);
 
         return res.StatusCode === StatusCode.SUCCESS; 
+    }
+
+    async createOpenProfile(settings: OpenLinkTemplate): Promise<OpenLinkStruct | null> {
+        const packet = new PacketCreateOpenLinkReq(
+            settings.linkName,
+            settings.linkCoverPath,
+            OpenLinkType.PROFILE,
+            settings.description,
+
+            settings.limitProfileType,
+            settings.canSearchLink,
+            
+            1,
+            true,
+            settings.maxChannelLimit);
+        
+        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
+
+        switch ( res.StatusCode ) {
+
+            case -804: 
+                throw new Error('The number of possible openings channel exceeds.');
+
+            case -326:
+                throw new Error('Usage restrictions./Protection meansures.');
+
+        }
+
+        if (res.StatusCode !== StatusCode.SUCCESS || !res.OpenLink) return null;
+
+        return res.OpenLink;
+    }
+
+    async updateOpenLink(linkId: Long, settings: OpenLinkSettings) {
+        const packet = new PacketUpdateOpenLinkReq(
+            linkId,
+            settings.linkName,
+            settings.linkCoverPath,
+            settings.maxUserLimit,
+            settings.maxChannelLimit,
+            settings.passcode,
+            settings.description,
+            settings.canSearchLink,
+            true,
+            true,
+        );
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenLinkRes>(packet);
+
+        return res.StatusCode === StatusCode.SUCCESS;
     }
 
 }
