@@ -191,22 +191,39 @@ export class OpenLinkManager extends AsyncIdStore<OpenLinkStruct> {
         return res.StatusCode === StatusCode.SUCCESS; 
     }
 
-    /* async createOpenProfile(settings: OpenLinkTemplate): Promise<OpenLinkStruct | null> {
+    async createOpenProfile(settings: OpenLinkTemplate, profileType: OpenProfileType.MAIN): Promise<OpenLinkStruct | null>;
+    async createOpenProfile(settings: OpenLinkTemplate, profileType: OpenProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<OpenLinkStruct | null>;
+    async createOpenProfile(settings: OpenLinkTemplate, profileType: OpenProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<OpenLinkStruct | null>;
+    async createOpenProfile(settings: OpenLinkTemplate, profileType: OpenProfileType): Promise<OpenLinkStruct | null> {
+
         const packet = new PacketCreateOpenLinkReq(
             settings.linkName,
             settings.linkCoverPath,
             OpenLinkType.PROFILE,
-            settings.profileType,
+            profileType,
             settings.description,
-            settings.profileId,
-            settings
-            settings.profileId,
+            
+            '',
+            '',
+            Long.ZERO,
+
             settings.limitProfileType,
             settings.canSearchLink,
-            settings.UNKNOWN1,
-            settings.UNKNOWN2);
+            
+            1,
+            true,
 
-        const res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
+            settings.maxChannelLimit,
+            settings.maxUserLimit);
+
+        if (profileType === OpenProfileType.KAKAO_ANON) {
+            packet.Nickname = arguments[2];
+            packet.ProfilePath = arguments[3];
+        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
+            packet.ProfileLinkId = arguments[2];
+        }
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
 
         switch ( res.StatusCode ) {
 
@@ -221,14 +238,14 @@ export class OpenLinkManager extends AsyncIdStore<OpenLinkStruct> {
         if (res.StatusCode !== StatusCode.SUCCESS || !res.OpenLink) return null;
 
         return res.OpenLink;
-    }*/
+    }
 
     async updateOpenLink(linkId: Long, settings: OpenLinkSettings) {
         const packet = new PacketUpdateOpenLinkReq(
             linkId,
             settings.linkName,
             settings.linkCoverPath,
-            settings.maxUser,
+            settings.maxUserLimit,
             settings.maxChannelLimit,
             settings.passcode,
             settings.description,

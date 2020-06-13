@@ -60,7 +60,7 @@ export interface OpenLinkStruct extends StructBase {
 
     createdAt: number,
 
-    maxUser?: number;
+    maxUserLimit?: number;
     maxChannelLimit?: number;
 
     passcode?: string; // '' === passcode disabled
@@ -91,7 +91,7 @@ export namespace OpenLinkStruct {
 
         createdAt: 'ca',
 
-        maxUser: 'ml',
+        maxUserLimit: 'ml',
         maxChannelLimit: 'dcl',
         activated: 'ac',
         UNKNOWN2: 'pa',

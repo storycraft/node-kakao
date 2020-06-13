@@ -29,13 +29,16 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
 
         public Nickname: string = '',           // KAKAO_ANON
         public ProfilePath: string = '', 
+        public ProfileLinkId: Long = Long.ZERO, // OPEN_PROFILE
 
-        public ProfileLinkId: Long = Long.ZERO,
         public LimitProfileType: boolean = true,
         public CanSearchLink: boolean = true,
 
-        public UNKNOWN1: number = Math.floor(Date.now() / 1000),
-        public UNKNOWN2: boolean = true,
+        public UNKNOWN1: number = 0,
+        public Activated: boolean = true,
+
+        public ChannelLimit: number = 0,
+        public UserLimit: number = 0
     ) {
         super();
     }
@@ -53,7 +56,7 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
             'aptp': this.LimitProfileType,
             'sc': this.CanSearchLink,
             'ri': this.UNKNOWN1,
-            'pa': this.UNKNOWN2,
+            'pa': this.Activated,
         };
 
         switch ( this.ProfileType ) {
@@ -67,6 +70,12 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
                 obj['pli'] = this.ProfileLinkId;
                 break;
 
+        }
+
+        if (this.LinkType === OpenLinkType.PROFILE) {
+            obj['dcl'] = this.ChannelLimit;
+        } else if (this.LinkType === OpenLinkType.CHATROOM) {
+            obj['ml'] = this.UserLimit
         }
 
         if ( this.Description ) obj['desc'] = this.Description;

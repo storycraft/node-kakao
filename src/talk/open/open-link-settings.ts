@@ -9,7 +9,7 @@ export interface OpenLinkSettings {
     linkName: string;
     linkCoverPath: string;
 
-    maxUser?: number;
+    maxUserLimit?: number;
     maxChannelLimit?: number;
 
     passcode?: string; // '' === passcode disabled

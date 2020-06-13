@@ -35,9 +35,10 @@ export class PacketUpdateLinkProfileReq extends LocoBsonRequestPacket {
         };
 
         if (this.ProfileType === OpenProfileType.KAKAO_ANON) {
-            if (this.Nickname !== '') obj['nn'] = this.Nickname;
 
+            if (this.Nickname !== '') obj['nn'] = this.Nickname;
             if (this.ProfilePath !== '') obj['pp'] = this.ProfilePath;
+            
         } else if (this.ProfileType === OpenProfileType.OPEN_PROFILE) {
             obj['pli'] = this.ProfileLinkId;
         }
