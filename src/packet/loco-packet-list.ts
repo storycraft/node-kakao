@@ -56,6 +56,7 @@ import { PacketMiniReq, PacketMiniRes } from "./media/packet-mini";
 import { PacketDownReq, PacketDownRes } from "./media/packet-down";
 import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "./packet-create-open-link";
 import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "./packet-update-link";
+import { PacketKickListDelItemRes, PacketKickListDelItemReq } from "./packet-kick-list-del-item";
 
 
 /*
@@ -119,6 +120,8 @@ export namespace LocoPacketList {
         requestPacketMap.set('CREATE', PacketCreateChatReq);
 
         requestPacketMap.set('KICKMEM', PacketKickMemberReq);
+        requestPacketMap.set('KLSYNC', PacketSyncLinkReq);
+        requestPacketMap.set('KLDELITEM', PacketKickListDelItemReq);
         requestPacketMap.set('DELETELINK', PacketDeleteLinkReq);
         requestPacketMap.set('INFOLINK', PacketInfoLinkReq);
         requestPacketMap.set('JOININFO', PacketJoinInfoReq);
@@ -202,6 +205,8 @@ export namespace LocoPacketList {
         responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
 
         responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
+        responsePacketMap.set('KLSYNC', PacketSyncLinkRes);
+        responsePacketMap.set('KLDELITEM', PacketKickListDelItemRes);
         responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
         responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
         responsePacketMap.set('REWRITE', PacketRewriteRes);
