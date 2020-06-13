@@ -24,21 +24,22 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
         public Name: string = '',
         public LinkImagePath: string = '',
         public LinkType: OpenLinkType = OpenLinkType.PROFILE,
-        public ProfileType: OpenProfileType = OpenProfileType.MAIN,
         public Description: (string | any) = null,
-
-        public Nickname: string = '',           // KAKAO_ANON
-        public ProfilePath: string = '', 
-        public ProfileLinkId: Long = Long.ZERO, // OPEN_PROFILE
 
         public LimitProfileType: boolean = true,
         public CanSearchLink: boolean = true,
 
         public UNKNOWN1: number = 0,
         public Activated: boolean = true,
-
         public ChannelLimit: number = 0,
+        
+        public ProfileType: OpenProfileType = OpenProfileType.MAIN,
+
+        public Nickname: string = '',           // KAKAO_ANON
+        public ProfilePath: string = '', 
+        public ProfileLinkId: Long = Long.ZERO,  // OPEN_PROFILE
         public UserLimit: number = 0
+        
     ) {
         super();
     }
@@ -52,30 +53,30 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
             'ln': this.Name,
             'lip': this.LinkImagePath,
             'lt': this.LinkType,
-            'ptp': this.ProfileType,
             'aptp': this.LimitProfileType,
             'sc': this.CanSearchLink,
             'ri': this.UNKNOWN1,
             'pa': this.Activated,
         };
 
-        switch ( this.ProfileType ) {
-
-            case OpenProfileType.KAKAO_ANON:
-                obj['nn'] = this.Nickname;
-                obj['pp'] = this.ProfilePath;
-                break;
-
-            case OpenProfileType.OPEN_PROFILE:
-                obj['pli'] = this.ProfileLinkId;
-                break;
-
-        }
-
         if (this.LinkType === OpenLinkType.PROFILE) {
             obj['dcl'] = this.ChannelLimit;
         } else if (this.LinkType === OpenLinkType.CHATROOM) {
-            obj['ml'] = this.UserLimit
+            obj['ptp'] = this.ProfileType;
+            obj['ml'] = this.UserLimit;
+
+            switch ( this.ProfileType ) {
+
+                case OpenProfileType.KAKAO_ANON:
+                    obj['nn'] = this.Nickname;
+                    obj['pp'] = this.ProfilePath;
+                    break;
+    
+                case OpenProfileType.OPEN_PROFILE:
+                    obj['pli'] = this.ProfileLinkId;
+                    break;
+    
+            }
         }
 
         if ( this.Description ) obj['desc'] = this.Description;
