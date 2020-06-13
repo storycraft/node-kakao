@@ -17,7 +17,4 @@ export interface OpenLinkSettings {
 
     description: string;
 
-    activated: boolean;
-    UNKNOWN2: true;
-
 }

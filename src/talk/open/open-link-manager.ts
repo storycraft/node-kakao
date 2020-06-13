@@ -192,7 +192,6 @@ export class OpenLinkManager extends AsyncIdStore<OpenLinkStruct> {
     }
 
     async createOpenProfile(settings: OpenLinkTemplate): Promise<OpenLinkStruct | null> {
-
         const packet = new PacketCreateOpenLinkReq(
             settings.linkName,
             settings.linkCoverPath,
@@ -233,8 +232,8 @@ export class OpenLinkManager extends AsyncIdStore<OpenLinkStruct> {
             settings.passcode,
             settings.description,
             settings.canSearchLink,
-            settings.activated,
-            settings.UNKNOWN2,
+            true,
+            true,
         );
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenLinkRes>(packet);
