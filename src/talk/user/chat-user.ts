@@ -188,28 +188,6 @@ export class UserInfo implements ChatUserInfoBase {
     }
 
     updateFromStruct(memberStruct: MemberStruct) {
-        // wtf kakao
-        if (memberStruct.openToken) {
-            this.updateFromOpenStruct({
-                userId: memberStruct.userId,
-                nickname: memberStruct.nickname,
-
-                linkId: memberStruct.openLinkId!,
-                openToken: memberStruct.openToken!,
-                
-
-                profileImageUrl: memberStruct.openProfileImageUrl!,
-                fullProfileImageUrl: memberStruct.openFullProfileImageUrl!,
-                originalProfileImageUrl: memberStruct.openOriginalProfileImageUrl!,
-
-                memberType: memberStruct.openMemberType!,
-                profileType: OpenProfileType.MAIN,
-                pv: Long.ZERO
-            });
-
-            return;
-        }
-
         this.accountId = memberStruct.accountId;
         this.nickname = memberStruct.nickname;
 

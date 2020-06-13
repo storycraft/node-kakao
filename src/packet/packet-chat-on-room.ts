@@ -44,7 +44,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public MemberList: MemberStruct[] = [],
+        public MemberList: (MemberStruct | OpenMemberStruct)[] = [],
         public Type: ChannelType = ChannelType.UNKNOWN,
         public WatermarkList: Long[] = [],
         public OpenChatToken: number = 0,
@@ -60,17 +60,25 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
     readBodyJson(rawData: any) {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
 
-        if (rawData['m']) {
-            this.MemberList = [];
-            for (let rawMem of rawData['m']) {
-                this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
-            }
-        }
-
         this.Type = rawData['t'];
         if (rawData['w']) this.WatermarkList = rawData['w'];
 
-        this.OpenChatToken = rawData['otk'];
+        this.MemberList = [];
+        if (rawData['otk']) {
+            this.OpenChatToken = rawData['otk'];
+
+            if (rawData['m']) {
+                for (let rawMem of rawData['m']) {
+                    this.MemberList.push(Serializer.deserialize<OpenMemberStruct>(rawMem, OpenMemberStruct.MAPPER));
+                }
+            }
+        } else {
+            if (rawData['m']) {
+                for (let rawMem of rawData['m']) {
+                    this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
+                }
+            }
+        }
 
         if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
     }

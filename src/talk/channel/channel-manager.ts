@@ -87,7 +87,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (profileType === OpenProfileType.KAKAO_ANON) {
             packet.Nickname = arguments[2];
-            packet.ProfilePath = arguments[2];
+            packet.ProfilePath = arguments[3];
         } else if (profileType === OpenProfileType.OPEN_PROFILE) {
             packet.ProfileLinkId = arguments[2];
         } else {
