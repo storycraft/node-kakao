@@ -39,13 +39,16 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     static readonly INFO_UPDATE_INTERVAL: number = 300000;
 
     private updateLockMap: WeakMap<ChatChannel, PromiseTicket<void>>;
-    private infoUpdateMap: WeakMap<ChatChannel, number>;
+
+    private channelInfoUpdateMap: WeakMap<ChatChannel, number>;
+    private userInfoListUpdateMap: WeakMap<ChatChannel, number>;
     
     constructor(private client: LocoClient) {
         super();
 
         this.updateLockMap = new WeakMap();
-        this.infoUpdateMap = new WeakMap();
+        this.channelInfoUpdateMap = new WeakMap();
+        this.userInfoListUpdateMap = new WeakMap();
     }
 
     get Client() {
@@ -56,8 +59,12 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return Array.from(super.values()).map((channel) => channel.Id);
     }
 
-    getLastUpdate(channel: ChatChannel): number {
-        return this.infoUpdateMap.get(channel) || 0;
+    getLastUserInfoUpdate(channel: ChatChannel): number {
+        return this.userInfoListUpdateMap.get(channel) || 0;
+    }
+
+    getLastChannelInfoUpdate(channel: ChatChannel): number {
+        return this.channelInfoUpdateMap.get(channel) || 0;
     }
 
     async get(id: Long, skipUpdate: boolean = false): Promise<ChatChannel> {
@@ -66,7 +73,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         if (!skipUpdate) {
             if (this.updateLockMap.has(channel)) await this.updateLockMap.get(channel)!.createTicket();
 
-            if (this.getLastUpdate(channel) + ChannelManager.INFO_UPDATE_INTERVAL < Date.now()) await this.updateChannel(channel);
+            await this.updateChannel(channel);
         }
 
         return channel;
@@ -98,7 +105,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
                 let link = (await this.client.OpenLinkManager.get(channelData.linkId!)) as OpenLinkChannel;
                 channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link, chatOnRoom.ClientOpenProfile!);
 
-                this.updateFromChatOnRoom(channel, chatOnRoom);
+                this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
                 break;
             }
 
@@ -129,20 +136,24 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
         channel.updateMetaList(channelInfo.channelMetaList);
         if (channelInfo.lastChatLog) channel.updateLastChat(await this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog));
+
+        this.channelInfoUpdateMap.set(channel, Date.now());
     }
 
-    protected updateFromChatOnRoom(channel: ManagedBaseChatChannel, chatOnRoom: PacketChatOnRoomRes) {
+    protected updateFromUserInfoList(channel: ManagedBaseChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
         if (channel.isOpenChat()) {
             let normal = channel as ManagedChatChannel;
 
-            normal.updateMemberList(chatOnRoom.MemberList as MemberStruct[]);
+            normal.updateMemberList(memberList as MemberStruct[]);
         } else {
             let open = channel as ManagedOpenChatChannel;
 
-            if (chatOnRoom.ClientOpenProfile) open.updateClientUserInfo(chatOnRoom.ClientOpenProfile);
+            if (openProfile) open.updateClientUserInfo(openProfile);
 
-            open.updateMemberList(chatOnRoom.MemberList as OpenMemberStruct[]);
+            open.updateMemberList(memberList as OpenMemberStruct[]);
         }
+
+        this.userInfoListUpdateMap.set(channel, Date.now());
     }
 
     protected async updateChannelInfo(channel: ManagedBaseChatChannel) {
@@ -151,26 +162,37 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         await this.updateFromChannelInfo(channel, channelInfo);
     }
 
-    protected async updateChatOnRoom(channel: ManagedBaseChatChannel) {
+    protected async updateUserInfoList(channel: ManagedBaseChatChannel) {
         let openToken;
         if (channel.isOpenChat()) openToken = (channel as ManagedOpenChatChannel).OpenToken;
         let chatOnRoom = await this.requestChatOnRoom(channel.Id, channel.LastChat && channel.LastChat.LogId || Long.ZERO, openToken);
 
-        this.updateFromChatOnRoom(channel, chatOnRoom);
+        this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
+
+        this.channelInfoUpdateMap.set(channel, Date.now());
     }
     
     protected async updateChannel(channel: ManagedBaseChatChannel) {
-        let ticketObj = new PromiseTicket<void>();
+        let taskList: Promise<unknown>[] = [];
 
-        this.updateLockMap.set(channel, ticketObj);
-        let req = Promise.all([ this.updateChatOnRoom(channel), this.updateChannelInfo(channel) ]);
+        let now = Date.now();
 
-        await req;
+        if (this.getLastChannelInfoUpdate(channel) + ChannelManager.INFO_UPDATE_INTERVAL < now) taskList.push(this.updateChannelInfo(channel));
 
-        this.infoUpdateMap.set(channel, Date.now());
-        ticketObj.resolve();
+        if (this.getLastUserInfoUpdate(channel) + ChannelManager.INFO_UPDATE_INTERVAL < now) taskList.push(this.updateUserInfoList(channel));
 
-        this.updateLockMap.delete(channel);
+        if (taskList.length > 0) {
+            let ticketObj = new PromiseTicket<void>();
+            
+            this.updateLockMap.set(channel, ticketObj);
+            let req = Promise.all(taskList);
+    
+            await req;
+    
+            ticketObj.resolve();
+    
+            this.updateLockMap.delete(channel);
+        }
     }
 
     async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel | null> {
