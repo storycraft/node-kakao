@@ -20,7 +20,7 @@ export interface BaseMemberStruct extends StructBase {
 
 }
 
-export interface MemberStruct extends BaseMemberStruct, Partial<CommonOpenMemberStruct> {
+export interface MemberStruct extends BaseMemberStruct {
 
     type: UserType;
     accountId: number;

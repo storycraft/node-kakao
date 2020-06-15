@@ -28,12 +28,32 @@ export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStru
     memberType: OpenMemberType;
     profileType: OpenProfileType;
 
-    linkId?: Long;
     openToken: number;
 
     pv: Long;
     
 }
+
+export namespace OpenMemberStruct {
+
+    export const Mappings = {
+
+        userId: 'userId',
+        nickname: 'nickName',
+        profileImageUrl: 'pi',
+        originalProfileImageUrl: 'opi',
+        fullProfileImageUrl: 'fpi',
+        memberType: 'lmt',
+        profileType: 'ptp',
+        openToken: 'opt',
+        pv: 'pv'
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+    
+}
+
 
 export interface OpenLinkMemberStruct extends OpenMemberStruct {
 
