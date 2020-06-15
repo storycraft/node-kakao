@@ -57,6 +57,7 @@ import { PacketDownReq, PacketDownRes } from "./media/packet-down";
 import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "./packet-create-open-link";
 import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "./packet-update-link";
 import { PacketKickListDelItemRes, PacketKickListDelItemReq } from "./packet-kick-list-del-item";
+import { PacketKickListSyncRes, PacketKickListSyncReq } from "./packet-kick-list-sync";
 
 
 /*
@@ -120,7 +121,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('CREATE', PacketCreateChannelReq);
 
         requestPacketMap.set('KICKMEM', PacketKickMemberReq);
-        requestPacketMap.set('KLSYNC', PacketSyncLinkReq);
+        requestPacketMap.set('KLSYNC', PacketKickListSyncReq);
         requestPacketMap.set('KLDELITEM', PacketKickListDelItemReq);
         requestPacketMap.set('DELETELINK', PacketDeleteLinkReq);
         requestPacketMap.set('INFOLINK', PacketInfoLinkReq);
@@ -205,7 +206,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
 
         responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
-        responsePacketMap.set('KLSYNC', PacketSyncLinkRes);
+        responsePacketMap.set('KLSYNC', PacketKickListSyncRes);
         responsePacketMap.set('KLDELITEM', PacketKickListDelItemRes);
         responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
         responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
