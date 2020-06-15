@@ -17,7 +17,7 @@ export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
     constructor(
         public ChannelId: Long = Long.ZERO,
         public Token: Long = Long.ZERO,
-        public OpenChatToken: number = -1,
+        public OpenToken: number = -1,
     ) {
         super();
     }
@@ -32,7 +32,7 @@ export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
             'token': this.Token
         };
 
-        if (this.OpenChatToken !== -1) obj['opt'] = this.OpenChatToken;
+        if (this.OpenToken !== -1) obj['opt'] = this.OpenToken;
 
         return obj;
     }

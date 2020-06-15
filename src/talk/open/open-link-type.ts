@@ -7,7 +7,7 @@
 export enum OpenLinkType {
 
     PROFILE = 1,
-    CHATROOM = 2
+    CHANNEL = 2
 
 }
 

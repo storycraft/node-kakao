@@ -2,10 +2,10 @@ import { Long, AccessDataProvider } from ".";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
-import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
+import { ClientChatUser, ChatUser, ClientUserInfo } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
 import { ChatChannel } from "./talk/channel/chat-channel";
-import { Chat } from "./talk/chat/chat";
+import { Chat, FeedChat } from "./talk/chat/chat";
 import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
 import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
@@ -21,6 +21,7 @@ import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-stat
 import { StatusCode } from "./packet/loco-packet-base";
 import { ClientStatus } from "./client-status";
 import { MediaManager } from "./talk/media/media-manager";
+import { UserType } from "./talk/user/user-type";
 
 /*
  * Created on Fri Nov 01 2019
@@ -74,13 +75,24 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
     on(event: 'login', listener: (user: ClientChatUser) => void): this;
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
     on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'feed', listener: (chat: Chat, feed: ChatFeed) => void): this;
+    on(event: 'feed', listener: (feedChat: FeedChat) => void): this;
     on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
     on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
+    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
+    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
+    on(event: 'join_channel', listener: (joinChannel: ChatChannel, feedChat?: FeedChat) => void): this;
     on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
+
+    once(event: 'login', listener: (user: ClientChatUser) => void): this;
+    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
+    once(event: 'message', listener: (chat: Chat) => void): this;
+    once(event: 'feed', listener: (feedChat: FeedChat) => void): this;
+    once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
+    once(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
+    once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
+    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
+    once(event: 'join_channel', listener: (joinChannel: ChatChannel, feedChat?: FeedChat) => void): this;
+    once(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
 
 }
 
@@ -252,10 +264,10 @@ export class TalkClient extends LoginClient implements LocoClient {
 
         let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
 
-        this.clientUser = new ClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
+        this.clientUser = new TalkClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 
         this.userManager.initalizeClient();
-        this.channelManager.initalizeLoginData(loginRes.ChatDataList);
+        await this.channelManager.initalizeLoginData(loginRes.ChatDataList);
         await this.openLinkManager.initOpenSession();
 
         this.emit('login', this.clientUser);
@@ -283,23 +295,98 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.networkManager.disconnect();
     }
 
-    on(event: 'login', listener: (user: ClientChatUser) => void): this;
-    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'feed', listener: (chat: Chat, feed: ChatFeed) => void): this;
-    on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
-    on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
+}
 
-    on(event: string, listener: (...args: any[]) => void): this {
-        return super.on(event, listener);
+export class TalkClientChatUser extends EventEmitter implements ClientChatUser {
+
+    private client: TalkClient;
+    private id: Long;
+
+    private mainUserInfo: ClientUserInfo;
+
+    constructor(client: TalkClient, id: Long, settings: MoreSettingsStruct, private mainOpenToken: number) {
+        super();
+
+        this.client = client;
+        this.id = id;
+
+        this.mainUserInfo = new TalkClientUserInfo(this, settings);
     }
 
-    once(event: string, listener: (...args: any[]) => void): this {
-        return super.on(event, listener);
+    get Client(): LocoClient {
+        return this.client;
+    }
+
+    get Id() {
+        return this.id;
+    }
+
+    get MainUserInfo() {
+        return this.mainUserInfo;
+    }
+
+    get MainOpenToken() {
+        return this.mainOpenToken;
+    }
+
+    get Nickname() {
+        return this.mainUserInfo.Nickname;
+    }
+
+    async createDM(): Promise<ChatChannel | null> {
+        throw new Error('MemoChat not implemented');
+    }
+
+    isClientUser() {
+        return true;
+    }
+
+}
+
+export class TalkClientUserInfo implements ClientUserInfo {
+
+    constructor(private user: TalkClientChatUser, private settings: MoreSettingsStruct) {
+        
+    }
+
+    get Client() {
+        return this.user.Client;
+    }
+
+    get User() {
+        return this.user;
+    }
+
+    get Id() {
+        return this.user.Id;
+    }
+
+    get AccountId() {
+        return this.settings.accountId;
+    }
+
+    get Nickname() {
+        return this.settings.nickName;
+    }
+
+    get UserType() {
+        return UserType.Undefined;
+    }
+
+    get ProfileImageURL() {
+        return this.settings.profileImageUrl || '';
+    }
+
+    get FullProfileImageURL() {
+        return this.settings.fullProfileImageUrl || '';
+    }
+
+    get OriginalProfileImageURL() {
+        return this.settings.originalProfileImageUrl || '';
+    }
+
+    isOpenUser(): false {
+        return false;
     }
 
 }

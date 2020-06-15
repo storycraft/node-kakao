@@ -21,7 +21,7 @@ export interface OpenMemberStruct {
     memberType: OpenMemberType;
     profileType: OpenProfileType;
 
-    linkId: Long;
+    linkId?: Long;
     openToken: number;
 
     pv: Long;
@@ -75,6 +75,59 @@ export interface OpenLinkStruct extends StructBase {
 
     owner: OpenMemberStruct;
 
+    tagList: { tags?: OpenLinkTag[] };
+
+}
+
+export enum OpenLinkTagType {
+
+    DESCRIPTION = 1,
+    HASH_TAG = 2
+
+}
+
+export interface OpenLinkTag {
+
+    type: OpenLinkTagType; 
+    content: string;
+
+}
+
+export namespace OpenLinkTag {
+
+    export const Mappings = {
+
+        type: 't',
+        content: 'c'
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+
+}
+
+export interface OpenLinkTagList {
+
+    tags: OpenLinkTag[];
+
+}
+
+export namespace OpenLinkTagList {
+
+    export const Mappings = {
+
+        tags: 'tags'
+
+    }
+
+    export const ConvertMap = {
+        
+        tags: new Converter.Array(OpenLinkTag.Mappings)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+
 }
 
 export namespace OpenLinkStruct {
@@ -100,13 +153,16 @@ export namespace OpenLinkStruct {
         owner: 'olu',
         description: 'desc',
         
-        canSearchLink: 'sc'
+        canSearchLink: 'sc',
+
+        tagList: 'omt'
 
     }
 
     export const ConvertMap = {
 
-        owner: new Converter.Object(OpenMemberStruct.Mappings)
+        owner: new Converter.Object(OpenMemberStruct.Mappings),
+        tagList: new Converter.Object(OpenLinkTagList.Mappings, OpenLinkTagList.ConvertMap)
 
     }
 

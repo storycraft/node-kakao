@@ -12,7 +12,7 @@ export class PacketJoinInfoReq extends LocoBsonRequestPacket {
 
     constructor(
         public OpenLinkURL: string = '',
-        public LinkRef: string = ''//default EW
+        public LinkRef: string = ''//default EW:<url>
     ) {
         super();
     }

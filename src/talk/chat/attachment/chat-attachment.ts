@@ -3,7 +3,7 @@ import { Long } from "bson";
 import { ChatType } from "../chat-type";
 import { Chat } from "../chat";
 import { JsonUtil } from "../../../util/json-util";
-import { ChatUser } from "../../user/chat-user";
+import { UserInfo } from "../../user/chat-user";
 
 /*
  * Created on Sun Nov 03 2019
@@ -476,7 +476,7 @@ export interface ChatContent {
 export class ChatMention implements ChatContent {
     
     constructor(
-        public User: ChatUser
+        public Info: UserInfo
     ) {
         
     }

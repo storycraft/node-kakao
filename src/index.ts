@@ -57,7 +57,6 @@ export * from './talk/chat/template/message-template';
 export * from './talk/chat/chat-manager';
 
 export * from './talk/channel/chat-channel';
-export * from './talk/channel/channel-info';
 export * from './talk/channel/channel-settings';
 
 export * from './talk/channel/channel-manager';
@@ -66,6 +65,7 @@ export * from './talk/open/open-link-type';
 export * from './talk/open/open-link-manager';
 export * from './talk/open/open-link-settings';
 export * from './talk/open/open-link-template';
+export * from './talk/open/open-link';
 
 export * from './talk/user/chat-user';
 export * from './talk/user/user-type';

@@ -10,7 +10,7 @@ import { Serializer } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class PacketCreateChatReq extends LocoBsonRequestPacket {
+export class PacketCreateChannelReq extends LocoBsonRequestPacket {
 
     constructor(
         public UserIdList: Long[] = [],
@@ -37,7 +37,7 @@ export class PacketCreateChatReq extends LocoBsonRequestPacket {
 
 }
 
-export class PacketCreateChatRes extends LocoBsonResponsePacket {
+export class PacketCreateChannelRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,

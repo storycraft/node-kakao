@@ -82,9 +82,9 @@ export class ChatManager {
         
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
-        if (res.Chatlog) return this.client.ChatManager.chatFromChatlog(res.Chatlog);
+        if (res.Chatlog) return this.chatFromChatlog(res.Chatlog);
 
-        return this.client.ChatManager.chatFromChatlog({
+        return this.chatFromChatlog({
             logId: res.LogId,
             prevLogId: res.PrevLogId,
             senderId: this.client.ClientUser.Id,
@@ -110,9 +110,9 @@ export class ChatManager {
 
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
-        if (res.Chatlog) return this.client.ChatManager.chatFromChatlog(res.Chatlog);
+        if (res.Chatlog) return this.chatFromChatlog(res.Chatlog);
 
-        return this.client.ChatManager.chatFromChatlog({
+        return this.chatFromChatlog({
             logId: res.LogId,
             prevLogId: res.PrevLogId,
             senderId: this.client.ClientUser.Id,

@@ -61,7 +61,7 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
 
         if (this.LinkType === OpenLinkType.PROFILE) {
             obj['dcl'] = this.ChannelLimit;
-        } else if (this.LinkType === OpenLinkType.CHATROOM) {
+        } else if (this.LinkType === OpenLinkType.CHANNEL) {
             obj['ptp'] = this.ProfileType;
             obj['ml'] = this.UserLimit;
 

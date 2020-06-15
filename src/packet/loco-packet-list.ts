@@ -23,7 +23,7 @@ import { PacketDeleteChatRes } from "./packet-delete-chat";
 import { PacketMemberRes, PacketMemberReq } from "./packet-member";
 import { PacketPingRes, PacketPingReq } from "./packet-ping";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "./packet-info-link";
-import { PacketCreateChatRes, PacketCreateChatReq } from "./packet-create-chat";
+import { PacketCreateChannelRes, PacketCreateChannelReq } from "./packet-create-channel";
 import { PacketSyncJoinOpenchatRes } from "./packet-sync-join-openchat";
 import { PacketDeleteMemberRes } from "./packet-delmem";
 import { PacketMessageNotiReadReq, PacketMessageNotiReadRes } from "./packet-noti-read";
@@ -117,7 +117,7 @@ export namespace LocoPacketList {
         
         requestPacketMap.set('REWRITE', PacketRewriteReq);
 
-        requestPacketMap.set('CREATE', PacketCreateChatReq);
+        requestPacketMap.set('CREATE', PacketCreateChannelReq);
 
         requestPacketMap.set('KICKMEM', PacketKickMemberReq);
         requestPacketMap.set('KLSYNC', PacketSyncLinkReq);
@@ -197,7 +197,7 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('KICKMEM', PacketKickMemberRes);
 
-        responsePacketMap.set('CREATE', PacketCreateChatRes);
+        responsePacketMap.set('CREATE', PacketCreateChannelRes);
 
         responsePacketMap.set('NEWMEM', PacketNewMemberRes);
         responsePacketMap.set('LEFT', PacketLeftRes);

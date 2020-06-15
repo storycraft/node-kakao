@@ -224,7 +224,11 @@ export class FeedChat extends Chat {
         return ChatType.Feed;
     }
 
-    get RichFeed(): RichFeedAttachment | null {
+    get Feed() {
+        return this.getFeed();
+    }
+
+    get RichFeedAttachment(): RichFeedAttachment | null {
         return this.AttachmentList[0] as RichFeedAttachment || null;
     }
 
