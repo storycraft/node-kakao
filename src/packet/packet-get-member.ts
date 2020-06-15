@@ -2,7 +2,7 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packe
 import { Long } from "..";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { Serializer } from "json-proxy-mapper";
-import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
 
 /*
  * Created on Sun Nov 03 2019
@@ -34,7 +34,7 @@ export class PacketGetMemberRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public MemberList: (MemberStruct | OpenMemberStruct)[] = []
+        public MemberList: (MemberStruct | OpenLinkMemberStruct)[] = []
     ) {
         super(status);
     }
@@ -49,12 +49,8 @@ export class PacketGetMemberRes extends LocoBsonResponsePacket {
             let memberList: any[] = json['members'];
 
             for (let rawMemberStruct of memberList) {
-                if (rawMemberStruct[OpenMemberStruct.Mappings.openToken]) {
-                    this.MemberList.push(Serializer.deserialize(rawMemberStruct, OpenMemberStruct.MAPPER));
-                } else {
-                    this.MemberList.push(Serializer.deserialize(rawMemberStruct, MemberStruct.MAPPER));
-                }
-                
+                if (rawMemberStruct[OpenLinkMemberStruct.Mappings.linkId]) this.MemberList.push(Serializer.deserialize<OpenLinkMemberStruct>(rawMemberStruct, OpenLinkMemberStruct.MAPPER));
+                else this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMemberStruct, MemberStruct.MAPPER));
             }
         }
     }

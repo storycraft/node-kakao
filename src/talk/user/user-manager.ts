@@ -35,34 +35,22 @@ export class UserManager extends IdStore<ChatUser> {
         return super.get(key, true);
     }
 
-    getFromStruct(memberStruct: MemberStruct): ChatUserInfo {
-        return new ManagedChatUserInfo(this, this.get(memberStruct.userId), memberStruct);
-    }
-
-    getFromOpenStruct(memberStruct: OpenMemberStruct): OpenChatUserInfo {
-        return new ManagedOpenChatUserInfo(this, this.get(memberStruct.userId), memberStruct);
+    getFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {
+        if (memberStruct.openToken) return new ManagedOpenChatUserInfo(this, this.get(memberStruct.userId), memberStruct as OpenMemberStruct);
+    
+        return new ManagedChatUserInfo(this, this.get(memberStruct.userId), memberStruct as MemberStruct);
     }
 
     async requestAllUserInfoList(channel: ChatChannel): Promise<ChatUserInfo[]> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channel.Id));
 
-        let memberList = res.MemberList;
-        if (channel.isOpenChat()) {
-            return (memberList as OpenMemberStruct[]).map(this.getFromOpenStruct.bind(this));
-        } else {
-            return (memberList as MemberStruct[]).map(this.getFromStruct.bind(this));
-        }
+        return res.MemberList.map(this.getFromStruct.bind(this));
     }
 
     async requestUserInfoList(channel: ChatChannel, idList: Long[]): Promise<ChatUserInfo[]> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channel.Id, idList));
 
-        let memberList = res.MemberList;
-        if (channel.isOpenChat()) {
-            return (memberList as OpenMemberStruct[]).map(this.getFromOpenStruct.bind(this));
-        } else {
-            return (memberList as MemberStruct[]).map(this.getFromStruct.bind(this));
-        }
+        return res.MemberList.map(this.getFromStruct.bind(this));
     }
 
     initalizeClient() {

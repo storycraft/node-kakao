@@ -86,12 +86,12 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
 
 }
 
-export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> extends ChatChannel<I> {
+export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
 
     readonly LinkId: Long;
     readonly OpenToken: number;
 
-    readonly ClientUserInfo: OpenChatUserInfo;
+    readonly ClientUserInfo: ChatUserInfo;
 
     getOpenLink(): OpenLinkChannel;
 

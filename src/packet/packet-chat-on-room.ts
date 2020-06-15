@@ -9,7 +9,7 @@ import { Long } from "bson";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChannelType } from "../talk/channel/channel-type";
 import { JsonUtil } from "../util/json-util";
-import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
@@ -44,11 +44,11 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public MemberList: (MemberStruct | OpenMemberStruct)[] = [],
+        public MemberList: (MemberStruct | OpenLinkMemberStruct)[] = [],
         public Type: ChannelType = ChannelType.UNKNOWN,
         public WatermarkList: Long[] = [],
         public OpenChatToken: number = 0,
-        public ClientOpenProfile?: OpenMemberStruct
+        public ClientOpenProfile?: OpenLinkMemberStruct
     ) {
         super(status);
     }
@@ -64,23 +64,16 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         if (rawData['w']) this.WatermarkList = rawData['w'];
 
         this.MemberList = [];
-        if (rawData['otk']) {
-            this.OpenChatToken = rawData['otk'];
+        if (rawData['otk']) this.OpenChatToken = rawData['otk'];
 
-            if (rawData['m']) {
-                for (let rawMem of rawData['m']) {
-                    this.MemberList.push(Serializer.deserialize<OpenMemberStruct>(rawMem, OpenMemberStruct.MAPPER));
-                }
-            }
-        } else {
-            if (rawData['m']) {
-                for (let rawMem of rawData['m']) {
-                    this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
-                }
+        if (rawData['m']) {
+            for (let rawMem of rawData['m']) {
+                if (rawMem[OpenLinkMemberStruct.Mappings.linkId]) this.MemberList.push(Serializer.deserialize<OpenLinkMemberStruct>(rawMem, OpenLinkMemberStruct.MAPPER));
+                else this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
             }
         }
 
-        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
+        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
     }
 
 }

@@ -11,7 +11,7 @@ import { OpenLinkProfile } from "../open/open-link";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { EventEmitter } from "events";
 import { Long } from "bson";
-import { OpenMemberType } from "../open/open-link-type";
+import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
 import { ChatChannel } from "../channel/chat-channel";
 
 
@@ -120,15 +120,15 @@ export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
     }
 
     get ProfileOpenToken() {
-        return this.memberStruct.openToken;
+        return this.memberStruct.openToken || -1;
     }
 
     get ProfileType() {
-        return this.memberStruct.profileType;
+        return this.memberStruct.profileType || OpenProfileType.KAKAO_ANON;
     }
 
     get MemberType() {
-        return this.memberStruct.memberType;
+        return this.memberStruct.memberType || OpenMemberType.UNKNOWN;
     }
 
     get ProfileImageURL() {

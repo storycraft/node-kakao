@@ -1,8 +1,8 @@
 import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
 import { Long } from "bson";
-import { OpenMemberType } from "../open/open-link-type";
 import { ObjectMapper } from "json-proxy-mapper";
+import { CommonOpenMemberStruct } from "./open/open-link-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -10,13 +10,18 @@ import { ObjectMapper } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface MemberStruct extends StructBase {
-
+export interface BaseMemberStruct extends StructBase {
+    
     userId: Long;
     nickname: string;
     profileImageUrl: string;
     originalProfileImageUrl: string;
     fullProfileImageUrl: string;
+
+}
+
+export interface MemberStruct extends BaseMemberStruct, Partial<CommonOpenMemberStruct> {
+
     type: UserType;
     accountId: number;
     linkedService: string;
@@ -36,7 +41,13 @@ export namespace MemberStruct {
         type: 'type',
         accountId: 'accountId',
         linkedService: 'linkedService',
-        statusMessage: 'statusMessage'
+        statusMessage: 'statusMessage',
+
+        openToken: 'opt',
+        memberType: 'lmt',
+        profileType: 'ptp',
+        linkId: 'li',
+        pv: 'pv'
 
     }
 

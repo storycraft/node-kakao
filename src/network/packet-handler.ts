@@ -306,7 +306,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel) return;
         
-        (channel as ManagedOpenChatChannel).updateUserInfo(packet.UpdatedProfile.userId, this.UserManager.getFromOpenStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
+        (channel as ManagedOpenChatChannel).updateUserInfo(packet.UpdatedProfile.userId, this.UserManager.getFromStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
     }
     
     async syncProfileUpdate(packet: PacketSyncProfileRes) {
@@ -318,7 +318,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel.isOpenChat()) return;
 
-        channel.updateUserInfo(packet.OpenMember.userId, this.UserManager.getFromOpenStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
+        channel.updateUserInfo(packet.OpenMember.userId, this.UserManager.getFromStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
     }
 
     async onOpenChannelKick(packet: PacketKickMemberRes) {

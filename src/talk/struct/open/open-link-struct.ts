@@ -3,6 +3,7 @@ import { Long } from "bson";
 import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open/open-link-type";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkSettings } from "../../open/open-link-settings";
+import { BaseMemberStruct } from "../member-struct";
 
 /*
  * Created on Fri Nov 22 2019
@@ -10,13 +11,7 @@ import { OpenLinkSettings } from "../../open/open-link-settings";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface OpenMemberStruct {
-
-    userId: Long;
-    nickname: string;
-    profileImageUrl: string;
-    originalProfileImageUrl: string;
-    fullProfileImageUrl: string;
+export interface CommonOpenMemberStruct {
 
     memberType: OpenMemberType;
     profileType: OpenProfileType;
@@ -25,10 +20,28 @@ export interface OpenMemberStruct {
     openToken: number;
 
     pv: Long;
+    
+}
+
+export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStruct {
+
+    memberType: OpenMemberType;
+    profileType: OpenProfileType;
+
+    linkId?: Long;
+    openToken: number;
+
+    pv: Long;
+    
+}
+
+export interface OpenLinkMemberStruct extends OpenMemberStruct {
+
+    linkId: Long;
 
 }
 
-export namespace OpenMemberStruct {
+export namespace OpenLinkMemberStruct {
 
     export const Mappings = {
 
@@ -161,7 +174,7 @@ export namespace OpenLinkStruct {
 
     export const ConvertMap = {
 
-        owner: new Converter.Object(OpenMemberStruct.Mappings),
+        owner: new Converter.Object(OpenLinkMemberStruct.Mappings),
         tagList: new Converter.Object(OpenLinkTagList.Mappings, OpenLinkTagList.ConvertMap)
 
     }
