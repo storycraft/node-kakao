@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { OpenProfileType } from "../talk/open/open-link-type";
 import { Serializer } from "json-proxy-mapper";
 
@@ -51,7 +51,7 @@ export class PacketUpdateLinkProfileRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public UpdatedProfile?: OpenLinkMemberStruct
+        public UpdatedProfile?: OpenMemberStruct
     ) {
         super(status);
     }
@@ -62,7 +62,7 @@ export class PacketUpdateLinkProfileRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawData: any) {
         if (rawData['olu']) {
-            this.UpdatedProfile = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
+            this.UpdatedProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
         }
     }
 

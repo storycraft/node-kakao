@@ -5,7 +5,7 @@
  */
 
 import { OpenLinkChannel } from "../open/open-link";
-import { OpenLinkMemberStruct, OpenMemberStruct } from "../struct/open/open-link-struct";
+import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ChatUser, ChatUserInfo } from "../user/chat-user";
 import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
 import { Long } from "bson";
@@ -260,7 +260,7 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
 
     private clientUserInfo: ManagedOpenChatUserInfo;
 
-    constructor(manager: ChannelManager, id: Long, dataStruct: ChannelDataStruct, private linkId: Long, private openToken: number, private openLink: OpenLinkChannel, clientMemberStruct: OpenLinkMemberStruct) {
+    constructor(manager: ChannelManager, id: Long, dataStruct: ChannelDataStruct, private linkId: Long, private openToken: number, private openLink: OpenLinkChannel, clientMemberStruct: OpenMemberStruct) {
         super(manager, id, dataStruct);
 
         this.clientUserInfo = new ManagedOpenChatUserInfo(manager.Client.UserManager, manager.Client.ClientUser, clientMemberStruct);

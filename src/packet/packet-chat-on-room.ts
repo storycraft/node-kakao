@@ -9,7 +9,7 @@ import { Long } from "bson";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChannelType } from "../talk/channel/channel-type";
 import { JsonUtil } from "../util/json-util";
-import { OpenLinkMemberStruct, OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
@@ -48,7 +48,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         public Type: ChannelType = ChannelType.UNKNOWN,
         public WatermarkList: Long[] = [],
         public OpenChatToken: number = 0,
-        public ClientOpenProfile?: OpenLinkMemberStruct
+        public ClientOpenProfile?: OpenMemberStruct
     ) {
         super(status);
     }
@@ -68,16 +68,12 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
 
         if (rawData['m']) {
             for (let rawMem of rawData['m']) {
-                if (rawMem[OpenMemberStruct.Mappings.openToken]) {
-                    if (rawMem[OpenLinkMemberStruct.Mappings.linkId]) this.MemberList.push(Serializer.deserialize<OpenLinkMemberStruct>(rawMem, OpenLinkMemberStruct.MAPPER));
-                    else this.MemberList.push(Serializer.deserialize<OpenMemberStruct>(rawMem, OpenMemberStruct.MAPPER));
-                } else {
-                    this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
-                }
+                if (rawMem[OpenMemberStruct.Mappings.openToken]) this.MemberList.push(Serializer.deserialize<OpenMemberStruct>(rawMem, OpenMemberStruct.MAPPER));
+                else this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMem, MemberStruct.MAPPER));
             }
         }
 
-        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
+        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
     }
 
 }

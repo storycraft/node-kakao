@@ -18,19 +18,10 @@ export interface CommonOpenMemberStruct {
 
     linkId?: Long;
     openToken: number;
-
-    pv: Long;
     
 }
 
 export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStruct {
-
-    memberType: OpenMemberType;
-    profileType: OpenProfileType;
-
-    openToken: number;
-
-    pv: Long;
     
 }
 
@@ -43,10 +34,11 @@ export namespace OpenMemberStruct {
         profileImageUrl: 'pi',
         originalProfileImageUrl: 'opi',
         fullProfileImageUrl: 'fpi',
-        memberType: 'lmt',
         profileType: 'ptp',
         openToken: 'opt',
-        pv: 'pv'
+
+        linkId: 'pli',
+        memberType: 'mt'
 
     }
 
@@ -58,6 +50,7 @@ export namespace OpenMemberStruct {
 export interface OpenLinkMemberStruct extends OpenMemberStruct {
 
     linkId: Long;
+    pv: Long;
 
 }
 
@@ -80,36 +73,6 @@ export namespace OpenLinkMemberStruct {
 
     export const MAPPER = new ObjectMapper(Mappings);
     
-}
-
-export interface OpenLinkStruct extends StructBase {
-
-    linkId: Long;
-    openToken: number;
-
-    linkName: string;
-    linkURL: string;
-    linkType: OpenLinkType;
-
-    createdAt: number,
-
-    maxUserLimit?: number;
-    maxChannelLimit?: number;
-
-    passcode?: string; // '' === passcode disabled
-    canSearchLink: boolean;
-
-    activated: boolean;
-    UNKNOWN2: true;
-
-    description: string;
-
-    linkCoverURL: string;
-
-    owner: OpenMemberStruct;
-
-    tagList: { tags?: OpenLinkTag[] };
-
 }
 
 export enum OpenLinkTagType {
@@ -160,6 +123,36 @@ export namespace OpenLinkTagList {
     }
 
     export const MAPPER = new ObjectMapper(Mappings);
+
+}
+
+export interface OpenLinkStruct extends StructBase {
+
+    linkId: Long;
+    openToken: number;
+
+    linkName: string;
+    linkURL: string;
+    linkType: OpenLinkType;
+
+    createdAt: number,
+
+    maxUserLimit?: number;
+    maxChannelLimit?: number;
+
+    passcode?: string; // '' === passcode disabled
+    canSearchLink: boolean;
+
+    activated: boolean;
+    UNKNOWN2: true;
+
+    description: string;
+
+    linkCoverURL: string;
+
+    owner: OpenMemberStruct;
+
+    tagList: { tags?: OpenLinkTag[] };
 
 }
 

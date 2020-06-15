@@ -3,7 +3,7 @@ import { Long } from "bson";
 import { JsonUtil } from "../util/json-util";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { Serializer } from "json-proxy-mapper";
-import { OpenLinkMemberStruct, OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
 
 /*
  * Created on Tue Jan 14 2020
@@ -56,7 +56,7 @@ export class PacketMemberRes extends LocoBsonResponsePacket {
             let memberList: any[] = json['members'];
 
             for (let rawMemberStruct of memberList) {
-                if (rawMemberStruct[OpenLinkMemberStruct.Mappings.linkId]) this.MemberList.push(Serializer.deserialize<OpenLinkMemberStruct>(rawMemberStruct, OpenLinkMemberStruct.MAPPER));
+                if (rawMemberStruct[OpenMemberStruct.Mappings.openToken]) this.MemberList.push(Serializer.deserialize<OpenMemberStruct>(rawMemberStruct, OpenMemberStruct.MAPPER));
                 else this.MemberList.push(Serializer.deserialize<MemberStruct>(rawMemberStruct, MemberStruct.MAPPER));
             }
         }
