@@ -13,20 +13,19 @@ import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
 import { LocoSecureSocket } from "../../network/loco-secure-socket";
 import { ChatType } from "../chat/chat-type";
 import { Long } from "bson";
+import { PromiseTicket } from "../../ticket/promise-ticket";
 
 export class MediaUploadInterface extends LocoSecureCommandInterface {
 
     private uploading: boolean;
 
-    private completeRes: ((resolve: PacketCompleteRes) => void) | null;
-    private completeErr: ((reason: any) => void) | null;
+    private ticketObj: PromiseTicket<PacketCompleteRes>;
 
     constructor(hostData: HostData, listener: LocoListener | null = null) {
         super(hostData, listener);
 
         this.uploading = false;
-        this.completeRes = null;
-        this.completeErr = null;
+        this.ticketObj = new PromiseTicket();
     }
 
     get Uploading() {
@@ -36,26 +35,19 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
     responseReceived(header: PacketHeader, data: Buffer): LocoResponsePacket {
         let res = super.responseReceived(header, data);
 
-        if (res.PacketName === 'COMPLETE' && this.completeRes) {
+        if (res.PacketName === 'COMPLETE') {
             this.uploading = false;
 
             if (res.StatusCode !== StatusCode.SUCCESS) {
-                if (this.completeErr) this.completeErr(res.StatusCode);
+                this.ticketObj.reject(res.StatusCode);
             } else {
-                this.completeRes(res as PacketCompleteRes);
+                this.ticketObj.resolve(res as PacketCompleteRes);
             }
             
             this.disconnect();
         }
 
         return res;
-    }
-
-    protected createCompleteTicket() {
-        return new Promise<PacketCompleteRes>((resolve, reject) => {
-            this.completeRes = resolve;
-            this.completeErr = reject;
-        });
     }
 
     async upload(clientUserId: Long, key: string, channelId: Long, type: ChatType, name: string, data: Buffer, width: number, height: number): Promise<PacketCompleteRes> {
@@ -80,7 +72,7 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
         rawSocket.sendBuffer(data);
         
-        return this.createCompleteTicket();
+        return this.ticketObj.createTicket();
     }
 
 }

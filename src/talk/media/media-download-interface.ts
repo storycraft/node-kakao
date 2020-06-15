@@ -17,6 +17,7 @@ import { LocoPacketResolver } from "../../network/stream/loco-packet-resolver";
 import { ChunkedBufferList } from "../../network/chunk/chunked-buffer-list";
 import { Writable, Transform, TransformCallback } from "stream";
 import { StatusCode } from "../../packet/loco-packet-base";
+import { PromiseTicket } from "../../ticket/promise-ticket";
 
 export class MediaDownloadInterface extends LocoSecureCommandInterface {
 
@@ -24,8 +25,7 @@ export class MediaDownloadInterface extends LocoSecureCommandInterface {
     private size: number;
     private receiver: MediaDataReceiver;
 
-    private completeRes: ((resolve: Buffer) => void) | null;
-    private completeErr: ((reason: any) => void) | null;
+    private ticketObj: PromiseTicket<Buffer>;
 
     constructor(hostData: HostData,  listener: LocoListener | null = null) {
         super(hostData, listener);
@@ -33,8 +33,8 @@ export class MediaDownloadInterface extends LocoSecureCommandInterface {
         this.downloading = false;
         this.size = -1;
         
-        this.completeRes = null;
-        this.completeErr = null;
+        this.ticketObj = new PromiseTicket();
+
         this.receiver = new MediaDataReceiver(this);
     }
     
@@ -57,18 +57,9 @@ export class MediaDownloadInterface extends LocoSecureCommandInterface {
     downloadDone(buffer: Buffer) {
         if (this.Connected) this.disconnect();
 
-        if (this.completeRes) this.completeRes(buffer.slice(0, this.size));
+        this.ticketObj.resolve(buffer);
 
         this.downloading = false;
-    }
-
-    protected createDownloadTicket() {
-        this.downloading = true;
-
-        return new Promise<Buffer>((resolve, reject) => {
-            this.completeRes = resolve;
-            this.completeErr = reject;
-        });
     }
 
     async download(clientUserId: Long, key: string, channelId: Long): Promise<Buffer | null> {
@@ -89,7 +80,7 @@ export class MediaDownloadInterface extends LocoSecureCommandInterface {
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
         this.size = res.Size;
 
-        return this.createDownloadTicket();
+        return this.ticketObj.createTicket();
     }
 
 }
