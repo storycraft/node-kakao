@@ -58,7 +58,7 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
 
     leave(block?: boolean): Promise<boolean>;
 
-    updateChannelSettings(settings: ChannelSettings): Promise<boolean>;
+    setChannelSettings(settings: ChannelSettings): Promise<boolean>;
 
     setTitleMeta(title: string): Promise<boolean>;
 

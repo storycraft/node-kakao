@@ -281,7 +281,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateChannelRes>(new PacketUpdateChannelReq(channel.Id, settings.pushAlert));
 
         if (res.StatusCode === StatusCode.SUCCESS) {
-            (channel as ManagedChatChannel).updateChannel(settings);
+            (channel as ManagedChatChannel).updateChannelSettings(settings);
             return true;
         }
 

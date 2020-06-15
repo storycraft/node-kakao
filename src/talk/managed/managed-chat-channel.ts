@@ -130,7 +130,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         return this.manager.leave(this, block);
     }
 
-    async updateChannelSettings(settings: ChannelSettings): Promise<boolean> {
+    async setChannelSettings(settings: ChannelSettings): Promise<boolean> {
         return this.manager.updateChannelSettings(this, settings);
     }
 
@@ -175,7 +175,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
     }
 
     updateMetaList(metaList: ChannelMetaStruct[]) {
-        for (let meta of this.channelMetaList) {
+        for (let meta of metaList) {
             this.updateMeta(meta);
         }
     }
@@ -220,7 +220,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         if (clientMeta.favorite) this.isFavorite = clientMeta.favorite;
     }
 
-    updateChannel(settings: ChannelSettings) {
+    updateChannelSettings(settings: ChannelSettings) {
         if (settings.pushAlert) this.dataStruct.pushAlert = settings.pushAlert;
     }
 
