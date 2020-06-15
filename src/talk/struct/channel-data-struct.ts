@@ -18,7 +18,7 @@ export interface ChannelDataStruct extends StructBase {
     pushAlert: boolean;
     linkId?: Long;
     openToken?: number;
-    metadata: ChannelClientMetaStruct;
+    metadata?: ChannelClientMetaStruct;
 
 }
 

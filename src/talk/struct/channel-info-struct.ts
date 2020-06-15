@@ -19,7 +19,7 @@ export interface ChannelInfoStruct extends ChannelDataStruct {
     lastMessage: string;
     lastLogId: Long;
     lastSeenLogId: Long;
-    lastChatLog: ChatlogStruct;
+    lastChatLog?: ChatlogStruct;
     displayMemberList: MemberStruct[];
     channelMetaList: ChannelMetaStruct[];
     isDirectChat: boolean;
