@@ -115,11 +115,11 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
     async onMessagePacket(packet: PacketMessageRes) {
-        if (Long.ZERO.equals(packet.ChannelId)) return;
+        if (Long.ZERO.equals(packet.ChannelId) || !packet.Chatlog) return;
         
         let channel = await this.getManagedChannel(packet.ChannelId);
 
-        let chatLog = packet.Chatlog!;
+        let chatLog = packet.Chatlog;
         let chat = await this.ChatManager.chatFromChatlog(chatLog);
 
         let userInfo = channel.getUserInfo(chat.Sender);

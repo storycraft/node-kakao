@@ -53,6 +53,7 @@ export namespace ChannelInfoStruct {
     export const ConvertMap = {
 
         displayMemberList: new Converter.Array(MemberStruct.Mappings),
+        lastChatLog: new Converter.Object(ChatlogStruct.Mappings)
 
     }
 

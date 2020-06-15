@@ -126,7 +126,7 @@ export class ChatManager {
     }
 
     async chatFromChatlog(chatLog: ChatlogStruct) {
-        let channel = await this.Client.ChannelManager.get(chatLog.channelId);
+        let channel = await this.Client.ChannelManager.get(chatLog.channelId, true);
         let sender = this.Client.UserManager.get(chatLog.senderId);
 
         const TypedChat = TypeMap.getChatConstructor(chatLog.type);

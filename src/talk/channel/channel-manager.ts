@@ -10,7 +10,7 @@ import { Long } from "bson";
 import { LocoClient } from "../../client";
 import { ChatUser } from "../user/chat-user";
 import { PacketCreateChannelRes, PacketCreateChannelReq } from "../../packet/packet-create-channel";
-import { PacketChatInfoReq, PacketChatInfoRes } from "../../packet/packet-chatinfo";
+import { PacketChannelInfoReq, PacketChannelInfoRes } from "../../packet/packet-channel-info";
 import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { ChannelDataStruct } from "../struct/channel-data-struct";
 import { PacketLeaveRes, PacketLeaveReq } from "../../packet/packet-leave";
@@ -32,12 +32,13 @@ import { OpenLinkChannel } from "../open/open-link";
 import { MemberStruct } from "../struct/member-struct";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel } from "../managed/managed-chat-channel";
+import { PromiseTicket } from "../../ticket/promise-ticket";
 
 export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
     static readonly INFO_UPDATE_INTERVAL: number = 300000;
 
-    private updateLockMap: WeakMap<ChatChannel, Promise<unknown>>;
+    private updateLockMap: WeakMap<ChatChannel, PromiseTicket<void>>;
     private infoUpdateMap: WeakMap<ChatChannel, number>;
     
     constructor(private client: LocoClient) {
@@ -59,12 +60,14 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return this.infoUpdateMap.get(channel) || 0;
     }
 
-    async get(id: Long): Promise<ChatChannel> {
-        let channel = await super.get(id, true) as ManagedBaseChatChannel;
+    async get(id: Long, skipUpdate: boolean = false): Promise<ChatChannel> {
+        let channel = await super.get(id) as ManagedBaseChatChannel;
 
-        if (this.updateLockMap.has(channel)) await this.updateLockMap.get(channel);
+        if (!skipUpdate) {
+            if (this.updateLockMap.has(channel)) await this.updateLockMap.get(channel)!.createTicket();
 
-        if (this.getLastUpdate(channel) + ChannelManager.INFO_UPDATE_INTERVAL < Date.now()) await this.updateChannel(channel);
+            if (this.getLastUpdate(channel) + ChannelManager.INFO_UPDATE_INTERVAL < Date.now()) await this.updateChannel(channel);
+        }
 
         return channel;
     }
@@ -81,19 +84,19 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return null;
     }
 
-    protected async getWithChannelInfo(id: Long, chatInfo: ChannelInfoStruct): Promise<ChatChannel> {
+    protected async getWithChannelData(id: Long, channelData: ChannelDataStruct): Promise<ManagedBaseChatChannel> {
         let channel: ManagedChatChannel | ManagedOpenChatChannel;
 
-        switch(chatInfo.type) {
+        switch(channelData.type) {
 
             case ChannelType.OPENCHAT_DIRECT:
             case ChannelType.OPENCHAT_GROUP: {
                 let openToken;
-                if (chatInfo.openToken) openToken = chatInfo.openToken;
+                if (channelData.openToken) openToken = channelData.openToken;
                 let chatOnRoom = await this.requestChatOnRoom(id, Long.ZERO, openToken);
 
-                let link = (await this.client.OpenLinkManager.get(chatInfo.linkId!)) as OpenLinkChannel;
-                channel = new ManagedOpenChatChannel(this, id, chatInfo, chatInfo.linkId!, chatInfo.openToken!, link, chatOnRoom.ClientOpenProfile!);
+                let link = (await this.client.OpenLinkManager.get(channelData.linkId!)) as OpenLinkChannel;
+                channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link, chatOnRoom.ClientOpenProfile!);
 
                 this.updateFromChatOnRoom(channel, chatOnRoom);
                 break;
@@ -104,18 +107,28 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             case ChannelType.DIRECT:
             case ChannelType.SELFCHAT:
             default: {
-                channel = new ManagedChatChannel(this, id, chatInfo);
+                channel = new ManagedChatChannel(this, id, channelData);
                 break;
             }
             
         }
-
-        channel.updateData(chatInfo);
-        channel.updateClientMeta(chatInfo.metadata);
-        channel.updateMetaList(chatInfo.channelMetaList);
-        channel.updateLastChat(await this.client.ChatManager.chatFromChatlog(chatInfo.lastChatLog));
         
         return channel;
+    }
+
+    protected async getWithChannelInfo(id: Long, channelInfo: ChannelInfoStruct): Promise<ManagedBaseChatChannel> {
+        let channel = await this.getWithChannelData(id, channelInfo);
+
+        await this.updateFromChannelInfo(channel, channelInfo);
+        
+        return channel;
+    }
+
+    protected async updateFromChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
+        channel.updateData(channelInfo);
+        if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
+        channel.updateMetaList(channelInfo.channelMetaList);
+        if (channelInfo.lastChatLog) channel.updateLastChat(await this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog));
     }
 
     protected updateFromChatOnRoom(channel: ManagedBaseChatChannel, chatOnRoom: PacketChatOnRoomRes) {
@@ -130,23 +143,34 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
             open.updateMemberList(chatOnRoom.MemberList as OpenMemberStruct[]);
         }
-
-        this.infoUpdateMap.set(channel, Date.now());
     }
 
-    async updateChannel(channel: ManagedBaseChatChannel): Promise<unknown> {
+    protected async updateChannelInfo(channel: ManagedBaseChatChannel) {
+        let channelInfo = await this.requestChannelInfo(channel.Id);
+
+        await this.updateFromChannelInfo(channel, channelInfo);
+    }
+
+    protected async updateChatOnRoom(channel: ManagedBaseChatChannel) {
         let openToken;
         if (channel.isOpenChat()) openToken = (channel as ManagedOpenChatChannel).OpenToken;
-        let chatOnRoomReq = this.requestChatOnRoom(channel.Id, channel.LastChat && channel.LastChat.LogId || Long.ZERO, openToken);
-        
-        this.updateLockMap.set(channel, chatOnRoomReq);
-
-        let chatOnRoom = await chatOnRoomReq;
-        this.updateLockMap.delete(channel);
+        let chatOnRoom = await this.requestChatOnRoom(channel.Id, channel.LastChat && channel.LastChat.LogId || Long.ZERO, openToken);
 
         this.updateFromChatOnRoom(channel, chatOnRoom);
+    }
+    
+    protected async updateChannel(channel: ManagedBaseChatChannel) {
+        let ticketObj = new PromiseTicket<void>();
 
-        return chatOnRoomReq;
+        this.updateLockMap.set(channel, ticketObj);
+        let req = Promise.all([ this.updateChatOnRoom(channel), this.updateChannelInfo(channel) ]);
+
+        await req;
+
+        this.infoUpdateMap.set(channel, Date.now());
+        ticketObj.resolve();
+
+        this.updateLockMap.delete(channel);
     }
 
     async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<ChatChannel | null> {
@@ -154,11 +178,10 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (this.has(res.ChannelId)) return this.get(res.ChannelId);
 
-        let chan = await this.channelFromData(res.ChannelId, res.ChatInfo!);
-
-        this.setCache(chan.Id, chan);
-
-        return chan;
+        let channel = await this.getWithChannelInfo(res.ChannelId, res.ChatInfo!);
+        this.setCache(channel.Id, channel);
+        
+        return channel;
     }
 
     async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.MAIN): Promise<OpenChatChannel | null>;
@@ -184,7 +207,10 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
 
-        return this.client.ChannelManager.channelFromData(res.ChatInfo.channelId, res.ChatInfo) as Promise<ManagedOpenChatChannel>;
+        let channel = await this.getWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo);
+        this.setCache(channel.Id, channel);
+        
+        return channel as ManagedOpenChatChannel;
     }
 
     async joinOpenChannel(linkId: Long, profileType: OpenProfileType.MAIN, passcode?: string): Promise<OpenChatChannel | null>;
@@ -205,47 +231,22 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (res.StatusCode !== StatusCode.SUCCESS || !res.ChatInfo) return null;
 
-        return this.client.ChannelManager.channelFromData(res.ChatInfo.channelId, res.ChatInfo) as Promise<ManagedOpenChatChannel>;
-    }
-
-    protected async fetchValue(id: Long): Promise<ManagedChatChannel> {
-        let chatInfo = await this.requestChannelInfo(id);
-
-        let channel = await this.channelFromData(id, chatInfo) as ManagedChatChannel;
-
-        return channel;
-    }
-
-    protected async channelFromData(id: Long, chatData: ChannelDataStruct): Promise<ManagedChatChannel | ManagedOpenChatChannel> {
-        let channel: ManagedChatChannel | ManagedOpenChatChannel;
+        let channel = await this.getWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo);
+        this.setCache(channel.Id, channel);
         
-        let openToken;
-        if (chatData.openToken) openToken = chatData.openToken;
-        let chatOnRoom = await this.requestChatOnRoom(id, Long.ZERO, openToken);
+        return channel as ManagedOpenChatChannel;
+    }
 
-        switch(chatData.type) {
+    protected async fetchValue(id: Long) {
+        let info = await this.requestChannelInfo(id);
 
-            case ChannelType.OPENCHAT_DIRECT:
-            case ChannelType.OPENCHAT_GROUP: {
-                let link = (await this.client.OpenLinkManager.get(chatData.linkId!)) as OpenLinkChannel;
-                channel = new ManagedOpenChatChannel(this, id, chatData, chatData.linkId!, chatData.openToken!, link, chatOnRoom.ClientOpenProfile!);
-                break;
-            }
-
-            case ChannelType.GROUP:
-            case ChannelType.PLUSCHAT:
-            case ChannelType.DIRECT:
-            case ChannelType.SELFCHAT: channel = new ManagedChatChannel(this, id, chatData); break;
-
-            default: channel = new ManagedChatChannel(this, id, chatData); break;
-            
-        }
+        let channel = await this.getWithChannelData(id, info);
 
         return channel;
     }
 
     protected async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketChatInfoRes>(new PacketChatInfoReq(channelId));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketChannelInfoRes>(new PacketChannelInfoReq(channelId));
 
         if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.PARTIAL) {
             return res.ChatInfo!;
@@ -356,11 +357,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     async initalizeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
 
-        let channelList = await Promise.all(chatDataList.map((chatData) => this.channelFromData(chatData.channelId, chatData)));
-        
-        for (let channel of channelList) {
-            this.setCache(channel.Id, channel);
-        }
+        (await Promise.all(chatDataList.map((chatData) => this.getWithChannelData(chatData.channelId, chatData)))).forEach((channel) => this.setCache(channel.Id, channel));
     }
 
 }

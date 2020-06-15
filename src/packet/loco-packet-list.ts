@@ -9,7 +9,7 @@ import { PacketInvoiceRes } from "./packet-invoice";
 import { PacketNewMemberRes } from "./packet-new-member";
 import { PacketLeftRes, PacketLeaveReq, PacketLeaveRes } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
-import { PacketChatInfoReq, PacketChatInfoRes } from "./packet-chatinfo";
+import { PacketChannelInfoReq, PacketChannelInfoRes } from "./packet-channel-info";
 import { PacketChanJoinRes } from "./packet-chan-join";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
@@ -92,7 +92,7 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
-        requestPacketMap.set('CHATINFO', PacketChatInfoReq);
+        requestPacketMap.set('CHATINFO', PacketChannelInfoReq);
 
         requestPacketMap.set('UPDATECHAT', PacketUpdateChannelReq);
 
@@ -179,7 +179,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('NOTIREAD', PacketMessageNotiReadRes);
         responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
         responsePacketMap.set('MEMBER', PacketChatMemberRes);
-        responsePacketMap.set('CHATINFO', PacketChatInfoRes);
+        responsePacketMap.set('CHATINFO', PacketChannelInfoRes);
 
         responsePacketMap.set('UPDATECHAT', PacketUpdateChannelRes);
 
