@@ -29,6 +29,7 @@ import { ManagedOpenLink, ManagedOpenKickedUserInfo } from "../managed/managed-o
 import { OpenKickedUserInfo } from "../user/chat-user";
 import { PacketKickListSyncReq, PacketKickListSyncRes } from "../../packet/packet-kick-list-sync";
 import { RequestResult } from "../request/request-result";
+import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
 
 export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
@@ -223,6 +224,18 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenLinkRes>(packet);
 
         return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async deleteFromKickList(linkId: Long, kickedInfo: OpenKickedUserInfo): Promise<RequestResult<boolean>> {
+        return this.deleteFromKickListId(linkId, kickedInfo.KickedChannelId, kickedInfo.Id);
+    }
+
+    async deleteFromKickListId(linkId: Long, channelId: Long, userId: Long): Promise<RequestResult<boolean>> {
+        let packet = new PacketKickListDelItemReq(linkId, channelId, userId);
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketKickListDelItemRes>(packet);
+
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
     async requestKickList(linkId: Long): Promise<RequestResult<OpenKickedUserInfo[]>> {
