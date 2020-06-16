@@ -21,6 +21,7 @@ import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { MemberStruct } from "../struct/member-struct";
 import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
+import { RequestResult } from "../request/request-result";
 
 
 export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserInfo> extends EventEmitter implements ChatChannel<I> {
@@ -151,43 +152,43 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         return this.ChatManager.sendTemplate(this, template);
     }
 
-    async leave(block: boolean = false): Promise<boolean> {
+    async leave(block: boolean = false): Promise<RequestResult<boolean>> {
         return this.manager.leave(this, block);
     }
 
-    async setChannelSettings(settings: ChannelSettings): Promise<boolean> {
+    async setChannelSettings(settings: ChannelSettings): Promise<RequestResult<boolean>> {
         return this.manager.updateChannelSettings(this, settings);
     }
 
-    async setTitleMeta(title: string): Promise<boolean> {
+    async setTitleMeta(title: string): Promise<RequestResult<boolean>> {
         return this.manager.setTitleMeta(this, title);
     }
 
-    async setNoticeMeta(notice: string): Promise<boolean> {
+    async setNoticeMeta(notice: string): Promise<RequestResult<boolean>> {
         return this.manager.setNoticeMeta(this, notice);
     }
 
-    async setPrivilegeMeta(content: PrivilegeMetaContent): Promise<boolean> {
+    async setPrivilegeMeta(content: PrivilegeMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setPrivilegeMeta(this, content);
     }
 
-    async setProfileMeta(content: ProfileMetaContent): Promise<boolean> {
+    async setProfileMeta(content: ProfileMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setProfileMeta(this, content);
     }
 
-    async setTvMeta(content: TvMetaContent): Promise<boolean> {
+    async setTvMeta(content: TvMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setTvMeta(this, content);
     }
 
-    async setTvLiveMeta(content: TvLiveMetaContent): Promise<boolean> {
+    async setTvLiveMeta(content: TvLiveMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setTvLiveMeta(this, content);
     }
 
-    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<boolean> {
+    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setLiveTalkCountMeta(this, content);
     }
 
-    async setGroupMeta(content: GroupMetaContent): Promise<boolean> {
+    async setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setGroupMeta(this, content);
     }
 
@@ -267,17 +268,21 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
 }
 
 export class ManagedChatChannel extends ManagedBaseChatChannel<ManagedChatUserInfo> {
-
-    getUserInfoId(id: Long) {
-        return super.getUserInfoId(id);
-    }
-
+    
     updateMemberList(memberList: MemberStruct[]) {
         for (let memberStruct of memberList) {
-            let userInfo = this.Client.UserManager.getFromStruct(memberStruct) as ManagedChatUserInfo;
+            let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedChatUserInfo;
             this.updateUserInfo(userInfo.Id, userInfo);
         }
     }
+
+    isOpenChat() {
+        return false;
+    }
+
+}
+
+export class ManagedMemoChatChannel extends ManagedBaseChatChannel<ManagedChatUserInfo> {
 
     isOpenChat() {
         return false;
@@ -355,35 +360,35 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return this.getMemberTypeId(userId) === OpenMemberType.MANAGER;
     }
 
-    async kickMember(user: ChatUser): Promise<boolean> {
+    async kickMember(user: ChatUser): Promise<RequestResult<boolean>> {
         return this.kickMemberId(user.Id);
     }
 
-    async kickMemberId(userId: Long): Promise<boolean> {
+    async kickMemberId(userId: Long): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.kickMember(this, userId);
     }
 
-    async deleteLink(): Promise<boolean> {
+    async deleteLink(): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.deleteLink(this.linkId);
     }
 
-    async hideChat(chat: Chat): Promise<boolean> {
+    async hideChat(chat: Chat): Promise<RequestResult<boolean>> {
         return this.hideChatId(chat.LogId);
     }
 
-    async hideChatId(logId: Long): Promise<boolean> {
+    async hideChatId(logId: Long): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.hideChat(this, logId);
     }
 
-    async changeToMainProfile(): Promise<boolean> {
+    async changeToMainProfile(): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.MAIN);
     }
 
-    async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
+    async changeToKakaoProfile(nickname: string, profilePath: string): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
     }
 
-    async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
+    async changeToLinkProfile(profileLinkId: Long): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
     }
 
@@ -391,7 +396,7 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return this.setOpenMemberTypeId(user.Id, memberType);
     }
 
-    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
+    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
     }
 
@@ -401,7 +406,7 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
 
     updateMemberList(memberList: OpenMemberStruct[]) {
         for (let memberStruct of memberList) {
-            let userInfo = this.Client.UserManager.getFromStruct(memberStruct) as ManagedOpenChatUserInfo;
+            let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedOpenChatUserInfo;
             this.updateUserInfo(userInfo.Id, userInfo);
         }
     }

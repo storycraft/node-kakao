@@ -13,6 +13,7 @@ import { EventEmitter } from "events";
 import { Long } from "bson";
 import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
 import { ChatChannel } from "../channel/chat-channel";
+import { RequestResult } from "../request/request-result";
 
 
 export class ManagedChatUser extends EventEmitter implements ChatUser {
@@ -33,7 +34,7 @@ export class ManagedChatUser extends EventEmitter implements ChatUser {
         return false;
     }
 
-    createDM(): Promise<ChatChannel | null> {
+    createDM(): Promise<RequestResult<ChatChannel>> {
         return this.Client.ChannelManager.createChannel([ this ]);
     }
 

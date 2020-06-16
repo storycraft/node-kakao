@@ -9,7 +9,6 @@ import { OpenUserInfo, OpenKickedUserInfo } from "../user/chat-user";
 import { Long } from "bson";
 import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct } from "../struct/open/open-link-struct";
 import { OpenLinkChannel, OpenLinkProfile, OpenLink } from "../open/open-link";
-import { OpenChatChannel } from "../channel/chat-channel";
 
 
 export class ManagedOpenUserInfo implements OpenUserInfo {

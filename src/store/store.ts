@@ -6,7 +6,15 @@
 
 import { Long } from "bson";
 
-export abstract class BaseConvertibleStore<K, MK, V, MV> {
+export interface Store<K, V> {
+
+    has(key: K): boolean;
+
+    get(key: K, cache: boolean): V;
+
+}
+
+export abstract class BaseConvertibleStore<K, MK, V, MV> implements Store<K, V> {
 
     private cacheMap: Map<MK, MV>;
 
@@ -92,18 +100,6 @@ export abstract class AsyncConvertibleStore<K, MK, V> extends BaseConvertibleSto
     protected abstract convertKey(key: K): MK;
 
     protected async abstract fetchValue(key: K): Promise<V>;
-
-}
-
-export abstract class Store<K, V> extends AsyncConvertibleStore<K, K, V> {
-
-    constructor() {
-        super();
-    }
-
-    protected convertKey(key: K) {
-        return key;
-    }
 
 }
 

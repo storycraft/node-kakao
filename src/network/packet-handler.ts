@@ -165,7 +165,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let feed = ChatFeed.getFeedFromText(chat.Text);
 
         let idList: Long[] = [];
-        let infoList: ChatUserInfo[] = await this.UserManager.requestUserInfoList(channel, idList);
+        let infoList: ChatUserInfo[] = (await this.UserManager.requestUserInfoList(channel, idList)).result!;
 
         if (feed.feedType === FeedType.INVITE && (feed as InviteFeed).members) {
             for (let member of (feed as InviteFeed).members) {
@@ -306,7 +306,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel) return;
         
-        (channel as ManagedOpenChatChannel).updateUserInfo(packet.UpdatedProfile.userId, this.UserManager.getFromStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
+        (channel as ManagedOpenChatChannel).updateUserInfo(packet.UpdatedProfile.userId, this.UserManager.getInfoFromStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
     }
     
     async syncProfileUpdate(packet: PacketSyncProfileRes) {
@@ -318,7 +318,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel.isOpenChat()) return;
 
-        channel.updateUserInfo(packet.OpenMember.userId, this.UserManager.getFromStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
+        channel.updateUserInfo(packet.OpenMember.userId, this.UserManager.getInfoFromStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
     }
 
     async onOpenChannelKick(packet: PacketKickMemberRes) {

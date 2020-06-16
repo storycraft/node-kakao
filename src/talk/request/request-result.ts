@@ -7,6 +7,6 @@
 export interface RequestResult<T> {
 
     status: number;
-    result?: T;
+    result?: T | null;
 
 }

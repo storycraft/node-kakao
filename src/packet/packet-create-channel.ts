@@ -15,7 +15,8 @@ export class PacketCreateChannelReq extends LocoBsonRequestPacket {
     constructor(
         public UserIdList: Long[] = [],
         public Nickname: string = '',
-        public ProfileURL: string = ''
+        public ProfileURL: string = '',
+        public IsMemoChat: boolean = false
         ) {
         super();
     }
@@ -31,6 +32,8 @@ export class PacketCreateChannelReq extends LocoBsonRequestPacket {
 
         if (this.Nickname !== '') obj['nickname'] = this.Nickname;
         if (this.ProfileURL !== '') obj['profileImageUrl'] = this.ProfileURL;
+
+        if (this.IsMemoChat) obj['memoChat'] = this.IsMemoChat;
 
         return obj;
     }

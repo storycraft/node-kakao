@@ -11,6 +11,7 @@ import { OpenMemberType } from "../open/open-link-type";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct } from "../struct/channel-meta-struct";
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
+import { RequestResult } from "../request/request-result";
 
 /*
  * Created on Fri Nov 01 2019
@@ -60,25 +61,25 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
     
     sendTemplate(template: MessageTemplate): Promise<Chat | null>;
 
-    leave(block?: boolean): Promise<boolean>;
+    leave(block?: boolean): Promise<RequestResult<boolean>>;
 
-    setChannelSettings(settings: ChannelSettings): Promise<boolean>;
+    setChannelSettings(settings: ChannelSettings): Promise<RequestResult<boolean>>;
 
-    setTitleMeta(title: string): Promise<boolean>;
+    setTitleMeta(title: string): Promise<RequestResult<boolean>>;
 
-    setNoticeMeta(notice: string): Promise<boolean>;
+    setNoticeMeta(notice: string): Promise<RequestResult<boolean>>;
 
-    setPrivilegeMeta(content: PrivilegeMetaContent): Promise<boolean>;
+    setPrivilegeMeta(content: PrivilegeMetaContent): Promise<RequestResult<boolean>>;
 
-    setProfileMeta(content: ProfileMetaContent): Promise<boolean>;
+    setProfileMeta(content: ProfileMetaContent): Promise<RequestResult<boolean>>;
 
-    setTvMeta(content: TvMetaContent): Promise<boolean>;
+    setTvMeta(content: TvMetaContent): Promise<RequestResult<boolean>>;
 
-    setTvLiveMeta(content: TvLiveMetaContent): Promise<boolean>;
+    setTvLiveMeta(content: TvLiveMetaContent): Promise<RequestResult<boolean>>;
 
-    setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<boolean>;
+    setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<RequestResult<boolean>>;
 
-    setGroupMeta(content: GroupMetaContent): Promise<boolean>;
+    setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>>;
 
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
@@ -87,6 +88,12 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
     once(event: 'message', listener: (chat: Chat) => void): this;
     once(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
     once(event: 'left', listener: (leftUser: ChatUser, chat: FeedChat) => void): this;
+
+}
+
+export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
+
+    
 
 }
 
@@ -113,21 +120,21 @@ export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
 
     isOpenChat(): true;
 
-    kickMember(user: ChatUser): Promise<boolean>;
-    kickMemberId(userId: Long): Promise<boolean>;
+    kickMember(user: ChatUser): Promise<RequestResult<boolean>>;
+    kickMemberId(userId: Long): Promise<RequestResult<boolean>>;
 
-    deleteLink(): Promise<boolean>;
+    deleteLink(): Promise<RequestResult<boolean>>;
 
-    hideChat(chat: Chat): Promise<boolean>;
-    hideChatId(logId: Long): Promise<boolean>;
+    hideChat(chat: Chat): Promise<RequestResult<boolean>>;
+    hideChatId(logId: Long): Promise<RequestResult<boolean>>;
 
-    changeToMainProfile(): Promise<boolean>;
-    changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean>;
-    changeToLinkProfile(profileLinkId: Long): Promise<boolean>;
+    changeToMainProfile(): Promise<RequestResult<boolean>>;
+    changeToKakaoProfile(nickname: string, profilePath: string): Promise<RequestResult<boolean>>;
+    changeToLinkProfile(profileLinkId: Long): Promise<RequestResult<boolean>>;
 
-    setOpenMemberType(user: ChatUser, memberType: OpenMemberType): Promise<boolean>;
+    setOpenMemberType(user: ChatUser, memberType: OpenMemberType): Promise<RequestResult<boolean>>;
 
-    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean>;
+    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<RequestResult<boolean>>;
 
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;

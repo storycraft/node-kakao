@@ -1,11 +1,12 @@
 import { Long } from "bson";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
-import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
+import { ChatChannel, OpenChatChannel, MemoChatChannel } from "../channel/chat-channel";
 import { Chat, FeedChat } from "../chat/chat";
 import { LocoClient } from "../../client";
 import { OpenProfileType, OpenMemberType } from "../open/open-link-type";
 import { OpenLinkProfile } from "../open/open-link";
+import { RequestResult } from "../request/request-result";
 
 /*
  * Created on Fri Nov 01 2019
@@ -21,7 +22,7 @@ export interface ChatUser extends EventEmitter {
 
     isClientUser(): boolean;
 
-    createDM(): Promise<ChatChannel | null>;
+    createDM(): Promise<RequestResult<ChatChannel>>;
 
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'message_read', listener: (channel: ChatChannel, watermark: Long) => void): this;
@@ -95,6 +96,8 @@ export interface OpenChatUserInfo extends OpenUserInfo, ChatUserInfo {
 }
 
 export interface ClientChatUser extends ChatUser {
+
+    createDM(): Promise<RequestResult<MemoChatChannel>>;
 
     readonly MainUserInfo: ClientUserInfo;
 

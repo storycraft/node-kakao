@@ -4,7 +4,7 @@ import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login
 import { KakaoAPI } from "./kakao-api";
 import { ClientChatUser, ChatUser, ClientUserInfo } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
-import { ChatChannel } from "./talk/channel/chat-channel";
+import { ChatChannel, MemoChatChannel } from "./talk/channel/chat-channel";
 import { Chat, FeedChat } from "./talk/chat/chat";
 import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
 import { UserManager } from "./talk/user/user-manager";
@@ -22,6 +22,7 @@ import { StatusCode } from "./packet/loco-packet-base";
 import { ClientStatus } from "./client-status";
 import { MediaManager } from "./talk/media/media-manager";
 import { UserType } from "./talk/user/user-type";
+import { RequestResult } from "./talk/request/request-result";
 
 /*
  * Created on Fri Nov 01 2019
@@ -333,8 +334,8 @@ export class TalkClientChatUser extends EventEmitter implements ClientChatUser {
         return this.mainUserInfo.Nickname;
     }
 
-    async createDM(): Promise<ChatChannel | null> {
-        throw new Error('MemoChat not implemented');
+    async createDM(): Promise<RequestResult<MemoChatChannel>> {
+        return this.client.ChannelManager.createMemoChannel();
     }
 
     isClientUser() {

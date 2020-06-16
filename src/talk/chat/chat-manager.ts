@@ -20,6 +20,7 @@ import { ChatContent } from "./attachment/chat-attachment";
 import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
 import { ChatType } from "./chat-type";
 import { MessageTemplate } from "./template/message-template";
+import { RequestResult } from "../request/request-result";
 
 export class ChatManager {
 
@@ -49,20 +50,18 @@ export class ChatManager {
         return this.messageId++;
     }
 
-    async getChatListFrom(channelId: Long, sinceLogId: number): Promise<Chat[]> {
+    async getChatListFrom(channelId: Long, sinceLogId: number): Promise<RequestResult<Chat[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ sinceLogId ]));
-
-        if (res.StatusCode !== StatusCode.SUCCESS) return [];
 
         let taskList: Promise<Chat>[] = [];
         for (let chatLog of res.ChatlogList) {
             taskList.push(this.chatFromChatlog(chatLog));
         }
 
-        return Promise.all(taskList);
+        return { status: res.StatusCode, result: await Promise.all(taskList) };
     }
 
-    async getChatListBetween(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<Chat[]> {
+    async getChatListBetween(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<RequestResult<Chat[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
 
         let taskList: Promise<Chat>[] = [];
@@ -70,7 +69,7 @@ export class ChatManager {
             taskList.push(this.chatFromChatlog(chatLog));
         }
 
-        return Promise.all(taskList);
+        return { status: res.StatusCode, result: await Promise.all(taskList) };
     }
 
     async sendText(channel: ChatChannel, ...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
@@ -134,10 +133,10 @@ export class ChatManager {
         return new TypedChat(channel, sender, chatLog.messageId, chatLog.logId, chatLog.prevLogId, chatLog.sendTime, chatLog.text, chatLog.rawAttachment);
     }
 
-    async deleteChat(channelId: Long, logId: Long): Promise<boolean> {
+    async deleteChat(channelId: Long, logId: Long): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketDeleteChatRes>(new PacketDeleteChatReq(channelId, logId));
 
-        return res.StatusCode === StatusCode.SUCCESS;
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
     
 }

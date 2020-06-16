@@ -11,6 +11,7 @@ import { CustomAttachment } from "./attachment/custom-attachment";
 import { ChannelType } from "../channel/channel-type";
 import { FeedType } from "../feed/feed-type";
 import { RichFeedAttachment } from "./attachment/rich-feed-attachment";
+import { RequestResult } from "../request/request-result";
 
 /*
  * Created on Fri Nov 01 2019
@@ -180,19 +181,11 @@ export abstract class Chat {
         return this.channel.isOpenChat() && this.channel.Type === ChannelType.OPENCHAT_GROUP;
     }
 
-    async delete(): Promise<boolean> {
-        if (!this.Deletable) {
-            return false;
-        }
-
+    async delete(): Promise<RequestResult<boolean>> {
         return this.channel.Client.ChatManager.deleteChat(this.Channel.Id, this.logId);
     }
 
-    async hide(): Promise<boolean> {
-        if (!this.Hidable) {
-            return false;
-        }
-
+    async hide(): Promise<RequestResult<boolean>> {
         let openChannel = this.channel as OpenChatChannel;
 
         return openChannel.hideChat(this);

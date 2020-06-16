@@ -14,6 +14,7 @@ import { PacketMemberReq } from "../../packet/packet-member";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ChatChannel } from "../channel/chat-channel";
 import { ManagedChatUser, ManagedChatUserInfo, ManagedOpenChatUserInfo } from "../managed/managed-chat-user";
+import { RequestResult } from "../request/request-result";
 
 export class UserManager extends IdStore<ChatUser> {
 
@@ -35,22 +36,22 @@ export class UserManager extends IdStore<ChatUser> {
         return super.get(key, true);
     }
 
-    getFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {
+    getInfoFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {
         if ((memberStruct as OpenMemberStruct).openToken) return new ManagedOpenChatUserInfo(this, this.get(memberStruct.userId), memberStruct as OpenMemberStruct);
     
         return new ManagedChatUserInfo(this, this.get(memberStruct.userId), memberStruct as MemberStruct);
     }
 
-    async requestAllUserInfoList(channel: ChatChannel): Promise<ChatUserInfo[]> {
+    async requestAllUserInfoList(channel: ChatChannel): Promise<RequestResult<ChatUserInfo[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channel.Id));
 
-        return res.MemberList.map(this.getFromStruct.bind(this));
+        return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
     }
 
-    async requestUserInfoList(channel: ChatChannel, idList: Long[]): Promise<ChatUserInfo[]> {
+    async requestUserInfoList(channel: ChatChannel, idList: Long[]): Promise<RequestResult<ChatUserInfo[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channel.Id, idList));
 
-        return res.MemberList.map(this.getFromStruct.bind(this));
+        return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
     }
 
     initalizeClient() {
