@@ -58,6 +58,8 @@ import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "./packet-creat
 import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "./packet-update-link";
 import { PacketKickListDelItemRes, PacketKickListDelItemReq } from "./packet-kick-list-del-item";
 import { PacketKickListSyncRes, PacketKickListSyncReq } from "./packet-kick-list-sync";
+import { PacketReactionCountReq, PacketReactionCountRes } from "./packet-reaction-count";
+import { PacketReactRes, PacketReactReq } from "./packet-react";
 
 
 /*
@@ -136,6 +138,9 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('NOTIREAD', PacketMessageNotiReadReq);
         requestPacketMap.set('CHATONROOM', PacketChatOnRoomReq);
+
+        requestPacketMap.set('REACTCNT', PacketReactionCountReq);
+        requestPacketMap.set('REACT', PacketReactReq);
 
         requestPacketMap.set('PING', PacketPingReq);
 
@@ -219,6 +224,9 @@ export namespace LocoPacketList {
         responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);
 
         responsePacketMap.set('CHATONROOM', PacketChatOnRoomRes);
+
+        responsePacketMap.set('REACTCNT', PacketReactionCountRes);
+        responsePacketMap.set('REACT', PacketReactRes);
 
         responsePacketMap.set('SYNCMEMT', PacketSyncMemberTypeRes);
 

@@ -217,3 +217,10 @@ export namespace OpenLinkStruct {
     export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
     
 }
+
+export interface OpenLinkReactionInfo {
+
+    reactionCount: number;
+    reacted: boolean;
+
+}

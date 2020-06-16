@@ -177,7 +177,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         this.channelInfoUpdateMap.set(channel, Date.now());
     }
-    
+
     protected async updateChannel(channel: ManagedBaseChatChannel) {
         let taskList: Promise<unknown>[] = [];
 

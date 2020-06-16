@@ -7,8 +7,9 @@
 import { OpenLinkManager } from "../open/open-link-manager";
 import { OpenUserInfo, OpenKickedUserInfo } from "../user/chat-user";
 import { Long } from "bson";
-import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 import { OpenLinkChannel, OpenLinkProfile, OpenLink } from "../open/open-link";
+import { RequestResult } from "../request/request-result";
 
 
 export class ManagedOpenUserInfo implements OpenUserInfo {
@@ -179,6 +180,10 @@ export class ManagedOpenLink implements OpenLink<ManagedOpenUserInfo>, OpenLinkC
 
     get LinkOwnerInfo() {
         return this.userInfo;
+    }
+
+    async requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>> {
+        return this.manager.requestReactionInfo(this.linkId);
     }
 
     updateStruct(linkStruct: OpenLinkStruct) {

@@ -7,6 +7,8 @@
 import { Long } from "bson";
 import { OpenUserInfo } from "../user/chat-user";
 import { OpenLinkType } from "./open-link-type";
+import { RequestResult } from "../request/request-result";
+import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 
 export interface OpenLink<I extends OpenUserInfo = OpenUserInfo> {
 
@@ -32,6 +34,8 @@ export interface OpenLink<I extends OpenUserInfo = OpenUserInfo> {
     readonly CreatedAt: number;
 
     readonly Activated: boolean;
+
+    requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>>;
 
 }
 

@@ -12,6 +12,7 @@ import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaCont
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
+import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -135,6 +136,9 @@ export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
     setOpenMemberType(user: ChatUser, memberType: OpenMemberType): Promise<RequestResult<boolean>>;
 
     setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<RequestResult<boolean>>;
+
+    requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>>;
+    setReacted(reacted: boolean): Promise<RequestResult<boolean>>;
 
     on(event: 'message', listener: (chat: Chat) => void): this;
     on(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;

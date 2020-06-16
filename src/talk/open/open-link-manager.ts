@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct, OpenKickedMemberStruct } from "../struct/open/open-link-struct";
+import { OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-info";
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
@@ -30,6 +30,8 @@ import { OpenKickedUserInfo } from "../user/chat-user";
 import { PacketKickListSyncReq, PacketKickListSyncRes } from "../../packet/packet-kick-list-sync";
 import { RequestResult } from "../request/request-result";
 import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
+import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/packet-reaction-count";
+import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
 
 export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
@@ -244,6 +246,22 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketKickListSyncRes>(packet);
 
         return { status: res.StatusCode, result: res.KickedMemberList.map(this.getFromKickedStruct.bind(this)) };
+    }
+
+    async requestReactionInfo(linkId: Long): Promise<RequestResult<OpenLinkReactionInfo>> {
+        let packet = new PacketReactionCountReq(linkId);
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketReactionCountRes>(packet);
+
+        return { status: res.StatusCode, result: { reactionCount: res.ReactionCount.toNumber(), reacted: !!res.Reacted } };
+    }
+
+    async setLinkReacted(linkId: Long, reacted: boolean): Promise<RequestResult<boolean>> {
+        let packet = new PacketReactReq(linkId, reacted ? 1 : 0);
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketReactRes>(packet);
+
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
 }

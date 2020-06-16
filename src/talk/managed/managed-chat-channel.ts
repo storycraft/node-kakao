@@ -5,7 +5,7 @@
  */
 
 import { OpenLinkChannel } from "../open/open-link";
-import { OpenMemberStruct } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 import { ChatUser, ChatUserInfo } from "../user/chat-user";
 import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
 import { Long } from "bson";
@@ -398,6 +398,14 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
 
     async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
+    }
+
+    requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>> {
+        return this.Client.OpenLinkManager.requestReactionInfo(this.linkId);
+    }
+
+    async setReacted(reacted: boolean): Promise<RequestResult<boolean>> {
+        return this.Client.OpenLinkManager.setLinkReacted(this.linkId, reacted);
     }
 
     updateLink(link: OpenLinkChannel) {
