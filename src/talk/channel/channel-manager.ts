@@ -110,8 +110,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
                 break;
             }
 
-            case ChannelType.SELFCHAT:
-                channel = new ManagedMemoChatChannel(this, id, channelData);
+            case ChannelType.SELFCHAT: channel = new ManagedMemoChatChannel(this, id, channelData); break;
             
             case ChannelType.GROUP:
             case ChannelType.PLUSCHAT:
