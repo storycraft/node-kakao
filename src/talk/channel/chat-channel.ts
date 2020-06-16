@@ -28,15 +28,19 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
 
     readonly Type: ChannelType;
 
-    readonly PushAlert: boolean;
-
     readonly Name: string;
 
     readonly RoomImageURL: string;
-
     readonly RoomFullImageURL: string;
 
+    readonly ClientName: string;
+
+    readonly ClientRoomImageURL: string;
+    readonly ClientRoomFullImageURL: string;
+
     readonly IsFavorite: boolean;
+
+    readonly PushAlert: boolean;
 
     readonly UserInfoList: I[];
 

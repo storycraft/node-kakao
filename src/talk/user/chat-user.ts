@@ -1,7 +1,7 @@
 import { Long } from "bson";
 import { UserType } from "./user-type";
 import { EventEmitter } from "events";
-import { ChatChannel } from "../channel/chat-channel";
+import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { Chat, FeedChat } from "../chat/chat";
 import { LocoClient } from "../../client";
 import { OpenProfileType, OpenMemberType } from "../open/open-link-type";
@@ -66,6 +66,12 @@ export interface NormalChatUserInfo extends ChatUserInfo {
     readonly UserType: UserType;
 
     isOpenUser(): boolean;
+
+}
+
+export interface OpenKickedUserInfo extends UserInfo {
+
+    readonly KickedChannelId: Long;
 
 }
 

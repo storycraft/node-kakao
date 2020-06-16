@@ -21,6 +21,29 @@ export interface CommonOpenMemberStruct {
     
 }
 
+export interface OpenKickedMemberStruct extends BaseMemberStruct {
+    
+    kickedChannelId: Long;
+    dc: boolean;
+
+}
+
+export namespace OpenKickedMemberStruct {
+
+    export const Mappings = {
+
+        userId: 'userId',
+        nickname: 'nickName',
+        profileImageUrl: 'pi',
+        kickedChannelId: 'c',
+        dc: 'dc'
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+    
+}
+
 export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStruct {
     
 }
@@ -45,7 +68,6 @@ export namespace OpenMemberStruct {
     export const MAPPER = new ObjectMapper(Mappings);
     
 }
-
 
 export interface OpenLinkMemberStruct extends OpenMemberStruct {
 

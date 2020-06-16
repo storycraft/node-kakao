@@ -6,6 +6,8 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
+import { OpenKickedMemberStruct } from "../talk/struct/open/open-link-struct";
+import { Serializer } from "json-proxy-mapper";
 
 export class PacketKickListSyncReq extends LocoBsonRequestPacket {
 
@@ -29,6 +31,7 @@ export class PacketKickListSyncRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
+        public KickedMemberList: OpenKickedMemberStruct[] = []
     ) {
         super(status);
     }
@@ -38,7 +41,14 @@ export class PacketKickListSyncRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
+        this.KickedMemberList = [];
+        if (rawData['kickMembers']) {
+            for (let rawKickedMem of rawData['kickMembers']) {
+                this.KickedMemberList.push(Serializer.deserialize<OpenKickedMemberStruct>(rawKickedMem, OpenKickedMemberStruct.MAPPER));
+            }
+        }
+
     }
 
 }

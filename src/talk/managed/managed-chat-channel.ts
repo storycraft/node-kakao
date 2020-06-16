@@ -32,6 +32,13 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
 
     private name: string;
 
+    private clientRoomImageURL: string;
+    private clientRoomFullImageURL: string;
+
+    private clientName: string;
+
+    private clientPushSound: string;
+
     private isFavorite: boolean;
 
     private channelMetaList: ChannelMetaStruct[];
@@ -47,6 +54,12 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         this.roomFullImageURL = '';
 
         this.name = '';
+
+        this.clientRoomImageURL = '';
+        this.clientRoomFullImageURL = '';
+
+        this.clientName = '';
+        this.clientPushSound = '';
         this.isFavorite = false;
 
         this.userInfoMap = new Map();
@@ -92,6 +105,18 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
 
     get RoomFullImageURL() {
         return this.roomFullImageURL;
+    }
+
+    get ClientName() {
+        return this.clientName;
+    }
+
+    get ClientRoomImageURL() {
+        return this.clientRoomImageURL;
+    }
+
+    get ClientRoomFullImageURL() {
+        return this.clientRoomFullImageURL;
     }
 
     get ChannelMetaList() {
@@ -214,8 +239,12 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
     }
 
     updateClientMeta(clientMeta: ChannelClientMetaStruct) {
-        if (clientMeta.imageUrl) this.roomImageURL = clientMeta.imageUrl;
-        if (clientMeta.full_image_url) this.roomFullImageURL = clientMeta.full_image_url;
+        if (clientMeta.name) this.clientName = clientMeta.name;
+
+        if (clientMeta.imageUrl) this.clientRoomImageURL = clientMeta.imageUrl;
+        if (clientMeta.full_image_url) this.clientRoomFullImageURL = clientMeta.full_image_url;
+
+        if (clientMeta.push_sound) {}//this.clientPushSound = clientMeta.push_sound;
 
         if (clientMeta.favorite) this.isFavorite = clientMeta.favorite;
     }

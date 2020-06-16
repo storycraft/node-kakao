@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct } from "../struct/open/open-link-struct";
+import { OpenLinkStruct, OpenKickedMemberStruct } from "../struct/open/open-link-struct";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-info";
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
@@ -25,7 +25,9 @@ import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "../../packet/p
 import { OpenLinkSettings } from "./open-link-settings";
 import { OpenLinkTemplate } from "./open-link-template";
 import { OpenLink, OpenLinkProfile } from "./open-link";
-import { ManagedOpenLink } from "../managed/managed-open-link";
+import { ManagedOpenLink, ManagedOpenKickedUserInfo } from "../managed/managed-open-link";
+import { OpenUserInfo, UserInfo, OpenKickedUserInfo } from "../user/chat-user";
+import { PacketKickListSyncReq, PacketKickListSyncRes } from "../../packet/packet-kick-list-sync";
 
 export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
@@ -71,6 +73,10 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         }
 
         return link;
+    }
+
+    protected getFromKickedStruct(kickedMemberStruct: OpenKickedMemberStruct): OpenKickedUserInfo {
+        return new ManagedOpenKickedUserInfo(this, kickedMemberStruct);
     }
 
     async fetchInfoFromIdList(linkIdList: Long[]): Promise<OpenLink[]> {
@@ -224,6 +230,14 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateOpenLinkRes>(packet);
 
         return res.StatusCode === StatusCode.SUCCESS;
+    }
+
+    async requestKickList(linkId: Long): Promise<OpenKickedUserInfo[]> {
+        let packet = new PacketKickListSyncReq(linkId);
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketKickListSyncRes>(packet);
+
+        return res.KickedMemberList.map(this.getFromKickedStruct.bind(this));
     }
 
 }

@@ -5,10 +5,11 @@
  */
 
 import { OpenLinkManager } from "../open/open-link-manager";
-import { OpenUserInfo } from "../user/chat-user";
+import { OpenUserInfo, OpenKickedUserInfo } from "../user/chat-user";
 import { Long } from "bson";
-import { OpenMemberStruct, OpenLinkStruct } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct } from "../struct/open/open-link-struct";
 import { OpenLinkChannel, OpenLinkProfile, OpenLink } from "../open/open-link";
+import { OpenChatChannel } from "../channel/chat-channel";
 
 
 export class ManagedOpenUserInfo implements OpenUserInfo {
@@ -73,6 +74,46 @@ export class ManagedOpenUserInfo implements OpenUserInfo {
 
     updateStruct(memberStruct: OpenMemberStruct) {
         this.memberStruct = memberStruct;
+    }
+
+}
+
+export class ManagedOpenKickedUserInfo implements OpenKickedUserInfo {
+
+    constructor(private manager: OpenLinkManager, private kickedMemberStruct: OpenKickedMemberStruct) {
+        
+    }
+
+    get Client() {
+        return this.manager.Client;
+    }
+    
+    get Id() {
+        return this.kickedMemberStruct.userId;
+    }
+    
+    get Nickname() {
+        return this.kickedMemberStruct.nickname;
+    }
+    
+    get KickedChannelId() {
+        return this.kickedMemberStruct.kickedChannelId;
+    }
+
+    get ProfileImageURL() {
+        return this.kickedMemberStruct.profileImageUrl;
+    }
+
+    get FullProfileImageURL() {
+        return this.kickedMemberStruct.profileImageUrl;
+    }
+
+    get OriginalProfileImageURL() {
+        return this.kickedMemberStruct.profileImageUrl;
+    }
+
+    isOpenUser(): boolean {
+        return false;
     }
 
 }
