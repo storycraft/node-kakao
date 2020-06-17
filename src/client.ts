@@ -12,7 +12,6 @@ import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { JsonUtil } from "./util/json-util";
 import { OpenLinkManager } from "./talk/open/open-link-manager";
-import { ChatFeed } from "./talk/chat/chat-feed";
 import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient } from "./api/api-client";
 import { Serializer } from "json-proxy-mapper";
@@ -20,7 +19,6 @@ import { ApiStatusCode } from "./talk/struct/api/api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
 import { ClientStatus } from "./client-status";
-import { MediaManager } from "./talk/media/media-manager";
 import { UserType } from "./talk/user/user-type";
 import { RequestResult } from "./talk/request/request-result";
 
@@ -69,9 +67,9 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly LocoLogon: boolean;
 
-    setStatus(status: ClientStatus): Promise<boolean>;
+    setStatus(status: ClientStatus): Promise<RequestResult<boolean>>;
     getStatus(): ClientStatus;
-    updateStatus(): Promise<boolean>;
+    updateStatus(): Promise<RequestResult<boolean>>;
 
     on(event: 'login', listener: (user: ClientChatUser) => void): this;
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
@@ -274,16 +272,16 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.emit('login', this.clientUser);
     }
 
-    async setStatus(status: ClientStatus): Promise<boolean> {
+    async setStatus(status: ClientStatus): Promise<RequestResult<boolean>> {
         if (this.status !== status) this.status = status;
 
         return this.updateStatus();
     }
 
-    async updateStatus(): Promise<boolean> {
+    async updateStatus(): Promise<RequestResult<boolean>> {
         let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(this.status));
 
-        return res.StatusCode === StatusCode.SUCCESS;
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
     getStatus(): ClientStatus {
