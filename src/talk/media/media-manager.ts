@@ -5,7 +5,6 @@
  */
 
 import { LocoClient } from "../../client";
-import { ChatType } from "../chat/chat-type";
 import { PacketShipReq, PacketShipRes } from "../../packet/packet-ship";
 import { ChatChannel } from "../channel/chat-channel";
 import { Long } from "bson";
@@ -15,6 +14,7 @@ import { StatusCode } from "../../packet/loco-packet-base";
 import { MediaAttachment, MediaHasThumbnail } from "../chat/attachment/chat-attachment";
 import { PacketGetTrailerRes, PacketGetTrailerReq } from "../../packet/packet-get-trailer";
 import { MediaDownloadInterface } from "./media-download-interface";
+import { MediaTemplates } from "../chat/template/media-template";
 
 export class MediaManager {
 
@@ -38,11 +38,11 @@ export class MediaManager {
         return this.client.NetworkManager;
     }
 
-    async sendMedia(channel: ChatChannel, type: ChatType, name: string, data: Buffer, width: number = 0, height: number = 0, ext: string = ''): Promise<Chat | null> {
-        let shipRes = await this.NetworkManager.requestPacketRes<PacketShipRes>(new PacketShipReq(channel.Id, type, Long.fromNumber(data.byteLength), this.createMediaHash(data), ext));
+    async sendMedia(channel: ChatChannel, template: MediaTemplates): Promise<Chat | null> {
+        let shipRes = await this.NetworkManager.requestPacketRes<PacketShipRes>(new PacketShipReq(channel.Id, template.type, Long.fromNumber(template.data.byteLength), this.createMediaHash(template.data), template.ext || ''));
         let uploadInterface = this.NetworkManager.createUploadInterface({ host: shipRes.VHost, port: shipRes.Port, keepAlive: true });
 
-        let res = await uploadInterface.upload(this.ClientUser.Id, shipRes.Key, channel.Id, type, name, data, width, height);
+        let res = await uploadInterface.upload(this.ClientUser.Id, shipRes.Key, channel.Id, template.type, name, template.data, template.width || 0, template.height || 0);
 
         if (res.StatusCode === StatusCode.SUCCESS && res.Chatlog) return await this.ChatManager.chatFromChatlog(res.Chatlog);
 

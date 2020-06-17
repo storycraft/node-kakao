@@ -86,3 +86,7 @@ export type OpenManagerRevokeFeed = ChatFeed<FeedType.OPEN_MANAGER_REVOKE> & Fee
 
 export type ChannelDeletedFeed = ChatFeed<FeedType.CHANNEL_DELETED>;
 export type DeleteAllFeed = ChatFeed<FeedType.DELETE_TO_ALL> & FeedFragment.Message;
+
+
+export type OpenLinkFeeds = OpenJoinFeed | OpenLinkDeletedFeed | OpenRewriteFeed | OpenKickFeed | OpenHandOverHostFeed | OpenManagerGrantFeed | OpenManagerRevokeFeed;
+export type ChatFeeds = InviteFeed | LeaveFeed | RichContentFeed | OpenLinkFeeds | ChannelDeletedFeed | DeleteAllFeed;

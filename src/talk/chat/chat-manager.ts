@@ -21,6 +21,7 @@ import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packe
 import { ChatType } from "./chat-type";
 import { MessageTemplate } from "./template/message-template";
 import { RequestResult } from "../request/request-result";
+import { MediaTemplates } from "./template/media-template";
 
 export class ChatManager {
 
@@ -72,15 +73,7 @@ export class ChatManager {
         return { status: res.StatusCode, result: await Promise.all(taskList) };
     }
 
-    async sendText(channel: ChatChannel, ...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
-        let { text, extra } = ChatBuilder.buildMessage(...textFormat);
-
-        let extraText = JsonUtil.stringifyLoseless(extra);
-        
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, ChatType.Text, true, extraText));
-        
-        if (res.StatusCode !== StatusCode.SUCCESS) return null;
-
+    protected async chatFromWriteRes(res: PacketMessageWriteRes, text: string, extra: string): Promise<Chat> {
         if (res.Chatlog) return this.chatFromChatlog(res.Chatlog);
 
         return this.chatFromChatlog({
@@ -91,9 +84,25 @@ export class ChatManager {
             type: ChatType.Text,
             text: text,
             sendTime: res.SendTime,
-            rawAttachment: extraText,
+            rawAttachment: extra,
             messageId: res.MessageId
         });
+    }
+
+    async sendText(channel: ChatChannel, ...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
+        let { text, extra } = ChatBuilder.buildMessage(...textFormat);
+
+        let extraText = JsonUtil.stringifyLoseless(extra);
+        
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, ChatType.Text, true, extraText));
+        
+        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+
+        return this.chatFromWriteRes(res, text, extraText);
+    }
+
+    async sendMedia(channel: ChatChannel, template: MediaTemplates): Promise<Chat | null> {
+        return this.mediaManager.sendMedia(channel, template);
     }
     
     async sendTemplate(channel: ChatChannel, template: MessageTemplate): Promise<Chat | null> {
@@ -109,19 +118,7 @@ export class ChatManager {
 
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
-        if (res.Chatlog) return this.chatFromChatlog(res.Chatlog);
-
-        return this.chatFromChatlog({
-            logId: res.LogId,
-            prevLogId: res.PrevLogId,
-            senderId: this.client.ClientUser.Id,
-            channelId: res.ChannelId,
-            type: sentType,
-            text: text,
-            sendTime: res.SendTime,
-            rawAttachment: extra,
-            messageId: res.MessageId
-        });
+        return this.chatFromWriteRes(res, text, extra);
     }
 
     async chatFromChatlog(chatLog: ChatlogStruct) {
