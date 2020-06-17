@@ -19,7 +19,7 @@ import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite"
 import { FeedType } from "../feed/feed-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "../../packet/packet-update-link-profile";
-import { OpenProfileType, OpenMemberType, OpenLinkType } from "./open-link-type";
+import { OpenMemberType, OpenLinkType } from "./open-link-type";
 import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "../../packet/packet-create-open-link";
 import { PacketUpdateOpenLinkReq, PacketUpdateOpenLinkRes } from "../../packet/packet-update-link";
 import { OpenLinkSettings } from "./open-link-settings";
@@ -32,6 +32,7 @@ import { RequestResult } from "../request/request-result";
 import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
 import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/packet-reaction-count";
 import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
+import { OpenProfileTemplate } from "./open-link-profile-template";
 
 export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
@@ -63,7 +64,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         return this.clientLinkIdList.includes(id.toString());
     }
 
-    protected fromLinkStruct(linkStruct: OpenLinkStruct): OpenLink {
+    protected getFromLinkStruct(linkStruct: OpenLinkStruct): OpenLink {
         let link: ManagedOpenLink;
         if (this.has(linkStruct.linkId)) {
             link = this.getValue(linkStruct.linkId)! as ManagedOpenLink;
@@ -96,7 +97,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
     async requestLinkFromIdList(linkIdList: Long[]): Promise<RequestResult<OpenLink[]>> {
         let res = await this.Interface.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq(linkIdList));
 
-        let linkList = res.LinkList.map(this.fromLinkStruct.bind(this));
+        let linkList = res.LinkList.map(this.getFromLinkStruct.bind(this));
 
         return { status: res.StatusCode, result: linkList };
     }
@@ -105,7 +106,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
 
         let link;
-        if (res.OpenLink) link = this.fromLinkStruct(res.OpenLink);
+        if (res.OpenLink) link = this.getFromLinkStruct(res.OpenLink);
 
         return { status: res.StatusCode, result: link };
     }
@@ -119,7 +120,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketSyncLinkRes>(new PacketSyncLinkReq(openChatToken));
 
-        return { status: res.StatusCode, result: res.LinkList.map(this.fromLinkStruct.bind(this)) as OpenLinkProfile[] };
+        return { status: res.StatusCode, result: res.LinkList.map(this.getFromLinkStruct.bind(this)) as OpenLinkProfile[] };
     }
 
     async initOpenSession() {
@@ -173,40 +174,38 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.MAIN): Promise<RequestResult<boolean>>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<RequestResult<boolean>>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<RequestResult<boolean>>;
-    async changeProfile(channel: OpenChatChannel, profileType: OpenProfileType): Promise<RequestResult<boolean>> {
-        let packet = new PacketUpdateLinkProfileReq(channel.LinkId, profileType);
-        if (profileType === OpenProfileType.KAKAO_ANON) {
-            packet.Nickname = arguments[2];
-            packet.ProfilePath = arguments[3];
-        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
-            packet.ProfileLinkId = arguments[2];
-        }
+    async changeProfile(channel: OpenChatChannel, profile: OpenProfileTemplate): Promise<RequestResult<boolean>> {
+        let packet = new PacketUpdateLinkProfileReq(channel.LinkId, profile.type, profile.anonNickname, profile.anonProfilePath, profile.profileLinkId);
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateLinkProfileRes>(packet);
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async createOpenProfile(settings: OpenLinkTemplate): Promise<RequestResult<OpenLinkStruct>> {
+    async createOpenProfile(template: OpenLinkTemplate): Promise<RequestResult<OpenLinkProfile>> {
         const packet = new PacketCreateOpenLinkReq(
-            settings.linkName,
-            settings.linkCoverPath,
+            template.linkName,
+            template.linkCoverPath,
             OpenLinkType.PROFILE,
-            settings.description,
 
-            settings.limitProfileType,
-            settings.canSearchLink,
+            template.description,
+            template.profileContent || null,
+
+            template.allowAnonProfile,
+            template.canSearchLink,
             
-            1,
+            Long.fromNumber(Date.now() / 1000),
             true,
-            settings.maxChannelLimit);
+            template.maxChannelLimit,
+            template.clientProfile.type,
+            template.clientProfile.anonNickname,
+            template.clientProfile.anonProfilePath,
+            template.clientProfile.profileLinkId,
+            template.maxUserLimit);
         
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
 
-        return { status: res.StatusCode, result: res.OpenLink };
+        return { status: res.StatusCode, result: res.OpenLink && (this.getFromLinkStruct(res.OpenLink) as OpenLinkProfile) || null };
     }
 
     async updateOpenLink(linkId: Long, settings: OpenLinkSettings) {

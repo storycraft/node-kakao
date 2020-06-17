@@ -10,11 +10,10 @@ import { OpenProfileType, OpenChannelType, OpenLinkType } from "../talk/open/ope
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
 import { Serializer } from "json-proxy-mapper";
 import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
+import { OpenLinkProfileContent } from "../talk/open/open-link-profile-template";
 
 /*
  *  TODO:
- *    - What is 'pa'?
- *    - What is 'ri'?
  *    - How to make 'lip'?
  */
 
@@ -24,12 +23,13 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
         public Name: string = '',
         public LinkImagePath: string = '',
         public LinkType: OpenLinkType = OpenLinkType.PROFILE,
-        public Description: (string | any) = null,
+        public Description: string = '',
+        public ProfileContent: OpenLinkProfileContent | null = null,
 
-        public LimitProfileType: boolean = true,
+        public AllowAnonProfile: boolean = true,
         public CanSearchLink: boolean = true,
 
-        public UNKNOWN1: number = 0,
+        public CreatedTime: Long = Long.ZERO,
         public Activated: boolean = true,
         public ChannelLimit: number = 0,
         
@@ -53,33 +53,33 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
             'ln': this.Name,
             'lip': this.LinkImagePath,
             'lt': this.LinkType,
-            'aptp': this.LimitProfileType,
+            'aptp': this.AllowAnonProfile,
             'sc': this.CanSearchLink,
-            'ri': this.UNKNOWN1,
+            'ri': this.CreatedTime,
             'pa': this.Activated,
         };
 
-        if (this.LinkType === OpenLinkType.PROFILE) {
-            obj['dcl'] = this.ChannelLimit;
-        } else if (this.LinkType === OpenLinkType.CHANNEL) {
-            obj['ptp'] = this.ProfileType;
-            obj['ml'] = this.UserLimit;
+        if (this.LinkType === OpenLinkType.PROFILE) obj['dcl'] = this.ChannelLimit;
+        else if (this.LinkType === OpenLinkType.CHANNEL) obj['ml'] = this.UserLimit;
 
-            switch ( this.ProfileType ) {
+        obj['ptp'] = this.ProfileType;
+        switch ( this.ProfileType ) {
 
-                case OpenProfileType.KAKAO_ANON:
-                    obj['nn'] = this.Nickname;
-                    obj['pp'] = this.ProfilePath;
-                    break;
-    
-                case OpenProfileType.OPEN_PROFILE:
-                    obj['pli'] = this.ProfileLinkId;
-                    break;
-    
-            }
+            case OpenProfileType.KAKAO_ANON:
+                obj['nn'] = this.Nickname;
+                obj['pp'] = this.ProfilePath;
+                break;
+
+            case OpenProfileType.OPEN_PROFILE:
+                obj['pli'] = this.ProfileLinkId;
+                break;
+
+            default: break;
+
         }
 
-        if ( this.Description ) obj['desc'] = this.Description;
+        obj['desc'] = this.Description;
+        if (this.ProfileContent) obj['pfc'] = this.ProfileContent;
 
         return obj;
     }

@@ -13,6 +13,7 @@ import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
 import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { OpenProfileTemplate } from "../open/open-link-profile-template";
 
 /*
  * Created on Fri Nov 01 2019
@@ -129,9 +130,7 @@ export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
     hideChat(chat: Chat): Promise<RequestResult<boolean>>;
     hideChatId(logId: Long): Promise<RequestResult<boolean>>;
 
-    changeToMainProfile(): Promise<RequestResult<boolean>>;
-    changeToKakaoProfile(nickname: string, profilePath: string): Promise<RequestResult<boolean>>;
-    changeToLinkProfile(profileLinkId: Long): Promise<RequestResult<boolean>>;
+    changeProfile(profile: OpenProfileTemplate): Promise<RequestResult<boolean>>;
 
     setOpenMemberType(user: ChatUser, memberType: OpenMemberType): Promise<RequestResult<boolean>>;
 

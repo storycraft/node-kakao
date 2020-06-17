@@ -8,6 +8,6 @@ import { OpenLinkSettings } from "./open-link-settings";
 
 export interface OpenLinkTemplate extends OpenLinkSettings {
 
-    limitProfileType: boolean;
+    allowAnonProfile: boolean;
 
 }

@@ -63,6 +63,7 @@ export * from './talk/channel/channel-manager';
 
 export * from './talk/open/open-link-type';
 export * from './talk/open/open-link-manager';
+export * from './talk/open/open-link-profile-template';
 export * from './talk/open/open-link-settings';
 export * from './talk/open/open-link-template';
 export * from './talk/open/open-link';

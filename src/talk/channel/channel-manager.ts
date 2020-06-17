@@ -225,26 +225,20 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return { status: res.StatusCode, result: channel };
     }
 
-    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.MAIN): Promise<RequestResult<OpenChatChannel>>;
-    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.KAKAO_ANON, nickname: string, profilePath: string): Promise<RequestResult<OpenChatChannel>>;
-    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType.OPEN_PROFILE, profileLinkId: Long): Promise<RequestResult<OpenChatChannel>>;
-    async createOpenChannel(template: OpenLinkTemplate, profileType: OpenProfileType): Promise<RequestResult<OpenChatChannel>> {
+    async createOpenChannel(template: OpenLinkTemplate): Promise<RequestResult<OpenChatChannel>> {
         let packet = new PacketCreateOpenLinkReq(
-            template.linkName, template.linkCoverPath, OpenLinkType.CHANNEL, template.description,
-            template.limitProfileType, template.canSearchLink, 1, true, 0, 
-            profileType, '', '', Long.ZERO,
+            template.linkName, template.linkCoverPath, OpenLinkType.CHANNEL, template.description, template.profileContent || null,
+            template.allowAnonProfile, template.canSearchLink, Long.fromNumber(Date.now() / 1000), true, 0, 
+            template.clientProfile.type, template.clientProfile.anonNickname, template.clientProfile.anonProfilePath, template.clientProfile.profileLinkId,
             template.maxUserLimit);
-
-        if (profileType === OpenProfileType.KAKAO_ANON) {
-            packet.Nickname = arguments[2];
-            packet.ProfilePath = arguments[3];
-        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
-            packet.ProfileLinkId = arguments[2];
-        }
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
 
-        if (!res.ChatInfo) return { status: res.StatusCode };
+        if (!res.ChatInfo || !res.OpenLink) return { status: res.StatusCode };
+
+        // fix linkid and openToken
+        res.ChatInfo.linkId = res.OpenLink.linkId;
+        res.ChatInfo.openToken = res.OpenLink.openToken;
         
         return { status: res.StatusCode, result: (await this.getWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo)) as ManagedOpenChatChannel };
     }

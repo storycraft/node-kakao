@@ -19,9 +19,9 @@ import { ChannelDataStruct } from "../struct/channel-data-struct";
 import { EventEmitter } from "events";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { MemberStruct } from "../struct/member-struct";
-import { ChannelInfoStruct } from "../struct/channel-info-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../request/request-result";
+import { OpenProfileTemplate } from "../open/open-link-profile-template";
 
 
 export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserInfo> extends EventEmitter implements ChatChannel<I> {
@@ -89,7 +89,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
     }
 
     get PushAlert() {
-        return this.dataStruct.pushAlert;
+        return this.dataStruct.pushAlert || false;
     }
 
     get Name() {
@@ -380,16 +380,8 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return this.Client.OpenLinkManager.hideChat(this, logId);
     }
 
-    async changeToMainProfile(): Promise<RequestResult<boolean>> {
-        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.MAIN);
-    }
-
-    async changeToKakaoProfile(nickname: string, profilePath: string): Promise<RequestResult<boolean>> {
-        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.KAKAO_ANON, nickname, profilePath);
-    }
-
-    async changeToLinkProfile(profileLinkId: Long): Promise<RequestResult<boolean>> {
-        return this.Client.OpenLinkManager.changeProfile(this, OpenProfileType.OPEN_PROFILE, profileLinkId);
+    async changeProfile(profile: OpenProfileTemplate): Promise<RequestResult<boolean>> {
+        return this.Client.OpenLinkManager.changeProfile(this, profile);
     }
 
     async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {

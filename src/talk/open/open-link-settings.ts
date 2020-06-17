@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { OpenLinkProfileContent, OpenProfileTemplate } from "./open-link-profile-template";
+
 export interface OpenLinkSettings {
 
     linkName: string;
@@ -16,5 +18,8 @@ export interface OpenLinkSettings {
     canSearchLink: boolean;
 
     description: string;
+    profileContent?: OpenLinkProfileContent;
+
+    clientProfile: OpenProfileTemplate;
 
 }
