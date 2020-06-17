@@ -53,6 +53,7 @@ export * from './talk/chat/attachment/custom-attachment';
 export * from './talk/chat/attachment/rich-feed-attachment';
 
 export * from './talk/chat/template/message-template';
+export * from './talk/chat/template/media-template';
 
 export * from './talk/chat/chat-manager';
 
