@@ -7,30 +7,29 @@
 import { OpenProfileType } from "./open-link-type";
 import { Long } from "bson";
 
-export interface OpenProfileTemplate {
+export namespace OpenProfileTemplate {
 
-    type: OpenProfileType;
+    export interface Anon {
+        
+        anonNickname: string;
+        anonProfilePath: string;
+    }
 
-    anonNickname?: string;
-    anonProfilePath?: string;
-    profileLinkId?: Long;
+    export interface Link {
+        
+        profileLinkId: Long;
+        
+    }
+
+}
+
+export interface OpenProfileTemplate<T extends OpenProfileType> extends Partial<OpenProfileTemplate.Anon>, Partial<OpenProfileTemplate.Link> {
+
+    type: T;
 
 }
 
-export interface OpenMainProfileTemplate {
-
-    type: OpenProfileType.MAIN;
-
-}
-
-export interface OpenAnonProfileTemplate {
-
-    type: OpenProfileType.KAKAO_ANON;
-
-    anonNickname: string;
-    anonProfilePath: string;
-
-}
+export type OpenProfileTemplates = OpenProfileTemplate<OpenProfileType.MAIN> | OpenProfileTemplate<OpenProfileType.KAKAO_ANON> & OpenProfileTemplate.Anon | OpenProfileTemplate<OpenProfileType.OPEN_PROFILE> & OpenProfileTemplate.Link;
 
 export interface OpenLinkProfileTemplate {
 
@@ -39,6 +38,8 @@ export interface OpenLinkProfileTemplate {
     profileLinkId: Long;
 
 }
+
+
 
 export interface OpenLinkProfileContent {
 

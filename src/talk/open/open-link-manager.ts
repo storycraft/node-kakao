@@ -32,7 +32,7 @@ import { RequestResult } from "../request/request-result";
 import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
 import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/packet-reaction-count";
 import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
-import { OpenProfileTemplate } from "./open-link-profile-template";
+import { OpenProfileTemplates } from "./open-link-profile-template";
 
 export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
@@ -174,7 +174,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async changeProfile(channel: OpenChatChannel, profile: OpenProfileTemplate): Promise<RequestResult<boolean>> {
+    async changeProfile(channel: OpenChatChannel, profile: OpenProfileTemplates): Promise<RequestResult<boolean>> {
         let packet = new PacketUpdateLinkProfileReq(channel.LinkId, profile.type, profile.anonNickname, profile.anonProfilePath, profile.profileLinkId);
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketUpdateLinkProfileRes>(packet);

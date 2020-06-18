@@ -7,7 +7,7 @@
 import { OpenLinkChannel } from "../open/open-link";
 import { OpenMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 import { ChatUser, ChatUserInfo } from "../user/chat-user";
-import { OpenMemberType, OpenProfileType } from "../open/open-link-type";
+import { OpenMemberType } from "../open/open-link-type";
 import { Long } from "bson";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct } from "../struct/channel-meta-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
@@ -21,7 +21,7 @@ import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { MemberStruct } from "../struct/member-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../request/request-result";
-import { OpenProfileTemplate } from "../open/open-link-profile-template";
+import { OpenProfileTemplates } from "../open/open-link-profile-template";
 
 
 export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserInfo> extends EventEmitter implements ChatChannel<I> {
@@ -380,7 +380,7 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return this.Client.OpenLinkManager.hideChat(this, logId);
     }
 
-    async changeProfile(profile: OpenProfileTemplate): Promise<RequestResult<boolean>> {
+    async changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.changeProfile(this, profile);
     }
 
