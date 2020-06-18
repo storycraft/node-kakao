@@ -14,6 +14,10 @@ export interface Store<K, V> {
 
 }
 
+export interface NullableStore<K, V> extends Store<K, V | null> {
+
+}
+
 export abstract class BaseConvertibleStore<K, MK, V, MV> implements Store<K, V> {
 
     private cacheMap: Map<MK, MV>;

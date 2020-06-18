@@ -29,17 +29,11 @@ export interface OpenProfileTemplate<T extends OpenProfileType> extends Partial<
 
 }
 
-export type OpenProfileTemplates = OpenProfileTemplate<OpenProfileType.MAIN> | OpenProfileTemplate<OpenProfileType.KAKAO_ANON> & OpenProfileTemplate.Anon | OpenProfileTemplate<OpenProfileType.OPEN_PROFILE> & OpenProfileTemplate.Link;
+export type OpenMainProfileTemplate = OpenProfileTemplate<OpenProfileType.MAIN>;
+export type OpenAnonProfileTemplate = OpenProfileTemplate<OpenProfileType.KAKAO_ANON> & OpenProfileTemplate.Anon;
+export type OpenLinkProfileTemplate = OpenProfileTemplate<OpenProfileType.OPEN_PROFILE> & OpenProfileTemplate.Link;
 
-export interface OpenLinkProfileTemplate {
-
-    type: OpenProfileType.OPEN_PROFILE;
-
-    profileLinkId: Long;
-
-}
-
-
+export type OpenProfileTemplates = OpenMainProfileTemplate | OpenAnonProfileTemplate | OpenLinkProfileTemplate;
 
 export interface OpenLinkProfileContent {
 
