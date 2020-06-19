@@ -89,7 +89,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
     }
 
     get PushAlert() {
-        return this.dataStruct.pushAlert || false;
+        return this.dataStruct.pushAlert;
     }
 
     get Name() {
@@ -251,7 +251,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
     }
 
     updateChannelSettings(settings: ChannelSettings) {
-        if (settings.pushAlert) this.dataStruct.pushAlert = settings.pushAlert;
+        if (settings.pushAlert) this.dataStruct.pushAlert = settings.pushAlert || true;
     }
 
     updateLastChat(chat: Chat) {

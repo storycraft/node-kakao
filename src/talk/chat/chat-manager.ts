@@ -54,26 +54,30 @@ export class ChatManager {
     async getChatListFrom(channelId: Long, sinceLogId: number): Promise<RequestResult<Chat[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ sinceLogId ]));
 
-        let taskList: Promise<Chat>[] = [];
+        let chatList: Chat[] = [];
         for (let chatLog of res.ChatlogList) {
-            taskList.push(this.chatFromChatlog(chatLog));
+            let chat = this.chatFromChatlog(chatLog);
+
+            if (chat) chatList.push(chat);
         }
 
-        return { status: res.StatusCode, result: await Promise.all(taskList) };
+        return { status: res.StatusCode, result: chatList };
     }
 
     async getChatListBetween(channelId: Long, startLogId: Long, count: number, endLogId: Long): Promise<RequestResult<Chat[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSyncMessageRes>(new PacketSyncMessageReq(channelId, startLogId, count, endLogId));
 
-        let taskList: Promise<Chat>[] = [];
+        let chatList: Chat[] = [];
         for (let chatLog of res.ChatList) {
-            taskList.push(this.chatFromChatlog(chatLog));
+            let chat = this.chatFromChatlog(chatLog);
+
+            if (chat) chatList.push(chat);
         }
 
-        return { status: res.StatusCode, result: await Promise.all(taskList) };
+        return { status: res.StatusCode, result: chatList };
     }
 
-    protected async chatFromWriteRes(res: PacketMessageWriteRes, text: string, extra: string): Promise<Chat> {
+    protected async chatFromWriteRes(res: PacketMessageWriteRes, text: string, extra: string): Promise<Chat | null> {
         if (res.Chatlog) return this.chatFromChatlog(res.Chatlog);
 
         return this.chatFromChatlog({
@@ -121,8 +125,11 @@ export class ChatManager {
         return this.chatFromWriteRes(res, text, extra);
     }
 
-    async chatFromChatlog(chatLog: ChatlogStruct) {
-        let channel = await this.Client.ChannelManager.get(chatLog.channelId, true);
+    chatFromChatlog(chatLog: ChatlogStruct): Chat | null {
+        let channel = this.Client.ChannelManager.get(chatLog.channelId);
+
+        if (!channel) return null;
+
         let sender = this.Client.UserManager.get(chatLog.senderId);
 
         const TypedChat = TypeMap.getChatConstructor(chatLog.type);

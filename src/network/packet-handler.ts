@@ -106,24 +106,25 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
     }
 
-    async getManagedChannel(id: Long): Promise<ManagedChatChannel | ManagedOpenChatChannel> {
-        return this.ChannelManager.get(id) as Promise<ManagedChatChannel | ManagedOpenChatChannel>;
+    getManagedChannel(id: Long): ManagedChatChannel | ManagedOpenChatChannel | null {
+        return this.ChannelManager.get(id) as ManagedChatChannel | ManagedOpenChatChannel | null;
     }
 
     async onLogin(packet: PacketLoginRes) {
         await this.Client.updateStatus();
     }
 
-    async onMessagePacket(packet: PacketMessageRes) {
-        if (Long.ZERO.equals(packet.ChannelId) || !packet.Chatlog) return;
-        
-        let channel = await this.getManagedChannel(packet.ChannelId);
+    onMessagePacket(packet: PacketMessageRes) {
+        if (!packet.Chatlog) return;
 
         let chatLog = packet.Chatlog;
-        let chat = await this.ChatManager.chatFromChatlog(chatLog);
+        let chat = this.ChatManager.chatFromChatlog(chatLog);
+
+        if (!chat) return;
+        
+        let channel = chat.Channel as (ManagedChatChannel | ManagedOpenChatChannel);
 
         let userInfo = channel.getUserInfo(chat.Sender);
-
         if (userInfo) userInfo.updateNickname(packet.SenderNickname);
 
         channel.updateLastChat(chat);
@@ -135,8 +136,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
     }
 
-    async onMessageRead(packet: PacketMessageReadRes) {
-        let channel = await this.ChannelManager.get(packet.ChannelId);
+    onMessageRead(packet: PacketMessageReadRes) {
+        let channel = this.getManagedChannel(packet.ChannelId);
+
+        if (!channel) return;
 
         let reader = this.UserManager.get(packet.ReaderId);
 
@@ -146,10 +149,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('message_read', channel, reader, watermark);
     }
 
-    async onMetaChange(packet: PacketMetaChangeRes | PacketSetMetaRes) {
+    onMetaChange(packet: PacketMetaChangeRes | PacketSetMetaRes) {
         if (!packet.Meta) return;
 
-        let channel = await this.getManagedChannel(packet.ChannelId);
+        let channel = this.getManagedChannel(packet.ChannelId);
+
+        if (!channel) return;
 
         channel.updateMeta(packet.Meta);
     }
@@ -158,15 +163,15 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (!packet.Chatlog) return;
 
         let chatlog = packet.Chatlog;
-        let chat = await this.Client.ChatManager.chatFromChatlog(chatlog);
+        let chat = this.Client.ChatManager.chatFromChatlog(chatlog);
 
-        let channel = await this.getManagedChannel(chatlog.channelId) as ManagedBaseChatChannel;
+        if (!chat || !chat.isFeed()) return;
+
+        let channel = chat.Channel as ManagedBaseChatChannel;
 
         let feed = ChatFeed.getFeedFromText(chat.Text);
 
         let idList: Long[] = [];
-        let infoList: ChatUserInfo[] = (await this.UserManager.requestUserInfoList(channel, idList)).result!;
-
         if (feed.feedType === FeedType.INVITE && (feed as InviteFeed).members) {
             for (let member of (feed as InviteFeed).members) {
                 idList.push(member.userId);
@@ -174,6 +179,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         } else if (feed.feedType === FeedType.OPENLINK_JOIN && (feed as OpenJoinFeed).member) {
             idList.push((feed as OpenJoinFeed).member.userId);
         }
+
+        let infoList: ChatUserInfo[] = (await this.UserManager.requestUserInfoList(channel, idList)).result!;
 
         for(let i = 0; i < idList.length; i++) {
             let id = idList[i];
@@ -195,12 +202,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
     }
 
-    async syncMessageDelete(packet: PacketSyncDeleteMessageRes) {
+    syncMessageDelete(packet: PacketSyncDeleteMessageRes) {
         if (!packet.Chatlog) return;
 
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog);
 
-        if (!chat.isFeed()) return;
+        if (!chat || !chat.isFeed()) return;
 
         let feed = chat.getFeed() as DeleteAllFeed;
 
@@ -208,65 +215,70 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
     }
 
-    async onChannelLeft(packet: PacketLeftRes) {
-        let channel = await this.ChannelManager.get(packet.ChannelId);
+    onChannelLeft(packet: PacketLeftRes) {
+        let channel = this.getManagedChannel(packet.ChannelId);
+
+        if (!channel) return;
 
         this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
+        this.ChannelManager.removeChannel(channel.Id);
     }
 
-    async onChannelLeave(packet: PacketLeaveRes, reqPacket?: PacketLeaveReq) {
-        if (!reqPacket) return;
+    onChannelLeave(packet: PacketLeaveRes, reqPacket?: PacketLeaveReq) {
+        if (!reqPacket || !reqPacket.ChannelId) return;
 
-        let chanId = reqPacket.ChannelId;
+        let channel = this.getManagedChannel(reqPacket.ChannelId);
 
-        if (!this.ChannelManager.has(chanId)) return;
-
-        let channel = await this.ChannelManager.get(chanId);
+        if (!channel) return;
 
         this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
+        this.ChannelManager.removeChannel(channel.Id);
     }
 
-    async onLinkKicked(packet: PacketLinkKickedRes) {
+    onLinkKicked(packet: PacketLinkKickedRes) {
         if (!packet.Chatlog) return;
 
-        let channel = await this.ChannelManager.get(packet.ChannelId);
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog);
+
+        if (!chat) return;
+
+        let channel = chat.Channel;
 
         this.Client.emit('left_channel', channel);
-        this.ChannelManager.removeChannel(channel);
+        this.ChannelManager.removeChannel(channel.Id);
 
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog);
         if (!chat.isFeed()) return;
         this.Client.emit('feed', chat);
     }
 
-    async onChannelJoin(packet: PacketChanJoinRes) {
-        if (!packet.Chatlog || Long.ZERO.equals(packet.ChannelId)) return;
+    onChannelJoin(packet: PacketChanJoinRes) {
+        if (!packet.Chatlog) return;
 
         let chanId = packet.ChannelId;
 
-        let newChan = await this.ChannelManager.get(chanId);
+        let newChan = this.getManagedChannel(chanId);
 
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
+        if (!newChan) return;
+
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
         if (!chat.isFeed()) return;
 
         this.Client.emit('join_channel', newChan, chat);
         this.Client.emit('feed', chat);
     }
 
-    async onOpenChannelJoin(packet: PacketJoinLinkRes) {
+    onOpenChannelJoin(packet: PacketJoinLinkRes) {
         if (!packet.ChatInfo) return;
 
         let chanId = packet.ChatInfo.channelId;
 
-        if (this.ChannelManager.has(chanId) || !packet.Chatlog) return;
+        if (!packet.Chatlog) return;
 
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
 
-        if (!chat.isFeed()) return;
+        if (!chat || !chat.isFeed()) return;
         
-        let newChan = await this.ChannelManager.get(chanId);
+        let newChan = this.getManagedChannel(chanId);
 
         this.Client.emit('join_channel', newChan, chat);
         this.Client.emit('feed', chat);
@@ -277,19 +289,19 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let chanId = packet.ChatInfo.channelId;
 
-        if (this.ChannelManager.has(chanId)) return;
+        if (this.ChannelManager.has(chanId) || !packet.ChatInfo) return;
         
-        let newChan = await this.ChannelManager.get(chanId);
+        let newChan = await this.ChannelManager.addWithChannelInfo(chanId, packet.ChatInfo);
 
         this.Client.emit('join_channel', newChan);
     }
 
-    async syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
+    syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
         let chanId = packet.ChannelId;
 
-        let channel = (await this.getManagedChannel(chanId)) as ManagedOpenChatChannel;
-        
-        if (!channel.isOpenChat()) return;
+        let channel = this.getManagedChannel(chanId) as ManagedOpenChatChannel | null;
+
+        if (!channel || !channel.isOpenChat()) return;
 
         let len = packet.MemberIdList.length;
         for (let i = 0; i < len; i++) {
@@ -299,8 +311,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         }
     }
 
-    async syncClientProfileUpdate(packet: PacketUpdateLinkProfileRes, reqPacket: PacketUpdateLinkProfileReq) {
-        if (!packet.UpdatedProfile) return false;
+    syncClientProfileUpdate(packet: PacketUpdateLinkProfileRes, reqPacket: PacketUpdateLinkProfileReq) {
+        if (!packet.UpdatedProfile) return;
 
         let channel = this.ChannelManager.findOpenChatChannel(reqPacket.LinkId);
 
@@ -309,31 +321,26 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         (channel as ManagedOpenChatChannel).updateUserInfo(packet.UpdatedProfile.userId, this.UserManager.getInfoFromStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
     }
     
-    async syncProfileUpdate(packet: PacketSyncProfileRes) {
+    syncProfileUpdate(packet: PacketSyncProfileRes) {
         let chanId = packet.ChannelId;
 
-        if (Long.ZERO.equals(chanId) || !packet.OpenMember) return;
+        if (!packet.OpenMember) return;
 
-        let channel = await this.getManagedChannel(chanId) as ManagedOpenChatChannel;
+        let channel = this.getManagedChannel(chanId) as ManagedOpenChatChannel;
 
-        if (!channel.isOpenChat()) return;
+        if (!channel || !channel.isOpenChat()) return;
 
         channel.updateUserInfo(packet.OpenMember.userId, this.UserManager.getInfoFromStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
     }
 
-    async onOpenChannelKick(packet: PacketKickMemberRes) {
+    onOpenChannelKick(packet: PacketKickMemberRes) {
         if (!packet.Chatlog) return;
 
-        let chanId = packet.ChannelId;
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
 
-        if (!this.ChannelManager.has(chanId)) return;
-        
-        let channel = await this.getManagedChannel(chanId);
+        if (!chat || !chat.isFeed()) return;
 
-        let chat = await this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
-
-        if (!chat.isFeed()) return;
-
+        let channel = chat.Channel as ManagedBaseChatChannel;
         let feed = chat.getFeed() as OpenKickFeed;
 
         if (!feed.member) return;
@@ -348,15 +355,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (!this.Client.ClientUser.Id.equals(feed.member.userId)) channel.updateUserInfo(feed.member.userId, null);
     }
 
-    async onMemberDelete(packet: PacketDeleteMemberRes) {
+    onMemberDelete(packet: PacketDeleteMemberRes) {
         if (!packet.Chatlog) return;
 
         let chatLog = packet.Chatlog;
 
-        let chat = await this.ChatManager.chatFromChatlog(chatLog);
-        let channel = chat.Channel as ManagedBaseChatChannel;
+        let chat = this.ChatManager.chatFromChatlog(chatLog);
 
-        if (!chat.isFeed()) return;
+        if (!chat || !chat.isFeed()) return;
+
+        let channel = chat.Channel as ManagedBaseChatChannel;
 
         let feed = chat.getFeed() as OpenKickFeed;
 
@@ -372,18 +380,18 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.updateUserInfo(feed.member.userId, null);
     }
 
-    async onSwitchServerReq(packet: PacketChangeServerRes) {
+     onSwitchServerReq(packet: PacketChangeServerRes) {
         this.kickReason = LocoKickoutType.CHANGE_SERVER;
 
         this.networkManager.disconnect();
 
         let accessData = this.Client.getLatestAccessData();
 
-        // recache data
-        await this.networkManager.getCheckinData(accessData.userId, true);
-
-        await this.networkManager.locoLogin(this.Client.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
-        this.kickReason = LocoKickoutType.UNKNOWN;
+        // recache and relogin
+        this.networkManager.getCheckinData(accessData.userId, true).then(() => {
+            this.networkManager.locoLogin(this.Client.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken)
+                .then(() => this.kickReason = LocoKickoutType.UNKNOWN);
+        });
     }
 
     onLocoKicked(packet: PacketKickoutRes) {

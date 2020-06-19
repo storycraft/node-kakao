@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AsyncIdStore } from "../../store/store";
+import { IdStore } from "../../store/store";
 import { ChatChannel, OpenChatChannel, MemoChatChannel } from "./chat-channel";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
@@ -34,7 +34,7 @@ import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel, ManagedMemoChatChannel } from "../managed/managed-chat-channel";
 import { RequestResult } from "../request/request-result";
 
-export class ChannelManager extends AsyncIdStore<ChatChannel> {
+export class ChannelManager extends IdStore<ChatChannel> {
 
     static readonly INFO_UPDATE_INTERVAL: number = 300000;
     
@@ -50,12 +50,6 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return Array.from(super.values()).map((channel) => channel.Id);
     }
 
-    async get(id: Long, skipUpdate: boolean = false): Promise<ChatChannel> {
-        let channel = await super.get(id) as ManagedBaseChatChannel;
-
-        return channel;
-    }
-
     findOpenChatChannel(linkId: Long): OpenChatChannel | null {
         let channels = this.values();
 
@@ -68,21 +62,18 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return null;
     }
 
-    protected async getWithChannelData(id: Long, channelData: ChannelDataStruct, cache: boolean = true): Promise<ManagedBaseChatChannel> {
+    protected async addWithChannelData(id: Long, channelData: ChannelDataStruct): Promise<ManagedBaseChatChannel> {
+        let openToken;
+        if (channelData.openToken) openToken = channelData.openToken;
+        let chatOnRoom = await this.requestChatOnRoom(id, Long.ZERO, openToken);
         
         let channel: ManagedBaseChatChannel;
         switch(channelData.type) {
 
             case ChannelType.OPENCHAT_DIRECT:
             case ChannelType.OPENCHAT_GROUP: {
-                let openToken;
-                if (channelData.openToken) openToken = channelData.openToken;
-                let chatOnRoom = await this.requestChatOnRoom(id, Long.ZERO, openToken);
-
-                let link = (await this.client.OpenLinkManager.get(channelData.linkId!)) as OpenLinkChannel;
+                let link = await this.client.OpenLinkManager.get(channelData.linkId!) as OpenLinkChannel;
                 channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link, chatOnRoom.ClientOpenProfile!);
-
-                this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
                 break;
             }
 
@@ -98,28 +89,31 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
             
         }
 
-        if (cache) this.setCache(id, channel);
+        this.updateFromChannelInfo(channel, await this.requestChannelInfo(id));
+        this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
+
+        this.set(id, channel);
         
         return channel;
     }
 
-    protected async getWithChannelInfo(id: Long, channelInfo: ChannelInfoStruct, cache: boolean = true): Promise<ManagedBaseChatChannel> {
-        let channel = await this.getWithChannelData(id, channelInfo, cache);
+    async addWithChannelInfo(id: Long, channelInfo: ChannelInfoStruct): Promise<ManagedBaseChatChannel> {
+        let channel = await this.addWithChannelData(id, channelInfo);
 
-        await this.updateFromChannelInfo(channel, channelInfo);
+        this.updateFromChannelInfo(channel, channelInfo);
         
         return channel;
     }
 
-    protected async updateFromChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
+    protected updateFromChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
         channel.updateData(channelInfo);
         if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
         if (channelInfo.channelMetaList) channel.updateMetaList(channelInfo.channelMetaList);
-        if (channelInfo.lastChatLog) channel.updateLastChat(await this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog));
+        if (channelInfo.lastChatLog) channel.updateLastChat(this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog)!);
     }
 
     protected updateFromUserInfoList(channel: ManagedBaseChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
-        if (channel.Type=== ChannelType.SELFCHAT) return;
+        if (channel.Type === ChannelType.SELFCHAT) return;
         
         if (!channel.isOpenChat()) {
             let normal = channel as ManagedChatChannel;
@@ -134,28 +128,14 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         }
     }
 
-    protected async updateChannelInfo(channel: ManagedBaseChatChannel) {
-        let channelInfo = await this.requestChannelInfo(channel.Id);
-
-        await this.updateFromChannelInfo(channel, channelInfo);
-    }
-
-    protected async updateUserInfoList(channel: ManagedBaseChatChannel) {
-        let openToken;
-        if (channel.isOpenChat()) openToken = (channel as ManagedOpenChatChannel).OpenToken;
-        let chatOnRoom = await this.requestChatOnRoom(channel.Id, channel.LastChat && channel.LastChat.LogId || Long.ZERO, openToken);
-
-        this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
-    }
-
     async createMemoChannel(): Promise<RequestResult<MemoChatChannel>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChannelRes>(new PacketCreateChannelReq([], '', '', true));
 
-        if (this.has(res.ChannelId)) return { status: StatusCode.SUCCESS, result: await this.get(res.ChannelId) };
+        if (this.has(res.ChannelId)) return { status: StatusCode.SUCCESS, result: this.get(res.ChannelId) };
 
         if (!res.ChatInfo) return { status: res.StatusCode };
 
-        let channel = await this.getWithChannelInfo(res.ChannelId, res.ChatInfo);
+        let channel = await this.addWithChannelInfo(res.ChannelId, res.ChatInfo);
         
         return { status: res.StatusCode, result: channel };
     }
@@ -163,11 +143,11 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
     async createChannel(users: ChatUser[], nickname: string = '', profileURL: string = ''): Promise<RequestResult<ChatChannel>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateChannelRes>(new PacketCreateChannelReq(users.map((user) => user.Id), nickname, profileURL));
 
-        if (this.has(res.ChannelId)) return { status: StatusCode.SUCCESS, result: await this.get(res.ChannelId) };
+        if (this.has(res.ChannelId)) return { status: StatusCode.SUCCESS, result: this.get(res.ChannelId) };
 
         if (!res.ChatInfo) return { status: res.StatusCode };
 
-        let channel = await this.getWithChannelInfo(res.ChannelId, res.ChatInfo);
+        let channel = await this.addWithChannelInfo(res.ChannelId, res.ChatInfo);
         
         return { status: res.StatusCode, result: channel };
     }
@@ -187,7 +167,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         res.ChatInfo.linkId = res.OpenLink.linkId;
         res.ChatInfo.openToken = res.OpenLink.openToken;
         
-        return { status: res.StatusCode, result: (await this.getWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo)) as ManagedOpenChatChannel };
+        return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
     async joinOpenChannel(linkId: Long, profileType: OpenProfileType.MAIN, passcode?: string): Promise<RequestResult<OpenChatChannel>>;
@@ -206,7 +186,7 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
 
         if (!res.ChatInfo) return { status: res.StatusCode };
         
-        return { status: res.StatusCode, result: await this.getWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
+        return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
     protected async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct> {
@@ -305,26 +285,18 @@ export class ChannelManager extends AsyncIdStore<ChatChannel> {
         return this.updateChannelMeta(channel, ChannelMetaType.GROUP, JSON.stringify(content));
     }
 
-    protected removeChannel(channelId: Long) {
+    removeChannel(channelId: Long) {
         if (!this.has(channelId)) return false;
 
         this.delete(channelId);
 
         return true;
     }
-
-    protected addChannel(channel: ManagedBaseChatChannel) {
-        if (!this.has(channel.Id)) return false;
-
-        this.setCache(channel.Id, channel);
-
-        return true;
-    }
-
+    
     async initalizeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
 
-        return Promise.all(chatDataList.map((chatData) => this.getWithChannelData(chatData.channelId, chatData)));
+        return Promise.all(chatDataList.map((chatData) => this.addWithChannelData(chatData.channelId, chatData)));
     }
 
 }

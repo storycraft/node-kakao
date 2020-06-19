@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { IdStore } from "../../store/store";
+import { IdInstanceStore } from "../../store/store";
 import { ChatUser, ChatUserInfo, OpenChatUserInfo } from "./chat-user";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
@@ -16,7 +16,7 @@ import { ChatChannel } from "../channel/chat-channel";
 import { ManagedChatUser, ManagedChatUserInfo, ManagedOpenChatUserInfo } from "../managed/managed-chat-user";
 import { RequestResult } from "../request/request-result";
 
-export class UserManager extends IdStore<ChatUser> {
+export class UserManager extends IdInstanceStore<ChatUser> {
 
     constructor(private client: LocoClient) {
         super();
@@ -26,14 +26,14 @@ export class UserManager extends IdStore<ChatUser> {
         return this.client;
     }
 
-    protected fetchValue(key: Long): ManagedChatUser {
+    protected createInstanceFor(key: Long): ManagedChatUser {
         return new ManagedChatUser(this, key);
     }
 
     get(key: Long): ChatUser {
         if (this.client.ClientUser && this.client.ClientUser.Id.equals(key)) return this.client.ClientUser;
 
-        return super.get(key, true);
+        return super.get(key)!;
     }
 
     getInfoFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {

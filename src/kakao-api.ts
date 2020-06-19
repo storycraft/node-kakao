@@ -450,7 +450,6 @@ export class KakaoAPI {
         return hash.digest('hex');
     }
 
-
     static createSendTextURL(message: string) {
         return `kakaotalk://leverage?action=sendtext&message=${encodeURIComponent(message)}`;
     }

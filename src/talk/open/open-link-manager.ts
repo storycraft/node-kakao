@@ -10,7 +10,7 @@ import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
 import { PacketSyncLinkRes, PacketSyncLinkReq } from "../../packet/packet-sync-link";
 import { LocoClient } from "../../client";
-import { AsyncIdStore } from "../../store/store";
+import { AsyncIdInstanceStore } from "../../store/store";
 import { StatusCode } from "../../packet/loco-packet-base";
 import { OpenChatChannel } from "../channel/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-kick-member";
@@ -34,7 +34,7 @@ import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/pac
 import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
 import { OpenProfileTemplates } from "./open-link-profile-template";
 
-export class OpenLinkManager extends AsyncIdStore<OpenLink> {
+export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
     private clientLinkIdList: string[];
 
@@ -64,55 +64,57 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         return this.clientLinkIdList.includes(id.toString());
     }
 
-    protected getFromLinkStruct(linkStruct: OpenLinkStruct): OpenLink {
-        let link: ManagedOpenLink;
-        if (this.has(linkStruct.linkId)) {
-            link = this.getValue(linkStruct.linkId)! as ManagedOpenLink;
+    async getFromURL(openLinkURL: string): Promise<OpenLink | null> {
+        let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
+
+        if (res.OpenLink) return this.getWithLinkStruct(res.OpenLink.linkId, res.OpenLink);
+
+        return null;
+    }
+
+    protected async requestLinkFromIdList(linkIdList: Long[]): Promise<OpenLinkStruct[]> {
+        let res = await this.Interface.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq(linkIdList));
+
+        return res.LinkList;
+    }
+    
+    protected async requestLinkFromURL(openLinkURL: string): Promise<OpenLinkStruct | null> {
+        let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
+
+        return res.OpenLink || null;
+    }
+    
+    protected getWithLinkStruct(linkId: Long, linkStruct: OpenLinkStruct): OpenLink {
+        if (this.has(linkId)) {
+            let link = this.getFromMap(linkId)! as ManagedOpenLink;
 
             link.updateStruct(linkStruct);
-        } else {
-            link = new ManagedOpenLink(this, linkStruct.linkId, linkStruct.openToken, linkStruct);
-            this.setCache(link.LinkId, link);
+            
+            return link;
         }
 
+        let link = this.createWithLinkStruct(linkId, linkStruct);
+        this.set(linkId, link);
+
         return link;
+    }
+
+    protected createWithLinkStruct(linkId: Long, linkStruct: OpenLinkStruct): OpenLink {
+        return new ManagedOpenLink(this, linkId, linkStruct.openToken, linkStruct);
     }
 
     protected getFromKickedStruct(kickedMemberStruct: OpenKickedMemberStruct): OpenKickedUserInfo {
         return new ManagedOpenKickedUserInfo(this, kickedMemberStruct);
     }
 
-    async requestLinkFromId(linkId: Long): Promise<RequestResult<OpenLink>> {
-        let result = await this.requestLinkFromIdList([ linkId ]) as any;
+    protected async createInstanceFor(key: Long): Promise<OpenLink | null> {
+        let list = await this.requestLinkFromIdList([ key ]);
 
-        let link;
-        if (result.result) link = result.result[0];
+        let linkStruct = list[0];
 
-        // hax
-        result.result = link;
+        if (!linkStruct) return null;
 
-        return result as RequestResult<OpenLink>;
-    }
-
-    async requestLinkFromIdList(linkIdList: Long[]): Promise<RequestResult<OpenLink[]>> {
-        let res = await this.Interface.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq(linkIdList));
-
-        let linkList = res.LinkList.map(this.getFromLinkStruct.bind(this));
-
-        return { status: res.StatusCode, result: linkList };
-    }
-    
-    async requestLinkFromURL(openLinkURL: string): Promise<RequestResult<OpenLink>> {
-        let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
-
-        let link;
-        if (res.OpenLink) link = this.getFromLinkStruct(res.OpenLink);
-
-        return { status: res.StatusCode, result: link };
-    }
-
-    protected async fetchValue(key: Long): Promise<OpenLink> {
-        return (await this.requestLinkFromId(key)).result!;
+        return this.createWithLinkStruct(key, linkStruct);
     }
 
     async requestClientProfile(): Promise<RequestResult<OpenLinkProfile[]>> {
@@ -120,7 +122,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketSyncLinkRes>(new PacketSyncLinkReq(openChatToken));
 
-        return { status: res.StatusCode, result: res.LinkList.map(this.getFromLinkStruct.bind(this)) as OpenLinkProfile[] };
+        return { status: res.StatusCode, result: res.LinkList.map((linkStruct) => this.getWithLinkStruct(linkStruct.linkId, linkStruct)) as OpenLinkProfile[] };
     }
 
     async initOpenSession() {
@@ -205,7 +207,7 @@ export class OpenLinkManager extends AsyncIdStore<OpenLink> {
         
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
 
-        return { status: res.StatusCode, result: res.OpenLink && (this.getFromLinkStruct(res.OpenLink) as OpenLinkProfile) || null };
+        return { status: res.StatusCode, result: res.OpenLink && this.getWithLinkStruct(res.OpenLink.linkId, res.OpenLink) as OpenLinkProfile || null };
     }
 
     async updateOpenLink(linkId: Long, settings: OpenLinkSettings) {
