@@ -291,11 +291,21 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
         return true;
     }
+
+    protected async initWithChannelData(channelData: ChannelDataStruct): Promise<ManagedBaseChatChannel> {
+        let channel = await this.addWithChannelData(channelData.channelId, channelData);
+
+        let info = await this.requestChannelInfo(channel.Id);
+
+        if (info) this.updateFromChannelInfo(channel, info);
+        
+        return channel;
+    }
     
     async initalizeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
 
-        return Promise.all(chatDataList.map((chatData) => this.addWithChannelData(chatData.channelId, chatData)));
+        return Promise.all(chatDataList.map(this.initWithChannelData.bind(this)));
     }
 
 }
