@@ -211,14 +211,14 @@ export class UnknownChat extends Chat {
 
 }
 
-export class FeedChat extends Chat {
+export class FeedChat<T extends ChatFeed = ChatFeed> extends Chat {
     
     get Type() {
         return ChatType.Feed;
     }
 
-    get Feed() {
-        return this.getFeed();
+    get Feed(): T {
+        return this.getFeed() as T;
     }
 
     get RichFeedAttachment(): RichFeedAttachment | null {

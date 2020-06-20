@@ -1,18 +1,15 @@
-import { Long, AccessDataProvider } from ".";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
-import { ClientChatUser, ChatUser, ClientUserInfo } from "./talk/user/chat-user";
+import { ClientChatUser, ClientUserInfo } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
-import { ChatChannel, MemoChatChannel } from "./talk/channel/chat-channel";
-import { Chat, FeedChat } from "./talk/chat/chat";
+import { MemoChatChannel } from "./talk/channel/chat-channel";
 import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
 import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { JsonUtil } from "./util/json-util";
 import { OpenLinkManager } from "./talk/open/open-link-manager";
-import { LocoKickoutType } from "./packet/packet-kickout";
 import { ApiClient } from "./api/api-client";
 import { Serializer } from "json-proxy-mapper";
 import { ApiStatusCode } from "./talk/struct/api/api-struct";
@@ -21,6 +18,9 @@ import { StatusCode } from "./packet/loco-packet-base";
 import { ClientStatus } from "./client-status";
 import { UserType } from "./talk/user/user-type";
 import { RequestResult } from "./talk/request/request-result";
+import { AccessDataProvider } from "./oauth/access-data-provider";
+import { ClientEvents } from "./event/events";
+import { Long } from "bson";
 
 /*
  * Created on Fri Nov 01 2019
@@ -49,7 +49,7 @@ export interface LoginError {
 
 }
 
-export interface LocoClient extends LoginBasedClient, EventEmitter {
+export interface LocoClient extends LoginBasedClient, ClientEvents {
 
     readonly Name: string;
 
@@ -70,28 +70,6 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
     setStatus(status: ClientStatus): Promise<RequestResult<boolean>>;
     getStatus(): ClientStatus;
     updateStatus(): Promise<RequestResult<boolean>>;
-
-    on(event: 'login', listener: (user: ClientChatUser) => void): this;
-    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'feed', listener: (feedChat: FeedChat) => void): this;
-    on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
-    on(event: 'join_channel', listener: (joinChannel: ChatChannel, feedChat?: FeedChat) => void): this;
-    on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
-
-    once(event: 'login', listener: (user: ClientChatUser) => void): this;
-    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'feed', listener: (feedChat: FeedChat) => void): this;
-    once(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    once(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
-    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feedChat: FeedChat) => void): this;
-    once(event: 'join_channel', listener: (joinChannel: ChatChannel, feedChat?: FeedChat) => void): this;
-    once(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
 
 }
 

@@ -7,6 +7,7 @@ import { LocoClient } from "../../client";
 import { OpenProfileType, OpenMemberType } from "../open/open-link-type";
 import { OpenLinkProfile } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
+import { UserEvents } from "../../event/events";
 
 /*
  * Created on Fri Nov 01 2019
@@ -14,7 +15,7 @@ import { RequestResult } from "../request/request-result";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface ChatUser extends EventEmitter {
+export interface ChatUser extends UserEvents {
 
     readonly Client: LocoClient;
 
@@ -23,16 +24,6 @@ export interface ChatUser extends EventEmitter {
     isClientUser(): boolean;
 
     createDM(): Promise<RequestResult<ChatChannel>>;
-
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'message_read', listener: (channel: ChatChannel, watermark: Long) => void): this;
-    on(event: 'join', listener: (newChannel: ChatChannel, joinFeed: FeedChat) => void): this;
-    on(event: 'left', listener: (leftChannel: ChatChannel, leftFeed: FeedChat) => void): this;
-
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'message_read', listener: (channel: ChatChannel, watermark: Long) => void): this;
-    once(event: 'join', listener: (newChannel: ChatChannel, joinFeed: FeedChat) => void): this;
-    once(event: 'left', listener: (leftChannel: ChatChannel, leftFeed: FeedChat) => void): this;
 
 }
 

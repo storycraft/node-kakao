@@ -13,6 +13,7 @@ import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
 import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
+import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 
 /*
  * Created on Fri Nov 01 2019
@@ -20,7 +21,7 @@ import { OpenProfileTemplates } from "../open/open-link-profile-template";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends EventEmitter {
+export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChannelEvents {
 
     readonly Client: LocoClient;
 
@@ -82,14 +83,6 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Even
 
     setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>>;
 
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
-    on(event: 'left', listener: (leftUser: ChatUser, chat: FeedChat) => void): this;
-
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
-    once(event: 'left', listener: (leftUser: ChatUser, chat: FeedChat) => void): this;
-
 }
 
 export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
@@ -98,7 +91,8 @@ export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
 
 }
 
-export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
+type OpenChatChannelMixin<I extends ChatUserInfo> = ChatChannel<I> & OpenChannelEvents;
+export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends OpenChatChannelMixin<I> {
 
     readonly LinkId: Long;
     readonly OpenToken: number;
@@ -137,13 +131,5 @@ export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
 
     requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>>;
     setReacted(reacted: boolean): Promise<RequestResult<boolean>>;
-
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
-    on(event: 'left', listener: (leftUser: ChatUser, chat: FeedChat) => void): this;
-
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'join', listener: (newUser: ChatUser, chat: FeedChat) => void): this;
-    once(event: 'left', listener: (leftUser: ChatUser, chat: FeedChat) => void): this;
 
 }

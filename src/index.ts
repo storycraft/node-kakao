@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from './event/events';
 export * from './kakao-api';
 
 export * from './api/api-client';
