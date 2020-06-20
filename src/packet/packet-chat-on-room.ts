@@ -9,7 +9,7 @@ import { Long } from "bson";
 import { MemberStruct } from "../talk/struct/member-struct";
 import { ChannelType } from "../talk/channel/channel-type";
 import { JsonUtil } from "../util/json-util";
-import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
@@ -48,7 +48,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
         public Type: ChannelType = ChannelType.UNKNOWN,
         public WatermarkList: Long[] = [],
         public OpenChatToken: number = 0,
-        public ClientOpenProfile?: OpenMemberStruct
+        public ClientOpenProfile?: OpenLinkMemberStruct
     ) {
         super(status);
     }
@@ -73,7 +73,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
             }
         }
 
-        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
+        if (rawData['olu']) this.ClientOpenProfile = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
     }
 
 }
