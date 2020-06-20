@@ -89,12 +89,20 @@ export class ChannelManager extends IdStore<ChatChannel> {
             
         }
 
-        this.updateFromChannelInfo(channel, await this.requestChannelInfo(id));
+        this.updateFromChannelInfo(channel, (await this.requestChannelInfo(id))!);
         this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
 
         this.set(id, channel);
         
         return channel;
+    }
+
+    async addChannel(id: Long): Promise<ManagedBaseChatChannel | null> {
+        let info = await this.requestChannelInfo(id);
+
+        if (!info) return null;
+
+        return this.addWithChannelInfo(id, info);
     }
 
     async addWithChannelInfo(id: Long, channelInfo: ChannelInfoStruct): Promise<ManagedBaseChatChannel> {
@@ -189,13 +197,13 @@ export class ChannelManager extends IdStore<ChatChannel> {
         return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
-    protected async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct> {
+    protected async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct | null> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketChannelInfoRes>(new PacketChannelInfoReq(channelId));
 
         if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.PARTIAL) {
             return res.ChatInfo!;
         } else {
-            throw new Error(`Cannot request ChannelInfo: ${res.StatusCode}`);
+            return null;
         }
     }
 

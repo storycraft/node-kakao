@@ -11,7 +11,7 @@ import { PacketNewMemberRes } from "../packet/packet-new-member";
 import { PacketSyncDeleteMessageRes } from "../packet/packet-sync-delete-message";
 import { PacketLeftRes, PacketLeaveRes, PacketLeaveReq } from "../packet/packet-leave";
 import { PacketLinkKickedRes } from "../packet/packet-link-kicked";
-import { PacketChanJoinRes } from "../packet/packet-chan-join";
+import { PacketSyncJoinChannelRes } from "../packet/packet-sync-join-channel";
 import { PacketJoinLinkRes } from "../packet/packet-join-link";
 import { PacketSyncJoinOpenchatRes } from "../packet/packet-sync-join-openchat";
 import { PacketSyncMemberTypeRes } from "../packet/packet-sync-member-type";
@@ -162,12 +162,18 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onNewMember(packet: PacketNewMemberRes) {
         if (!packet.Chatlog) return;
 
+        let channel = this.getManagedChannel(packet.Chatlog.channelId) as ManagedBaseChatChannel;
+
+        if (!channel) {
+            channel = await this.ChannelManager.addChannel(packet.Chatlog.channelId) as ManagedBaseChatChannel;
+
+            if (!channel) return;
+        }
+
         let chatlog = packet.Chatlog;
         let chat = this.Client.ChatManager.chatFromChatlog(chatlog);
 
         if (!chat || !chat.isFeed()) return;
-
-        let channel = chat.Channel as ManagedBaseChatChannel;
 
         let feed = ChatFeed.getFeedFromText(chat.Text);
 
@@ -221,6 +227,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (!channel) return;
 
         this.Client.emit('left_channel', channel);
+
         this.ChannelManager.removeChannel(channel.Id);
     }
 
@@ -232,6 +239,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (!channel) return;
 
         this.Client.emit('left_channel', channel);
+        
         this.ChannelManager.removeChannel(channel.Id);
     }
 
@@ -251,12 +259,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
     }
 
-    onChannelJoin(packet: PacketChanJoinRes) {
+    // TODO
+    onChannelJoin(packet: PacketSyncJoinChannelRes) {
         if (!packet.Chatlog) return;
 
         let chanId = packet.ChannelId;
 
-        let newChan = this.getManagedChannel(chanId);
+        let newChan = this.ChannelManager.get(chanId);
 
         if (!newChan) return;
 
@@ -272,13 +281,13 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let chanId = packet.ChatInfo.channelId;
 
+        let newChan = this.ChannelManager.addWithChannelInfo(chanId, packet.ChatInfo);
+
         if (!packet.Chatlog) return;
 
         let chat = this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
 
         if (!chat || !chat.isFeed()) return;
-        
-        let newChan = this.getManagedChannel(chanId);
 
         this.Client.emit('join_channel', newChan, chat);
         this.Client.emit('feed', chat);

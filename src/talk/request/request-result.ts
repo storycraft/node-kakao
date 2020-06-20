@@ -4,9 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { StatusCode } from "../../packet/loco-packet-base";
+
 export interface RequestResult<T> {
 
-    status: number;
+    status: StatusCode;
     result?: T | null;
 
 }

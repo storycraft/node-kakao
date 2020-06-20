@@ -10,7 +10,7 @@ import { PacketNewMemberRes } from "./packet-new-member";
 import { PacketLeftRes, PacketLeaveReq, PacketLeaveRes } from "./packet-leave";
 import { PacketChatMemberReq, PacketChatMemberRes } from "./packet-chat-member";
 import { PacketChannelInfoReq, PacketChannelInfoRes } from "./packet-channel-info";
-import { PacketChanJoinRes } from "./packet-chan-join";
+import { PacketSyncJoinChannelRes } from "./packet-sync-join-channel";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetaListReq, PacketGetMetaListRes } from "./packet-get-meta";
@@ -208,7 +208,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('NEWMEM', PacketNewMemberRes);
         responsePacketMap.set('LEFT', PacketLeftRes);
         responsePacketMap.set('LEAVE', PacketLeaveRes);
-        responsePacketMap.set('SYNCJOIN', PacketChanJoinRes);
+        responsePacketMap.set('SYNCJOIN', PacketSyncJoinChannelRes);
 
         responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);
         responsePacketMap.set('KLSYNC', PacketKickListSyncRes);
