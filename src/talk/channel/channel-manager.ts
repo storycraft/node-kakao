@@ -73,7 +73,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
             case ChannelType.OPENCHAT_DIRECT:
             case ChannelType.OPENCHAT_GROUP: {
                 let link = await this.client.OpenLinkManager.get(channelData.linkId!) as OpenLinkChannel;
-                channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link, chatOnRoom.ClientOpenProfile!);
+                channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link);
                 break;
             }
 
@@ -89,7 +89,6 @@ export class ChannelManager extends IdStore<ChatChannel> {
             
         }
 
-        this.updateFromChannelInfo(channel, (await this.requestChannelInfo(id))!);
         this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
 
         this.set(id, channel);
@@ -130,7 +129,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         } else {
             let open = channel as ManagedOpenChatChannel;
 
-            if (openProfile) open.updateClientUserInfo(openProfile);
+            if (openProfile) open.updateMember(openProfile);
 
             open.updateMemberList(memberList as OpenMemberStruct[]);
         }

@@ -38,7 +38,7 @@ export class UserManager extends IdInstanceStore<ChatUser> {
 
     getInfoFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {
         if ((memberStruct as OpenMemberStruct).openToken) return new ManagedOpenChatUserInfo(this, this.get(memberStruct.userId), memberStruct as OpenMemberStruct);
-    
+
         return new ManagedChatUserInfo(this, this.get(memberStruct.userId), memberStruct as MemberStruct);
     }
 

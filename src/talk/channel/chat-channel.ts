@@ -92,12 +92,12 @@ export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends 
 }
 
 type OpenChatChannelMixin<I extends ChatUserInfo> = ChatChannel<I> & OpenChannelEvents;
-export interface OpenChatChannel<I extends ChatUserInfo = ChatUserInfo> extends OpenChatChannelMixin<I> {
+export interface OpenChatChannel<I extends ChatUserInfo = OpenChatUserInfo> extends OpenChatChannelMixin<I> {
 
     readonly LinkId: Long;
     readonly OpenToken: number;
 
-    readonly ClientUserInfo: ChatUserInfo;
+    readonly ClientUserInfo: OpenChatUserInfo;
 
     getOpenLink(): OpenLinkChannel;
 
