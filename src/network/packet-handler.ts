@@ -36,6 +36,7 @@ import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel } fr
 import { ManagedOpenChatUserInfo } from "../talk/managed/managed-chat-user";
 import { PacketSyncRewriteRes } from "../packet/packet-sync-rewrite";
 import { PacketRewriteRes, PacketRewriteReq } from "../packet/packet-rewrite";
+import { ChannelType } from "../talk/channel/channel-type";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -251,6 +252,9 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let channel = this.getManagedChannel(reqPacket.ChannelId);
 
         if (!channel) return;
+
+        // get ignored on DM channels
+        if (channel.Type !== ChannelType.GROUP && channel.Type !== ChannelType.OPENCHAT_GROUP) return;
 
         this.Client.ClientUser.emit('user_left', channel, this.Client.ClientUser);
         channel.emit('user_left', channel, this.Client.ClientUser);
