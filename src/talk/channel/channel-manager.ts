@@ -33,6 +33,7 @@ import { MemberStruct } from "../struct/member-struct";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel, ManagedMemoChatChannel } from "../managed/managed-chat-channel";
 import { RequestResult } from "../request/request-result";
+import { OpenProfileTemplates } from "../open/open-link-profile-template";
 
 export class ChannelManager extends IdStore<ChatChannel> {
 
@@ -177,17 +178,8 @@ export class ChannelManager extends IdStore<ChatChannel> {
         return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
-    async joinOpenChannel(linkId: Long, profileType: OpenProfileType.MAIN, passcode?: string): Promise<RequestResult<OpenChatChannel>>;
-    async joinOpenChannel(linkId: Long, profileType: OpenProfileType.KAKAO_ANON, passcode: string, nickname: string, profilePath: string): Promise<RequestResult<OpenChatChannel>>;
-    async joinOpenChannel(linkId: Long, profileType: OpenProfileType.OPEN_PROFILE, passcode: string, profileLinkId: Long): Promise<RequestResult<OpenChatChannel>>;
-    async joinOpenChannel(linkId: Long, profileType: OpenProfileType, passcode: string = ''): Promise<RequestResult<OpenChatChannel>> {
-        let packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileType);
-        if (profileType === OpenProfileType.KAKAO_ANON) {
-            packet.Nickname = arguments[3];
-            packet.ProfilePath = arguments[4];
-        } else if (profileType === OpenProfileType.OPEN_PROFILE) {
-            packet.ProfileLinkId = arguments[3];
-        }
+    async joinOpenChannel(linkId: Long, profileTemplate: OpenProfileTemplates, passcode: string = ''): Promise<RequestResult<OpenChatChannel>> {
+        let packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileTemplate.type, profileTemplate.anonNickname, profileTemplate.anonProfilePath, profileTemplate.profileLinkId);
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
 
