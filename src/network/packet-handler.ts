@@ -254,7 +254,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         if (!channel) return;
 
         // get ignored on DM channels
-        if (channel.Type !== ChannelType.GROUP && channel.Type !== ChannelType.OPENCHAT_GROUP) return;
+        if (channel.Type === ChannelType.DIRECT || channel.Type === ChannelType.SELFCHAT || channel.Type === ChannelType.OPENCHAT_GROUP) return;
 
         this.Client.ClientUser.emit('user_left', channel, this.Client.ClientUser);
         channel.emit('user_left', channel, this.Client.ClientUser);
