@@ -12,8 +12,8 @@
   "keywords": [],
   "author": {
     "name": "storycraft",
-    "email": "storycraft@storyboard.ml",
-    "url": "https://storyboard.ml"
+    "email": "storycraft@pancake.sh",
+    "url": "https://pancake.sh"
   },
   "license": "MIT",
   "devDependencies": {
