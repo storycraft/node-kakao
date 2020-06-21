@@ -366,8 +366,12 @@ export class TalkClientUserInfo implements ClientUserInfo {
         return this.settings.emailAddress;
     }
 
-    get TalkId() {
+    get AccountDisplayId() {
         return this.settings.accountDisplayId;
+    }
+
+    get TalkId() {
+        return this.settings.uuid;
     }
 
     get StatusMessage() {

@@ -100,6 +100,8 @@ export interface ClientUserInfo extends ChatUserInfo {
 
     readonly EmailAddress: string;
 
+    readonly AccountDisplayId: string;
+
     readonly TalkId: string;
 
     readonly StatusMessage: string;
