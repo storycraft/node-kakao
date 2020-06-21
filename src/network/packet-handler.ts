@@ -301,25 +301,21 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
     }*/
 
-    async onOpenChannelJoin(packet: PacketJoinLinkRes) {
-        if (!packet.ChatInfo) return;
-
-        let chanId = packet.ChatInfo.channelId;
-
-        let newChan = await this.ChannelManager.addWithChannelInfo(chanId, packet.ChatInfo);
-
+    onOpenChannelJoin(packet: PacketJoinLinkRes) {
         if (!packet.Chatlog) return;
 
         let chat = this.ChatManager.chatFromChatlog(packet.Chatlog) as FeedChat;
 
         if (!chat || !chat.isFeed()) return;
 
-        this.Client.ClientUser.emit('user_join', newChan, this.Client.ClientUser);
-        newChan.emit('user_join', newChan, this.Client.ClientUser);
-        this.Client.emit('user_join', newChan, this.Client.ClientUser);
+        let channel = chat.Channel;
+
+        this.Client.ClientUser.emit('user_join', channel, this.Client.ClientUser);
+        channel.emit('user_join', channel, this.Client.ClientUser);
+        this.Client.emit('user_join', channel, this.Client.ClientUser);
         
         this.Client.ClientUser.emit('feed', chat);
-        newChan.emit('feed', chat);
+        channel.emit('feed', chat);
         this.Client.emit('feed', chat);
     }
 

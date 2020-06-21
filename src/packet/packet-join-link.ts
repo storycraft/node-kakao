@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long, OpenProfileType } from "..";
-import { OpenLinkStruct, OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenLinkStruct, OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
 import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
 import { ChatlogStruct } from "../talk/struct/chatlog-struct";
 import { Serializer } from "json-proxy-mapper";
@@ -58,7 +58,7 @@ export class PacketJoinLinkRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public LinkInfo?: OpenLinkStruct,
-        public OpenMember?: OpenMemberStruct,
+        public OpenMember?: OpenLinkMemberStruct,
         public ChatInfo?: ChannelInfoStruct,
         public Chatlog?: ChatlogStruct
     ) {
@@ -71,7 +71,7 @@ export class PacketJoinLinkRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawData: any) {
         if (rawData['ol']) this.LinkInfo = Serializer.deserialize<OpenLinkStruct>(rawData['ol'], OpenLinkStruct.MAPPER);
-        if (rawData['olu']) this.OpenMember = Serializer.deserialize<OpenMemberStruct>(rawData['olu'], OpenMemberStruct.MAPPER);
+        if (rawData['olu']) this.OpenMember = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
         if (rawData['chatRoom']) this.ChatInfo = Serializer.deserialize<ChannelInfoStruct>(rawData['chatRoom'], ChannelInfoStruct.MAPPER);
         if (rawData['chatLog']) this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawData['chatLog'], ChatlogStruct.MAPPER);
     }

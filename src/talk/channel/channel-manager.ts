@@ -186,7 +186,11 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
 
-        if (!res.ChatInfo) return { status: res.StatusCode };
+        if (!res.ChatInfo || !res.LinkInfo) return { status: res.StatusCode };
+
+        // fix linkid and openToken
+        res.ChatInfo.linkId = res.LinkInfo.linkId;
+        res.ChatInfo.openToken = res.LinkInfo.openToken;
         
         return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
