@@ -129,7 +129,7 @@ export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
     }
 
     get MemberType() {
-        return this.memberStruct.memberType || OpenMemberType.UNKNOWN;
+        return this.memberStruct.memberType || OpenMemberType.NONE;
     }
 
     get ProfileImageURL() {

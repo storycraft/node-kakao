@@ -77,6 +77,12 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         return res.LinkList;
     }
+
+    protected async requestLinkFromId(linkId: Long): Promise<OpenLinkStruct | null> {
+        let res = await this.Interface.requestPacketRes<PacketInfoLinkRes>(new PacketInfoLinkReq([ linkId ]));
+
+        return res.LinkList[0] || null;
+    }
     
     protected async requestLinkFromURL(openLinkURL: string): Promise<OpenLinkStruct | null> {
         let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
@@ -99,6 +105,14 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
         return link;
     }
 
+    async updateInfo(link: OpenLink): Promise<OpenLink> {
+        let linkStruct = await this.requestLinkFromId(link.LinkId);
+
+        if (linkStruct) (link as ManagedOpenLink).updateStruct(linkStruct);
+        
+        return link;
+    }
+
     protected createWithLinkStruct(linkId: Long, linkStruct: OpenLinkStruct): OpenLink {
         return new ManagedOpenLink(this, linkId, linkStruct.openToken, linkStruct);
     }
@@ -108,9 +122,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
     }
 
     protected async createInstanceFor(key: Long): Promise<OpenLink | null> {
-        let list = await this.requestLinkFromIdList([ key ]);
-
-        let linkStruct = list[0];
+        let linkStruct = await this.requestLinkFromId(key);
 
         if (!linkStruct) return null;
 
@@ -155,6 +167,12 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
+    
+    async handOverHost(channel: OpenChatChannel, newHostUserId: Long): Promise<RequestResult<boolean>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(channel.LinkId, channel.Id, [ newHostUserId, channel.Client.ClientUser.Id ], [ OpenMemberType.OWNER, OpenMemberType.NONE ]));
+
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
+    }
 
     async hideChat(channel: OpenChatChannel, logId: Long): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, 1, FeedType.OPENLINK_REWRITE_FEED));
@@ -162,15 +180,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async updateOpenMemberTypeList(channel: OpenChatChannel, idTypeSet: Map<Long, OpenMemberType>): Promise<RequestResult<boolean>> {
-        let linkId = channel.LinkId;
-
-        let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(linkId, channel.Id, Array.from(idTypeSet.keys()), Array.from(idTypeSet.values())));
-
-        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
-    }
-
-    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType): Promise<RequestResult<boolean>> {
+    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(channel.LinkId, channel.Id, [ userId ], [ type ]));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };

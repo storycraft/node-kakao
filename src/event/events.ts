@@ -88,9 +88,8 @@ declare interface OpenChannelEvent extends Event {
     // 채널의 오픈링크가 삭제되었을시 호출
     on(event: 'link_deleted', listener: (channel: OpenChatChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void): this;
 
-    // TODO
     // 채널의 오픈링크 소유자가 바뀌었을시 호출
-    on(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, feed: FeedChat<OpenHandOverHostFeed>) => void): this;
+    on(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, newHost: ChatUser, prevHost: ChatUser) => void): this;
 
     once(event: 'user_join', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed>) => void): this;
     once(event: 'user_left', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed>) => void): this;

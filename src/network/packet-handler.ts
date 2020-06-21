@@ -19,7 +19,7 @@ import { PacketSyncProfileRes } from "../packet/packet-sync-profile";
 import { PacketKickMemberRes } from "../packet/packet-kick-member";
 import { PacketDeleteMemberRes } from "../packet/packet-delmem";
 import { PacketKickoutRes, LocoKickoutType } from "../packet/packet-kickout";
-import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed, OpenRewriteFeed } from "../talk/chat/chat-feed";
+import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed, OpenRewriteFeed, OpenHandOverHostFeed } from "../talk/chat/chat-feed";
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { NetworkManager } from "./network-manager";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
@@ -38,6 +38,8 @@ import { PacketSyncRewriteRes } from "../packet/packet-sync-rewrite";
 import { PacketRewriteRes, PacketRewriteReq } from "../packet/packet-rewrite";
 import { ChannelType } from "../talk/channel/channel-type";
 import { PacketLinkDeletedRes } from "../packet/packet-link-deleted";
+import { OpenMemberType } from "../talk/open/open-link-type";
+import { ManagedOpenLink } from "../talk/managed/managed-open-link";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -357,7 +359,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('user_join', newChan, this.Client.ClientUser);
     }
 
-    syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
+    async syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
         let chanId = packet.ChannelId;
 
         let channel = this.getManagedChannel(chanId) as ManagedOpenChatChannel | null;
@@ -367,11 +369,25 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let len = packet.MemberIdList.length;
         for (let i = 0; i < len; i++) {
             let info = channel.getUserInfoId(packet.MemberIdList[i]);
+            let type = packet.MemberTypeList[i];
 
             if (!info) continue;
 
             let lastType = info.MemberType;
-            info.updateMemberType(packet.MemberTypeList[i]);
+            info.updateMemberType(type);
+
+            if (type === OpenMemberType.OWNER) {
+                let link = channel.getOpenLink() as ManagedOpenLink;
+                let prevHost = this.UserManager.get(link.LinkOwnerInfo.Id);
+
+                await this.Client.OpenLinkManager.updateInfo(link);
+
+                info.User.emit('link_hand_over_host', channel, info.User, prevHost);
+                channel.emit('link_hand_over_host', channel, info.User, prevHost);
+                this.Client.emit('link_hand_over_host', channel, info.User, prevHost);
+
+                continue;
+            }
         
             info.User.emit('member_type_changed', channel, info.User, lastType);
             channel.emit('member_type_changed', channel, info.User, lastType);

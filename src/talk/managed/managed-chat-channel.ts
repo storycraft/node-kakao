@@ -387,15 +387,23 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return this.Client.OpenLinkManager.changeProfile(this, profile);
     }
 
-    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
+    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER) {
         return this.setOpenMemberTypeId(user.Id, memberType);
     }
 
-    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<RequestResult<boolean>> {
+    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
     }
 
-    requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>> {
+    async handOverHost(newHost: ChatUser): Promise<RequestResult<boolean>> {
+        return this.handOverHostId(newHost.Id);
+    }
+
+    async handOverHostId(newHostId: Long): Promise<RequestResult<boolean>> {
+        return this.Client.OpenLinkManager.handOverHost(this, newHostId);
+    }
+
+    async requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>> {
         return this.Client.OpenLinkManager.requestReactionInfo(this.linkId);
     }
 
