@@ -6,7 +6,7 @@
 
 import { OpenLinkChannel } from "../open/open-link";
 import { OpenMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
-import { ChatUser, ChatUserInfo } from "../user/chat-user";
+import { ChatUser, ChatUserInfo, OpenChatUserInfo } from "../user/chat-user";
 import { OpenMemberType } from "../open/open-link-type";
 import { Long } from "bson";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct } from "../struct/channel-meta-struct";
@@ -24,7 +24,7 @@ import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 
 
-export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserInfo> extends EventEmitter implements ChatChannel<I> {
+export abstract class ManagedBaseChatChannel extends EventEmitter implements ChatChannel {
 
     private lastChat: Chat | null;
 
@@ -44,7 +44,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
 
     private channelMetaList: ChannelMetaStruct[];
 
-    private userInfoMap: Map<string, I>;
+    private userInfoMap: Map<string, ChatUserInfo>;
 
     constructor(private manager: ChannelManager, private id: Long, private dataStruct: ChannelDataStruct) {
         super();
@@ -132,16 +132,20 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         return this.userInfoMap.has(id.toString());
     }
 
-    getUserInfoId(id: Long) {
-        let info = this.userInfoMap.get(id.toString()) || null;
+    getUserInfoId(id: Long): ChatUserInfo | null {
+        let info = this.getUserInfoIdMap(id);
 
-        if (!info && this.Client.ClientUser.Id.equals(id)) return this.Client.ClientUser.MainUserInfo as I;
+        if (!info && this.Client.ClientUser.Id.equals(id)) return this.Client.ClientUser.MainUserInfo;
 
         return info;
     }
 
-    getUserInfo(user: ChatUser) {
+    getUserInfo(user: ChatUser): ChatUserInfo | null {
         return this.getUserInfoId(user.Id);
+    }
+
+    protected getUserInfoIdMap(id: Long) {
+        return this.userInfoMap.get(id.toString()) || null;
     }
 
     async markChannelRead(lastWatermark: Long) {
@@ -262,7 +266,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         this.lastChat = chat;
     }
 
-    updateUserInfo(userId: Long, userInfo: I | null) {
+    updateUserInfo(userId: Long, userInfo: ChatUserInfo | null) {
         if (userInfo) this.userInfoMap.set(userId.toString(), userInfo);
         else this.userInfoMap.delete(userId.toString());
     }
@@ -271,7 +275,15 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
 
 }
 
-export class ManagedChatChannel extends ManagedBaseChatChannel<ManagedChatUserInfo> {
+export class ManagedChatChannel extends ManagedBaseChatChannel {
+
+    getManagedUserInfo(user: ChatUser): ManagedChatUserInfo | null {
+        return this.getManagedUserInfoId(user.Id);
+    }
+
+    getManagedUserInfoId(id: Long): ManagedChatUserInfo | null {
+        return this.getUserInfoIdMap(id) as ManagedChatUserInfo || null;
+    }
     
     updateMemberList(memberList: MemberStruct[]) {
         for (let memberStruct of memberList) {
@@ -286,7 +298,7 @@ export class ManagedChatChannel extends ManagedBaseChatChannel<ManagedChatUserIn
 
 }
 
-export class ManagedMemoChatChannel extends ManagedBaseChatChannel<ManagedChatUserInfo> {
+export class ManagedMemoChatChannel extends ManagedBaseChatChannel {
 
     isOpenChat() {
         return false;
@@ -294,7 +306,7 @@ export class ManagedMemoChatChannel extends ManagedBaseChatChannel<ManagedChatUs
 
 }
 
-export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenChatUserInfo> implements OpenChatChannel {
+export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements OpenChatChannel {
 
     //lazy initialization hax
     private clientUserInfo: ManagedOpenChatUserInfo | null;
@@ -329,10 +341,26 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
         return true;
     }
 
-    getUserInfoId(id: Long) {
+    getUserInfoList() {
+        return super.getUserInfoList() as OpenChatUserInfo[];
+    }
+
+    getUserInfo(user: ChatUser): OpenChatUserInfo | null {
+        return this.getUserInfoId(user.Id);
+    }
+
+    getUserInfoId(id: Long): OpenChatUserInfo | null {
         if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo;
 
-        return super.getUserInfoId(id);
+        return super.getUserInfoId(id) as OpenChatUserInfo | null;
+    }
+
+    getManagedUserInfo(user: ChatUser): ManagedOpenChatUserInfo | null {
+        return this.getManagedUserInfoId(user.Id);
+    }
+
+    getManagedUserInfoId(id: Long): ManagedOpenChatUserInfo | null {
+        return this.getUserInfoIdMap(id) as ManagedOpenChatUserInfo || null;
     }
 
     getMemberType(user: ChatUser): OpenMemberType {

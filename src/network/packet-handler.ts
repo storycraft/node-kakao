@@ -133,8 +133,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         
         let channel = chat.Channel as (ManagedChatChannel | ManagedOpenChatChannel);
 
-        let userInfo = channel.getUserInfo(chat.Sender);
-        if (userInfo) userInfo.updateNickname(packet.SenderNickname);
+        let managedInfo = channel.getManagedUserInfo(chat.Sender);
+        if (managedInfo) managedInfo.updateNickname(packet.SenderNickname);
 
         channel.updateLastChat(chat);
 
@@ -373,8 +373,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
             if (!info) continue;
 
+            let managedInfo = channel.getManagedUserInfoId(packet.MemberIdList[i]);
+            if (managedInfo) managedInfo.updateMemberType(type);
+
             let lastType = info.MemberType;
-            info.updateMemberType(type);
 
             if (type === OpenMemberType.OWNER) {
                 let link = channel.getOpenLink() as ManagedOpenLink;

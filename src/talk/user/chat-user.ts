@@ -98,4 +98,17 @@ export interface ClientChatUser extends ChatUser {
 
 export interface ClientUserInfo extends ChatUserInfo {
 
+    readonly EmailAddress: string;
+
+    readonly TalkId: string;
+
+    readonly StatusMessage: string;
+
+    readonly NsnPhoneNumber: string;
+
+    readonly PstnPhoneNumber: string;
+
+    readonly FormattedNsnPhoneNumber: string;
+
+    readonly FormattedPstnPhoneNumber: string;
 }

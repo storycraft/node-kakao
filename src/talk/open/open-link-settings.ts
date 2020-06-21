@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkProfileContent, OpenProfileTemplate } from "./open-link-profile-template";
+import { OpenLinkProfileContent, OpenProfileTemplates } from "./open-link-profile-template";
 
 export interface OpenLinkSettings {
 
@@ -20,6 +20,6 @@ export interface OpenLinkSettings {
     description: string;
     profileContent?: OpenLinkProfileContent;
 
-    clientProfile: OpenProfileTemplate;
+    clientProfile: OpenProfileTemplates;
 
 }

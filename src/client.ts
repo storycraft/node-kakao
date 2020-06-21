@@ -362,6 +362,34 @@ export class TalkClientUserInfo implements ClientUserInfo {
         return this.settings.originalProfileImageUrl || '';
     }
 
+    get EmailAddress() {
+        return this.settings.emailAddress;
+    }
+
+    get TalkId() {
+        return this.settings.accountDisplayId;
+    }
+
+    get StatusMessage() {
+        return this.settings.statusMessage;
+    }
+
+    get NsnPhoneNumber() {
+        return this.settings.nsnNumber;
+    }
+
+    get PstnPhoneNumber() {
+        return this.settings.pstnNumber;
+    }
+
+    get FormattedNsnPhoneNumber() {
+        return this.settings.formattedNsnNumber;
+    }
+
+    get FormattedPstnPhoneNumber() {
+        return this.settings.formattedPstnNumber;
+    }
+
     isOpenUser(): false {
         return false;
     }
