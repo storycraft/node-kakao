@@ -73,7 +73,10 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
             case ChannelType.OPENCHAT_DIRECT:
             case ChannelType.OPENCHAT_GROUP: {
-                let link = await this.client.OpenLinkManager.get(channelData.linkId!) as OpenLinkChannel;
+                let link = await this.client.OpenLinkManager.get(channelData.linkId!) as OpenLinkChannel | null;
+
+                if (!link) throw new Error(`Invalid OpenLink at Channel ${id}`);
+
                 channel = new ManagedOpenChatChannel(this, id, channelData, channelData.linkId!, channelData.openToken!, link);
                 break;
             }

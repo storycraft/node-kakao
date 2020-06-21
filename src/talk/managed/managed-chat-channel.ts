@@ -124,7 +124,7 @@ export abstract class ManagedBaseChatChannel<I extends ChatUserInfo = ChatUserIn
         return this.channelMetaList;
     }
 
-    get UserInfoList() {
+    getUserInfoList() {
         return Array.from(this.userInfoMap.values());
     }
 
@@ -296,12 +296,17 @@ export class ManagedMemoChatChannel extends ManagedBaseChatChannel<ManagedChatUs
 
 export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenChatUserInfo> implements OpenChatChannel {
 
+    //lazy initialization hax
+    private clientUserInfo: ManagedOpenChatUserInfo | null;
+
     constructor(manager: ChannelManager, id: Long, dataStruct: ChannelDataStruct, private linkId: Long, private openToken: number, private openLink: OpenLinkChannel) {
         super(manager, id, dataStruct);
+
+        this.clientUserInfo = null;
     }
 
     get ClientUserInfo() {
-        return this.getUserInfoId(this.Client.ClientUser.Id)!;
+        return this.clientUserInfo!;
     }
 
     get Name() {
@@ -322,6 +327,12 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
 
     isOpenChat(): true {
         return true;
+    }
+
+    getUserInfoId(id: Long) {
+        if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo;
+
+        return super.getUserInfoId(id);
     }
 
     getMemberType(user: ChatUser): OpenMemberType {
@@ -397,13 +408,16 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel<ManagedOpenCh
     }
 
     updateMemberList(memberList: OpenMemberStruct[]) {
-        for (let memberStruct of memberList) {
-            this.updateMember(memberStruct);
-        }
+        memberList.forEach(this.updateMember.bind(this));
     }
 
     updateMember(memberStruct: OpenMemberStruct) {
         let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedOpenChatUserInfo;
+
+        if (this.Client.ClientUser.Id.equals(userInfo.Id)) {
+            this.clientUserInfo = userInfo;
+            return;
+        }
 
         this.updateUserInfo(userInfo.Id, userInfo);
     }

@@ -45,9 +45,9 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     readonly PushAlert: boolean;
 
-    readonly UserInfoList: I[];
-
     readonly ChannelMetaList: ChannelMetaStruct[];
+
+    getUserInfoList(): I[];
 
     hasUserInfo(id: Long): boolean;
 
