@@ -4,8 +4,9 @@ Note: this implemention can stop working anytime.
 
 ## Version Information
 
-| v2 | (Recommended) Current |
+| v3 | (Recommended) Current |
 |----|-----------------------|
+| v2 |      deprecated       |
 | v1 | experimental. buggy   |
 
 ## Warning
@@ -34,11 +35,11 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-client.on('user_join', (channel: ChatChannel, user: ChatUser, joinFeed: ChatFeed) => {
+client.on('user_join', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => {
     console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에 참여했습니다.');
 });
 
-client.on('user_left', (channel: ChatChannel, user: ChatUser) => {
+client.on('user_left', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => {
     console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에서 나갔습니다.');
 });
 
