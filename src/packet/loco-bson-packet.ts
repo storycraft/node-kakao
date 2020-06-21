@@ -1,5 +1,6 @@
 import * as Bson from "bson";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "./loco-packet-base";
+import { PromiseTicket } from "../ticket/promise-ticket";
 
 /*
  * Created on Wed Oct 30 2019
@@ -9,7 +10,11 @@ import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "./loco-packet
 
 export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
 
-    private resolveList: ((packet: any) => void)[] = [];
+    private ticketObj: PromiseTicket<any>;
+
+    constructor() {
+        this.ticketObj = new PromiseTicket();
+    }
 
     get StatusCode(): StatusCode {
         return StatusCode.SUCCESS;
@@ -28,13 +33,11 @@ export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
     }
 
     onResponse<T extends LocoResponsePacket>(packet: T) {
-        this.resolveList.forEach(resolve => resolve(packet));
-        this.resolveList = [];
+        this.ticketObj.resolve(packet);
     }
 
     submitResponseTicket<T extends LocoResponsePacket>(): Promise<T> {
-        let promise = new Promise<T>((resolve, reject) => { this.resolveList.push(resolve) });
-        return promise;
+        return this.ticketObj.createTicket();
     }
 
 }

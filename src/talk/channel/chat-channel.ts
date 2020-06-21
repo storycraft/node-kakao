@@ -1,22 +1,19 @@
-import { ChatUser } from "../user/chat-user";
+import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo } from "../user/chat-user";
 import { Long } from "bson";
-import { ChannelType } from "../chat/channel-type";
+import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
-import { Chat, UnknownChat } from "../chat/chat";
-import { PacketMessageWriteReq, PacketMessageWriteRes } from "../../packet/packet-message";
-import { ChatType } from "../chat/chat-type";
+import { Chat, FeedChat } from "../chat/chat";
 import { MessageTemplate } from "../chat/template/message-template";
-import { ChatlogStruct } from "../struct/chatlog-struct";
-import { OpenLinkStruct } from "../struct/open-link-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
-import { ChatBuilder } from "../chat/chat-builder";
-import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
-import { ChatFeed } from "../chat/chat-feed";
-import { JsonUtil } from "../../util/json-util";
-import { ChannelInfo, OpenChannelInfo } from "./channel-info";
 import { LocoClient } from "../../client";
-import { OpenMemberType, OpenchatProfileType } from "../open/open-link-type";
-import { StatusCode } from "../../packet/loco-packet-base";
+import { OpenMemberType } from "../open/open-link-type";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct } from "../struct/channel-meta-struct";
+import { ChannelSettings } from "./channel-settings";
+import { OpenLinkChannel } from "../open/open-link";
+import { RequestResult } from "../request/request-result";
+import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { OpenProfileTemplates } from "../open/open-link-profile-template";
+import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 
 /*
  * Created on Fri Nov 01 2019
@@ -24,190 +21,118 @@ import { StatusCode } from "../../packet/loco-packet-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChatChannel extends EventEmitter {
+export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChannelEvents {
 
-    static readonly INFO_UPDATE_INTERVAL: number = 300000;
+    readonly Client: LocoClient;
 
-    private lastChat: Chat | null;
+    readonly LastChat: Chat | null;
 
-    private readonly channelInfo: ChannelInfo;
+    readonly Id: Long;
 
-    constructor(private client: LocoClient, private id: Long, private type: ChannelType) {
-        super();
+    readonly Type: ChannelType;
 
-        this.channelInfo = this.createChannelInfo();
-        this.lastChat = null;
-    }
+    readonly Name: string;
 
-    protected createChannelInfo(): ChannelInfo {
-        return new ChannelInfo(this);
-    }
+    readonly RoomImageURL: string;
+    readonly RoomFullImageURL: string;
 
-    get Client() {
-        return this.client;
-    }
+    readonly ClientName: string;
 
-    get LastChat() {
-        return this.lastChat;
-    }
+    readonly ClientRoomImageURL: string;
+    readonly ClientRoomFullImageURL: string;
 
-    get Id() {
-        return this.id;
-    }
+    readonly IsFavorite: boolean;
 
-    get Type() {
-        return this.type;
-    }
+    readonly PushAlert: boolean;
 
-    async getChannelInfo(forceUpdate: boolean = false) {
-        if (forceUpdate || this.channelInfo.LastInfoUpdated + ChatChannel.INFO_UPDATE_INTERVAL <= Date.now()) {
-            await this.channelInfo.updateInfo();
-        }
+    readonly ChannelMetaList: ChannelMetaStruct[];
 
-        return this.channelInfo;
-    }
+    getUserInfoList(): I[];
 
-    chatReceived(chat: Chat) {
-        this.lastChat = chat;
+    hasUserInfo(id: Long): boolean;
 
-        this.emit('message', chat);
-        this.client.emit('message', chat);
-    }
+    getUserInfo(user: ChatUser): I | null;
 
-    async markChannelRead(lastWatermark: Long) {
-        await this.Client.ChannelManager.markRead(this, lastWatermark);
-    }
+    getUserInfoId(id: Long): I | null;
 
-    async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
-        let { text, extra } = ChatBuilder.buildMessage(...textFormat);
+    isOpenChat(): boolean;
 
-        let extraText = JsonUtil.stringifyLoseless(extra);
-        
-        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, ChatType.Text, false, extraText));
-        
-        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+    markChannelRead(lastWatermark: Long): Promise<void>;
 
-        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
-    }
+    sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null>;
     
-    async sendTemplate(template: MessageTemplate): Promise<Chat | null> {
-        if (!template.Valid) {
-            throw new Error('Invalid template');
-        }
+    sendTemplate(template: MessageTemplate): Promise<Chat | null>;
 
-        let sentType = template.getMessageType();
-        let text = template.getPacketText();
-        let extra = template.getPacketExtra();
+    leave(block?: boolean): Promise<RequestResult<boolean>>;
 
-        let res = await this.client.LocoInterface.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), this.id, text, sentType, false, extra));
+    setChannelSettings(settings: ChannelSettings): Promise<RequestResult<boolean>>;
 
-        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+    setTitleMeta(title: string): Promise<RequestResult<boolean>>;
 
-        return this.client.ChatManager.chatFromChatlog(res.Chatlog!);
-    }
+    setNoticeMeta(notice: string): Promise<RequestResult<boolean>>;
 
-    async leave(block: boolean = false): Promise<boolean> {
-        return this.client.ChannelManager.leave(this, block);
-    }
+    setPrivilegeMeta(content: PrivilegeMetaContent): Promise<RequestResult<boolean>>;
 
-    isOpenChat(): boolean {
-        return false;
-    }
+    setProfileMeta(content: ProfileMetaContent): Promise<RequestResult<boolean>>;
 
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'join', listener: (newUser: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'left', listener: (leftUser: ChatUser, feed: ChatFeed) => void): this;
+    setTvMeta(content: TvMetaContent): Promise<RequestResult<boolean>>;
 
-    on(event: string, listener: (...args: any[]) => void) {
-        return super.on(event, listener);
-    }
+    setTvLiveMeta(content: TvLiveMetaContent): Promise<RequestResult<boolean>>;
 
-    once(event: 'message', listener: (chat: Chat) => void): this;
-    once(event: 'join', listener: (newUser: ChatUser, feed: ChatFeed) => void): this;
-    once(event: 'left', listener: (leftUser: ChatUser, feed: ChatFeed) => void): this;
+    setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<RequestResult<boolean>>;
 
-    once(event: string, listener: (...args: any[]) => void) {
-        return super.once(event, listener);
-    }
+    setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>>;
 
 }
 
-export class OpenChatChannel extends ChatChannel {
+export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
 
-    constructor(client: LocoClient, channelId: Long, type: ChannelType, private linkId: Long, private openToken: number) {
-        super(client, channelId, type);
-    }
-
-    protected createChannelInfo(): OpenChannelInfo {
-        return new OpenChannelInfo(this);
-    }
     
-    async getChannelInfo(forceUpdate: boolean = false): Promise<OpenChannelInfo> {
-        return super.getChannelInfo(forceUpdate) as Promise<OpenChannelInfo>;
-    }
 
-    get LinkId() {
-        return this.linkId;
-    }
+}
 
-    get OpenToken() {
-        return this.openToken;
-    }
+type OpenChatChannelMixin<I extends OpenChatUserInfo> = ChatChannel<I> & OpenChannelEvents;
+export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> extends OpenChatChannelMixin<I> {
 
-    isOpenChat(): boolean {
-        return true;
-    }
+    readonly LinkId: Long;
+    readonly OpenToken: number;
 
-    async kickMember(user: ChatUser): Promise<boolean> {
-        return this.kickMemberId(user.Id);
-    }
+    readonly ClientUserInfo: OpenChatUserInfo;
 
-    async kickMemberId(userId: Long): Promise<boolean> {
-        if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
+    getOpenLink(): OpenLinkChannel;
 
-        return this.Client.OpenChatManager.kickMember(this, userId);
-    }
+    canManageChannel(user: ChatUser): boolean;
 
-    async deleteLink(): Promise<boolean> {
-        if (!(await this.getChannelInfo()).LinkOwner.isClientUser()) return false;
+    canManageChannelId(userId: Long): boolean;
 
-        return this.Client.OpenChatManager.deleteLink(this.linkId);
-    }
+    isManager(user: ChatUser): boolean;
 
-    async hideChat(chat: Chat) {
-        return this.hideChatId(chat.LogId);
-    }
+    isManagerId(userId: Long): boolean;
 
-    async hideChatId(logId: Long) {
-        if (!(await this.getChannelInfo()).canManageChannel(this.Client.ClientUser)) return false;
+    getMemberType(user: ChatUser): OpenMemberType;
 
-        return this.Client.OpenChatManager.hideChat(this, logId);
-    }
+    getMemberTypeId(userId: Long): OpenMemberType;
 
-    async changeToMainProfile(): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.MAIN);
-    }
+    isOpenChat(): true;
 
-    async changeToKakaoProfile(nickname: string, profilePath: string): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.KAKAO_ANON, nickname, profilePath);
-    }
+    kickMember(user: ChatUser): Promise<RequestResult<boolean>>;
+    kickMemberId(userId: Long): Promise<RequestResult<boolean>>;
 
-    async changeToLinkProfile(profileLinkId: Long): Promise<boolean> {
-        return this.Client.OpenChatManager.changeProfile(this, OpenchatProfileType.OPEN_PROFILE, profileLinkId);
-    }
+    deleteLink(): Promise<RequestResult<boolean>>;
 
-    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType) {
-        return this.setOpenMemberTypeId(user.Id, memberType);
-    }
+    hideChat(chat: Chat): Promise<RequestResult<boolean>>;
+    hideChatId(logId: Long): Promise<RequestResult<boolean>>;
 
-    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType): Promise<boolean> {
-        if (!(await this.getChannelInfo()).hasUserInfo(userId)) return false;
+    changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>>;
 
-        return this.Client.OpenChatManager.setOpenMemberType(this, userId, memberType);
-    }
+    setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
 
-    async getOpenProfile(): Promise<OpenLinkStruct> {
-        return this.Client.OpenChatManager.get(this.linkId);
-    }
+    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
+
+    handOverHost(newHost: ChatUser): Promise<RequestResult<boolean>>;
+    handOverHostId(newHostId: Long): Promise<RequestResult<boolean>>;
+
+    requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>>;
+    setReacted(reacted: boolean): Promise<RequestResult<boolean>>;
 
 }

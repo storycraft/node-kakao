@@ -96,7 +96,7 @@ export namespace TestUtil {
         constructor(name: string, deviceUUID: string, hook: LocoPacketHandler) {
             super(name, deviceUUID);
 
-            let networkManager = this.LocoInterface as NetworkManager;
+            let networkManager = this.NetworkManager as NetworkManager;
 
             networkManager.Handler = new WrappedHandler(networkManager.Handler, hook);
         }

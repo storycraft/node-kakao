@@ -1,5 +1,4 @@
 import { Duplex, Writable } from "stream";
-import { LocoPacketReader } from "../../packet/loco-packet-reader";
 import { LocoSocket } from "../loco-socket";
 import { PacketHeader } from "../../packet/packet-header-struct";
 import { ChunkedBufferList } from "../chunk/chunked-buffer-list";

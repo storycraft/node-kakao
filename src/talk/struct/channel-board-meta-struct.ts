@@ -1,24 +1,47 @@
-import { StructBaseOld } from "./struct-base";
-
 /*
  * Created on Tue Nov 05 2019
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class ChannelBoardMetaStruct implements StructBaseOld {
-    
-    fromJson(rawData: any): void {
-        throw new Error("Method not implemented.");
-    }
-    
-    toJson() {
-        throw new Error("Method not implemented.");
-    }
+import { StructBase } from "./struct-base";
+import { ObjectMapper } from "json-proxy-mapper";
+import { Long } from "bson";
+import { JsonUtil } from "../../util/json-util";
+
+export interface ChannelBoardMetaStruct extends StructBase {
+
+    type: ChannelBoardMetaType;
+    content: string;
+
+    boardRevision: Long;
+    userRevision: Long;
 
 }
 
-export enum ChannelBoardType {
+export namespace ChannelBoardMetaStruct {
+
+    export const Mappings = {
+
+        'type': 't',
+        'content': 'ct',
+        'boardRevision': 'br',
+        'userRevision': 'ur'
+
+    }
+
+    export const ConvertMap = {
+
+        'boardRevision': JsonUtil.LongConverter,
+        'userRevision': JsonUtil.LongConverter
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+
+}
+
+export enum ChannelBoardMetaType {
 
     NONE = 0,
     FLOATING_NOTICE = 1,

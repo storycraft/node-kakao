@@ -1,25 +1,26 @@
-import { Long, AccessDataProvider } from ".";
 import { NetworkManager } from "./network/network-manager";
 import { LoginAccessDataStruct, LoginStatusCode } from "./talk/struct/auth/login-access-data-struct";
 import { KakaoAPI } from "./kakao-api";
-import { ClientChatUser, ChatUser } from "./talk/user/chat-user";
+import { ClientChatUser, ClientUserInfo } from "./talk/user/chat-user";
 import { EventEmitter } from "events";
-import { ChatChannel } from "./talk/channel/chat-channel";
-import { Chat } from "./talk/chat/chat";
+import { MemoChatChannel } from "./talk/channel/chat-channel";
 import { MoreSettingsStruct } from "./talk/struct/api/account/client-settings-struct";
 import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { JsonUtil } from "./util/json-util";
-import { OpenChatManager } from "./talk/open/open-chat-manager";
-import { ChatFeed } from "./talk/chat/chat-feed";
-import { LocoKickoutType } from "./packet/packet-kickout";
+import { OpenLinkManager } from "./talk/open/open-link-manager";
 import { ApiClient } from "./api/api-client";
-import { LocoInterface } from "./loco/loco-interface";
 import { Serializer } from "json-proxy-mapper";
 import { ApiStatusCode } from "./talk/struct/api/api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
+import { ClientStatus } from "./client-status";
+import { UserType } from "./talk/user/user-type";
+import { RequestResult } from "./talk/request/request-result";
+import { AccessDataProvider } from "./oauth/access-data-provider";
+import { ClientEvents } from "./event/events";
+import { Long } from "bson";
 
 /*
  * Created on Fri Nov 01 2019
@@ -27,9 +28,10 @@ import { StatusCode } from "./packet/loco-packet-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface LoginBasedClient {
+export interface LoginBasedClient extends AccessDataProvider {
 
     readonly Logon: boolean;
+    readonly ApiClient: ApiClient;
     
     login(email: string, password: string, deviceUUID?: string, forced?: boolean): Promise<void>;
     loginToken(email: string, token: string, deviceUUID?: string, forced?: boolean): Promise<void>;
@@ -47,18 +49,11 @@ export interface LoginError {
 
 }
 
-export enum ClientStatus {
-
-    UNLOCKED = 1,
-    LOCKED = 2
-
-}
-
-export interface LocoClient extends LoginBasedClient, EventEmitter {
+export interface LocoClient extends LoginBasedClient, ClientEvents {
 
     readonly Name: string;
 
-    readonly LocoInterface: LocoInterface;
+    readonly NetworkManager: NetworkManager;
 
     readonly ChannelManager: ChannelManager;
 
@@ -66,15 +61,19 @@ export interface LocoClient extends LoginBasedClient, EventEmitter {
 
     readonly ChatManager: ChatManager;
 
-    readonly OpenChatManager: OpenChatManager;
+    readonly OpenLinkManager: OpenLinkManager;
 
     readonly ClientUser: ClientChatUser;
 
     readonly LocoLogon: boolean;
 
+    setStatus(status: ClientStatus): Promise<RequestResult<boolean>>;
+    getStatus(): ClientStatus;
+    updateStatus(): Promise<RequestResult<boolean>>;
+
 }
 
-export class LoginClient extends EventEmitter implements LoginBasedClient, AccessDataProvider {
+export class LoginClient extends EventEmitter implements LoginBasedClient {
 
     private name: string;
 
@@ -160,7 +159,7 @@ export class TalkClient extends LoginClient implements LocoClient {
     private userManager: UserManager;
 
     private chatManager: ChatManager;
-    private openChatManager: OpenChatManager;
+    private openLinkManager: OpenLinkManager;
 
     private status: ClientStatus;
 
@@ -173,15 +172,15 @@ export class TalkClient extends LoginClient implements LocoClient {
         this.userManager = new UserManager(this);
 
         this.chatManager = new ChatManager(this);
-        this.openChatManager = new OpenChatManager(this);
+        this.openLinkManager = new OpenLinkManager(this);
 
         this.clientUser = null;
 
         this.status = ClientStatus.UNLOCKED;
     }
 
-    get LocoInterface() {
-        return this.networkManager as LocoInterface;
+    get NetworkManager() {
+        return this.networkManager;
     }
 
     get ChannelManager() {
@@ -196,8 +195,8 @@ export class TalkClient extends LoginClient implements LocoClient {
         return this.chatManager;
     }
 
-    get OpenChatManager() {
-        return this.openChatManager;
+    get OpenLinkManager() {
+        return this.openLinkManager;
     }
 
     get LocoLogon() {
@@ -242,54 +241,161 @@ export class TalkClient extends LoginClient implements LocoClient {
 
         let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
 
-        this.clientUser = new ClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
+        this.clientUser = new TalkClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 
         this.userManager.initalizeClient();
-        this.channelManager.initalizeLoginData(loginRes.ChatDataList);
-        await this.openChatManager.initOpenSession();
+        await this.channelManager.initalizeLoginData(loginRes.ChatDataList);
+        await this.openLinkManager.initOpenSession();
 
         this.emit('login', this.clientUser);
-
-        await this.setStatus(this.status);
     }
 
-    async setStatus(status: ClientStatus): Promise<boolean> {
-        let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(status));
+    async setStatus(status: ClientStatus): Promise<RequestResult<boolean>> {
+        if (this.status !== status) this.status = status;
 
-        if (res.StatusCode === StatusCode.SUCCESS) {
-            if (status !== this.status) this.status = status;
-            return true;
-        }
-
-        return false;
+        return this.updateStatus();
     }
 
-    async getStatus(): Promise<ClientStatus> {
+    async updateStatus(): Promise<RequestResult<boolean>> {
+        let res = await this.networkManager.requestPacketRes<PacketSetStatusRes>(new PacketSetStatusReq(this.status));
+
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
+    }
+
+    getStatus(): ClientStatus {
         return this.status;
     }
 
     async logout() {
         await super.logout();
-
-        return this.networkManager.disconnect();
+        
+        this.networkManager.disconnect();
     }
 
-    on(event: 'login', listener: (user: ClientChatUser) => void): this;
-    on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
-    on(event: 'message', listener: (chat: Chat) => void): this;
-    on(event: 'feed', listener: (chat: Chat, feed: ChatFeed) => void): this;
-    on(event: 'message_read', listener: (channel: ChatChannel, reader: ChatUser, watermark: Long) => void): this;
-    on(event: 'message_deleted', listener: (logId: Long, hidden: boolean) => void): this;
-    on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed: ChatFeed) => void): this;
-    on(event: 'join_channel', listener: (joinChannel: ChatChannel) => void): this;
-    on(event: 'left_channel', listener: (leftChannel: ChatChannel) => void): this;
-    on(event: string, listener: (...args: any[]) => void): this {
-        return super.on(event, listener);
+}
+
+export class TalkClientChatUser extends EventEmitter implements ClientChatUser {
+
+    private client: TalkClient;
+    private id: Long;
+
+    private mainUserInfo: ClientUserInfo;
+
+    constructor(client: TalkClient, id: Long, settings: MoreSettingsStruct, private mainOpenToken: number) {
+        super();
+
+        this.client = client;
+        this.id = id;
+
+        this.mainUserInfo = new TalkClientUserInfo(this, settings);
     }
 
-    once(event: string, listener: (...args: any[]) => void): this {
-        return super.on(event, listener);
+    get Client(): LocoClient {
+        return this.client;
+    }
+
+    get Id() {
+        return this.id;
+    }
+
+    get MainUserInfo() {
+        return this.mainUserInfo;
+    }
+
+    get MainOpenToken() {
+        return this.mainOpenToken;
+    }
+
+    get Nickname() {
+        return this.mainUserInfo.Nickname;
+    }
+
+    async createDM(): Promise<RequestResult<MemoChatChannel>> {
+        return this.client.ChannelManager.createMemoChannel();
+    }
+
+    isClientUser() {
+        return true;
+    }
+
+}
+
+export class TalkClientUserInfo implements ClientUserInfo {
+
+    constructor(private user: TalkClientChatUser, private settings: MoreSettingsStruct) {
+        
+    }
+
+    get Client() {
+        return this.user.Client;
+    }
+
+    get User() {
+        return this.user;
+    }
+
+    get Id() {
+        return this.user.Id;
+    }
+
+    get AccountId() {
+        return this.settings.accountId;
+    }
+
+    get Nickname() {
+        return this.settings.nickName;
+    }
+
+    get UserType() {
+        return UserType.Undefined;
+    }
+
+    get ProfileImageURL() {
+        return this.settings.profileImageUrl || '';
+    }
+
+    get FullProfileImageURL() {
+        return this.settings.fullProfileImageUrl || '';
+    }
+
+    get OriginalProfileImageURL() {
+        return this.settings.originalProfileImageUrl || '';
+    }
+
+    get EmailAddress() {
+        return this.settings.emailAddress;
+    }
+
+    get AccountDisplayId() {
+        return this.settings.accountDisplayId;
+    }
+
+    get TalkId() {
+        return this.settings.uuid;
+    }
+
+    get StatusMessage() {
+        return this.settings.statusMessage;
+    }
+
+    get NsnPhoneNumber() {
+        return this.settings.nsnNumber;
+    }
+
+    get PstnPhoneNumber() {
+        return this.settings.pstnNumber;
+    }
+
+    get FormattedNsnPhoneNumber() {
+        return this.settings.formattedNsnNumber;
+    }
+
+    get FormattedPstnPhoneNumber() {
+        return this.settings.formattedPstnNumber;
+    }
+
+    isOpenUser(): false {
+        return false;
     }
 
 }

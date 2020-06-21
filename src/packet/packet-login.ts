@@ -1,6 +1,6 @@
 import { KakaoAPI } from "../kakao-api";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChatDataStruct } from "../talk/struct/chatdata-struct";
+import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";
@@ -24,8 +24,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         public Language: string = 'ko',
         public Revision: number = 0, //Always 0 since I didnt implement revision data and dunno what
         public RevisionData: null | Buffer = null, // idk
-        public ChatIds: Long[] = [],
-        public MaxIds: Long[] = [],
+        public ChannelIdList: Long[] = [],
+        public MaxIdList: Long[] = [],
         public LastTokenId: Long = Long.ZERO,
         public LastChatId: Long = Long.ZERO,
         public Lbk: number = 0, // ?
@@ -53,8 +53,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
             'MCCMNC': this.NetworkMccMnc,
             'revision': this.Revision,
             'rp': null,
-            'chatIds': this.ChatIds,
-            'maxIds': this.MaxIds,
+            'chatIds': this.ChannelIdList,
+            'maxIds': this.MaxIdList,
             'lastTokenId': this.LastTokenId,
             'lbk': this.Lbk,
             'bg': this.Bg
@@ -76,7 +76,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         public Revision: number = 0,
         public OpenChatToken: number = 0,
         public RevisionDetail: string = '',
-        public ChatDataList: ChatDataStruct[] = []
+        public ChatDataList: ChannelDataStruct[] = []
     ) {
         super(status);
 
@@ -97,7 +97,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
             let chatDataList: any[] = body['chatDatas'];
 
             for (let rawChatData of chatDataList) {
-                this.ChatDataList.push(Serializer.deserialize<ChatDataStruct>(rawChatData, ChatDataStruct.MAPPER));
+                this.ChatDataList.push(Serializer.deserialize<ChannelDataStruct>(rawChatData, ChannelDataStruct.MAPPER));
             }
         }
     }

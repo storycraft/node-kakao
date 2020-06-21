@@ -3,7 +3,7 @@ import { Long } from "bson";
 import { ChatType } from "../chat-type";
 import { Chat } from "../chat";
 import { JsonUtil } from "../../../util/json-util";
-import { ChatUser } from "../../user/chat-user";
+import { UserInfo } from "../../user/chat-user";
 
 /*
  * Created on Sun Nov 03 2019
@@ -29,7 +29,19 @@ export interface AttachmentContent {
 
 }
 
-export class PhotoAttachment implements ChatAttachment {
+export interface MediaAttachment extends ChatAttachment {
+
+    KeyPath: string;
+
+}
+
+export interface MediaHasThumbnail extends MediaAttachment {
+
+    readonly HasThumbnail: boolean;
+
+}
+
+export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
 
     constructor(
         public KeyPath: string = '',
@@ -37,6 +49,7 @@ export class PhotoAttachment implements ChatAttachment {
         public Height: number = 0,
         public ImageURL: string = '',
         public Size: Long = Long.ZERO,
+        public MediaType: string = '',
 
         //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
@@ -52,6 +65,10 @@ export class PhotoAttachment implements ChatAttachment {
         return ChatType.Photo;
     }
 
+    get HasThumbnail() {
+        return true;
+    }
+
     readAttachment(rawJson: any) {
         this.KeyPath = rawJson['k'];
 
@@ -60,6 +77,8 @@ export class PhotoAttachment implements ChatAttachment {
 
         this.ImageURL = rawJson['url'];
         this.ThumbnailURL = rawJson['thumbnailUrl'];
+
+        this.MediaType = rawJson['mt'];
         
         this.ThumbnailWidth = rawJson['thumbnailWidth'];
         this.ThumbnailHeight = rawJson['thumbnailHeight'];
@@ -77,6 +96,10 @@ export class PhotoAttachment implements ChatAttachment {
 
         if (this.ThumbnailURL !== '') {
             obj['thumbnailUrl'] = this.ThumbnailURL;
+        }
+
+        if (this.MediaType !== '') {
+            obj['mt'] = this.MediaType;
         }
 
         if (this.ThumbnailWidth !== -1) {
@@ -102,7 +125,7 @@ export class PhotoAttachment implements ChatAttachment {
 
 }
 
-export class VideoAttachment implements ChatAttachment {
+export class VideoAttachment implements ChatAttachment, MediaHasThumbnail {
 
     constructor(
         public KeyPath: string = '',
@@ -120,6 +143,10 @@ export class VideoAttachment implements ChatAttachment {
 
     get RequiredMessageType() {
         return ChatType.Video;
+    }
+
+    get HasThumbnail() {
+        return true;
     }
 
     readAttachment(rawJson: any) {
@@ -158,7 +185,7 @@ export class VideoAttachment implements ChatAttachment {
 
 }
 
-export class FileAttachment implements ChatAttachment {
+export class FileAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public KeyPath: string = '',
@@ -202,15 +229,15 @@ export class FileAttachment implements ChatAttachment {
         return obj;
     }
 
-    static async fromBuffer(data: Buffer, name: string, width: number, height: number, size: number = data.byteLength): Promise<FileAttachment> {
+    static async fromBuffer(data: Buffer, name: string, size: number = data.byteLength, expire: Long = Long.fromNumber(1209600)): Promise<FileAttachment> {
         let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.FILE, data, name);
 
-        return new FileAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.FILE), name, Long.fromNumber(size), Long.fromNumber(Date.now() + 1209600000));
+        return new FileAttachment(KakaoAPI.getUploadedFileKey(path), KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.FILE), name, Long.fromNumber(size), expire);
     }
 
 }
 
-export class AudioAttachment implements ChatAttachment {
+export class AudioAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public KeyPath: string = '',
@@ -326,7 +353,7 @@ export class EmoticonAniAttachment extends EmoticonAttachment {
 
 }
 
-export class LongTextAttachment implements ChatAttachment {
+export class LongTextAttachment implements ChatAttachment, MediaAttachment {
 
     constructor(
         public Path: string = '',
@@ -449,7 +476,7 @@ export interface ChatContent {
 export class ChatMention implements ChatContent {
     
     constructor(
-        public User: ChatUser
+        public Info: UserInfo
     ) {
         
     }

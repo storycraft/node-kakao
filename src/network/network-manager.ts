@@ -1,77 +1,56 @@
-import { PacketLoginRes, PacketLoginReq } from "../packet/packet-login";
-import { LocoClient } from "../client";
-import { LocoInterface, LocoReceiver } from "../loco/loco-interface";
-import { PacketPingReq } from "../packet/packet-ping";
-import { TalkPacketHandler } from "./packet-handler";
-import { Socket } from "net";
-import { PacketCheckInReq, PacketCheckInRes } from "../packet/packet-check-in";
-import { PacketGetConfReq, PacketGetConfRes } from "../packet/packet-get-conf";
-import { StatusCode, LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
-import { LocoPacketWriter, LocoPacketReader, LocoPacketHandler, LocoTLSSocket, LocoSecureSocket, Long, LocoPacketList, PacketHeader, KakaoAPI } from "..";
-import { LocoSocket } from "./loco-socket";
-
 /*
  * Created on Fri Nov 01 2019
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export class NetworkManager implements LocoInterface, LocoReceiver {
+import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { TalkPacketHandler } from "./packet-handler";
+import { LocoCommandInterface, LocoListener, LocoInterface, LocoTLSCommandInterface, LocoSecureCommandInterface, LocoReceiver } from "../loco/loco-interface";
+import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet/loco-packet-base";
+import { PacketLoginRes, PacketLoginReq } from "../packet/packet-login";
+import { PacketPingReq } from "../packet/packet-ping";
+import { LocoClient } from "../client";
+import { PacketCheckInReq, PacketCheckInRes } from "../packet/checkin/packet-check-in";
+import { PacketGetConfReq, PacketGetConfRes } from "../packet/booking/packet-get-conf";
+import { PacketBuyCallServerRes, PacketBuyCallServerReq } from "../packet/checkin/packet-buy-call-server";
+import { Long } from "bson";
+import { HostData } from "./host-data";
+import { MediaUploadInterface } from "../talk/media/media-upload-interface";
+import { MediaDownloadInterface } from "../talk/media/media-download-interface";
+
+export class NetworkManager implements LocoListener, LocoInterface {
 
     public static readonly PING_INTERVAL = 600000;
 
-    private currentSocket: LocoSocket | null;
-
-    private locoConnected: boolean;
-    private locoLogon: boolean;
-
-    private packetWriter: LocoPacketWriter;
-    private packetReader: LocoPacketReader;
-    
     private cachedBookingData: BookingData | null;
     private cachedCheckinData: CheckinData | null;
     private lastCheckinReq: number;
-
-    private packetMap: Map<number, LocoRequestPacket>;
+    
+    private mainInterface: LocoMainInterface | null;
 
     private handler: LocoPacketHandler;
 
-    private pingSchedulerId: NodeJS.Timeout | null;
-
-    constructor(private client: LocoClient, packetWriter: LocoPacketWriter = new LocoPacketWriter(), packetReader: LocoPacketReader = new LocoPacketReader()) {
-        this.packetMap = new Map();
-        
-        this.pingSchedulerId = null;
-
-        this.handler = this.createPacketHandler();
-
-        this.locoConnected = false;
-        this.locoLogon = false;
-
+    constructor(private client: LocoClient) {
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
         this.lastCheckinReq = -1;
 
-        this.currentSocket = null;
+        this.mainInterface = null;
 
-        this.packetWriter = packetWriter;
-        this.packetReader = packetReader;
+        this.handler = this.createPacketHandler();
     }
 
-    protected createPacketHandler() {
-        return new TalkPacketHandler(this);
+    get Client() {
+        return this.client;
     }
 
-    get CurrentSocket() {
-        return this.currentSocket;
+    get Connected(): boolean {
+        return this.mainInterface && this.mainInterface.Connected || false;
     }
 
-    get Writer() {
-        return this.packetWriter;
-    }
-
-    get Reader() {
-        return this.packetReader;
+    get Logon() {
+        return this.mainInterface && this.mainInterface.Logon || false;
     }
 
     get Handler() {
@@ -82,93 +61,100 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
         this.handler = handler;
     }
 
-    get Client() {
-        return this.client;
+    async connect(): Promise<boolean> {
+        return this.mainInterface && this.mainInterface.connect() || false;
     }
 
-    get Connected() {
-        return this.locoConnected;
+    disconnect(): boolean {
+        return this.mainInterface && this.mainInterface.disconnect() || false;
     }
 
-    get Logon() {
-        return this.locoLogon;
+    async sendPacket(packet: LocoRequestPacket): Promise<boolean> {
+        return this.mainInterface && await this.mainInterface.sendPacket(packet) || false;
     }
 
-    protected createBookingSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
-        return new LocoTLSSocket(receiver, hostInfo.Host, hostInfo.Port, false);
-    }
-
-    protected createCheckinSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
-        return new LocoSecureSocket(receiver, hostInfo.Host, hostInfo.Port, false);
-    }
-
-    protected createLocoSocket(receiver: LocoReceiver, hostInfo: HostData): LocoSocket {
-        return new LocoSecureSocket(receiver, hostInfo.Host, hostInfo.Port, true);
-    }
-
-    protected async fetchCheckinData(checkinHost: HostData, userId: Long): Promise<CheckinData> {
-        let socket = this.createCheckinSocket({
-            responseReceived: this.responseReceived.bind(this),
-            disconnected: () => {}
-        }, checkinHost);
-
-        let connected = await socket.connect();
-
-        if (!connected) {
-            throw new Error('Cannot contact to checkin server');
+    async requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
+        if (!this.mainInterface) {
+            throw new Error("Not Connected to loco");
         }
 
-        let packet = new PacketCheckInReq(userId);
+        return this.mainInterface.requestPacketRes<T>(packet);
+    }
 
-        let ticket = packet.submitResponseTicket<PacketCheckInRes>();
+    protected createBookingInterface(hostInfo: HostData, listener: LocoListener = this): LocoCommandInterface {
+        return new LocoTLSCommandInterface(hostInfo, listener);
+    }
 
-        let packetId = this.packetWriter.getNextPacketId();
+    protected createCheckinInterface(hostInfo: HostData, listener: LocoListener = this): LocoCommandInterface {
+        return new LocoSecureCommandInterface(hostInfo, listener);
+    }
 
-        socket.sendBuffer(this.packetWriter.toBuffer({ packetId: packetId, statusCode: 0, packetName: packet.PacketName, bodyType: 0, bodySize: 0 }, packet));
-        this.packetMap.set(packetId, packet);
+    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this): LocoMainInterface {
+        return new MainInterface(hostInfo, listener);
+    }
 
-        let res = await ticket;
+    createUploadInterface(hostInfo: HostData): MediaUploadInterface {
+        return new MediaUploadInterface(hostInfo, this);
+    }
+
+    createDownloadInterface(hostInfo: HostData): MediaDownloadInterface {
+        return new MediaDownloadInterface(hostInfo, this);
+    }
+
+    async requestCheckinData(userId: Long): Promise<CheckinData> {
+        let res = await this.requestCheckinRes<PacketCheckInRes>(new PacketCheckInReq(userId));
 
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
-        return new CheckinData(new HostData(res.Host, res.Port), res.CacheExpire);
+        return new CheckinData({
+            host: res.Host,
+            port: res.Port,
+            keepAlive: true
+        }, res.CacheExpire);
     }
 
-    protected async fetchBookingData(bookingHost: HostData = HostData.BookingHost): Promise<BookingData> {
-        let socket = this.createBookingSocket({
-            responseReceived: this.responseReceived.bind(this),
-            disconnected: () => {}
-        }, bookingHost);
+    async requestCallServerData(userId: Long): Promise<PacketBuyCallServerRes> {
+        let res = await this.requestCheckinRes<PacketBuyCallServerRes>(new PacketBuyCallServerReq(userId));
 
-        let connected = await socket.connect();
+        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
-        if (!connected) {
+        return res;
+    }
+
+    async requestBookingData(): Promise<BookingData> {
+        let res = await this.requestBookingRes<PacketGetConfRes>(new PacketGetConfReq());
+
+        return new BookingData({
+            host: res.HostList[0],
+            port: res.PortList[0],
+            keepAlive: false
+        });
+    }
+
+    async requestBookingRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
+        let bookingInterface = this.createBookingInterface(HostData.BookingHost);
+
+        if (!(await bookingInterface.connect())) {
             throw new Error('Cannot contact to booking server');
         }
 
-        let packet = new PacketGetConfReq();
-        let ticket = packet.submitResponseTicket<PacketGetConfRes>();
+        return bookingInterface.requestPacketRes<T>(packet);
+    }
 
-        let packetId = this.packetWriter.getNextPacketId();
+    async requestCheckinRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
+        let checkinInterface = this.createCheckinInterface((await this.getBookingData()).CheckinHost);
 
-        socket.sendBuffer(this.packetWriter.toBuffer({ packetId: packetId, statusCode: 0, packetName: packet.PacketName, bodyType: 0, bodySize: 0 }, packet));
-        this.packetMap.set(packetId, packet);
-
-        let res = await ticket;
-
-        if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
-        
-        if (res.HostList.length < 1 && res.PortList.length < 1) {
-            throw new Error(`No server avaliable`);
+        if (!(await checkinInterface.connect())) {
+            throw new Error('Cannot contact to checkin server');
         }
 
-        return new BookingData(new HostData(res.HostList[0], res.PortList[0]));
+        return checkinInterface.requestPacketRes<T>(packet);
     }
 
     async getBookingData(forceRecache: boolean = false): Promise<BookingData> {
         if (!this.cachedBookingData || forceRecache) {
             try {
-                this.cachedBookingData = await this.fetchBookingData();
+                this.cachedBookingData = await this.requestBookingData();
             } catch (statusCode) {
                 throw new Error(`Booking failed. code: ${statusCode}`);
             }
@@ -180,7 +166,7 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
     async getCheckinData(userId: Long, forceRecache: boolean = false): Promise<CheckinData> {
         if (!this.cachedCheckinData || this.cachedCheckinData.expireTime + this.lastCheckinReq < Date.now() || forceRecache) {
             try {
-                this.cachedCheckinData = await this.fetchCheckinData((await this.getBookingData()).CheckinHost, userId);
+                this.cachedCheckinData = await this.requestCheckinData(userId);
                 this.lastCheckinReq = Date.now();
             } catch (statusCode) {
                 throw new Error(`Checkin failed. code: ${statusCode}`);
@@ -190,6 +176,10 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
         return this.cachedCheckinData;
     }
 
+    protected createPacketHandler() {
+        return new TalkPacketHandler(this);
+    }
+
     async locoLogin(deviceUUID: string, userId: Long, accessToken: string): Promise<PacketLoginRes> {
         if (this.Logon) {
             throw new Error('Already logon to loco');
@@ -197,157 +187,29 @@ export class NetworkManager implements LocoInterface, LocoReceiver {
         
         let checkinData = await this.getCheckinData(userId);
 
-        await this.connectToLoco(checkinData.LocoHost);
+        this.mainInterface = this.createMainInterface(checkinData.LocoHost);
 
-        let res = await this.loginToLoco(deviceUUID, accessToken);
+        if (!(await this.mainInterface.connect())) {
+            throw new Error(`Loco Login failed`);
+        }
+
+        let res = await this.mainInterface.login(deviceUUID, accessToken);
         
-        this.locoLogon = true;
-
         return res;
-    }
-
-    protected async connectToLoco(locoHost: HostData): Promise<boolean> {
-        this.currentSocket = this.createLocoSocket(this, locoHost);
-
-        this.locoConnected = await this.currentSocket.connect();
-
-        if (!this.locoConnected) {
-            throw new Error('Cannot connect to LOCO server');
-        }
-
-        return true;
-    }
-
-    async loginToLoco(deviceUUID: string, accessToken: string): Promise<PacketLoginRes> {
-        if (!this.locoConnected) {
-            throw new Error('Not connected to LOCO');
-        }
-
-        if (this.locoLogon) {
-            throw new Error('Already logon to LOCO');
-        }
-
-        let packet = new PacketLoginReq(deviceUUID, accessToken);
-
-        let res = await this.requestPacketRes<PacketLoginRes>(packet);
-
-        this.locoLogon = true;
-        this.schedulePing();
-
-        return res;
-    }
-
-    private schedulePing() {
-        if (!this.locoConnected) {
-            return;
-        }
-
-        this.pingSchedulerId = setTimeout(this.schedulePing.bind(this), NetworkManager.PING_INTERVAL);
-
-        this.sendPacket(new PacketPingReq());
-    }
-
-    async disconnect() {
-        if (!this.locoConnected) {
-            throw new Error('Not connected to loco');
-        }
-
-        this.currentSocket!.disconnect();
-    }
-
-    async sendPacket(packet: LocoRequestPacket) {
-        if (!this.locoConnected) {
-            return false;
-        }
-        
-        let packetId = this.packetWriter.getNextPacketId();
-
-        this.packetMap.set(packetId, packet);
-
-        if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
-            throw new Error(`Tried to send invalid packet ${packet.PacketName}`);
-        }
-        
-        let header: PacketHeader = {
-            packetId: packetId,
-            statusCode: 0,
-            packetName: packet.PacketName,
-            bodyType: 0,
-            bodySize: 0
-        };
-
-        let buffer = this.packetWriter.toBuffer(header, packet);
-        header.bodyType = buffer.byteLength;
-
-        let res = await this.CurrentSocket!.sendBuffer(buffer);
-
-        this.packetSent(packetId, packet);
-
-        return res;
-    }
-
-    async requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket) {
-        this.sendPacket(packet);
-
-        return packet.submitResponseTicket<T>();
     }
 
     packetSent(packetId: number, packet: LocoRequestPacket): void {
-        if (this.Handler) this.Handler.onRequest(packetId, packet);
-    }
-
-    packetReceived(packetId: number, packet: LocoResponsePacket): void {
-        if (this.packetMap.has(packetId)) {
-            let requestPacket = this.packetMap.get(packetId)!;
-
-            this.packetMap.delete(packetId);
-
-            requestPacket.onResponse(packet);
-
-            if (this.Handler) this.Handler.onResponse(packetId, packet, requestPacket);
-        } else {
-            if (this.Handler) this.Handler.onResponse(packetId, packet);
-        }
-    }
-
-    responseReceived(header: PacketHeader, data: Buffer): void {
-        try {
-            let packet = this.packetReader.structToPacket(header, data);
-
-            this.packetReceived(header.packetId, packet);
-
-            if (header.packetName == 'KICKOUT') {
-                this.disconnect();
-            }
-        } catch(e) {
-            throw new Error(`Error while processing packet#${header.packetId} ${header.packetName}: ${e}`);
-        }
-    }
-
-    disconnected() {
-        this.locoConnected = false;
-        this.locoLogon = false;
-        
-        this.currentSocket = null;
-
-        if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
-
-       if (this.Handler) this.Handler.onDisconnected();
+        this.Handler.onRequest(packetId, packet);
     }
     
-}
-
-export class HostData {
-
-    static readonly BookingHost: HostData = new HostData(KakaoAPI.LocoEntry, KakaoAPI.LocoEntryPort);
-    
-    constructor(
-        public Host: string,
-        public Port: number
-    ) {
-
+    packetReceived(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
+        this.Handler.onResponse(packetId, packet, reqPacket);
     }
 
+    disconnected(): void {
+        this.Handler.onDisconnected();
+    }
+    
 }
 
 export class BookingData {
@@ -367,6 +229,62 @@ export class CheckinData {
         public expireTime: number
     ) {
 
+    }
+
+}
+
+export interface LocoMainInterface extends LocoInterface, LocoReceiver {
+
+    readonly Logon: boolean;
+
+    login(deviceUUID: string, accessToken: string): Promise<PacketLoginRes>;
+
+}
+
+export class MainInterface extends LocoSecureCommandInterface implements LocoMainInterface {
+
+    private locoLogon: boolean = false;
+
+    private pingSchedulerId: NodeJS.Timeout | null = null;
+
+    get Logon() {
+        return this.locoLogon;
+    }
+
+    async login(deviceUUID: string, accessToken: string): Promise<PacketLoginRes> {
+        if (!this.Connected) {
+            throw new Error('Not connected to LOCO');
+        }
+
+        if (this.locoLogon) {
+            throw new Error('Already logon to LOCO');
+        }
+
+        let packet = new PacketLoginReq(deviceUUID, accessToken);
+
+        let res = await this.requestPacketRes<PacketLoginRes>(packet);
+
+        this.locoLogon = true;
+        this.schedulePing();
+
+        return res;
+    }
+
+    private schedulePing() {
+        if (!this.Connected) {
+            return;
+        }
+
+        this.pingSchedulerId = setTimeout(this.schedulePing.bind(this), NetworkManager.PING_INTERVAL);
+
+        this.sendPacket(new PacketPingReq());
+    }
+
+    disconnected() {
+        super.disconnected();
+
+        if (this.pingSchedulerId) clearTimeout(this.pingSchedulerId);
+        this.locoLogon = false;
     }
 
 }

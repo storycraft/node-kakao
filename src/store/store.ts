@@ -6,108 +6,65 @@
 
 import { Long } from "bson";
 
-export abstract class BaseConvertibleStore<K, MK, V, MV> {
+export interface Store<K, V> {
 
-    private cacheMap: Map<MK, MV>;
+    has(key: K): boolean;
+
+    get(key: K): V;
+
+}
+
+export interface AsyncStore<K, V> extends Store<K, Promise<V>> {
+
+}
+
+export interface NullableStore<K, V> extends Store<K, V | null> {
+
+}
+
+export interface NullableAsyncStore<K, V> extends AsyncStore<K, V | null> {
+
+}
+
+export interface NullableIdStore<V> extends NullableStore<Long, V> {
+
+}
+
+export interface NullableAsyncIdStore<V> extends NullableAsyncStore<Long, V> {
+
+}
+
+export class IdStore<V> implements NullableIdStore<V> {
+
+    private map: Map<string, V>;
 
     constructor() {
-        this.cacheMap = new Map();
+        this.map = new Map();
     }
 
-    abstract get(key: K, cache: boolean): V;
-
-    has(key: K): boolean {
-        return this.cacheMap.has(this.convertKey(key));
+    has(key: Long) {
+        return this.map.has(this.convertKey(key));
     }
 
-    protected getValue(key: K) {
-        return this.cacheMap.get(this.convertKey(key));
+    get(key: Long) {
+        return this.map.get(this.convertKey(key)) || null;
     }
 
-    protected getValueRaw(key: MK) {
-        return this.cacheMap.get(key);
+    protected set(key: Long, value: V) {
+        return this.map.set(this.convertKey(key), value);
     }
 
-    protected setCache(key: K, value: MV) {
-        this.cacheMap.set(this.convertKey(key), value);
-    }
-
-    protected setCacheRaw(key: MK, value: MV) {
-        this.cacheMap.set(key, value);
-    }
-
-    protected delete(key: K) {
-        this.cacheMap.delete(this.convertKey(key));
-    }
-
-    protected values() {
-        return this.cacheMap.values();
+    protected delete(key: Long) {
+        return this.map.delete(this.convertKey(key));
     }
 
     protected clear() {
-        this.cacheMap.clear();
+        return this.map.clear();
     }
 
-    protected abstract convertKey(key: K): MK;
-}
-
-export abstract class ConvertibleStore<K, MK, V> extends BaseConvertibleStore<K, MK, V, V> {
-
-    constructor() {
-        super();
+    protected values() {
+        return this.map.values();
     }
-
-    get(key: K, cache = true): V {
-        let k = this.convertKey(key);
-
-        if (cache && this.has(key)) return this.getValueRaw(k)!;
-
-        let val = this.fetchValue(key);
-        if (cache) this.setCacheRaw(k, val);
-
-        return val;
-    }
-
-    protected abstract fetchValue(key: K): V;
-
-}
-
-export abstract class AsyncConvertibleStore<K, MK, V> extends BaseConvertibleStore<K, MK, Promise<V>, V> {
-
-    constructor() {
-        super();
-    }
-
-    async get(key: K, cache = true): Promise<V> {
-        let k = this.convertKey(key);
-
-        if (cache && this.has(key)) return this.getValueRaw(k)!;
-
-        let val = await this.fetchValue(key);
-        if (cache) this.setCacheRaw(k, val);
-
-        return val;
-    }
-
-    protected abstract convertKey(key: K): MK;
-
-    protected async abstract fetchValue(key: K): Promise<V>;
-
-}
-
-export abstract class Store<K, V> extends AsyncConvertibleStore<K, K, V> {
-
-    constructor() {
-        super();
-    }
-
-    protected convertKey(key: K) {
-        return key;
-    }
-
-}
-
-export abstract class AsyncIdStore<V> extends AsyncConvertibleStore<Long, string, V> {
 
     protected convertKey(key: Long): string {
         return key.toString();
@@ -115,10 +72,84 @@ export abstract class AsyncIdStore<V> extends AsyncConvertibleStore<Long, string
 
 }
 
-export abstract class IdStore<V> extends ConvertibleStore<Long, string, V> {
+export class AsyncIdStore<V> implements NullableAsyncIdStore<V> {
+
+    private map: Map<string, V>;
+
+    constructor() {
+        this.map = new Map();
+    }
+
+    has(key: Long) {
+        return this.map.has(this.convertKey(key));
+    }
+
+    async get(key: Long) {
+        return this.map.get(this.convertKey(key)) || null;
+    }
+
+    protected getFromMap(key: Long) {
+        return this.map.get(this.convertKey(key));
+    }
+
+    protected set(key: Long, value: V) {
+        return this.map.set(this.convertKey(key), value);
+    }
+
+    protected delete(key: Long) {
+        return this.map.delete(this.convertKey(key));
+    }
+
+    protected clear() {
+        return this.map.clear();
+    }
+
+    protected values() {
+        return this.map.values();
+    }
 
     protected convertKey(key: Long): string {
         return key.toString();
+    }
+
+}
+
+export abstract class IdInstanceStore<V> extends IdStore<V> {
+
+    protected abstract createInstanceFor(key: Long): V;
+
+    get(key: Long): V | null {
+        let val = super.get(key);
+
+        if (!val) {
+            val = this.createInstanceFor(key);
+
+            if (!val) return null;
+
+            this.set(key, val);
+        }
+
+        return val;
+    }
+
+}
+
+export abstract class AsyncIdInstanceStore<V> extends AsyncIdStore<V> {
+
+    protected abstract async createInstanceFor(key: Long): Promise<V>;
+
+    async get(key: Long): Promise<V | null> {
+        let val = await super.get(key);
+
+        if (!val) {
+            val = await this.createInstanceFor(key);
+
+            if (!val) return null;
+
+            this.set(key, val);
+        }
+
+        return val;
     }
 
 }

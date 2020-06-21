@@ -4,15 +4,19 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { IdStore } from "../../store/store";
-import { ChatUser } from "./chat-user";
+import { IdInstanceStore } from "../../store/store";
+import { ChatUser, ChatUserInfo, OpenChatUserInfo } from "./chat-user";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
 import { MemberStruct } from "../struct/member-struct";
 import { PacketGetMemberRes, PacketGetMemberReq } from "../../packet/packet-get-member";
 import { PacketMemberReq } from "../../packet/packet-member";
+import { OpenMemberStruct } from "../struct/open/open-link-struct";
+import { ChatChannel } from "../channel/chat-channel";
+import { ManagedChatUser, ManagedChatUserInfo, ManagedOpenChatUserInfo } from "../managed/managed-chat-user";
+import { RequestResult } from "../request/request-result";
 
-export class UserManager extends IdStore<ChatUser> {
+export class UserManager extends IdInstanceStore<ChatUser> {
 
     constructor(private client: LocoClient) {
         super();
@@ -22,25 +26,32 @@ export class UserManager extends IdStore<ChatUser> {
         return this.client;
     }
 
-    protected fetchValue(key: Long): ChatUser {
-        return new ChatUser(this.client, key);
+    protected createInstanceFor(key: Long): ManagedChatUser {
+        return new ManagedChatUser(this, key);
     }
 
-    get(key: Long) {
+    get(key: Long): ChatUser {
         if (this.client.ClientUser && this.client.ClientUser.Id.equals(key)) return this.client.ClientUser;
 
-        return super.get(key, true);
+        return super.get(key)!;
     }
 
-    async requestMemberInfo(channelId: Long): Promise<MemberStruct[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
-        return res.MemberList;
+    getInfoFromStruct(memberStruct: MemberStruct | OpenMemberStruct): ChatUserInfo | OpenChatUserInfo {
+        if ((memberStruct as OpenMemberStruct).openToken) return new ManagedOpenChatUserInfo(this, this.get(memberStruct.userId), memberStruct as OpenMemberStruct);
+
+        return new ManagedChatUserInfo(this, this.get(memberStruct.userId), memberStruct as MemberStruct);
     }
 
-    async requestSpecificMemberInfo(channelId: Long, idList: Long[]): Promise<MemberStruct[]> {
-        let res = await this.client.LocoInterface.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channelId, idList));
-        
-        return res.MemberList;
+    async requestAllUserInfoList(channel: ChatChannel): Promise<RequestResult<ChatUserInfo[]>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channel.Id));
+
+        return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
+    }
+
+    async requestUserInfoList(channel: ChatChannel, idList: Long[]): Promise<RequestResult<ChatUserInfo[]>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channel.Id, idList));
+
+        return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
     }
 
     initalizeClient() {

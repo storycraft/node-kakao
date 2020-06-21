@@ -4,12 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from './event/events';
 export * from './kakao-api';
 
 export * from './api/api-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
+
+export * from './network/host-data';
 
 export * from './network/loco-socket';
 export * from './network/loco-tls-socket';
@@ -25,9 +28,6 @@ export * from './packet/loco-packet-base';
 export * from './packet/loco-bson-packet';
 export * from './packet/packet-header-struct';
 
-export * from './packet/loco-packet-reader';
-export * from './packet/loco-packet-writer';
-
 export * from './packet/loco-packet-list';
 
 export { LocoKickoutType } from './packet/packet-kickout';
@@ -35,13 +35,18 @@ export { LocoKickoutType } from './packet/packet-kickout';
 export * from './secure/crypto-manager';
 
 export * from './talk/chat/chat-type';
-export * from './talk/chat/channel-type';
+export * from './talk/channel/channel-type';
 export * from './talk/chat/chat-builder';
 
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-feed';
 
 export * from './talk/feed/feed-type';
+export * from './talk/voip/voip-type';
+
+export * from './talk/media/media-download-interface';
+export * from './talk/media/media-upload-interface';
+export * from './talk/media/media-manager';
 
 export * from './talk/chat/attachment/chat-attachment';
 export * from './talk/chat/attachment/sharp-attachment';
@@ -49,16 +54,21 @@ export * from './talk/chat/attachment/custom-attachment';
 export * from './talk/chat/attachment/rich-feed-attachment';
 
 export * from './talk/chat/template/message-template';
+export * from './talk/chat/template/media-template';
 
 export * from './talk/chat/chat-manager';
 
 export * from './talk/channel/chat-channel';
-export * from './talk/channel/channel-info';
+export * from './talk/channel/channel-settings';
 
 export * from './talk/channel/channel-manager';
 
 export * from './talk/open/open-link-type';
-export * from './talk/open/open-chat-manager';
+export * from './talk/open/open-link-manager';
+export * from './talk/open/open-link-profile-template';
+export * from './talk/open/open-link-settings';
+export * from './talk/open/open-link-template';
+export * from './talk/open/open-link';
 
 export * from './talk/user/chat-user';
 export * from './talk/user/user-type';
@@ -84,11 +94,14 @@ export * from './talk/struct/api/friends/friend-search-struct';
 export * from './talk/struct/api/profile/profile-struct';
 export * from './talk/struct/api/profile/profile-req-struct';
 
-export * from './talk/struct/chatdata-struct';
-export * from './talk/struct/chat-info-struct';
+export * from './talk/struct/channel-data-struct';
+export * from './talk/struct/channel-info-struct';
 export * from './talk/struct/chatlog-struct';
+export * from './talk/struct/channel-meta-struct';
 export * from './talk/struct/channel-meta-set-struct';
-export * from './talk/struct/open-link-struct';
+
+export * from './talk/struct/open/open-link-struct';
+
 export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';
@@ -97,6 +110,7 @@ export * from './api/api-client';
 
 export * from './oauth/access-data-provider';
 
+export * from './client-status';
 export * from './client';
 
 import { Long } from 'bson';

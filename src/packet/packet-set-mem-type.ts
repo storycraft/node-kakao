@@ -64,7 +64,7 @@ export class PacketSetMemTypeRes extends LocoBsonResponsePacket {
         }
 
         if (rawData['mts']) {
-            this.MemberIdList = rawData['mts'];
+            this.MemberTypeList = rawData['mts'];
         }
 
         if (rawData['chatLog']) {

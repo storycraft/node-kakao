@@ -29,15 +29,18 @@ export enum ChatType {
     Nudge = 21,
     Actioncon = 22,
     Search = 23,
+    Post = 24,
     Reply = 26,
     MultiPhoto = 27,
-    Mvoip = 51,
+    Voip = 51,
+    LiveTalk = 52,
     Custom = 71,
     Alim = 72,
     PlusFriend = 81,
+    PlusEvent = 82,
     PlusFriendViral = 83,
-    Template = 90,
-    ApiTemplate = 91,
+    OpenVote = 97,
+    OpenPost = 98,
 
 }
 

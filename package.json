@@ -1,6 +1,6 @@
 {
-  "name": "node-kakao",
-  "version": "2.1.1",
+  "name": "@storycraft/node-kakao",
+  "version": "3.0.0",
   "description": "Loco protocol compatible library",
   "main": "dist/index.js",
   "scripts": {
@@ -12,8 +12,11 @@
   "keywords": [],
   "author": {
     "name": "storycraft",
-    "email": "storycraft@storyboard.ml",
-    "url": "https://storyboard.ml"
+    "email": "storycraft@pancake.sh",
+    "url": "https://pancake.sh"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "devDependencies": {
@@ -34,7 +37,7 @@
   },
   "dependencies": {
     "bson": "^4.0.2",
-    "json-proxy-mapper": "^1.2.0",
+    "json-proxy-mapper": "^1.1.1",
     "lossless-json": "^1.0.3",
     "node-forge": "^0.9.1",
     "request": "^2.88.0",

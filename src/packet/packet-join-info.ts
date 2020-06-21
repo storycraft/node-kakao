@@ -5,14 +5,14 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { OpenLinkStruct } from "../talk/struct/open-link-struct";
+import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketJoinInfoReq extends LocoBsonRequestPacket {
 
     constructor(
         public OpenLinkURL: string = '',
-        public LinkRef: string = ''//default EW
+        public LinkRef: string = ''//default EW:<url>
     ) {
         super();
     }

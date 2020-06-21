@@ -13,7 +13,9 @@ export enum CustomType {
     FEED = 'Feed',
     LIST = 'List',
     COMMERCE = 'Commerce',
-    CAROUSEL = 'Carousel'
+    CAROUSEL = 'Carousel',
+
+    
 
 }
 
@@ -807,6 +809,38 @@ export class CustomCarouselContent extends CustomContent {
 
 }
 
+export class ServiceSettingsContent extends CustomContent {
+
+    constructor(
+        public SenderReceiver?: string,
+        public Link?: URLFragment,
+    ) {
+        super();
+    }
+
+    readRawContent(rawData: any): void {
+        this.SenderReceiver = rawData['SR'];
+
+        if (rawData['L']) {
+            this.Link = new URLFragment();
+            this.Link.readRawContent(rawData['L']);
+        }
+    }
+
+    toRawContent() {
+        let obj: any = {
+            'SR': this.SenderReceiver
+        };
+
+        if (this.Link) {
+            obj['L'] = this.Link.toRawContent();
+        }
+
+        return obj;
+    }
+
+}
+
 export class CustomInfo implements CustomBaseContent {
 
     constructor(
@@ -818,10 +852,12 @@ export class CustomInfo implements CustomBaseContent {
         public IosVersion: string = '',
         public WinVersion: string = '',
         public MacVersion: string = '',
+        public ServiceSettings?: ServiceSettingsContent,
         public ServiceNickname?: string,
         public ServiceIcon?: string,
         public ServiceLink?: URLFragment,
         public Link?: URLFragment,
+        public BigChat?: boolean,
         public Secure?: boolean,
         public KakaoVerified?: boolean,
         public CanForward?: boolean,
@@ -852,6 +888,13 @@ export class CustomInfo implements CustomBaseContent {
         if (typeof(rawData['KV']) !== 'undefined') this.KakaoVerified = rawData['KV'];
         if (typeof(rawData['FW']) !== 'undefined') this.CanForward = rawData['FW'];
 
+        if (typeof(rawData['BC']) !== 'undefined') this.BigChat = rawData['BC'];
+
+        if (rawData['SST']) {
+            this.ServiceSettings = new ServiceSettingsContent();
+            this.ServiceSettings.readRawContent(rawData['SST']);
+        }
+
         if (rawData['L']) {
             this.Link = new URLFragment();
             this.Link.readRawContent(rawData['L']);
@@ -877,11 +920,14 @@ export class CustomInfo implements CustomBaseContent {
             'VM': this.MacVersion,
         };
 
+        if (this.ServiceSettings) obj['SST'] = this.ServiceSettings.toRawContent();
+
         if (this.ServiceNickname) obj['SNM'] = this.ServiceNickname;
         if (this.ServiceIcon) obj['SIC'] = this.ServiceIcon;
 
         if (typeof(this.Secure) !== 'undefined') obj['LOCK'] = this.Secure;
 
+        if (typeof(this.BigChat) !== 'undefined') obj['BC'] = this.BigChat;
         if (typeof(this.CanForward) !== 'undefined') obj['FW'] = this.CanForward;
         if (typeof(this.KakaoVerified) !== 'undefined') obj['KV'] = this.KakaoVerified;
         if (typeof(this.Ad) !== 'undefined') obj['AD'] = this.Ad;

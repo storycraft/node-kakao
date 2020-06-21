@@ -7,22 +7,30 @@
 export enum OpenLinkType {
 
     PROFILE = 1,
-    CHATROOM = 2
+    CHANNEL = 2
 
 }
 
 export enum OpenMemberType {
 
-    UNKNOWN = 1,
+    OWNER = 1,
     NONE = 2,
     MANAGER = 4
 
 }
 
-export enum OpenchatProfileType {
+export enum OpenProfileType {
 
     MAIN = 1, //?
     KAKAO_ANON = 2,
     OPEN_PROFILE = 16
 
+}
+
+export enum OpenChannelType {
+
+    UNKNOWN = 0,
+    DIRECT = 1,
+    GROUP = 2
+    
 }

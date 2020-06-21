@@ -4,8 +4,9 @@ Note: this implemention can stop working anytime.
 
 ## Version Information
 
-| v2 | (Recommended) Current |
+| v3 | (Recommended) Current |
 |----|-----------------------|
+| v2 |      deprecated       |
 | v1 | experimental. buggy   |
 
 ## Warning
@@ -18,32 +19,28 @@ Many functions that I may not know are disabled or tricked to keep this client s
 let client = new TalkClient('TEST_CLIENT');
 
 client.on('message', (chat: Chat) => {
+    let userInfo = chat.Channel.getUserInfo(chat.Sender);
+
+    if (!userInfo) return;
+
     if (chat.Type === ChatType.Search) {
         let attachment = chat.AttachmentList[0] as SharpAttachment;
 
-        chat.replyText(`${chat.Sender.Nickname}님이 샵 검색 전송 ${attachment.Question}. 리다이렉트 경로: ${attachment.RedirectURL}`);
+        chat.replyText(`${userInfo.Nickname}님이 샵 검색 전송 ${attachment.Question}. 리다이렉트 경로: ${attachment.RedirectURL}`);
     }
 
     if (chat.Text === '안녕하세요') {
-        chat.replyText('안녕하세요 ', new ChatMention(chat.Sender)); // Ex) 안녕하세요 @storycraft
+        chat.replyText('안녕하세요 ', new ChatMention(userInfo)); // Ex) 안녕하세요 @storycraft
         //chat.Channel.sendTemplate(new AttachmentTemplate(ReplyAttachment.fromChat(chat), '안녕하세요')); // 답장형식
     }
 });
 
-client.on('user_join', (channel: ChatChannel, user: ChatUser, joinFeed: ChatFeed) => {
+client.on('user_join', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => {
     console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에 참여했습니다.');
 });
 
-client.on('user_left', (channel: ChatChannel, user: ChatUser) => {
+client.on('user_left', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => {
     console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에서 나갔습니다.');
-});
-
-client.on('join_channel', (channel: ChatChannel) => {
-    console.log('클라이언트가 ' + channel.Id + ' 방에 참여했습니다');
-});
-
-client.on('left_channel', (channel: ChatChannel) => {
-    console.log('클라이언트가 ' + channel.Id + ' 방에서 나갔습니다');
 });
 
 client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Long) => {

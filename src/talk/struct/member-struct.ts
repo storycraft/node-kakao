@@ -1,9 +1,8 @@
-import { StructBaseOld, StructBase } from "./struct-base";
+import { StructBase } from "./struct-base";
 import { UserType } from "../user/user-type";
-import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
-import { OpenMemberType } from "../open/open-link-type";
 import { ObjectMapper } from "json-proxy-mapper";
+import { CommonOpenMemberStruct } from "./open/open-link-struct";
 
 /*
  * Created on Sat Nov 02 2019
@@ -11,24 +10,22 @@ import { ObjectMapper } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface MemberStruct extends StructBase {
-
+export interface BaseMemberStruct extends StructBase {
+    
     userId: Long;
     nickname: string;
     profileImageUrl: string;
     originalProfileImageUrl: string;
     fullProfileImageUrl: string;
+
+}
+
+export interface MemberStruct extends BaseMemberStruct {
+
     type: UserType;
     accountId: number;
     linkedService: string;
     statusMessage: string;
-
-    openProfileImageUrl?: string;
-    openOriginalProfileImageUrl?: string;
-    openFullProfileImageUrl?: string;
-    openMemberType?: OpenMemberType;
-    openLinkId?: Long,
-    openToken?: number;
 
 }
 
@@ -46,12 +43,11 @@ export namespace MemberStruct {
         linkedService: 'linkedService',
         statusMessage: 'statusMessage',
 
-        openProfileImageUrl: 'pi',
-        openOriginalProfileImageUrl: 'opi',
-        openFullProfileImageUrl: 'fpi',
-        openMemberType: 'mt',
-        openLinkId: 'li',
-        openToken: 'opt'
+        openToken: 'opt',
+        memberType: 'lmt',
+        profileType: 'ptp',
+        linkId: 'li',
+        pv: 'pv'
 
     }
 

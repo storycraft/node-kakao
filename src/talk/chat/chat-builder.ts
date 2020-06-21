@@ -36,13 +36,13 @@ export namespace ChatBuilder {
                     case 'mention': {
                         let mentionContent = content as ChatMention;
 
-                        let mentionContentList = mentionMap.get(mentionContent.User.Id.toString());
-                        let nickname = mentionContent.User.Nickname || 'unknown';
+                        let mentionContentList = mentionMap.get(mentionContent.Info.Id.toString());
+                        let nickname = mentionContent.Info.Nickname || 'unknown';
 
                         if (!mentionContentList) {
-                            mentionContentList = new MentionContentList(mentionContent.User.Id, nickname.length);
+                            mentionContentList = new MentionContentList(mentionContent.Info.Id, nickname.length);
 
-                            mentionMap.set(mentionContent.User.Id.toString(), mentionContentList);
+                            mentionMap.set(mentionContent.Info.Id.toString(), mentionContentList);
                         }
 
                         mentionContentList.IndexList.push(mentionCount++);

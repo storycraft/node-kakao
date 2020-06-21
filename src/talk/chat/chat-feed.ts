@@ -75,7 +75,7 @@ export type LeaveFeed = ChatFeed<FeedType.LEAVE> & FeedFragment.Member;
 
 export type RichContentFeed = ChatFeed<FeedType.RICH_CONTENT>;
 
-export type OpenJoinFeed = ChatFeed<FeedType.OPENLINK_JOIN> & FeedFragment.Member;
+export type OpenJoinFeed = ChatFeed<FeedType.OPENLINK_JOIN> & FeedFragment.MemberList;
 export type OpenLinkDeletedFeed = ChatFeed<FeedType.OPENLINK_DELETE_LINK>;
 export type OpenRewriteFeed = ChatFeed<FeedType.OPENLINK_REWRITE_FEED> & FeedFragment.Member & FeedFragment.Message;
 export type OpenKickFeed = ChatFeed<FeedType.OPENLINK_KICKED> & FeedFragment.Member;
@@ -86,3 +86,8 @@ export type OpenManagerRevokeFeed = ChatFeed<FeedType.OPEN_MANAGER_REVOKE> & Fee
 
 export type ChannelDeletedFeed = ChatFeed<FeedType.CHANNEL_DELETED>;
 export type DeleteAllFeed = ChatFeed<FeedType.DELETE_TO_ALL> & FeedFragment.Message;
+
+
+
+export type OpenLinkFeeds = OpenJoinFeed | OpenLinkDeletedFeed | OpenRewriteFeed | OpenKickFeed | OpenHandOverHostFeed | OpenManagerGrantFeed | OpenManagerRevokeFeed;
+export type ChatFeeds = InviteFeed | LeaveFeed | RichContentFeed | OpenLinkFeeds | ChannelDeletedFeed | DeleteAllFeed;

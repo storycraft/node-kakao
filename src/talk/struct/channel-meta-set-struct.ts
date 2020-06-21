@@ -1,38 +1,13 @@
-import { StructBaseOld, Long } from "../..";
-import { JsonUtil } from "../../util/json-util";
+import { Long } from "bson";
 import { StructBase } from "./struct-base";
 import { ObjectMapper } from "json-proxy-mapper";
+import { ChannelMetaStruct } from "./channel-meta-struct";
 
 /*
  * Created on Tue Nov 05 2019
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
-
-export enum ChannelMetaType {
-    
-    NOTICE = 1,
-    GROUP = 2,
-    TITLE = 3,
-    PROFILE = 4,
-    TV = 5,
-    PRIVILEGE = 6,
-    TV_LIVE = 7,
-    PLUS_BACKGROUND = 8,
-    LIVE_TALK_INFO = 11,
-    LIVE_TALK_COUNT = 12
-
-}
-
-export interface ChannelMetaStruct extends StructBase {
-
-    type: ChannelMetaType,
-    revision: Long,
-    authorId: Long,
-    content: string,
-    updatedAt: number
-
-}
 
 export interface ChannelMetaSetStruct extends StructBase {
 

@@ -3,8 +3,8 @@ import { CryptoManager } from "../secure/crypto-manager";
 import * as net from "net";
 import { LocoEncryptedTransformer } from "./stream/loco-encrypted-transformer";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
-import { LocoRequestPacket } from "../packet/loco-packet-base";
 import { LocoReceiver } from "../loco/loco-interface";
+import { PacketHeader } from "../packet/packet-header-struct";
 
 /*
  * Created on Sun Oct 20 2019
@@ -44,6 +44,15 @@ export class LocoSecureSocket extends LocoBasicSocket {
         return super.transformBuffer(data);
     }
 
+    async connect() {
+        let res = await super.connect();
+        let handshaked = await this.handshake();
+
+        if (!handshaked) throw new Error('Handshake failed');
+
+        return res;
+    }
+
     async handshake() {
         if (!this.Connected || this.handshaked) {
             return false;
@@ -76,14 +85,6 @@ export class LocoSecureSocket extends LocoBasicSocket {
             port: port,
             timeout: 15000
         }, callback).setKeepAlive(this.KeepAlive).setNoDelay(true);
-    }
-
-    async sendBuffer(buffer: Buffer): Promise<boolean> {
-        if (!this.Connected) return false;
-
-        if (!this.handshaked) await this.handshake();
-
-        return super.sendBuffer(buffer);
     }
 
     get Crypto() {

@@ -1,7 +1,9 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "..";
 import { JsonUtil } from "../util/json-util";
-import { ChannelMetaStruct, ChannelMetaType } from "../talk/struct/channel-meta-set-struct";
+import { ChannelMetaStruct, ChannelMetaType } from "../talk/struct/channel-meta-struct";
+import { ChannelMetaSetStruct } from "../talk/struct/channel-meta-set-struct";
+import { Serializer } from "json-proxy-mapper";
 
 /*
  * Created on Tue Nov 05 2019
@@ -60,7 +62,7 @@ export class PacketGetMetaRes extends LocoBsonResponsePacket {
 
 }
 
-export class PacketGetMetasReq extends LocoBsonRequestPacket {
+export class PacketGetMetaListReq extends LocoBsonRequestPacket {
 
     constructor(
         public ChannelList: Long[] = []
@@ -80,11 +82,11 @@ export class PacketGetMetasReq extends LocoBsonRequestPacket {
 
 }
 
-export class PacketGetMetasRes extends LocoBsonResponsePacket {
+export class PacketGetMetaListRes extends LocoBsonResponsePacket {
 
     constructor(
         status: number,
-        public ChannelList: Long[] = []
+        public MetaSetList: ChannelMetaSetStruct[] = []
     ) {
         super(status);
     }
@@ -93,8 +95,15 @@ export class PacketGetMetasRes extends LocoBsonResponsePacket {
         return 'GETMETAS';
     }
 
-    readBodyJson(rawJson: any) {
+    readBodyJson(rawData: any) {
         
+        this.MetaSetList = [];
+        if (rawData['mss']) {
+            for (let rawMetaSet of rawData['mss']) {
+                this.MetaSetList.push(Serializer.deserialize(rawMetaSet, ChannelMetaSetStruct.MAPPER));
+            }
+        }
+
     }
 
 }

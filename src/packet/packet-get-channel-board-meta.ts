@@ -1,7 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "..";
 import { JsonUtil } from "../util/json-util";
-import { ChannelBoardType } from "../talk/struct/channel-board-meta-struct";
+import { ChannelBoardMetaType } from "../talk/struct/channel-board-meta-struct";
 
 /*
  * Created on Tue Nov 05 2019
@@ -13,7 +13,7 @@ export class PacketGetChannelBoardMetaReq extends LocoBsonRequestPacket {
     
     constructor(
         public ChannelId: Long = Long.ZERO,
-        public MetaTypeList: ChannelBoardType[] = []
+        public MetaTypeList: ChannelBoardMetaType[] = []
     ) {
         super();
     }
@@ -46,6 +46,8 @@ export class PacketGetMoimMetaRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawData: any) {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
+
+        console.log(rawData);
 
         // TODO::
     }

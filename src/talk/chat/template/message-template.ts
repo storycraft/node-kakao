@@ -1,9 +1,9 @@
 import { ChatType } from "../chat-type";
-import { ChatAttachment, EmoticonAttachment, ChatContent, ReplyAttachment } from "../attachment/chat-attachment";
+import { ChatAttachment, ChatContent, ReplyAttachment } from "../attachment/chat-attachment";
 import { JsonUtil } from "../../../util/json-util";
 import { ChatBuilder } from "../chat-builder";
 import { RichFeedAttachment } from "../attachment/rich-feed-attachment";
-import { ChatFeed } from "../chat-feed";
+import { ChatFeeds } from "../chat-feed";
 
 /*
  * Created on Fri Jan 03 2020
@@ -104,7 +104,7 @@ export class ReplyContentTemplate extends AttachmentTemplate {
 export class FeedTemplate implements MessageTemplate {
 
     constructor(
-        private feed: ChatFeed,
+        private feed: ChatFeeds,
         private extraContent?: RichFeedAttachment
     ) {
 

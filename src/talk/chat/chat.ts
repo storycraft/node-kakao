@@ -8,9 +8,10 @@ import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { CustomAttachment } from "./attachment/custom-attachment";
-import { ChannelType } from "./channel-type";
+import { ChannelType } from "../channel/channel-type";
 import { FeedType } from "../feed/feed-type";
 import { RichFeedAttachment } from "./attachment/rich-feed-attachment";
+import { RequestResult } from "../request/request-result";
 
 /*
  * Created on Fri Nov 01 2019
@@ -180,19 +181,11 @@ export abstract class Chat {
         return this.channel.isOpenChat() && this.channel.Type === ChannelType.OPENCHAT_GROUP;
     }
 
-    async delete(): Promise<boolean> {
-        if (!this.Deletable) {
-            return false;
-        }
-
+    async delete(): Promise<RequestResult<boolean>> {
         return this.channel.Client.ChatManager.deleteChat(this.Channel.Id, this.logId);
     }
 
-    async hide(): Promise<boolean> {
-        if (!this.Hidable) {
-            return false;
-        }
-
+    async hide(): Promise<RequestResult<boolean>> {
         let openChannel = this.channel as OpenChatChannel;
 
         return openChannel.hideChat(this);
@@ -218,10 +211,18 @@ export class UnknownChat extends Chat {
 
 }
 
-export class FeedChat extends Chat {
+export class FeedChat<T extends ChatFeed = ChatFeed> extends Chat {
     
     get Type() {
         return ChatType.Feed;
+    }
+
+    get Feed(): T {
+        return this.getFeed() as T;
+    }
+
+    get RichFeedAttachment(): RichFeedAttachment | null {
+        return this.AttachmentList[0] as RichFeedAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -240,6 +241,10 @@ export class TextChat extends Chat {
     
     get Type() {
         return ChatType.Text;
+    }
+
+    get LongText(): LongTextAttachment | null {
+        return this.AttachmentList[0] as LongTextAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -262,6 +267,10 @@ export class SinglePhotoChat extends PhotoChat {
 
     get Type() {
         return ChatType.Photo;
+    }
+
+    get Photo(): PhotoAttachment | null {
+        return this.AttachmentList[0] as PhotoAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -303,6 +312,10 @@ export class MultiPhotoChat extends PhotoChat {
 
 export abstract class EmoticonChat extends Chat {
 
+    get Emoticon(): EmoticonAttachment | null {
+        return this.AttachmentList[0] as EmoticonAttachment || null;
+    }
+
 }
 
 export class StaticEmoticonChat extends EmoticonChat {
@@ -341,6 +354,10 @@ export class VideoChat extends Chat {
         return ChatType.Video;
     }
 
+    get Video(): VideoAttachment | null {
+        return this.AttachmentList[0] as VideoAttachment || null;
+    }
+
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let attachment = new VideoAttachment();
         attachment.readAttachment(attachmentJson);
@@ -350,27 +367,14 @@ export class VideoChat extends Chat {
 
 }
 
-
-//Unused
-export class LongTextChat extends Chat {
-    
-    get Type() {
-        return ChatType.Text;
-    }
-
-    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        let textAttachment = new LongTextAttachment();
-        textAttachment.readAttachment(attachmentJson);
-
-        attachmentList.push(textAttachment);
-    }
-
-}
-
 export class SharpSearchChat extends Chat {
     
     get Type() {
         return ChatType.Search;
+    }
+
+    get Sharp(): SharpAttachment | null {
+        return this.AttachmentList[0] as SharpAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -387,6 +391,10 @@ export class MapChat extends Chat {
 
     get Type() {
         return ChatType.Map;
+    }
+
+    get Map(): MapAttachment | null {
+        return this.AttachmentList[0] as MapAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
@@ -411,6 +419,10 @@ export class ReplyChat extends Chat {
         return this.contentOnly;
     }
 
+    get Reply(): ReplyAttachment | null {
+        return this.AttachmentList[0] as ReplyAttachment || null;
+    }
+
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         let replyAttachment = new ReplyAttachment();
 
@@ -432,6 +444,10 @@ export class CustomChat extends Chat {
     
     get Type() {
         return ChatType.Custom;
+    }
+
+    get Custom(): CustomAttachment | null {
+        return this.AttachmentList[0] as CustomAttachment || null;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
