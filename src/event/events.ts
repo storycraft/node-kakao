@@ -24,7 +24,7 @@ declare interface Event {
 
 declare interface ChatEvent extends Event {
 
-    // 메세지 받을시 호출 (클라이언트 유저 전송 포함)
+    // 메세지 받을시 호출
     on(event: 'message', listener: (chat: Chat) => void): this;
 
     // 피드 메세지 받을시 호출
