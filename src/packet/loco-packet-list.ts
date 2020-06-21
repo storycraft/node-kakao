@@ -61,6 +61,7 @@ import { PacketKickListSyncRes, PacketKickListSyncReq } from "./packet-kick-list
 import { PacketReactionCountReq, PacketReactionCountRes } from "./packet-reaction-count";
 import { PacketReactRes, PacketReactReq } from "./packet-react";
 import { PacketSyncRewriteRes } from "./packet-sync-rewrite";
+import { PacketLinkDeletedRes } from "./packet-link-deleted";
 
 
 /*
@@ -216,6 +217,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('KLDELITEM', PacketKickListDelItemRes);
         responsePacketMap.set('INFOLINK', PacketInfoLinkRes);
         responsePacketMap.set('DELETELINK', PacketDeleteLinkRes);
+        responsePacketMap.set('LNKDELETED', PacketLinkDeletedRes);
         responsePacketMap.set('REWRITE', PacketRewriteRes);
         responsePacketMap.set('SYNCREWR', PacketSyncRewriteRes);
         responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);

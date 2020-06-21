@@ -85,7 +85,6 @@ declare interface OpenChannelEvent extends Event {
     // 메세지가 가려졌을시 호출
     on(event: 'message_hidden', listener: (channel: OpenChatChannel, logId: Long, feed?: FeedChat<OpenRewriteFeed>) => void): this;
 
-    // TODO
     // 채널의 오픈링크가 삭제되었을시 호출
     on(event: 'link_deleted', listener: (channel: OpenChatChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void): this;
 

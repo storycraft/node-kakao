@@ -37,6 +37,7 @@ import { ManagedOpenChatUserInfo } from "../talk/managed/managed-chat-user";
 import { PacketSyncRewriteRes } from "../packet/packet-sync-rewrite";
 import { PacketRewriteRes, PacketRewriteReq } from "../packet/packet-rewrite";
 import { ChannelType } from "../talk/channel/channel-type";
+import { PacketLinkDeletedRes } from "../packet/packet-link-deleted";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -69,6 +70,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('KICKMEM', this.onOpenChannelKick.bind(this));
         this.on('DELMEM', this.onMemberDelete.bind(this));
         this.on('LINKKICKED', this.onLinkKicked.bind(this));
+        this.on('LNKDELETED', this.onLinkDeleted.bind(this));
         //this.on('SYNCJOIN', this.onChannelJoin.bind(this));
         this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
@@ -283,6 +285,17 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('feed', chat);
 
         this.ChannelManager.removeChannel(channel.Id);
+    }
+    
+    onLinkDeleted(packet: PacketLinkDeletedRes) {
+        if (!packet.Chatlog) return;
+
+        let chat = this.ChatManager.chatFromChatlog(packet.Chatlog);
+
+        if (!chat || !chat.isFeed()) return;
+
+        chat.Channel.emit('link_deleted', chat.Channel, chat);
+        this.Client.emit('link_deleted', chat.Channel, chat);
     }
 
     /*onChannelJoin(packet: PacketSyncJoinChannelRes) {
