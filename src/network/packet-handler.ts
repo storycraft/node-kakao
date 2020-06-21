@@ -40,6 +40,7 @@ import { ChannelType } from "../talk/channel/channel-type";
 import { PacketLinkDeletedRes } from "../packet/packet-link-deleted";
 import { OpenMemberType } from "../talk/open/open-link-type";
 import { ManagedOpenLink } from "../talk/managed/managed-open-link";
+import { PacketSetMemTypeRes } from "../packet/packet-set-mem-type";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -63,7 +64,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('JOINLINK', this.onOpenChannelJoin.bind(this));
         this.on('REWRITE', this.onRewrite.bind(this));
         this.on('SYNCLINKCR', this.syncOpenChannelJoin.bind(this));
-        this.on('SYNCMEMT', this.syncMemberTypeChange.bind(this));
+        this.on('SETMEMTYPE', this.onMemberTypeChange.bind(this));
+        this.on('SYNCMEMT', this.onMemberTypeChange.bind(this));
         this.on('SYNCLINKPF', this.syncProfileUpdate.bind(this));
         this.on('SYNCREWR', this.syncRewrite.bind(this));
         this.on('UPLINKPROF', this.syncClientProfileUpdate.bind(this));
@@ -360,7 +362,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.Client.emit('user_join', newChan, this.Client.ClientUser);
     }
 
-    async syncMemberTypeChange(packet: PacketSyncMemberTypeRes) {
+    async onMemberTypeChange(packet: PacketSetMemTypeRes | PacketSyncMemberTypeRes) {
         let chanId = packet.ChannelId;
 
         let channel = this.getManagedChannel(chanId) as ManagedOpenChatChannel | null;
