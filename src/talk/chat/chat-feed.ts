@@ -75,7 +75,7 @@ export type LeaveFeed = ChatFeed<FeedType.LEAVE> & FeedFragment.Member;
 
 export type RichContentFeed = ChatFeed<FeedType.RICH_CONTENT>;
 
-export type OpenJoinFeed = ChatFeed<FeedType.OPENLINK_JOIN> & FeedFragment.Member;
+export type OpenJoinFeed = ChatFeed<FeedType.OPENLINK_JOIN> & FeedFragment.MemberList;
 export type OpenLinkDeletedFeed = ChatFeed<FeedType.OPENLINK_DELETE_LINK>;
 export type OpenRewriteFeed = ChatFeed<FeedType.OPENLINK_REWRITE_FEED> & FeedFragment.Member & FeedFragment.Message;
 export type OpenKickFeed = ChatFeed<FeedType.OPENLINK_KICKED> & FeedFragment.Member;

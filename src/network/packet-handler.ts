@@ -192,14 +192,15 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!chat || !chat.isFeed()) return;
 
-        let feed = ChatFeed.getFeedFromText(chat.Text);
+        let feed = chat.getFeed() as InviteFeed | OpenJoinFeed;
 
         let idList: Long[];
-        if (feed.feedType === FeedType.INVITE && (feed as InviteFeed).members) idList = (feed as InviteFeed).members.map((feedMemberStruct) => feedMemberStruct.userId);
-        else if (feed.feedType === FeedType.OPENLINK_JOIN && (feed as OpenJoinFeed).member) idList = [ (feed as OpenJoinFeed).member.userId ];
+        if (feed.members) idList = feed.members.map((feedMemberStruct) => feedMemberStruct.userId);
         else idList = [];
 
-        let infoList: ChatUserInfo[] = (await this.UserManager.requestUserInfoList(channel, idList)).result!;
+        let infoList: ChatUserInfo[];
+        if (idList.length > 0) infoList = (await this.UserManager.requestUserInfoList(channel, idList)).result!;
+        else infoList = [];
 
         for(let i = 0; i < idList.length; i++) {
             let id = idList[i];
