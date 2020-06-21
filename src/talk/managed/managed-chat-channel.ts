@@ -360,6 +360,8 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements Op
     }
 
     getManagedUserInfoId(id: Long): ManagedOpenChatUserInfo | null {
+        if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo;
+        
         return this.getUserInfoIdMap(id) as ManagedOpenChatUserInfo || null;
     }
 

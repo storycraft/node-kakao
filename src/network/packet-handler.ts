@@ -373,10 +373,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
             if (!info) continue;
 
+            let lastType = info.MemberType;
+
             let managedInfo = channel.getManagedUserInfoId(packet.MemberIdList[i]);
             if (managedInfo) managedInfo.updateMemberType(type);
-
-            let lastType = info.MemberType;
 
             if (type === OpenMemberType.OWNER) {
                 let link = channel.getOpenLink() as ManagedOpenLink;
