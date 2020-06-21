@@ -35,18 +35,6 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-client.on('user_join', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => {
-    console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에 참여했습니다.');
-});
-
-client.on('user_left', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => {
-    console.log(user.Nickname + ' 님이 ' + channel.Id + ' 방에서 나갔습니다.');
-});
-
-client.on('message_read', (channel: ChatChannel, reader: ChatUser, watermark: Long) => {
-    console.log(reader.Nickname + ' 이(가) ' + channel.Id + ' 방의 글을 읽었습니다. 워터마크: ' + watermark);
-});
-
 await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id');
 ```
 
