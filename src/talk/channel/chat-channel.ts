@@ -57,6 +57,11 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     isOpenChat(): boolean;
 
+    getLatestUserInfo(user: ChatUser): Promise<ChatUserInfo | null>;
+    getLatestUserInfoId(id: Long): Promise<ChatUserInfo | null>;
+
+    sendChatOn(): Promise<RequestResult<boolean>>;
+
     markChannelRead(lastWatermark: Long): Promise<void>;
 
     sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null>;

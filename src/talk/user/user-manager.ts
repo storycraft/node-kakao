@@ -54,6 +54,16 @@ export class UserManager extends IdInstanceStore<ChatUser> {
         return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
     }
 
+    async requestUserInfo(channel: ChatChannel, id: Long): Promise<RequestResult<ChatUserInfo>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMemberRes>(new PacketMemberReq(channel.Id, [ id ]));
+
+        let memberStruct = res.MemberList[0];
+
+        if (!memberStruct) return { status: res.StatusCode };
+
+        return { status: res.StatusCode, result: this.getInfoFromStruct(memberStruct) };
+    }
+
     initalizeClient() {
         this.clear();
     }

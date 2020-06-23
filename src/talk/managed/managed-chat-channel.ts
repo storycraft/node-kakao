@@ -144,6 +144,26 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         return this.getUserInfoId(user.Id);
     }
 
+    async sendChatOn(): Promise<RequestResult<boolean>> {
+        return this.manager.sendChatOn(this);
+    }
+
+    async getLatestUserInfoId(id: Long): Promise<ChatUserInfo | null> {
+        let latest = await this.Client.UserManager.requestUserInfo(this, id);
+
+        if (latest.result) {
+            this.updateUserInfo(id, latest.result);
+
+            return latest.result;
+        }
+
+        return null;
+    }
+
+    async getLatestUserInfo(user: ChatUser) {
+        return this.getLatestUserInfoId(user.Id);
+    }
+
     protected getUserInfoIdMap(id: Long) {
         return this.userInfoMap.get(id.toString()) || null;
     }
@@ -267,8 +287,17 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
     }
 
     updateUserInfo(userId: Long, userInfo: ChatUserInfo | null) {
-        if (userInfo) this.userInfoMap.set(userId.toString(), userInfo);
-        else this.userInfoMap.delete(userId.toString());
+        if (userInfo) {
+            let last = this.userInfoMap.get(userId.toString());
+
+            let newInfo = userInfo;
+            if (last) newInfo = Object.assign(last, userInfo);
+
+            this.userInfoMap.set(userId.toString(), newInfo);
+        }
+        else {
+            this.userInfoMap.delete(userId.toString());
+        }
     }
 
     abstract isOpenChat(): boolean;
@@ -353,6 +382,14 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements Op
         if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo;
 
         return super.getUserInfoId(id) as OpenChatUserInfo | null;
+    }
+
+    async getLatestUserInfoId(id: Long) {
+        return super.getLatestUserInfoId(id) as Promise<OpenChatUserInfo | null>;
+    }
+
+    async getLatestUserInfo(user: ChatUser) {
+        return super.getLatestUserInfo(user) as Promise<OpenChatUserInfo | null>;
     }
 
     getManagedUserInfo(user: ChatUser): ManagedOpenChatUserInfo | null {

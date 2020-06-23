@@ -64,10 +64,6 @@ export class ChannelManager extends IdStore<ChatChannel> {
     }
 
     protected async addWithChannelData(id: Long, channelData: ChannelDataStruct): Promise<ManagedBaseChatChannel> {
-        let openToken;
-        if (channelData.openToken) openToken = channelData.openToken;
-        let chatOnRoom = await this.requestChatOnRoom(id, Long.ZERO, openToken);
-        
         let channel: ManagedBaseChatChannel;
         switch(channelData.type) {
 
@@ -93,8 +89,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
             
         }
 
-        this.updateFromUserInfoList(channel, chatOnRoom.MemberList, chatOnRoom.ClientOpenProfile);
-
+        await this.sendChatOn(channel);
         this.set(id, channel);
         
         return channel;
@@ -111,19 +106,19 @@ export class ChannelManager extends IdStore<ChatChannel> {
     async addWithChannelInfo(id: Long, channelInfo: ChannelInfoStruct): Promise<ManagedBaseChatChannel> {
         let channel = await this.addWithChannelData(id, channelInfo);
 
-        this.updateFromChannelInfo(channel, channelInfo);
+        this.initChannelInfo(channel, channelInfo);
         
         return channel;
     }
 
-    protected updateFromChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
+    protected initChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
         channel.updateData(channelInfo);
         if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
         if (channelInfo.channelMetaList) channel.updateMetaList(channelInfo.channelMetaList);
         if (channelInfo.lastChatLog) channel.updateLastChat(this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog)!);
     }
 
-    protected updateFromUserInfoList(channel: ManagedBaseChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
+    protected initUserInfoList(channel: ManagedBaseChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
         if (channel.Type === ChannelType.SELFCHAT) return;
         
         if (!channel.isOpenChat()) {
@@ -205,14 +200,18 @@ export class ChannelManager extends IdStore<ChatChannel> {
         }
     }
 
-    protected async requestChatOnRoom(channelId: Long, lastChatLogId: Long, openToken?: number): Promise<PacketChatOnRoomRes> {
-        let packet = new PacketChatOnRoomReq(channelId, lastChatLogId);
+    async sendChatOn(channel: ChatChannel): Promise<RequestResult<boolean>> {
+        let token = channel.LastChat ? channel.LastChat.LogId : Long.ZERO;
+        let openToken;
+        if (channel.isOpenChat()) openToken = (channel as OpenChatChannel).OpenToken;
 
-        if (openToken) packet.OpenToken = openToken;
+        let res = await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(new PacketChatOnRoomReq(channel.Id, token, openToken));
+    
+        this.initUserInfoList(channel as ManagedBaseChatChannel, res.MemberList, res.ClientOpenProfile);
 
-        return await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(packet);
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
-
+    
     async leave(channel: ChatChannel, block: boolean = false): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
 
@@ -304,7 +303,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
         let info = await this.requestChannelInfo(channel.Id);
 
-        if (info) this.updateFromChannelInfo(channel, info);
+        if (info) this.initChannelInfo(channel, info);
         
         return channel;
     }
