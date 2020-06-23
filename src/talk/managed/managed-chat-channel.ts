@@ -287,17 +287,8 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
     }
 
     updateUserInfo(userId: Long, userInfo: ChatUserInfo | null) {
-        if (userInfo) {
-            let last = this.userInfoMap.get(userId.toString());
-
-            let newInfo = userInfo;
-            if (last) newInfo = Object.assign(last, userInfo);
-
-            this.userInfoMap.set(userId.toString(), newInfo);
-        }
-        else {
-            this.userInfoMap.delete(userId.toString());
-        }
+        if (userInfo) this.userInfoMap.set(userId.toString(), userInfo);
+        else this.userInfoMap.delete(userId.toString());
     }
 
     abstract isOpenChat(): boolean;
