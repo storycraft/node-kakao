@@ -10,7 +10,7 @@ import { Long } from "bson";
 import { LocoClient } from "../../client";
 import { MemberStruct } from "../struct/member-struct";
 import { PacketGetMemberRes, PacketGetMemberReq } from "../../packet/packet-get-member";
-import { PacketMemberReq } from "../../packet/packet-member";
+import { PacketMemberReq, PacketMemberRes } from "../../packet/packet-member";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
 import { ChatChannel } from "../channel/chat-channel";
 import { ManagedChatUser, ManagedChatUserInfo, ManagedOpenChatUserInfo } from "../managed/managed-chat-user";
@@ -49,7 +49,7 @@ export class UserManager extends IdInstanceStore<ChatUser> {
     }
 
     async requestUserInfoList(channel: ChatChannel, idList: Long[]): Promise<RequestResult<ChatUserInfo[]>> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketMemberReq(channel.Id, idList));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMemberRes>(new PacketMemberReq(channel.Id, idList));
 
         return { status: res.StatusCode, result: res.MemberList.map(this.getInfoFromStruct.bind(this)) };
     }
