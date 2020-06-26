@@ -123,13 +123,13 @@ export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
     get ProfileOpenToken() {
         return this.memberStruct.openToken || -1;
     }
-
-    get ProfileType() {
-        return this.memberStruct.profileType || OpenProfileType.KAKAO_ANON;
-    }
-
+    
     get MemberType() {
         return this.memberStruct.memberType || OpenMemberType.NONE;
+    }
+
+    get UserType() {
+        return this.memberStruct.type;
     }
 
     get ProfileImageURL() {

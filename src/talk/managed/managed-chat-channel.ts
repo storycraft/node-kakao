@@ -144,7 +144,7 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         return this.getUserInfoId(user.Id);
     }
 
-    async sendChatOn(): Promise<RequestResult<boolean>> {
+    async chatON(): Promise<RequestResult<boolean>> {
         return this.manager.sendChatOn(this);
     }
 

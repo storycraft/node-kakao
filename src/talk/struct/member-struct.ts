@@ -12,6 +12,7 @@ import { CommonOpenMemberStruct } from "./open/open-link-struct";
 
 export interface BaseMemberStruct extends StructBase {
     
+    type: UserType;
     userId: Long;
     nickname: string;
     profileImageUrl: string;
@@ -22,7 +23,6 @@ export interface BaseMemberStruct extends StructBase {
 
 export interface MemberStruct extends BaseMemberStruct {
 
-    type: UserType;
     accountId: number;
     linkedService: string;
     statusMessage: string;

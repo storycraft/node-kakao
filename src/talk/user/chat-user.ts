@@ -72,7 +72,7 @@ export interface OpenUserInfo extends UserInfo {
     readonly ProfileLinkId: Long | null;
     readonly ProfileOpenToken: number;
 
-    readonly ProfileType: OpenProfileType;
+    readonly UserType: UserType;
     readonly MemberType: OpenMemberType;
 
     getOpenLink(): Promise<OpenLinkProfile | null>;

@@ -4,6 +4,7 @@ import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open/open-l
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkSettings } from "../../open/open-link-settings";
 import { BaseMemberStruct } from "../member-struct";
+import { UserType } from "../../user/user-type";
 
 /*
  * Created on Fri Nov 22 2019
@@ -14,7 +15,6 @@ import { BaseMemberStruct } from "../member-struct";
 export interface CommonOpenMemberStruct {
 
     memberType: OpenMemberType;
-    profileType: OpenProfileType;
 
     linkId?: Long;
     openToken: number;
@@ -46,6 +46,8 @@ export namespace OpenKickedMemberStruct {
 
 export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStruct {
     
+    type: UserType;
+
 }
 
 export namespace OpenMemberStruct {
@@ -57,8 +59,8 @@ export namespace OpenMemberStruct {
         profileImageUrl: 'pi',
         originalProfileImageUrl: 'opi',
         fullProfileImageUrl: 'fpi',
-        profileType: 'ptp',
         openToken: 'opt',
+        type: 'type',
 
         linkId: 'pli',
         memberType: 'mt'
@@ -70,6 +72,8 @@ export namespace OpenMemberStruct {
 }
 
 export interface OpenLinkMemberStruct extends OpenMemberStruct {
+
+    profileType: OpenProfileType;
 
     linkId: Long;
     pv: Long;

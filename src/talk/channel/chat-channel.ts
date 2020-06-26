@@ -60,7 +60,7 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
     getLatestUserInfo(user: ChatUser): Promise<ChatUserInfo | null>;
     getLatestUserInfoId(id: Long): Promise<ChatUserInfo | null>;
 
-    sendChatOn(): Promise<RequestResult<boolean>>;
+    chatON(): Promise<RequestResult<boolean>>;
 
     markChannelRead(lastWatermark: Long): Promise<void>;
 

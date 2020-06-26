@@ -38,12 +38,12 @@ export class ManagedOpenUserInfo implements OpenUserInfo {
         return this.openToken;
     }
 
-    get ProfileType() {
-        return this.memberStruct.profileType;
-    }
-
     get MemberType() {
         return this.memberStruct.memberType;
+    }
+
+    get UserType() {
+        return this.memberStruct.type;
     }
 
     get ProfileImageURL() {
