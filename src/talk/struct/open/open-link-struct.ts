@@ -232,6 +232,6 @@ export enum LinkReactionType {
 export interface OpenLinkReactionInfo {
 
     reactionCount: number;
-    reacted: boolean;
+    reactionType: LinkReactionType;
 
 }

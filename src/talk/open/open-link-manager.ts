@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet/packet-join-info";
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet/packet-info-link";
@@ -31,7 +31,7 @@ import { PacketKickListSyncReq, PacketKickListSyncRes } from "../../packet/packe
 import { RequestResult } from "../request/request-result";
 import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
 import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/packet-reaction-count";
-import { PacketReactReq, PacketReactRes, ReactionType } from "../../packet/packet-react";
+import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
 import { OpenProfileTemplates } from "./open-link-profile-template";
 
 export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
@@ -264,11 +264,11 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketReactionCountRes>(packet);
 
-        return { status: res.StatusCode, result: { reactionCount: res.ReactionCount.toNumber(), reacted: ReactionType.NORMAL ? true : false } };
+        return { status: res.StatusCode, result: { reactionCount: res.ReactionCount.toNumber(), reactionType: res.ReactType } };
     }
 
-    async setLinkReacted(linkId: Long, reacted: boolean): Promise<RequestResult<boolean>> {
-        let packet = new PacketReactReq(linkId, reacted ? ReactionType.NORMAL : ReactionType.NONE);
+    async setLinkReacted(linkId: Long, reactionType: LinkReactionType): Promise<RequestResult<boolean>> {
+        let packet = new PacketReactReq(linkId, reactionType);
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketReactRes>(packet);
 
