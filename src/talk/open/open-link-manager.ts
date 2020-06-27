@@ -31,7 +31,7 @@ import { PacketKickListSyncReq, PacketKickListSyncRes } from "../../packet/packe
 import { RequestResult } from "../request/request-result";
 import { PacketKickListDelItemReq, PacketKickListDelItemRes } from "../../packet/packet-kick-list-del-item";
 import { PacketReactionCountReq, PacketReactionCountRes } from "../../packet/packet-reaction-count";
-import { PacketReactReq, PacketReactRes } from "../../packet/packet-react";
+import { PacketReactReq, PacketReactRes, ReactionType } from "../../packet/packet-react";
 import { OpenProfileTemplates } from "./open-link-profile-template";
 
 export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
@@ -264,11 +264,11 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketReactionCountRes>(packet);
 
-        return { status: res.StatusCode, result: { reactionCount: res.ReactionCount.toNumber(), reacted: !!res.Reacted } };
+        return { status: res.StatusCode, result: { reactionCount: res.ReactionCount.toNumber(), reacted: ReactionType.NORMAL ? true : false } };
     }
 
     async setLinkReacted(linkId: Long, reacted: boolean): Promise<RequestResult<boolean>> {
-        let packet = new PacketReactReq(linkId, reacted ? 1 : 0);
+        let packet = new PacketReactReq(linkId, reacted ? ReactionType.NORMAL : ReactionType.NONE);
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketReactRes>(packet);
 

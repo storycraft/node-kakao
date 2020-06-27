@@ -222,6 +222,13 @@ export namespace OpenLinkStruct {
     
 }
 
+export enum LinkReactionType {
+
+    NONE = 0,
+    NORMAL = 1
+
+}
+
 export interface OpenLinkReactionInfo {
 
     reactionCount: number;

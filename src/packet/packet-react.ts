@@ -6,12 +6,13 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
+import { LinkReactionType } from "../talk/struct/open/open-link-struct";
 
 export class PacketReactReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
-        public React: number = 0 // wtf
+        public ReactType: LinkReactionType = LinkReactionType.NONE
     ) {
         super();
     }
@@ -23,7 +24,7 @@ export class PacketReactReq extends LocoBsonRequestPacket {
     toBodyJson() {
         return {
             'li': this.LinkId,
-            'rt': this.React
+            'rt': this.ReactType
         };
     }
 
