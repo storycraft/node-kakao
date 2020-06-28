@@ -5,10 +5,10 @@
  */
 
 import { IdInstanceStore } from "../../store/store";
-import { ChatUser, ChatUserInfo, OpenChatUserInfo } from "./chat-user";
+import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo } from "./chat-user";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
-import { MemberStruct } from "../struct/member-struct";
+import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
 import { PacketGetMemberRes, PacketGetMemberReq } from "../../packet/packet-get-member";
 import { PacketMemberReq, PacketMemberRes } from "../../packet/packet-member";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";

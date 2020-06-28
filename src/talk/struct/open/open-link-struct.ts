@@ -2,8 +2,7 @@ import { StructBase } from "../struct-base";
 import { Long } from "bson";
 import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open/open-link-type";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
-import { OpenLinkSettings } from "../../open/open-link-settings";
-import { BaseMemberStruct } from "../member-struct";
+import { BaseMemberStruct, BaseChatMemberStruct } from "../member-struct";
 import { UserType } from "../../user/user-type";
 
 /*
@@ -44,9 +43,7 @@ export namespace OpenKickedMemberStruct {
     
 }
 
-export interface OpenMemberStruct extends BaseMemberStruct, CommonOpenMemberStruct {
-    
-    type: UserType;
+export interface OpenMemberStruct extends BaseChatMemberStruct, CommonOpenMemberStruct {
 
 }
 

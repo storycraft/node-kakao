@@ -49,6 +49,12 @@ export interface ChatUserInfo extends UserInfo {
     
 }
 
+export interface DisplayUserInfo extends ChatUserInfo {
+
+
+
+}
+
 export interface NormalChatUserInfo extends ChatUserInfo {
 
     readonly User: ChatUser;

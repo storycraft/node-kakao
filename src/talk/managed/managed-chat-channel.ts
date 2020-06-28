@@ -5,8 +5,8 @@
  */
 
 import { OpenLinkChannel } from "../open/open-link";
-import { OpenMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
-import { ChatUser, ChatUserInfo, OpenChatUserInfo } from "../user/chat-user";
+import { OpenMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
+import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo } from "../user/chat-user";
 import { OpenMemberType } from "../open/open-link-type";
 import { Long } from "bson";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct } from "../struct/channel-meta-struct";
@@ -18,11 +18,10 @@ import { ChannelManager } from "../channel/channel-manager";
 import { ChannelDataStruct } from "../struct/channel-data-struct";
 import { EventEmitter } from "events";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
-import { MemberStruct } from "../struct/member-struct";
+import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
-
 
 export abstract class ManagedBaseChatChannel extends EventEmitter implements ChatChannel {
 
@@ -44,6 +43,8 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
 
     private channelMetaList: ChannelMetaStruct[];
 
+    private displayUserInfoList: ManagedDisplayUserInfo[];
+
     private userInfoMap: Map<string, ChatUserInfo>;
 
     constructor(private manager: ChannelManager, private id: Long, private dataStruct: ChannelDataStruct) {
@@ -62,6 +63,8 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         this.clientName = '';
         this.clientPushSound = '';
         this.isFavorite = false;
+
+        this.displayUserInfoList = [];
 
         this.userInfoMap = new Map();
 
@@ -122,6 +125,10 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
 
     get ChannelMetaList() {
         return this.channelMetaList;
+    }
+
+    get DisplayUserInfoList() {
+        return this.displayUserInfoList;
     }
 
     getUserInfoList() {
@@ -286,12 +293,56 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         this.lastChat = chat;
     }
 
+    updateDisplayUserInfoList(list: ManagedDisplayUserInfo[]) {
+        this.displayUserInfoList = list;
+    }
+
     updateUserInfo(userId: Long, userInfo: ChatUserInfo | null) {
         if (userInfo) this.userInfoMap.set(userId.toString(), userInfo);
         else this.userInfoMap.delete(userId.toString());
     }
 
     abstract isOpenChat(): boolean;
+
+}
+
+export class ManagedDisplayUserInfo implements DisplayUserInfo {
+
+    constructor(private user: ChatUser, private displayStruct: DisplayMemberStruct) {
+
+    }
+
+    get Client() {
+        return this.user.Client;
+    }
+
+    get User() {
+        return this.user;
+    }
+
+    get Id() {
+        return this.displayStruct.userId;
+    }
+
+    get Nickname() {
+        return this.displayStruct.nickname;
+    }
+
+    get ProfileImageURL() {
+        return this.displayStruct.profileImageUrl;
+    }
+
+    get FullProfileImageURL() {
+        return this.displayStruct.profileImageUrl;
+    }
+
+    get OriginalProfileImageURL() {
+        return this.displayStruct.profileImageUrl;
+    }
+
+    isOpenUser() {
+        return false;
+    }
 
 }
 
@@ -465,8 +516,8 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements Op
         return this.Client.OpenLinkManager.requestReactionInfo(this.linkId);
     }
 
-    async setReacted(reacted: boolean): Promise<RequestResult<boolean>> {
-        return this.Client.OpenLinkManager.setLinkReacted(this.linkId, reacted);
+    async setReacted(reactionType: LinkReactionType): Promise<RequestResult<boolean>> {
+        return this.Client.OpenLinkManager.setLinkReacted(this.linkId, reactionType);
     }
 
     updateLink(link: OpenLinkChannel) {

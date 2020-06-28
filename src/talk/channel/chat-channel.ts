@@ -1,4 +1,4 @@
-import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo } from "../user/chat-user";
+import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
@@ -11,7 +11,7 @@ import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaCont
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
-import { OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 
@@ -46,6 +46,8 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
     readonly PushAlert: boolean;
 
     readonly ChannelMetaList: ChannelMetaStruct[];
+
+    readonly DisplayUserInfoList: DisplayUserInfo[];
 
     getUserInfoList(): I[];
 
@@ -138,6 +140,6 @@ export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> 
     handOverHostId(newHostId: Long): Promise<RequestResult<boolean>>;
 
     requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>>;
-    setReacted(reacted: boolean): Promise<RequestResult<boolean>>;
+    setReacted(reactionType: LinkReactionType): Promise<RequestResult<boolean>>;
 
 }

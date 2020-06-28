@@ -16,12 +16,38 @@ export interface BaseMemberStruct extends StructBase {
     userId: Long;
     nickname: string;
     profileImageUrl: string;
-    originalProfileImageUrl: string;
-    fullProfileImageUrl: string;
 
 }
 
-export interface MemberStruct extends BaseMemberStruct {
+export interface BaseChatMemberStruct extends BaseMemberStruct {
+    
+    userId: Long;
+    nickname: string;
+    profileImageUrl: string;
+    fullProfileImageUrl: string;
+    originalProfileImageUrl: string;
+    
+}
+
+export interface DisplayMemberStruct extends BaseMemberStruct {
+
+}
+
+export namespace DisplayMemberStruct {
+
+    export const Mappings = {
+
+        userId: 'userId',
+        nickname: 'nickName',
+        profileImageUrl: 'pi'
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+    
+}
+
+export interface MemberStruct extends BaseChatMemberStruct {
 
     accountId: number;
     linkedService: string;

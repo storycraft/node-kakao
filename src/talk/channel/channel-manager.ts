@@ -8,7 +8,7 @@ import { IdStore } from "../../store/store";
 import { ChatChannel, OpenChatChannel, MemoChatChannel } from "./chat-channel";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
-import { ChatUser } from "../user/chat-user";
+import { ChatUser, DisplayUserInfo } from "../user/chat-user";
 import { PacketCreateChannelRes, PacketCreateChannelReq } from "../../packet/packet-create-channel";
 import { PacketChannelInfoReq, PacketChannelInfoRes } from "../../packet/packet-channel-info";
 import { ChannelInfoStruct } from "../struct/channel-info-struct";
@@ -29,9 +29,9 @@ import { OpenProfileType, OpenLinkType } from "../open/open-link-type";
 import { OpenLinkTemplate } from "../open/open-link-template";
 import { PacketCreateOpenLinkReq, PacketCreateOpenLinkRes } from "../../packet/packet-create-open-link";
 import { OpenLinkChannel } from "../open/open-link";
-import { MemberStruct } from "../struct/member-struct";
+import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
 import { OpenMemberStruct } from "../struct/open/open-link-struct";
-import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel, ManagedMemoChatChannel } from "../managed/managed-chat-channel";
+import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel, ManagedMemoChatChannel, ManagedDisplayUserInfo } from "../managed/managed-chat-channel";
 import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 
@@ -113,9 +113,11 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
     protected initChannelInfo(channel: ManagedBaseChatChannel, channelInfo: ChannelInfoStruct) {
         channel.updateData(channelInfo);
+        
         if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
         if (channelInfo.channelMetaList) channel.updateMetaList(channelInfo.channelMetaList);
         if (channelInfo.lastChatLog) channel.updateLastChat(this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog)!);
+        if (channelInfo.displayMemberList) channel.updateDisplayUserInfoList(channelInfo.displayMemberList.map(this.getDisplayUserInfoFromStruct.bind(this)));
     }
 
     protected initUserInfoList(channel: ManagedBaseChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
@@ -132,6 +134,10 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
             open.updateMemberList(memberList as OpenMemberStruct[]);
         }
+    }
+
+    protected getDisplayUserInfoFromStruct(memberStruct: DisplayMemberStruct): ManagedDisplayUserInfo {
+        return new ManagedDisplayUserInfo(this.client.UserManager.get(memberStruct.userId), memberStruct);
     }
 
     async createMemoChannel(): Promise<RequestResult<MemoChatChannel>> {

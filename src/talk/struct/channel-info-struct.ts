@@ -1,6 +1,6 @@
 import { Long } from "bson";
 import { ChatlogStruct } from "./chatlog-struct";
-import { MemberStruct } from "./member-struct";
+import { MemberStruct, DisplayMemberStruct } from "./member-struct";
 import { ChannelMetaStruct } from "./channel-meta-struct";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
 import { ChannelDataStruct } from "./channel-data-struct";
@@ -20,7 +20,7 @@ export interface ChannelInfoStruct extends ChannelDataStruct {
     lastLogId: Long;
     lastSeenLogId: Long;
     lastChatLog?: ChatlogStruct;
-    displayMemberList: MemberStruct[];
+    displayMemberList: DisplayMemberStruct[];
     channelMetaList?: ChannelMetaStruct[];
     isDirectChat: boolean;
 
@@ -52,7 +52,7 @@ export namespace ChannelInfoStruct {
 
     export const ConvertMap = {
 
-        displayMemberList: new Converter.Array(MemberStruct.Mappings),
+        displayMemberList: new Converter.Array(DisplayMemberStruct.Mappings),
         lastChatLog: new Converter.Object(ChatlogStruct.Mappings)
 
     }
