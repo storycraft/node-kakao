@@ -22,8 +22,9 @@ import { FriendBlockedListStruct } from "../talk/struct/api/friends/friend-block
 import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-struct";
 import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
 import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
+import { WebApiClient } from "./web-api-client";
 
-export class ApiClient {
+export class ApiClient implements WebApiClient {
 
     constructor(
         private deviceUUID: string,
