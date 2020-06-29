@@ -42,9 +42,9 @@ export class MediaManager {
         let shipRes = await this.NetworkManager.requestPacketRes<PacketShipRes>(new PacketShipReq(channel.Id, template.type, Long.fromNumber(template.data.byteLength), this.createMediaHash(template.data), template.ext || ''));
         let uploadInterface = this.NetworkManager.createUploadInterface({ host: shipRes.VHost, port: shipRes.Port, keepAlive: true });
 
-        let res = await uploadInterface.upload(this.ClientUser.Id, shipRes.Key, channel.Id, template.type, name, template.data, template.width || 0, template.height || 0);
+        let res = await uploadInterface.upload(this.ClientUser.Id, shipRes.Key, channel.Id, template.type, template.name, template.data, template.width || 0, template.height || 0);
 
-        if (res.StatusCode === StatusCode.SUCCESS && res.Chatlog) return await this.ChatManager.chatFromChatlog(res.Chatlog);
+        if (res.StatusCode === StatusCode.SUCCESS && res.Chatlog) return this.ChatManager.chatFromChatlog(res.Chatlog);
 
         return null;
     }
