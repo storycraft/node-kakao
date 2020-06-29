@@ -22,6 +22,7 @@ import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
+import { MediaTemplates } from "../chat/template/media-template";
 
 export abstract class ManagedBaseChatChannel extends EventEmitter implements ChatChannel {
 
@@ -181,6 +182,10 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
 
     async sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
         return this.ChatManager.sendText(this, ...textFormat);
+    }
+
+    async sendMedia(template: MediaTemplates): Promise<Chat | null> {
+        return this.ChatManager.sendMedia(this, template);
     }
     
     async sendTemplate(template: MessageTemplate): Promise<Chat | null> {

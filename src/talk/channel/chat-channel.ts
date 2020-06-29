@@ -14,6 +14,7 @@ import { RequestResult } from "../request/request-result";
 import { OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { ChannelEvents, OpenChannelEvents } from "../../event/events";
+import { MediaTemplates } from "../chat/template/media-template";
 
 /*
  * Created on Fri Nov 01 2019
@@ -67,6 +68,8 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
     markChannelRead(lastWatermark: Long): Promise<void>;
 
     sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null>;
+
+    sendMedia(template: MediaTemplates): Promise<Chat | null>;
     
     sendTemplate(template: MessageTemplate): Promise<Chat | null>;
 
