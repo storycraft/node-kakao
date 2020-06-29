@@ -177,7 +177,7 @@ export class SharpAttachment implements ChatAttachment {
 
                     case SharpContentType.WEATHER: content = new SharpWeatherContent(); break;
 
-                    case SharpContentType.SIMPLE: 
+                    case SharpContentType.SIMPLE:
                     default: content = new SharpSimpleContent(); break;
                 }
 

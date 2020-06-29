@@ -9,7 +9,7 @@ import { KakaoAPI } from "../kakao-api";
 export namespace HostData {
 
     export const BookingHost: HostData = {
-        host: KakaoAPI.LocoEntry, 
+        host: KakaoAPI.LocoEntry,
         port: KakaoAPI.LocoEntryPort,
         keepAlive: false
     }

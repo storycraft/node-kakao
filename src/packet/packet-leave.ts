@@ -54,7 +54,7 @@ export class PacketLeftRes extends LocoBsonResponsePacket {
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,
-        public LastTokenId: Long = Long.ZERO  
+        public LastTokenId: Long = Long.ZERO
     ) {
         super(status);
     }

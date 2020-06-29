@@ -107,7 +107,7 @@ export enum OpenLinkTagType {
 
 export interface OpenLinkTag {
 
-    type: OpenLinkTagType; 
+    type: OpenLinkTagType;
     content: string;
 
 }

@@ -62,4 +62,4 @@ export class PacketMemberRes extends LocoBsonResponsePacket {
         }
     }
 
-} 
+}
