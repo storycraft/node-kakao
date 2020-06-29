@@ -981,7 +981,7 @@ export class CustomAttachment implements ChatAttachment {
 
     constructor(
         public Info: CustomInfo = new CustomInfo(),
-        public Content?: CustomContent,  
+        public Content?: CustomContent,
         public LinkInfo?: KakaoLinkInfo
     ) {
 

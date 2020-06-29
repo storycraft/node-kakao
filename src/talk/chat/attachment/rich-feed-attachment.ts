@@ -109,14 +109,14 @@ export class RichActionContent implements AttachmentContent {
     }
 
     readRawContent(rawData: any): void {
-        this.Action = rawData['action'] || ''; 
-        this.URL = rawData['url'] || ''; 
+        this.Action = rawData['action'] || '';
+        this.URL = rawData['url'] || '';
 
-        if ( rawData['iu'] ) { 
-            if ( rawData['iu']['android'] ) { 
+        if ( rawData['iu'] ) {
+            if ( rawData['iu']['android'] ) {
                 this.URLAndroid = rawData['iu']['android'];
             }
-            if ( rawData['iu']['ios'] ) { 
+            if ( rawData['iu']['ios'] ) {
                 this.URLIos = rawData['iu']['ios'];
             }
         }

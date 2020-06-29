@@ -167,7 +167,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
     async createOpenChannel(template: OpenLinkTemplate): Promise<RequestResult<OpenChatChannel>> {
         let packet = new PacketCreateOpenLinkReq(
             template.linkName, template.linkCoverPath, OpenLinkType.CHANNEL, template.description, template.profileContent || null,
-            template.allowAnonProfile, template.canSearchLink, Long.fromNumber(Date.now() / 1000), true, 0, 
+            template.allowAnonProfile, template.canSearchLink, Long.fromNumber(Date.now() / 1000), true, 0,
             template.clientProfile.type, template.clientProfile.anonNickname, template.clientProfile.anonProfilePath, template.clientProfile.profileLinkId,
             template.maxUserLimit);
 

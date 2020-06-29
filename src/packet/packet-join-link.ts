@@ -21,7 +21,7 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
         public ProfileType: OpenProfileType = OpenProfileType.MAIN,
 
         public Nickname: string = '',           // KAKAO_ANON
-        public ProfilePath: string = '', 
+        public ProfilePath: string = '',
 
         public ProfileLinkId: Long = Long.ZERO  // OPEN_PROFILE
     ) {

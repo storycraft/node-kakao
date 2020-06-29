@@ -48,7 +48,7 @@ export class PacketSetMemTypeRes extends LocoBsonResponsePacket {
         public MemberTypeList: OpenMemberType[] = [],
         public Unknown1: Long[] = []
     ) {
-        super(status);        
+        super(status);
     }
 
     get PacketName() {
