@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "moduleResolution": "node",
         "noImplicitAny": true,
         "removeComments": true,
         "pretty": true,
@@ -8,13 +9,16 @@
         "outDir": "dist",
         "declaration": true,
         "sourceMap": true,
-        "target": "es2017"
+        "target": "es2017",
+        "lib": ["es2017"]
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
         "node_modules",
-        "**/*.spec.ts"
+        "dist",
+        "**/*.spec.ts",
+        "**/node_modules/*"
     ]
 }
