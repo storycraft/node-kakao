@@ -160,8 +160,8 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let watermark = packet.Watermark;
 
-        reader.emit('message_read', channel, watermark);
-        channel.emit('message_read', channel, watermark);
+        reader.emit('message_read', channel, reader, watermark);
+        channel.emit('message_read', channel, reader, watermark);
         this.Client.emit('message_read', channel, reader, watermark);
     }
 
