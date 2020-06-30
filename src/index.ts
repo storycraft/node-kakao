@@ -7,6 +7,9 @@
 export * from './event/events';
 export * from './kakao-api';
 
+export * from './api/web-api-client';
+export * from './api/api-header-decorator';
+
 export * from './api/api-client';
 
 export * from './loco/loco-interface';

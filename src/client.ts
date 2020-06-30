@@ -30,6 +30,10 @@ import { Long } from "bson";
 
 export interface LoginBasedClient extends AccessDataProvider {
 
+    readonly Name: string;
+
+    DeviceUUID: string;
+
     readonly Logon: boolean;
     readonly ApiClient: ApiClient;
     
@@ -50,8 +54,6 @@ export interface LoginError {
 }
 
 export interface LocoClient extends LoginBasedClient, ClientEvents {
-
-    readonly Name: string;
 
     readonly NetworkManager: NetworkManager;
 
@@ -77,6 +79,8 @@ export class LoginClient extends EventEmitter implements LoginBasedClient {
 
     private name: string;
 
+    private deviceUUID: string;
+
     private currentLogin: (() => Promise<void>) | null;
 
     private accessData: LoginAccessDataStruct | null;
@@ -87,15 +91,24 @@ export class LoginClient extends EventEmitter implements LoginBasedClient {
         super();
 
         this.name = name;
+        this.deviceUUID = deviceUUID;
 
         this.currentLogin = null;
         this.accessData = null;
 
-        this.apiClient = new ApiClient(deviceUUID, this);
+        this.apiClient = new ApiClient(this);
     }
 
     get Name() {
         return this.name;
+    }
+
+    get DeviceUUID() {
+        return this.deviceUUID;
+    }
+
+    set DeviceUUID(uuid) {
+        this.deviceUUID = uuid;
     }
 
     get ApiClient() {
@@ -107,19 +120,19 @@ export class LoginClient extends EventEmitter implements LoginBasedClient {
     }
 
     async login(email: string, password: string, deviceUUID?: string, forced: boolean = false) {
-        if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
+        if (deviceUUID && this.DeviceUUID !== deviceUUID) this.DeviceUUID = deviceUUID;
 
-        this.currentLogin = this.login.bind(this, email, password, this.apiClient.DeviceUUID, forced);
+        this.currentLogin = this.login.bind(this, email, password, this.DeviceUUID, forced);
 
-        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestLogin(email, password, this.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
     }
 
     async loginToken(email: string, token: string, deviceUUID?: string, forced: boolean = false, locked: boolean = true) {
-        if (deviceUUID && this.apiClient.DeviceUUID !== deviceUUID) this.apiClient.DeviceUUID = deviceUUID;
+        if (deviceUUID && this.DeviceUUID !== deviceUUID) this.DeviceUUID = deviceUUID;
 
-        this.currentLogin = this.loginToken.bind(this, email, token, this.apiClient.DeviceUUID, forced);
+        this.currentLogin = this.loginToken.bind(this, email, token, this.DeviceUUID, forced);
 
-        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestAutoLogin(locked, email, token, this.apiClient.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
+        await this.loginAccessData(Serializer.deserialize<LoginAccessDataStruct>(JsonUtil.parseLoseless(await KakaoAPI.requestAutoLogin(locked, email, token, this.DeviceUUID, this.name, forced)), LoginAccessDataStruct.MAPPER));
     }
 
     protected async loginAccessData(accessData: LoginAccessDataStruct) {
@@ -239,7 +252,7 @@ export class TalkClient extends LoginClient implements LocoClient {
             throw new Error(`more_settings.json ERR: ${res.status}`);
         }
 
-        let loginRes = await this.networkManager.locoLogin(this.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken);
+        let loginRes = await this.networkManager.locoLogin(this.DeviceUUID, accessData.userId, accessData.accessToken);
 
         this.clientUser = new TalkClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 

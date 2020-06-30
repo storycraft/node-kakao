@@ -22,159 +22,122 @@ import { FriendBlockedListStruct } from "../talk/struct/api/friends/friend-block
 import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-struct";
 import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
 import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
-import { WebApiClient } from "./web-api-client";
+import { WebApiClient, RequestHeader } from "./web-api-client";
+import { LoginClient } from "../client";
+import { SessionHeaderDecorator } from "./api-header-decorator";
 
-export class ApiClient implements WebApiClient {
+export class ApiClient extends WebApiClient {
+
+    private sessionHeaderDecorator: SessionHeaderDecorator;
 
     constructor(
-        private deviceUUID: string,
-        
-        private provider: AccessDataProvider
+        client: LoginClient
     ) {
-        
+       super();
+
+       this.sessionHeaderDecorator = new SessionHeaderDecorator(client);
     }
 
-    get DeviceUUID() {
-        return this.deviceUUID;
+    get Host() {
+        return KakaoAPI.ServiceURL;
     }
+    
+    protected fillHeader(header: RequestHeader) {
+        super.fillHeader(header);
 
-    set DeviceUUID(uuid) {
-        this.deviceUUID = uuid;
-    }
-
-    protected getAuthKey(): string {
-        let accessData = this.provider.getLatestAccessData();
-
-        return `${accessData.accessToken}-${this.deviceUUID}`;
-    }
-
-    protected getSessionHeader() {
-        return {
-            'Host': KakaoAPI.InternalHost,
-            'Authorization': this.getAuthKey(),
-            'A': KakaoAPI.AuthHeaderAgent,
-            'User-Agent': KakaoAPI.AuthUserAgent,
-            'Accept': '*/*',
-            'Accept-Language': KakaoAPI.Language
-        };
+        this.sessionHeaderDecorator.fillHeader(header);
     }
 
     // account
 
     async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<MoreSettingsStruct> {
-        return this.createApiRequest('GET', `${ApiClient.getAccountApiURL('more_settings.json')}?since=${since}&lang=${language}`);
+        return this.request('GET', `${ApiClient.getAccountApiPath('more_settings.json')}?since=${since}&lang=${language}`);
     }
 
     async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<LessSettingsStruct> {
-        return this.createApiRequest('GET', `${ApiClient.getAccountApiURL('less_settings.json')}?since=${since}&lang=${language}`);
+        return this.request('GET', `${ApiClient.getAccountApiPath('less_settings.json')}?since=${since}&lang=${language}`);
     }
 
     async requestWebLoginToken(): Promise<LoginTokenStruct> {
-        return this.createApiRequest('GET', ApiClient.getAccountApiURL('login_token.json'));
+        return this.request('GET', ApiClient.getAccountApiPath('login_token.json'));
     }
 
     // friends
 
     async addFriend(id: Long, pa: string = ''): Promise<FriendReqStruct> {
-        return this.createApiRequest('GET', `${ApiClient.getFriendsApiURL('add')}/${id}.json?pa=${pa}`);
+        return this.request('GET', `${ApiClient.getFriendsApiPath('add')}/${id}.json?pa=${pa}`);
     }
 
     async removeFriend(id: Long): Promise<FriendReqStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('purge.json'), { id: id.toString() });
+        return this.request('POST', ApiClient.getFriendsApiPath('purge.json'), { id: id.toString() });
     }
 
     async removeFriendList(idList: Long[]): Promise<FriendDeleteStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('delete.json'), { ids: JsonUtil.stringifyLoseless(idList) });
+        return this.request('POST', ApiClient.getFriendsApiPath('delete.json'), { ids: JsonUtil.stringifyLoseless(idList) });
     }
 
     async hideFriend(id: Long, pa: string = ''): Promise<ApiStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('hide.json'), { id: id.toString(), pa: pa });
+        return this.request('POST', ApiClient.getFriendsApiPath('hide.json'), { id: id.toString(), pa: pa });
     }
 
     async unhideFriend(id: Long): Promise<ApiStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('unhide.json'), { id: id.toString() });
+        return this.request('POST', ApiClient.getFriendsApiPath('unhide.json'), { id: id.toString() });
     }
 
     async searchFriends(query: string, pageNum?: number, pageSize?: number): Promise<FriendSearchStruct> {
-        if (pageNum && pageSize) return this.createApiFormRequest('GET', ApiClient.getFriendsApiURL('search.json'), { query: query, page_num: pageNum, page_size: pageSize });
+        if (pageNum && pageSize) return this.request('GET', ApiClient.getFriendsApiPath('search.json'), { query: query, page_num: pageNum, page_size: pageSize });
 
-        return this.createApiFormRequest('GET', ApiClient.getFriendsApiURL('search.json'), { query });
+        return this.request('GET', ApiClient.getFriendsApiPath('search.json'), { query });
     }
 
     async findFriendById(id: Long): Promise<FriendFindIdStruct> {
-        return this.createApiRequest('GET', ApiClient.getFriendsApiURL(`${id.toString()}.json`)); // 200 iq logics
+        return this.request('GET', ApiClient.getFriendsApiPath(`${id.toString()}.json`)); // 200 iq logics
     }
 
     async findFriendByUUID(uuid: string): Promise<FriendFindUUIDStruct> {
-        return this.createApiFormRequest('GET', `${ApiClient.getFriendsApiURL('find_by_uuid.json')}`, { uuid: uuid });
+        return this.request('GET', `${ApiClient.getFriendsApiPath('find_by_uuid.json')}`, { uuid: uuid });
     }
 
     async requestFriendList(types: string[] = [ 'plus', 'normal' ], eventTypes: string[] = [ 'create' ], token: Long = Long.ZERO): Promise<FriendListStruct> {
-        return this.createApiFormRequest('GET', `${ApiClient.getFriendsApiURL('list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token: token.toString() });
+        return this.request('GET', `${ApiClient.getFriendsApiPath('list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token: token.toString() });
     }
 
     async requestBlockedFriendList(): Promise<FriendBlockedListStruct> {
-        return this.createApiRequest('GET', `${ApiClient.getFriendsApiURL('blocked.json')}`);
+        return this.request('GET', `${ApiClient.getFriendsApiPath('blocked.json')}`);
     }
 
     async setNickname(id: Long, nickname: string): Promise<FriendNicknameStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('nickname.json'), { id: id.toString(), nickname: nickname });
+        return this.request('POST', ApiClient.getFriendsApiPath('nickname.json'), { id: id.toString(), nickname: nickname });
     }
 
     async addFavoriteFriends(idList: Long[]): Promise<ApiStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('add_favorite.json'), { ids: JsonUtil.stringifyLoseless(idList) });
+        return this.request('POST', ApiClient.getFriendsApiPath('add_favorite.json'), { ids: JsonUtil.stringifyLoseless(idList) });
     }
 
     async removeFavoriteFriend(id: Long): Promise<ApiStruct> {
-        return this.createApiFormRequest('POST', ApiClient.getFriendsApiURL('remove_favorite.json'), { id: id.toString() });
+        return this.request('POST', ApiClient.getFriendsApiPath('remove_favorite.json'), { id: id.toString() });
     }
 
     // profile
 
     async requestMyProfile(): Promise<ProfileReqStruct> {
-        return this.createApiRequest('GET', ApiClient.getProfile3ApiURL('me.json'));
+        return this.request('GET', ApiClient.getProfile3ApiPath('me.json'));
     }
 
     async requestProfile(id: Long): Promise<ProfileReqStruct> {
-        return this.createApiRequest('GET', `${ApiClient.getProfile3ApiURL('friend_info.json')}?id=${id}`);
+        return this.request('GET', `${ApiClient.getProfile3ApiPath('friend_info.json')}?id=${id}`);
     }
 
-    protected async createApiRequest<T extends ApiStruct>(method: string, url: string, mapper?: ObjectMapper): Promise<T> {
-        let rawRes = JsonUtil.parseLoseless(await request({
-            url: url,
-            headers: this.getSessionHeader(),
-            method: method
-        }));
-
-        if (mapper) return Serializer.deserialize<T>(rawRes, mapper);
-
-        return rawRes;
+    static getAccountApiPath(api: string) {
+        return `${KakaoAPI.Agent}/account/${api}`;
     }
 
-    // application/x-www-form-urlencoded
-    protected async createApiFormRequest<T extends ApiStruct>(method: string, url: string, form: any, mapper?: ObjectMapper): Promise<T> {
-        let rawRes = JsonUtil.parseLoseless(await request({
-            url: url,
-            headers: this.getSessionHeader(),
-            form: form,
-            method: method
-        }));
-
-        if (mapper) return Serializer.deserialize<T>(rawRes, mapper);
-
-        return rawRes;
+    static getFriendsApiPath(api: string) {
+        return `${KakaoAPI.Agent}/friends/${api}`;
     }
 
-    static getAccountApiURL(api: string) {
-        return `${KakaoAPI.InternalURL}/${KakaoAPI.Agent}/account/${api}`;
-    }
-
-    static getFriendsApiURL(api: string) {
-        return `${KakaoAPI.ServiceURL}/${KakaoAPI.Agent}/friends/${api}`;
-    }
-
-    static getProfile3ApiURL(api: string) {
-        return `${KakaoAPI.ServiceURL}/${KakaoAPI.Agent}/profile3/${api}`;
+    static getProfile3ApiPath(api: string) {
+        return `${KakaoAPI.Agent}/profile3/${api}`;
     }
 
 }
