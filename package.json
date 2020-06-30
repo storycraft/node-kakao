@@ -1,6 +1,6 @@
 {
   "name": "@storycraft/node-kakao",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Loco protocol compatible library",
   "main": "dist/index.js",
   "scripts": {
