@@ -7,7 +7,8 @@
 import { ApiStruct } from "../talk/struct/api/api-struct";
 import { JsonUtil } from "../util/json-util";
 import * as request from "request-promise";
-import { BasicHeaderDecorator, ApiHeaderDecorator } from "./api-header-decorator";
+import { BasicHeaderDecorator, ApiHeaderDecorator, SessionHeaderDecorator } from "./api-header-decorator";
+import { LoginClient } from "../client";
 
 export type RequestForm = { [key: string]: any };
 export type RequestHeader = { [key: string]: any };
@@ -42,6 +43,24 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
 
         return res;
+    }
+
+}
+
+export abstract class SessionApiClient extends WebApiClient {
+
+    private sessionHeaderDecorator: SessionHeaderDecorator;
+
+    constructor(client: LoginClient) {
+        super();
+
+        this.sessionHeaderDecorator = new SessionHeaderDecorator(client);
+    }
+
+    fillHeader(header: RequestHeader) {
+        super.fillHeader(header);
+
+        this.sessionHeaderDecorator.fillHeader(header);
     }
 
 }

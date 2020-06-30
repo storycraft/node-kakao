@@ -18,32 +18,21 @@ import { FriendBlockedListStruct } from "../talk/struct/api/friends/friend-block
 import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-struct";
 import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
 import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
-import { WebApiClient, RequestHeader } from "./web-api-client";
+import { SessionApiClient } from "./web-api-client";
 import { LoginClient } from "../client";
-import { SessionHeaderDecorator } from "./api-header-decorator";
 
-export class ApiClient extends WebApiClient {
-
-    private sessionHeaderDecorator: SessionHeaderDecorator;
+export class ApiClient extends SessionApiClient {
 
     constructor(
         client: LoginClient
     ) {
-       super();
-
-       this.sessionHeaderDecorator = new SessionHeaderDecorator(client);
+       super(client);
     }
 
     get Host() {
         return KakaoAPI.ServiceURL;
     }
     
-    fillHeader(header: RequestHeader) {
-        super.fillHeader(header);
-
-        this.sessionHeaderDecorator.fillHeader(header);
-    }
-
     // account
 
     async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<MoreSettingsStruct> {
