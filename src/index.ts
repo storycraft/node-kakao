@@ -10,6 +10,7 @@ export * from './kakao-api';
 export * from './api/web-api-client';
 export * from './api/api-header-decorator';
 
+export * from './api/auth-client';
 export * from './api/api-client';
 
 export * from './loco/loco-interface';
@@ -80,9 +81,10 @@ export * from './talk/user/user-manager';
 
 export * from './talk/struct/struct-base';
 
+export * from './talk/struct/auth/auth-api-struct';
 export * from './talk/struct/auth/login-access-data-struct';
 
-export * from './talk/struct/api/api-struct';
+export * from './talk/struct/web-api-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 export * from './talk/struct/api/account/login-token-struct';
 

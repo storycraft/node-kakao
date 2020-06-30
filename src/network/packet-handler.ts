@@ -506,18 +506,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     }
 
      onSwitchServerReq(packet: PacketChangeServerRes) {
-        this.kickReason = LocoKickoutType.CHANGE_SERVER;
-
-        this.networkManager.disconnect();
-
-        let accessData = this.Client.getLatestAccessData();
+        let accessData = this.Client.Auth.getLatestAccessData();
 
         this.Client.emit('switch_server');
 
         // recache and relogin
         this.networkManager.getCheckinData(accessData.userId, true).then(() => {
-            this.networkManager.locoLogin(this.Client.ApiClient.DeviceUUID, accessData.userId, accessData.accessToken)
-                .then(() => this.kickReason = LocoKickoutType.UNKNOWN);
+            this.kickReason = LocoKickoutType.CHANGE_SERVER;
+            this.networkManager.disconnect();
+
+            this.Client.relogin();
         });
     }
 

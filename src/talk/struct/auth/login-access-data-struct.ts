@@ -1,7 +1,7 @@
-import { StructBase } from "../struct-base";
 import { Long } from "bson";
 import { JsonUtil } from "../../../util/json-util";
 import { NameMapping, ConvertMap, ObjectMapper } from "json-proxy-mapper";
+import { AuthApiStruct } from "./auth-api-struct";
 
 /*
  * Created on Fri Nov 01 2019
@@ -9,19 +9,8 @@ import { NameMapping, ConvertMap, ObjectMapper } from "json-proxy-mapper";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum LoginStatusCode {
+export interface LoginAccessDataStruct extends AuthApiStruct {
 
-    PASS = 0,
-    VALIDATION_FAILED = -30,
-    DEVICE_NOT_REGISTERED = -100,
-    DEVICE_LOGON_ANOTHER = -101,
-    RESTRICTED = -997
-
-}
-
-export interface LoginAccessDataStruct extends StructBase {
-
-    status: LoginStatusCode,
     message: string,
     userId: Long,
     countryISO: string,

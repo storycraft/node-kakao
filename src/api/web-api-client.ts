@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ApiStruct } from "../talk/struct/api/api-struct";
+import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { JsonUtil } from "../util/json-util";
 import * as request from "request-promise";
-import { BasicHeaderDecorator, ApiHeaderDecorator, SessionHeaderDecorator } from "./api-header-decorator";
-import { LoginClient } from "../client";
+import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
+import { AccessDataProvider } from "../oauth/access-data-provider";
 
 export type RequestForm = { [key: string]: any };
 export type RequestHeader = { [key: string]: any };
@@ -23,13 +23,15 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         BasicHeaderDecorator.INSTANCE.fillHeader(header);
     }
 
+    abstract get Scheme(): string;
+
     abstract get Host(): string;
 
     toApiURL(path: string) {
-        return `${this.Host}/${path}`;
+        return `${this.Scheme}://${this.Host}/${path}`;
     }
 
-    async request<T extends ApiStruct>(method: string, path: string, form?: RequestForm): Promise<T> {
+    async request<T extends WebApiStruct>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let reqHeader = this.createClientHeader();
         this.fillHeader(reqHeader);
 
@@ -38,6 +40,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
             method: method
         };
 
+        if (headers) Object.assign(reqHeader, headers);
         if (form) reqData.form = form;
 
         let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
@@ -49,18 +52,14 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
 export abstract class SessionApiClient extends WebApiClient {
 
-    private sessionHeaderDecorator: SessionHeaderDecorator;
-
-    constructor(client: LoginClient) {
+    constructor(private provider: AccessDataProvider) {
         super();
-
-        this.sessionHeaderDecorator = new SessionHeaderDecorator(client);
     }
 
     fillHeader(header: RequestHeader) {
         super.fillHeader(header);
 
-        this.sessionHeaderDecorator.fillHeader(header);
+        this.provider.fillSessionHeader(header);
     }
 
 }

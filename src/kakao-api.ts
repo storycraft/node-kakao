@@ -1,7 +1,5 @@
 import * as request from "request-promise";
 import * as querystring from "querystring";
-import { Stream } from "stream";
-import { strict } from "assert";
 import * as Crypto from "crypto";
 
 /*
@@ -272,14 +270,6 @@ export class KakaoAPI {
         return 'account';
     }
 
-
-    
-    static getAccountInternalURL(type: KakaoAPI.Account) {
-        return `${KakaoAPI.AccountInternalURL}/${KakaoAPI.Agent}/${KakaoAPI.AccountPath}/${type}`;
-    }
-
-
-
     static getEmoticonHeader(screenWidth: number = 1080, screenHeight: number = 1920) {
         return {
             'RESOLUTION': `${screenWidth}x${screenHeight}`,
@@ -331,125 +321,6 @@ export class KakaoAPI {
         });
     }
 
-
-
-    static getAuthHeader(verifyCodeExtra: string, contentLength: number) {
-        return {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': contentLength,
-            'Host': KakaoAPI.AccountInternalHost,
-            'A': KakaoAPI.AuthHeaderAgent,
-            'X-VC': verifyCodeExtra,
-            'User-Agent': KakaoAPI.AuthUserAgent,
-            'Accept': '*/*',
-            'Accept-Language': KakaoAPI.Language
-        };
-    }
-
-    static getLoginData(email: string, password: string, deviceUUID: string, deviceName: string, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
-        return {
-            'email': email,
-            'password': password,
-            'device_uuid': deviceUUID,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'permanent': permanent,
-            'forced': forced
-        }
-    }
-
-    static getAutoLoginData(email: string, token: string, deviceUUID: string, deviceName: string, locked: boolean, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
-        return {
-            'email': email,
-            'password': token,
-            'device_uuid': deviceUUID,
-            'permanent': permanent,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'forced': forced,
-            'autowithlock': locked,
-            'auto_login': true
-        }
-    }
-
-    static getDeviceRegisterData(email: string, password: string, deviceUUID: string, deviceName: string, passcode: string, permanent = true, osVersion: string = KakaoAPI.OSVersion) {
-        return {
-            'email': email,
-            'password': password,
-            'device_uuid': deviceUUID,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'permanent': permanent,
-            'passcode': passcode
-        }
-    }
-    
-    static requestLogin(email: string, password: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion, forced);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.LOGIN),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static requestAutoLogin(locked: boolean, email: string, token: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getAutoLoginData(email, token, deviceUUID, deviceName, locked, permanent, osVersion, forced);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.LOGIN),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static requestPasscode(email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.REQUEST_PASSCODE),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static registerDevice(passcode: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let deviceRegisterData = KakaoAPI.getDeviceRegisterData(email, password, deviceUUID, deviceName, passcode, permanent, osVersion);
-
-        let queryData = querystring.stringify(deviceRegisterData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.REGISTER_DEVICE),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static calculateXVCKey(aHeader: string, email: string, deviceUUID: string): string {
-        return this.calculateFullXVCKey(aHeader, email, deviceUUID).substring(0, 16);
-    }
-
-    static calculateFullXVCKey(userAgent: string, email: string, deviceUUID: string): string {
-        let res = `HEATH|${userAgent}|DEMIAN|${email}|${deviceUUID}`;
-
-        let hash = Crypto.createHash('sha512');
-
-        hash.update(res);
-
-        return hash.digest('hex');
-    }
-
     static createSendTextURL(message: string) {
         return `kakaotalk://leverage?action=sendtext&message=${encodeURIComponent(message)}`;
     }
@@ -472,29 +343,6 @@ export namespace KakaoAPI {
         AUDIO = 'audio/mp4',
         VIDEO = 'video/mp4',
         FILE = 'image/jpeg'//'application/*' //THIS DOESNT WORK WTF WHY
-
-    }
-
-    export enum Account {
-        
-        LOGIN = 'login.json',
-        REGISTER_DEVICE = 'register_device.json',
-        REQUEST_PASSCODE = 'request_passcode.json'
-    
-    }
-
-    export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
-
-        SUCCESS = 0,
-        LOGIN_FAILED_REASON = 12,
-        LOGIN_FAILED = 30,
-        MOBILE_UNREGISTERED = 32,
-        DEVICE_NOT_REGISTERED = -100,
-        ANOTHER_LOGON = -101,
-        DEVICE_REGISTER_FAILED = -102,
-        PASSCODE_REQUEST_FAILED = -112,
-        OPERATION_DENIED = -500,
-        ACCOUNT_RESTRICTED = -997
 
     }
 

@@ -6,7 +6,6 @@
 
 import { RequestHeader } from "./web-api-client";
 import { KakaoAPI } from "../kakao-api";
-import { LoginClient } from "../client";
 
 export interface ApiHeaderDecorator {
 
@@ -22,10 +21,18 @@ export class BasicHeaderDecorator implements ApiHeaderDecorator {
 
     }
 
+    get Language() {
+        return KakaoAPI.Language;
+    }
+
+    get UserAgent() {
+        return KakaoAPI.AuthUserAgent;
+    }
+
     fillHeader(header: RequestHeader) {
         header['Accept'] = '*/*';
-        header['Accept-Language'] = KakaoAPI.Language;
-        header['User-Agent'] = KakaoAPI.AuthUserAgent;
+        header['Accept-Language'] = this.Language;
+        header['User-Agent'] = this.UserAgent;
     }
 
 }
@@ -52,18 +59,6 @@ export class CHeaderDecorator implements ApiHeaderDecorator {
 
     fillHeader(header: RequestHeader) {
         // TODO
-    }
-
-}
-
-export class SessionHeaderDecorator implements ApiHeaderDecorator {
-
-    constructor(private client: LoginClient) {
-
-    }
-
-    fillHeader(header: RequestHeader) {
-        header['Authorization'] = `${this.client.getLatestAccessData().accessToken}-${this.client.DeviceUUID}`;
     }
 
 }

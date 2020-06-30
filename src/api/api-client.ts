@@ -6,9 +6,7 @@
 
 import { KakaoAPI } from "../kakao-api";
 import { JsonUtil } from "../util/json-util";
-import { MoreSettingsStruct, LessSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
-import { ApiStruct } from "../talk/struct/api/api-struct";
-import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
+import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { Long } from "bson";
 import { FriendReqStruct } from "../talk/struct/api/friends/friend-req-struct";
 import { FriendListStruct } from "../talk/struct/api/friends/friend-list-struct";
@@ -19,35 +17,16 @@ import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-str
 import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
 import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
 import { SessionApiClient } from "./web-api-client";
-import { LoginClient } from "../client";
 
 export class ApiClient extends SessionApiClient {
 
-    constructor(
-        client: LoginClient
-    ) {
-       super(client);
+    get Scheme() {
+        return 'https';
     }
 
     get Host() {
-        return KakaoAPI.ServiceURL;
+        return 'katalk.kakao.com';
     }
-    
-    // account
-
-    async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<MoreSettingsStruct> {
-        return this.request('GET', `${ApiClient.getAccountApiPath('more_settings.json')}?since=${since}&lang=${language}`);
-    }
-
-    async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<LessSettingsStruct> {
-        return this.request('GET', `${ApiClient.getAccountApiPath('less_settings.json')}?since=${since}&lang=${language}`);
-    }
-
-    async requestWebLoginToken(): Promise<LoginTokenStruct> {
-        return this.request('GET', ApiClient.getAccountApiPath('login_token.json'));
-    }
-
-    // friends
 
     async addFriend(id: Long, pa: string = ''): Promise<FriendReqStruct> {
         return this.request('GET', `${ApiClient.getFriendsApiPath('add')}/${id}.json?pa=${pa}`);
@@ -61,11 +40,11 @@ export class ApiClient extends SessionApiClient {
         return this.request('POST', ApiClient.getFriendsApiPath('delete.json'), { ids: JsonUtil.stringifyLoseless(idList) });
     }
 
-    async hideFriend(id: Long, pa: string = ''): Promise<ApiStruct> {
+    async hideFriend(id: Long, pa: string = ''): Promise<WebApiStruct> {
         return this.request('POST', ApiClient.getFriendsApiPath('hide.json'), { id: id.toString(), pa: pa });
     }
 
-    async unhideFriend(id: Long): Promise<ApiStruct> {
+    async unhideFriend(id: Long): Promise<WebApiStruct> {
         return this.request('POST', ApiClient.getFriendsApiPath('unhide.json'), { id: id.toString() });
     }
 
@@ -95,11 +74,11 @@ export class ApiClient extends SessionApiClient {
         return this.request('POST', ApiClient.getFriendsApiPath('nickname.json'), { id: id.toString(), nickname: nickname });
     }
 
-    async addFavoriteFriends(idList: Long[]): Promise<ApiStruct> {
+    async addFavoriteFriends(idList: Long[]): Promise<WebApiStruct> {
         return this.request('POST', ApiClient.getFriendsApiPath('add_favorite.json'), { ids: JsonUtil.stringifyLoseless(idList) });
     }
 
-    async removeFavoriteFriend(id: Long): Promise<ApiStruct> {
+    async removeFavoriteFriend(id: Long): Promise<WebApiStruct> {
         return this.request('POST', ApiClient.getFriendsApiPath('remove_favorite.json'), { id: id.toString() });
     }
 
@@ -111,10 +90,6 @@ export class ApiClient extends SessionApiClient {
 
     async requestProfile(id: Long): Promise<ProfileReqStruct> {
         return this.request('GET', `${ApiClient.getProfile3ApiPath('friend_info.json')}?id=${id}`);
-    }
-
-    static getAccountApiPath(api: string) {
-        return `${KakaoAPI.Agent}/account/${api}`;
     }
 
     static getFriendsApiPath(api: string) {

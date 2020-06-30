@@ -4,10 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ApiStruct } from "../api-struct";
+import { WebApiStruct } from "../../web-api-struct";
 import { FriendStruct } from "./friend-struct";
 
-export interface FriendBlockedListStruct extends ApiStruct {
+export interface FriendBlockedListStruct extends WebApiStruct {
 
     total: number;
 
