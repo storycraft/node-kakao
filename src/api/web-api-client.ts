@@ -7,18 +7,18 @@
 import { ApiStruct } from "../talk/struct/api/api-struct";
 import { JsonUtil } from "../util/json-util";
 import * as request from "request-promise";
-import { BasicHeaderDecorator } from "./api-header-decorator";
+import { BasicHeaderDecorator, ApiHeaderDecorator } from "./api-header-decorator";
 
 export type RequestForm = { [key: string]: any };
 export type RequestHeader = { [key: string]: any };
 
-export abstract class WebApiClient {
+export abstract class WebApiClient implements ApiHeaderDecorator {
 
     protected createClientHeader(): RequestHeader {
         return { 'Host': this.Host };
     }
 
-    protected fillHeader(header: RequestHeader) {
+    fillHeader(header: RequestHeader) {
         BasicHeaderDecorator.INSTANCE.fillHeader(header);
     }
 

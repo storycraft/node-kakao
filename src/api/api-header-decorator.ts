@@ -10,7 +10,7 @@ import { LoginClient } from "../client";
 
 export interface ApiHeaderDecorator {
 
-    fillHeader(header: RequestHeader): this;
+    fillHeader(header: RequestHeader): void;
 
 }
 
@@ -26,8 +26,6 @@ export class BasicHeaderDecorator implements ApiHeaderDecorator {
         header['Accept'] = '*/*';
         header['Accept-Language'] = KakaoAPI.Language;
         header['User-Agent'] = KakaoAPI.AuthUserAgent;
-
-        return this;
     }
 
 }
@@ -42,8 +40,6 @@ export class AHeaderDecorator implements ApiHeaderDecorator {
 
     fillHeader(header: RequestHeader) {
         header['A'] = KakaoAPI.AuthHeaderAgent;
-
-        return this;
     }
 
 }
@@ -56,7 +52,6 @@ export class CHeaderDecorator implements ApiHeaderDecorator {
 
     fillHeader(header: RequestHeader) {
         // TODO
-        return this;
     }
 
 }
@@ -69,8 +64,6 @@ export class SessionHeaderDecorator implements ApiHeaderDecorator {
 
     fillHeader(header: RequestHeader) {
         header['Authorization'] = `${this.client.getLatestAccessData().accessToken}-${this.client.DeviceUUID}`;
-
-        return this;
     }
 
 }

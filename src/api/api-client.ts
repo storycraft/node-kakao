@@ -4,13 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import * as request from "request-promise";
-
 import { KakaoAPI } from "../kakao-api";
 import { JsonUtil } from "../util/json-util";
-import { AccessDataProvider } from "../oauth/access-data-provider";
 import { MoreSettingsStruct, LessSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
-import { ObjectMapper, Serializer } from "json-proxy-mapper";
 import { ApiStruct } from "../talk/struct/api/api-struct";
 import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
 import { Long } from "bson";
@@ -42,7 +38,7 @@ export class ApiClient extends WebApiClient {
         return KakaoAPI.ServiceURL;
     }
     
-    protected fillHeader(header: RequestHeader) {
+    fillHeader(header: RequestHeader) {
         super.fillHeader(header);
 
         this.sessionHeaderDecorator.fillHeader(header);
