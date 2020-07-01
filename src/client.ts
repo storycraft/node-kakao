@@ -7,7 +7,7 @@ import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { OpenLinkManager } from "./talk/open/open-link-manager";
-import { ApiClient } from "./api/api-client";
+import { FriendClient } from "./api/friend-client";
 import { WebApiStatusCode } from "./talk/struct/web-api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
@@ -17,6 +17,7 @@ import { RequestResult } from "./talk/request/request-result";
 import { ClientEvents } from "./event/events";
 import { Long } from "bson";
 import { AuthClient } from "./api/auth-client";
+import { OpenLinkClient } from "./api/open-link-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -31,13 +32,27 @@ export interface LoginError {
 
 }
 
-export interface LocoClient extends ClientEvents {
+export interface ApiClient {
 
     readonly Name: string;
 
     readonly Auth: AuthClient;
 
-    readonly Api: ApiClient;
+    readonly Friends: FriendClient;
+    readonly OpenLinkWeb: OpenLinkClient;
+
+    readonly Logon: boolean;
+
+    login(email: string, password: string, forced?: boolean): Promise<void>;
+    loginToken(email: string, token: string, forced?: boolean, locked?: boolean): Promise<void>;
+
+    relogin(): Promise<void>;
+
+    logout(): void;
+
+}
+
+export interface LocoClient extends ApiClient, ClientEvents {
 
     readonly NetworkManager: NetworkManager;
 
@@ -53,24 +68,75 @@ export interface LocoClient extends ClientEvents {
 
     readonly LocoLogon: boolean;
 
-    login(email: string, password: string, forced?: boolean): Promise<void>;
-    loginToken(email: string, token: string, forced?: boolean, locked?: boolean): Promise<void>;
-
-    relogin(): Promise<void>;
-
-    logout(): void;
-
     setStatus(status: ClientStatus): Promise<RequestResult<boolean>>;
     getStatus(): ClientStatus;
     updateStatus(): Promise<RequestResult<boolean>>;
 
 }
 
-export class TalkClient extends EventEmitter implements LocoClient {
+export class TalkApiClient extends EventEmitter {
 
     private auth: AuthClient;
 
-    private api: ApiClient;
+    private friends: FriendClient;
+    private openLinkWeb: OpenLinkClient;
+    
+    constructor(name: string, deviceUUID: string) {
+        super();
+
+        this.auth = new AuthClient(name, deviceUUID);
+
+        this.friends = new FriendClient(this.auth);
+        this.openLinkWeb = new OpenLinkClient(this.auth);
+    }
+
+    get Name() {
+        return this.auth.Name;
+    }
+
+    get Auth() {
+        return this.auth;
+    }
+
+    get Friends() {
+        return this.friends;
+    }
+
+    get OpenLinkWeb() {
+        return this.openLinkWeb;
+    }
+
+    get Logon() {
+        return this.auth.Logon;
+    }
+
+    async login(email: string, password: string, forced: boolean = false) {
+        if (this.Logon) {
+            throw new Error('Already logon');
+        }
+
+        await this.auth.login(email, password, forced);
+    }
+
+    async loginToken(email: string, token: string, forced: boolean = false, locked: boolean = false) {
+        if (this.Logon) {
+            throw new Error('Already logon');
+        }
+
+        await this.auth.loginToken(email, token, forced, locked);
+    }
+
+    async relogin() {
+        await this.auth.relogin();
+    }
+
+    logout() {
+        this.auth.logout();
+    }
+
+}
+
+export class TalkClient extends TalkApiClient implements LocoClient {
 
     private networkManager: NetworkManager;
 
@@ -84,15 +150,10 @@ export class TalkClient extends EventEmitter implements LocoClient {
 
     private status: ClientStatus;
 
-    constructor(name: string, deviceUUID: string = '') {
-        super();
-
-        this.auth = new AuthClient(name, deviceUUID);
-
-        this.api = new ApiClient(this.auth);
+    constructor(name: string, deviceUUID: string) {
+        super(name, deviceUUID);
 
         this.networkManager = new NetworkManager(this);
-
         this.channelManager = new ChannelManager(this);
         this.userManager = new UserManager(this);
 
@@ -102,18 +163,6 @@ export class TalkClient extends EventEmitter implements LocoClient {
         this.clientUser = null;
 
         this.status = ClientStatus.UNLOCKED;
-    }
-
-    get Auth() {
-        return this.auth;
-    }
-
-    get Api() {
-        return this.api;
-    }
-
-    get Name() {
-        return this.auth.Name;
     }
 
     get NetworkManager() {
@@ -151,7 +200,7 @@ export class TalkClient extends EventEmitter implements LocoClient {
             throw new Error('Already logon to loco');
         }
 
-        await this.auth.login(email, password, forced);
+        await super.login(email, password, forced);
         await this.locoLogin();
     }
 
@@ -160,27 +209,27 @@ export class TalkClient extends EventEmitter implements LocoClient {
             throw new Error('Already logon to loco');
         }
 
-        await this.auth.loginToken(email, token, forced, locked);
+        await super.loginToken(email, token, forced, locked);
         await this.locoLogin();
     }
 
     async relogin() {
-        await this.auth.relogin();
+        await super.relogin();
 
         this.networkManager.disconnect();
         await this.locoLogin();
     }
 
     protected async locoLogin() {
-        let accessData = this.auth.getLatestAccessData();
+        let accessData = this.Auth.getLatestAccessData();
 
-        let res: MoreSettingsStruct = await this.auth.requestMoreSettings(0);
+        let res: MoreSettingsStruct = await this.Auth.requestMoreSettings(0);
 
         if (res.status !== WebApiStatusCode.SUCCESS) {
             throw new Error(`more_settings.json ERR: ${res.status}`);
         }
 
-        let loginRes = await this.networkManager.locoLogin(this.auth.DeviceUUID, accessData.userId, accessData.accessToken);
+        let loginRes = await this.networkManager.locoLogin(this.Auth.DeviceUUID, accessData.userId, accessData.accessToken);
 
         this.clientUser = new TalkClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 
@@ -208,7 +257,7 @@ export class TalkClient extends EventEmitter implements LocoClient {
     }
 
     logout() {
-        this.auth.logout();
+        super.logout();
         
         this.networkManager.disconnect();
     }

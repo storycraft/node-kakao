@@ -11,7 +11,9 @@ export * from './api/web-api-client';
 export * from './api/api-header-decorator';
 
 export * from './api/auth-client';
-export * from './api/api-client';
+export * from './api/friend-client';
+
+export * from './api/open-link-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
@@ -111,7 +113,7 @@ export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 
-export * from './api/api-client';
+export * from './api/friend-client';
 
 export * from './oauth/access-data-provider';
 
