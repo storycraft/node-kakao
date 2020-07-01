@@ -5,6 +5,7 @@
  */
 
 import { SessionApiClient } from "./web-api-client";
+import { Long } from "bson";
 
 export class OpenLinkClient extends SessionApiClient {
 
@@ -14,6 +15,18 @@ export class OpenLinkClient extends SessionApiClient {
 
     get Host() {
         return 'open.kakao.com';
+    }
+
+    async getLinkPreset(): Promise<unknown> {
+        return this.request('GET', OpenLinkClient.getChannelApiPath('link/image/preset'));
+    }
+
+    async requestRecommend(): Promise<unknown> {
+        return this.request('GET', OpenLinkClient.getChannelApiPath('recommend'));
+    }
+
+    async requestPostList(linkId: Long): Promise<unknown> {
+        return this.request('GET', OpenLinkClient.getProfileApiPath(`${linkId.toString()}/posts/all`));
     }
 
     static getProfileApiPath(api: string) {
