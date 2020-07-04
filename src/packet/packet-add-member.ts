@@ -43,6 +43,6 @@ export class PacketAddMemberRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        console.log(rawData);
+        
     }
 }
