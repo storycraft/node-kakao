@@ -26,7 +26,11 @@ export class OpenLinkClient extends SessionApiClient {
     }
 
     async requestPostList(linkId: Long): Promise<unknown> {
-        return this.request('GET', OpenLinkClient.getProfileApiPath(`${linkId.toString()}/posts/all`));
+        return this.request('GET', OpenLinkClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`));
+    }
+
+    async searchLink(query: string): Promise<unknown> {
+        return this.request('GET', OpenLinkClient.getChannelApiPath(`search/unified?q=${encodeURIComponent(query)}`));
     }
 
     static getProfileApiPath(api: string) {

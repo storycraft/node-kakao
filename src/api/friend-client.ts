@@ -29,7 +29,7 @@ export class FriendClient extends SessionApiClient {
     }
 
     async addFriend(id: Long, pa: string = ''): Promise<FriendReqStruct> {
-        return this.request('GET', `${FriendClient.getFriendsApiPath('add')}/${id}.json?pa=${pa}`);
+        return this.request('GET', `${FriendClient.getFriendsApiPath('add')}/${encodeURIComponent(id.toString())}.json?pa=${encodeURIComponent(pa)}`);
     }
 
     async removeFriend(id: Long): Promise<FriendReqStruct> {
@@ -89,7 +89,7 @@ export class FriendClient extends SessionApiClient {
     }
 
     async requestProfile(id: Long): Promise<ProfileReqStruct> {
-        return this.request('GET', `${FriendClient.getProfile3ApiPath('friend_info.json')}?id=${id}`);
+        return this.request('GET', `${FriendClient.getProfile3ApiPath('friend_info.json')}?id=${encodeURIComponent(id)}`);
     }
 
     static getFriendsApiPath(api: string) {

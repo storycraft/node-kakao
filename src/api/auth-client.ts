@@ -94,11 +94,11 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     async requestMoreSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<MoreSettingsStruct> {
-        return this.request('GET', `${AuthClient.getAccountApiPath('more_settings.json')}?since=${since}&lang=${language}`);
+        return this.request('GET', `${AuthClient.getAccountApiPath('more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
     async requestLessSettings(since: number = 0, language: string = KakaoAPI.Language): Promise<LessSettingsStruct> {
-        return this.request('GET', `${AuthClient.getAccountApiPath('less_settings.json')}?since=${since}&lang=${language}`);
+        return this.request('GET', `${AuthClient.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
     async requestWebLoginToken(): Promise<LoginTokenStruct> {
