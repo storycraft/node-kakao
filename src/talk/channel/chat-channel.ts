@@ -1,4 +1,4 @@
-import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo } from "../user/chat-user";
+import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo, NormalChatUserInfo } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
@@ -50,6 +50,8 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     readonly DisplayUserInfoList: DisplayUserInfo[];
 
+    readonly UserCount: number;
+
     getUserInfoList(): I[];
 
     hasUserInfo(id: Long): boolean;
@@ -95,9 +97,21 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
 }
 
-export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
+export interface NormalChatChannel<I extends NormalChatUserInfo = NormalChatUserInfo> extends ChatChannel<I> {
 
-    
+    inviteUser(user: ChatUser): Promise<RequestResult<boolean>>;
+    inviteUserId(userId: Long): Promise<RequestResult<boolean>>;
+
+    inviteUserList(userList: ChatUser[]): Promise<RequestResult<boolean>>;
+    inviteUserIdList(userIdList: Long[]): Promise<RequestResult<boolean>>;
+
+    isOpenChat(): false;
+
+}
+
+export interface MemoChatChannel<I extends NormalChatUserInfo = NormalChatUserInfo> extends ChatChannel<I> {
+
+    isOpenChat(): false;
 
 }
 

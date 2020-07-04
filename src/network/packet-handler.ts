@@ -32,7 +32,7 @@ import { PacketLoginRes } from "../packet/packet-login";
 import { ChatUserInfo, OpenChatUserInfo } from "../talk/user/chat-user";
 import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "../packet/packet-update-link-profile";
 import { FeedChat } from "../talk/chat/chat";
-import { ManagedChatChannel, ManagedOpenChatChannel, ManagedBaseChatChannel } from "../talk/managed/managed-chat-channel";
+import { ManagedChatChannel, ManagedOpenChatChannel } from "../talk/managed/managed-chat-channel";
 import { ManagedOpenChatUserInfo } from "../talk/managed/managed-chat-user";
 import { PacketSyncRewriteRes } from "../packet/packet-sync-rewrite";
 import { PacketRewriteRes, PacketRewriteReq } from "../packet/packet-rewrite";
@@ -181,10 +181,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
     async onNewMember(packet: PacketNewMemberRes) {
         if (!packet.Chatlog) return;
 
-        let channel = this.getManagedChannel(packet.Chatlog.channelId) as ManagedBaseChatChannel | null;
+        let channel = this.getManagedChannel(packet.Chatlog.channelId) as ManagedChatChannel | null;
 
         if (!channel) {
-            channel = await this.ChannelManager.addChannel(packet.Chatlog.channelId) as ManagedBaseChatChannel | null;
+            channel = await this.ChannelManager.addChannel(packet.Chatlog.channelId) as ManagedChatChannel | null;
 
             if (!channel) return;
         }
@@ -462,7 +462,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!chat || !chat.isFeed()) return;
 
-        let channel = chat.Channel as ManagedBaseChatChannel;
+        let channel = chat.Channel as ManagedChatChannel;
         let feed = chat.getFeed() as OpenKickFeed;
 
         if (!feed.member) return;
@@ -486,7 +486,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!chat || !chat.isFeed()) return;
 
-        let channel = chat.Channel as ManagedBaseChatChannel;
+        let channel = chat.Channel as ManagedChatChannel;
 
         let feed = chat.getFeed() as OpenKickFeed;
 

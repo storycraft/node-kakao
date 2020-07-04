@@ -62,6 +62,7 @@ import { PacketReactionCountReq, PacketReactionCountRes } from "./packet-reactio
 import { PacketReactRes, PacketReactReq } from "./packet-react";
 import { PacketSyncRewriteRes } from "./packet-sync-rewrite";
 import { PacketLinkDeletedRes } from "./packet-link-deleted";
+import { PacketAddMemberReq, PacketAddMemberRes } from "./packet-add-member";
 
 
 /*
@@ -98,6 +99,8 @@ export namespace LocoPacketList {
         requestPacketMap.set('WRITE', PacketMessageWriteReq);
         requestPacketMap.set('MEMBER', PacketChatMemberReq);
         requestPacketMap.set('CHATINFO', PacketChannelInfoReq);
+
+        requestPacketMap.set('ADDMEM', PacketAddMemberReq);
 
         requestPacketMap.set('UPDATECHAT', PacketUpdateChannelReq);
 
@@ -188,6 +191,8 @@ export namespace LocoPacketList {
         responsePacketMap.set('DECUNREAD', PacketMessageReadRes);
         responsePacketMap.set('MEMBER', PacketChatMemberRes);
         responsePacketMap.set('CHATINFO', PacketChannelInfoRes);
+
+        responsePacketMap.set('ADDMEM', PacketAddMemberRes);
 
         responsePacketMap.set('UPDATECHAT', PacketUpdateChannelRes);
 

@@ -6,7 +6,7 @@
 
 import { OpenLinkChannel } from "../open/open-link";
 import { OpenMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
-import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo } from "../user/chat-user";
+import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo, NormalChatUserInfo } from "../user/chat-user";
 import { OpenMemberType } from "../open/open-link-type";
 import { Long } from "bson";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct } from "../struct/channel-meta-struct";
@@ -17,14 +17,14 @@ import { ChannelSettings } from "../channel/channel-settings";
 import { ChannelManager } from "../channel/channel-manager";
 import { ChannelDataStruct } from "../struct/channel-data-struct";
 import { EventEmitter } from "events";
-import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
+import { ChatChannel, OpenChatChannel, MemoChatChannel, NormalChatChannel } from "../channel/chat-channel";
 import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { MediaTemplates } from "../chat/template/media-template";
 
-export abstract class ManagedBaseChatChannel extends EventEmitter implements ChatChannel {
+export class ManagedChatChannel extends EventEmitter implements ChatChannel {
 
     private lastChat: Chat | null;
 
@@ -74,6 +74,10 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
 
     get Client() {
         return this.manager.Client;
+    }
+
+    get ChannelManager() {
+        return this.manager;
     }
 
     get ChatManager() {
@@ -132,6 +136,11 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         return this.displayUserInfoList;
     }
 
+    // include client user
+    get UserCount() {
+        return this.userInfoMap.size + 1;
+    }
+
     getUserInfoList() {
         return Array.from(this.userInfoMap.values());
     }
@@ -146,6 +155,14 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         if (!info && this.Client.ClientUser.Id.equals(id)) return this.Client.ClientUser.MainUserInfo;
 
         return info;
+    }
+
+    getManagedUserInfo(user: ChatUser): ManagedChatUserInfo | ManagedOpenChatUserInfo | null {
+        return this.getManagedUserInfoId(user.Id);
+    }
+
+    getManagedUserInfoId(id: Long): ManagedChatUserInfo | ManagedOpenChatUserInfo | null {
+        return this.getUserInfoIdMap(id) as ManagedChatUserInfo | ManagedOpenChatUserInfo || null;
     }
 
     getUserInfo(user: ChatUser): ChatUserInfo | null {
@@ -307,7 +324,16 @@ export abstract class ManagedBaseChatChannel extends EventEmitter implements Cha
         else this.userInfoMap.delete(userId.toString());
     }
 
-    abstract isOpenChat(): boolean;
+    updateMemberList(memberList: MemberStruct[]) {
+        for (let memberStruct of memberList) {
+            let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedChatUserInfo;
+            this.updateUserInfo(userInfo.Id, userInfo);
+        }
+    }
+
+    isOpenChat(): boolean {
+        return false;
+    }
 
 }
 
@@ -351,38 +377,63 @@ export class ManagedDisplayUserInfo implements DisplayUserInfo {
 
 }
 
-export class ManagedChatChannel extends ManagedBaseChatChannel {
+export class ManagedNormalChatChannel extends ManagedChatChannel implements NormalChatChannel {
 
-    getManagedUserInfo(user: ChatUser): ManagedChatUserInfo | null {
-        return this.getManagedUserInfoId(user.Id);
+    getUserInfoList() {
+        return super.getUserInfoList() as NormalChatUserInfo[];
     }
 
-    getManagedUserInfoId(id: Long): ManagedChatUserInfo | null {
-        return this.getUserInfoIdMap(id) as ManagedChatUserInfo || null;
-    }
-    
-    updateMemberList(memberList: MemberStruct[]) {
-        for (let memberStruct of memberList) {
-            let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedChatUserInfo;
-            this.updateUserInfo(userInfo.Id, userInfo);
-        }
+    getUserInfo(user: ChatUser): NormalChatUserInfo | null {
+        return this.getUserInfoId(user.Id);
     }
 
-    isOpenChat() {
+    getUserInfoId(id: Long): NormalChatUserInfo | null {
+        return super.getUserInfoId(id) as NormalChatUserInfo | null;
+    }
+
+    inviteUser(user: ChatUser): Promise<RequestResult<boolean>> {
+        return this.ChannelManager.inviteUser(this, user);
+    }
+
+    inviteUserId(userId: Long): Promise<RequestResult<boolean>> {
+        return this.ChannelManager.inviteUserId(this, userId);
+    }
+
+    inviteUserList(userList: ChatUser[]): Promise<RequestResult<boolean>> {
+        return this.ChannelManager.inviteUserList(this, userList);
+    }
+
+    inviteUserIdList(userIdList: Long[]): Promise<RequestResult<boolean>> {
+        return this.ChannelManager.inviteUserIdList(this, userIdList);
+    }
+
+    isOpenChat(): false {
         return false;
     }
 
 }
 
-export class ManagedMemoChatChannel extends ManagedBaseChatChannel {
+export class ManagedMemoChatChannel extends ManagedChatChannel implements MemoChatChannel {
 
-    isOpenChat() {
+    getUserInfoList() {
+        return super.getUserInfoList() as NormalChatUserInfo[];
+    }
+
+    getUserInfo(user: ChatUser): NormalChatUserInfo | null {
+        return this.getUserInfoId(user.Id);
+    }
+
+    getUserInfoId(id: Long): NormalChatUserInfo | null {
+        return super.getUserInfoId(id) as NormalChatUserInfo | null;
+    }
+
+    isOpenChat(): false {
         return false;
     }
 
 }
 
-export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements OpenChatChannel {
+export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenChatChannel {
 
     //lazy initialization hax
     private clientUserInfo: ManagedOpenChatUserInfo | null;
@@ -529,11 +580,11 @@ export class ManagedOpenChatChannel extends ManagedBaseChatChannel implements Op
         this.openLink = link;
     }
 
-    updateMemberList(memberList: OpenMemberStruct[]) {
-        memberList.forEach(this.updateMember.bind(this));
+    updateOpenMemberList(memberList: OpenMemberStruct[]) {
+        memberList.forEach(this.updateOpenMember.bind(this));
     }
 
-    updateMember(memberStruct: OpenMemberStruct) {
+    updateOpenMember(memberStruct: OpenMemberStruct) {
         let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedOpenChatUserInfo;
 
         if (this.Client.ClientUser.Id.equals(userInfo.Id)) {
