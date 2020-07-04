@@ -5,7 +5,7 @@
  */
 
 import { IdStore } from "../../store/store";
-import { ChatChannel, OpenChatChannel, MemoChatChannel } from "./chat-channel";
+import { ChatChannel, OpenChatChannel, MemoChatChannel, NormalChatChannel } from "./chat-channel";
 import { Long } from "bson";
 import { LocoClient } from "../../client";
 import { ChatUser, DisplayUserInfo } from "../user/chat-user";
@@ -229,19 +229,19 @@ export class ChannelManager extends IdStore<ChatChannel> {
         }
     }
 
-    async inviteUser(channel: ChatChannel, user: ChatUser) {
+    async inviteUser(channel: NormalChatChannel, user: ChatUser) {
         return this.inviteUserId(channel, user.Id);
     }
 
-    async inviteUserId(channel: ChatChannel, userId: Long) {
+    async inviteUserId(channel: NormalChatChannel, userId: Long) {
         return this.inviteUserIdList(channel, [ userId ]);
     }
 
-    async inviteUserList(channel: ChatChannel, userList: ChatUser[]) {
+    async inviteUserList(channel: NormalChatChannel, userList: ChatUser[]) {
         return this.inviteUserIdList(channel, userList.map(user => user.Id));
     }
 
-    async inviteUserIdList(channel: ChatChannel, userIdList: Long[]): Promise<RequestResult<boolean>> {
+    async inviteUserIdList(channel: NormalChatChannel, userIdList: Long[]): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketAddMemberRes>(new PacketAddMemberReq(channel.Id, userIdList));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
