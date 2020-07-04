@@ -89,7 +89,7 @@ export class FriendClient extends SessionApiClient {
     }
 
     async requestProfile(id: Long): Promise<ProfileReqStruct> {
-        return this.request('GET', `${FriendClient.getProfile3ApiPath('friend_info.json')}?id=${encodeURIComponent(id)}`);
+        return this.request('GET', `${FriendClient.getProfile3ApiPath('friend_info.json')}?id=${encodeURIComponent(id.toString())}`);
     }
 
     static getFriendsApiPath(api: string) {
