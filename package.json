@@ -7,6 +7,7 @@
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
     "build": "./node_modules/.bin/tsc",
+    "docs": "./node_modules/.bin/typedoc src",
     "prepublishOnly": "npm run test && npm run build"
   },
   "keywords": [],
@@ -29,7 +30,8 @@
     "chai": "^4.2.0",
     "mocha": "^6.2.1",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
+    "typedoc": "^0.17.8",
+    "typescript": "^3.9.6"
   },
   "repository": {
     "type": "git",
