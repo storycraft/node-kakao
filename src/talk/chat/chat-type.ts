@@ -30,6 +30,7 @@ export enum ChatType {
     Actioncon = 22,
     Search = 23,
     Post = 24,
+    StickerGif = 25,
     Reply = 26,
     MultiPhoto = 27,
     Voip = 51,

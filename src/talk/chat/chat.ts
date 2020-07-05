@@ -348,6 +348,21 @@ export class AnimatedEmoticonChat extends EmoticonChat {
 
 }
 
+export class GifEmoticonChat extends EmoticonChat {
+    
+    get Type() {
+        return ChatType.StickerAni;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new EmoticonAttachment();
+        attachment.readAttachment(attachmentJson);
+
+        attachmentList.push(attachment);
+    }
+
+}
+
 export class VideoChat extends Chat {
     
     get Type() {
@@ -483,6 +498,7 @@ export namespace TypeMap {
     typeMap.set(ChatType.Video, VideoChat);
     typeMap.set(ChatType.Sticker, StaticEmoticonChat);
     typeMap.set(ChatType.StickerAni, AnimatedEmoticonChat);
+    typeMap.set(ChatType.StickerGif, GifEmoticonChat);
     typeMap.set(ChatType.Search, SharpSearchChat);
     typeMap.set(ChatType.Map, MapChat);
     typeMap.set(ChatType.Reply, ReplyChat);
