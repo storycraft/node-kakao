@@ -4,12 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { JsonUtil } from "../util/json-util";
 import * as request from "request-promise";
 import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
 import { AccessDataProvider } from "../oauth/access-data-provider";
 import { ObjectMapper, Serializer } from "json-proxy-mapper";
+import { StructBase } from "../talk/struct/struct-base";
 
 export type RequestForm = { [key: string]: any };
 export type RequestHeader = { [key: string]: any };
@@ -32,7 +32,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return `${this.Scheme}://${this.Host}/${path}`;
     }
 
-    async request<T extends WebApiStruct>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    protected buildRequestData(method: string, headers: RequestHeader | null = null): request.RequestPromiseOptions {
         let reqHeader = this.createClientHeader();
         this.fillHeader(reqHeader);
 
@@ -42,6 +42,12 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         };
 
         if (headers) Object.assign(reqHeader, headers);
+
+        return reqData;
+    }
+
+    async request<T extends StructBase>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+        let reqData = this.buildRequestData(method, headers);
         if (form) reqData.form = form;
 
         let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
@@ -49,10 +55,21 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return res;
     }
 
-    async requestMapped<T extends WebApiStruct>(method: string, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    async requestMapped<T extends StructBase>(method: string, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let rawRes = await this.request(method, path, form, headers);
 
         let res = Serializer.deserialize<T>(rawRes, mapper);
+
+        return res;
+    }
+
+    async requestMultipart<T extends StructBase>(method: string, path: string, formData: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+        let reqData = this.buildRequestData(method, headers);
+        if (formData) reqData.formData = formData;
+
+        console.log(this.toApiURL(path));
+
+        let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
 
         return res;
     }
