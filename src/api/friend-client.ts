@@ -8,7 +8,7 @@ import { KakaoAPI } from "../kakao-api";
 import { JsonUtil } from "../util/json-util";
 import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { Long } from "bson";
-import { FriendReqStruct } from "../talk/struct/api/friends/friend-req-struct";
+import { FriendReqStruct, FriendReqPhoneNumberStruct } from "../talk/struct/api/friends/friend-req-struct";
 import { FriendListStruct } from "../talk/struct/api/friends/friend-list-struct";
 import { FriendFindIdStruct, FriendFindUUIDStruct } from "../talk/struct/api/friends/friend-find-struct";
 import { FriendDeleteStruct } from "../talk/struct/api/friends/friend-delete-struct";
@@ -30,6 +30,10 @@ export class FriendClient extends SessionApiClient {
 
     async addFriend(id: Long, pa: string = ''): Promise<FriendReqStruct> {
         return this.request('GET', `${FriendClient.getFriendsApiPath('add')}/${encodeURIComponent(id.toString())}.json?pa=${encodeURIComponent(pa)}`);
+    }
+
+    async addFriendWithPhoneNumber(nickname: string, countryIso: string, countryCode: string, phoneNumber: string): Promise<FriendReqPhoneNumberStruct> {
+        return this.request('POST', FriendClient.getFriendsApiPath('add_by_phonenumber.json'), { nickname: nickname, country_iso: countryIso, country_code: countryCode, phonenumber: phoneNumber });
     }
 
     async removeFriend(id: Long): Promise<FriendReqStruct> {
@@ -59,7 +63,7 @@ export class FriendClient extends SessionApiClient {
     }
 
     async findFriendByUUID(uuid: string): Promise<FriendFindUUIDStruct> {
-        return this.request('GET', `${FriendClient.getFriendsApiPath('find_by_uuid.json')}`, { uuid: uuid });
+        return this.request('POST', `${FriendClient.getFriendsApiPath('find_by_uuid.json')}`, { uuid: uuid });
     }
 
     async requestFriendList(types: string[] = [ 'plus', 'normal' ], eventTypes: string[] = [ 'create' ], token: Long = Long.ZERO): Promise<FriendListStruct> {

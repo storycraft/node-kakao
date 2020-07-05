@@ -12,3 +12,9 @@ export interface FriendReqStruct extends WebApiStruct {
     friend: FriendStruct;
 
 }
+
+export interface FriendReqPhoneNumberStruct extends WebApiStruct {
+
+    pstn_number: string;
+
+}

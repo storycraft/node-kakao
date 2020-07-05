@@ -9,6 +9,7 @@ import { Long } from "bson";
 import { BasicHeaderDecorator } from "./api-header-decorator";
 import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
+import { OpenPostListStruct } from "../talk/struct/api/open/open-post-struct";
 
 export class OpenChatClient extends SessionApiClient {
 
@@ -36,7 +37,7 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath('recommend'), OpenRecommendStruct.MAPPER);
     }
 
-    async requestPostList(linkId: Long): Promise<unknown> {
+    async requestPostList(linkId: Long): Promise<OpenPostListStruct> {
         return this.request('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`));
     }
 
