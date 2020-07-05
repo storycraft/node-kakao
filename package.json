@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "bson": "^4.0.2",
-    "json-proxy-mapper": "^1.1.1",
+    "json-proxy-mapper": "^1.1.2",
     "lossless-json": "^1.0.3",
     "node-forge": "^0.9.1",
     "request": "^2.88.0",
