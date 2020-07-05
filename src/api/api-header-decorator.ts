@@ -58,7 +58,7 @@ export class CHeaderDecorator implements ApiHeaderDecorator {
     }
 
     fillHeader(header: RequestHeader) {
-        // TODO
+        //header['C'] = uuid;
     }
 
 }

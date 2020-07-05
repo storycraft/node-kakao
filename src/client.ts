@@ -19,6 +19,7 @@ import { Long } from "bson";
 import { AuthClient } from "./api/auth-client";
 import { OpenChatClient } from "./api/open-chat-client";
 import { OpenUploadApi } from "./api/open-upload-api";
+import { ChannelBoardClient, OpenChannelBoardClient } from "./api/channel-board-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -43,6 +44,9 @@ export interface ApiClient {
 
     readonly OpenChat: OpenChatClient;
     readonly OpenUploadApi: OpenUploadApi;
+
+    readonly ChannelBoard: ChannelBoardClient;
+    readonly OpenChannelBoard: OpenChannelBoardClient;
 
     readonly Logon: boolean;
 
@@ -85,6 +89,9 @@ export class TalkApiClient extends EventEmitter {
 
     private openchatWeb: OpenChatClient;
     private openUploadApi: OpenUploadApi;
+
+    private channelBoard: ChannelBoardClient;
+    private openChannelBoard: OpenChannelBoardClient;
     
     constructor(name: string, deviceUUID: string) {
         super();
@@ -95,6 +102,9 @@ export class TalkApiClient extends EventEmitter {
 
         this.openchatWeb = new OpenChatClient(this.auth);
         this.openUploadApi = new OpenUploadApi();
+
+        this.channelBoard = new ChannelBoardClient(this.auth);
+        this.openChannelBoard = new OpenChannelBoardClient(this.auth);
     }
 
     get Name() {
@@ -115,6 +125,14 @@ export class TalkApiClient extends EventEmitter {
 
     get OpenUploadApi() {
         return this.openUploadApi;
+    }
+
+    get ChannelBoard() {
+        return this.channelBoard;
+    }
+
+    get OpenChannelBoard() {
+        return this.openChannelBoard;
     }
 
     get Logon() {
