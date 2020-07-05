@@ -98,6 +98,10 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         return this.request('GET', `${AuthClient.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
+    async updateSettings(settings: Partial<unknown>): Promise<AuthApiStruct> {
+        return this.request('POST', AuthClient.getAccountApiPath('update_settings.json'), settings);
+    }
+
     async requestWebLoginToken(): Promise<LoginTokenStruct> {
         return this.request('GET', AuthClient.getAccountApiPath('login_token.json'));
     }

@@ -15,7 +15,7 @@ export namespace OpenRecommend {
 
         tagName: string;
         backgroundColor?: string;
-        apr: string;
+        pageReferrer: string;
 
     }
     
@@ -37,7 +37,7 @@ export namespace OpenRecommend {
 
         reactCount: number;
 
-        apr: string;
+        pageReferrer: string;
     }
     
     export interface TagList extends StructBase {
@@ -53,7 +53,7 @@ export namespace OpenRecommend {
 
             tagName: 'tn',
             backgroundColor: 'bgColor',
-            apr: 'apr'
+            pageReferrer: 'apr'
     
         }
 
@@ -88,7 +88,7 @@ export namespace OpenRecommend {
 
             reactCount: 'rc',
 
-            apr: 'apr'
+            pageReferrer: 'apr'
     
         }
 

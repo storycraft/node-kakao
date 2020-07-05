@@ -103,6 +103,7 @@ export * from './talk/struct/api/profile/profile-req-struct';
 
 export * from './talk/struct/api/open/open-preset-struct';
 export * from './talk/struct/api/open/open-recommend-struct';
+export * from './talk/struct/api/open/open-search-struct';
 
 export * from './talk/struct/channel-data-struct';
 export * from './talk/struct/channel-info-struct';
