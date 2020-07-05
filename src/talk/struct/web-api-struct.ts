@@ -9,9 +9,8 @@ import { StructBase } from "./struct-base";
 export enum WebApiStatusCode {
 
     SUCCESS = 0,
-    OPERATION_DENIED = -500,
-    NO_RESULT = -1002
-
+    OPERATION_DENIED = -500
+    
 }
 
 export interface WebApiStruct extends StructBase {

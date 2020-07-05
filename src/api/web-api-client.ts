@@ -9,6 +9,7 @@ import { JsonUtil } from "../util/json-util";
 import * as request from "request-promise";
 import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
 import { AccessDataProvider } from "../oauth/access-data-provider";
+import { ObjectMapper, Serializer } from "json-proxy-mapper";
 
 export type RequestForm = { [key: string]: any };
 export type RequestHeader = { [key: string]: any };
@@ -44,6 +45,14 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         if (form) reqData.form = form;
 
         let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
+
+        return res;
+    }
+
+    async requestMapped<T extends WebApiStruct>(method: string, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+        let rawRes = await this.request(method, path, form, headers);
+
+        let res = Serializer.deserialize<T>(rawRes, mapper);
 
         return res;
     }

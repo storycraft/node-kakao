@@ -5,16 +5,13 @@
  */
 
 import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
-import { Serializer, ObjectMapper } from "json-proxy-mapper";
 import { LoginError } from "../client";
-import * as querystring from "querystring";
-import * as request from "request-promise";
 import * as crypto from "crypto";
 import { KakaoAPI } from "../kakao-api";
 import { AccessDataProvider } from "../oauth/access-data-provider";
 import { RequestHeader, WebApiClient, RequestForm } from "./web-api-client";
 import { AHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
-import { WebApiStruct, WebApiStatusCode } from "../talk/struct/web-api-struct";
+import { WebApiStatusCode } from "../talk/struct/web-api-struct";
 import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";
 import { MoreSettingsStruct, LessSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
 import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
@@ -175,14 +172,6 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         let form = this.createRegisterForm(passcode, email, password, permanent, forced);
 
         return this.request('POST', AuthClient.getAccountApiPath('register_device.json'), form);
-    }
-
-    async requestMapped<T extends WebApiStruct>(method: string, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
-        let rawRes = await this.request(method, path, form, headers);
-
-        let res = Serializer.deserialize<T>(rawRes, mapper);
-
-        return res;
     }
 
     async relogin() {

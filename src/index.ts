@@ -13,7 +13,7 @@ export * from './api/api-header-decorator';
 export * from './api/auth-client';
 export * from './api/friend-client';
 
-export * from './api/open-link-client';
+export * from './api/open-chat-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
@@ -100,6 +100,9 @@ export * from './talk/struct/api/friends/friend-search-struct';
 
 export * from './talk/struct/api/profile/profile-struct';
 export * from './talk/struct/api/profile/profile-req-struct';
+
+export * from './talk/struct/api/open/open-preset-struct';
+export * from './talk/struct/api/open/open-recommend-struct';
 
 export * from './talk/struct/channel-data-struct';
 export * from './talk/struct/channel-info-struct';

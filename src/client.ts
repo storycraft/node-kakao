@@ -17,7 +17,7 @@ import { RequestResult } from "./talk/request/request-result";
 import { ClientEvents } from "./event/events";
 import { Long } from "bson";
 import { AuthClient } from "./api/auth-client";
-import { OpenLinkClient } from "./api/open-link-client";
+import { OpenChatClient } from "./api/open-chat-client";
 
 /*
  * Created on Fri Nov 01 2019
@@ -39,7 +39,8 @@ export interface ApiClient {
     readonly Auth: AuthClient;
 
     readonly Friends: FriendClient;
-    readonly OpenLinkWeb: OpenLinkClient;
+
+    readonly OpenChat: OpenChatClient;
 
     readonly Logon: boolean;
 
@@ -79,7 +80,7 @@ export class TalkApiClient extends EventEmitter {
     private auth: AuthClient;
 
     private friends: FriendClient;
-    private openLinkWeb: OpenLinkClient;
+    private openchatWeb: OpenChatClient;
     
     constructor(name: string, deviceUUID: string) {
         super();
@@ -87,7 +88,7 @@ export class TalkApiClient extends EventEmitter {
         this.auth = new AuthClient(name, deviceUUID);
 
         this.friends = new FriendClient(this.auth);
-        this.openLinkWeb = new OpenLinkClient(this.auth);
+        this.openchatWeb = new OpenChatClient(this.auth);
     }
 
     get Name() {
@@ -102,8 +103,8 @@ export class TalkApiClient extends EventEmitter {
         return this.friends;
     }
 
-    get OpenLinkWeb() {
-        return this.openLinkWeb;
+    get OpenChat() {
+        return this.openchatWeb;
     }
 
     get Logon() {
