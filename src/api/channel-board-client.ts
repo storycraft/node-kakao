@@ -42,7 +42,7 @@ export class ChannelBoardClient extends SessionApiClient {
         return this.request('POST', `posts/${postId}/unset_notice`);
     }
 
-    async sharePost(postId: string): Promise<WebApiStruct> {
+    async sharePostToChannel(postId: string): Promise<WebApiStruct> {
         return this.request('POST', `posts/${postId}/share`);
     }
 
@@ -63,27 +63,27 @@ export class OpenChannelBoardClient extends SessionApiClient {
     }
 
     async getPost(linkId: Long, postId: string): Promise<unknown> {
-        return this.request('GET', `posts/${postId}?link_id=${encodeURIComponent(linkId.toString())}`);
+        return this.request('GET', `moim/posts/${postId}?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
     async getPostEmotionList(linkId: Long, postId: string): Promise<unknown> {
-        return this.request('GET', `posts/${postId}/emotions?link_id=${encodeURIComponent(linkId.toString())}`);
+        return this.request('GET', `moim/posts/${postId}/emotions?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
     async getPostCommentList(linkId: Long, postId: string): Promise<unknown> {
-        return this.request('GET', `posts/${postId}/comments?link_id=${encodeURIComponent(linkId.toString())}`);
+        return this.request('GET', `moim/posts/${postId}/comments?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
     async setPostNotice(linkId: Long, postId: string): Promise<unknown> {
-        return this.request('POST', `posts/${postId}/set_notice?link_id=${encodeURIComponent(linkId.toString())}`);
+        return this.request('POST', `moim/posts/${postId}/set_notice?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
     async unsetPostNotice(linkId: Long, postId: string): Promise<unknown> {
         return this.request('POST', `posts/${postId}/unset_notice?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
-    async sharePost(linkId: Long, postId: string): Promise<WebApiStruct> {
-        return this.request('POST', `posts/${postId}/share?link_id=${encodeURIComponent(linkId.toString())}`);
+    async sharePostToChannel(linkId: Long, postId: string): Promise<WebApiStruct> {
+        return this.request('POST', `moim/posts/${postId}/share?link_id=${encodeURIComponent(linkId.toString())}`);
     }
 
 }
