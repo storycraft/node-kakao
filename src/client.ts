@@ -18,6 +18,7 @@ import { ClientEvents } from "./event/events";
 import { Long } from "bson";
 import { AuthClient } from "./api/auth-client";
 import { OpenChatClient } from "./api/open-chat-client";
+import { OpenUploadApi } from "./api/open-upload-api";
 
 /*
  * Created on Fri Nov 01 2019
@@ -41,6 +42,7 @@ export interface ApiClient {
     readonly Friends: FriendClient;
 
     readonly OpenChat: OpenChatClient;
+    readonly OpenUploadApi: OpenUploadApi;
 
     readonly Logon: boolean;
 
@@ -80,7 +82,9 @@ export class TalkApiClient extends EventEmitter {
     private auth: AuthClient;
 
     private friends: FriendClient;
+
     private openchatWeb: OpenChatClient;
+    private openUploadApi: OpenUploadApi;
     
     constructor(name: string, deviceUUID: string) {
         super();
@@ -88,7 +92,9 @@ export class TalkApiClient extends EventEmitter {
         this.auth = new AuthClient(name, deviceUUID);
 
         this.friends = new FriendClient(this.auth);
+
         this.openchatWeb = new OpenChatClient(this.auth);
+        this.openUploadApi = new OpenUploadApi();
     }
 
     get Name() {
@@ -105,6 +111,10 @@ export class TalkApiClient extends EventEmitter {
 
     get OpenChat() {
         return this.openchatWeb;
+    }
+
+    get OpenUploadApi() {
+        return this.openUploadApi;
     }
 
     get Logon() {

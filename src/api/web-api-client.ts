@@ -67,8 +67,6 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         let reqData = this.buildRequestData(method, headers);
         if (formData) reqData.formData = formData;
 
-        console.log(this.toApiURL(path));
-
         let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
 
         return res;
