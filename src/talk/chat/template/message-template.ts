@@ -100,30 +100,3 @@ export class ReplyContentTemplate extends AttachmentTemplate {
     }
 
 }
-
-export class FeedTemplate implements MessageTemplate {
-
-    constructor(
-        private feed: ChatFeeds,
-        private extraContent?: RichFeedAttachment
-    ) {
-
-    }
-    
-    get Valid() {
-        return !!this.feed;
-    }
-
-    getMessageType(): ChatType {
-        return ChatType.Feed;
-    }
-
-    getPacketText(): string {
-        return JsonUtil.stringifyLoseless(this.feed);
-    }
-
-    getPacketExtra(): string {
-        return this.extraContent && JsonUtil.stringifyLoseless(this.extraContent.toJsonAttachment());
-    }
-
-}
