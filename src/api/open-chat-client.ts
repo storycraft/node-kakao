@@ -12,6 +12,8 @@ import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
 import { OpenPostListStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
 import { OpenSearchType } from "../talk/struct/api/open/open-search-struct";
+import { LinkReactionType } from "../talk/struct/open/open-link-struct";
+import { JsonUtil } from "../util/json-util";
 
 export class OpenChatClient extends SessionApiClient {
 
@@ -39,6 +41,14 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath('recommend'), OpenRecommendStruct.MAPPER);
     }
 
+    async requestRecommendPostList(): Promise<unknown> {
+        return this.request('GET', OpenChatClient.getProfileApiPath('recommend'));
+    }
+
+    async requestNewReactionList(): Promise<unknown> {
+        return this.request('GET', OpenChatClient.getProfileApiPath('reacts/newMark')); 
+    }
+
     async setRecommend(linkId: Long): Promise<OpenStruct> {
         return this.request('GET', OpenChatClient.getChannelApiPath(`search/recommend?li=${encodeURIComponent(linkId.toString())}`));
     }
@@ -49,6 +59,50 @@ export class OpenChatClient extends SessionApiClient {
 
     async requestPostList(linkId: Long): Promise<OpenPostListStruct> {
         return this.request('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`));
+    }
+
+    async getPostFromId(linkId: Long, postId: Long, userLinkId: Long): Promise<unknown>  {
+        return this.request('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    }
+
+    async getPostFromURL(postURL: string, userLinkId: Long): Promise<unknown>  {
+        return this.request('GET', OpenChatClient.getProfileApiPath(`post?postUrl=${encodeURIComponent(postURL)}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    }
+
+    async createPost(userLinkId: Long, description: string, postDataList: unknown[], scrapData: unknown, shareChannelList: Long[]): Promise<unknown> {
+        let postForm = {
+
+            description: description,
+            postDatas: JsonUtil.stringifyLoseless(postDataList),
+            scrapData: JsonUtil.stringifyLoseless(scrapData),
+            chatIds: JsonUtil.stringifyLoseless(shareChannelList)
+
+        };
+
+        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts`), postForm);
+    }
+
+    async updatePost(userLinkId: Long, postId: Long, description: string, scrapData: unknown): Promise<unknown> {
+        let postForm = {
+
+            description: description,
+            scrapData: JsonUtil.stringifyLoseless(scrapData)
+
+        };
+
+        return this.request('PUT', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`), postForm);
+    }
+
+    async deletePost(userLinkId: Long, postId: Long): Promise<unknown> {
+        return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`));
+    }
+
+    async reactToPost(linkId: Long, postId: Long, userLinkId: Long, type: LinkReactionType): Promise<unknown> {
+        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?type=${type}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    }
+
+    async unReactPost(linkId: Long, postId: Long, userLinkId: Long): Promise<unknown> {
+        return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
     async searchAll(query: string, searchType: OpenSearchType | null = null, page: number = 1, exceptLock: boolean = false, count: number = 30): Promise<unknown> {
