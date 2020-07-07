@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
 import { KakaoAPI } from "../kakao-api";
-import * as Forge from "node-forge";
 
 /*
  * Created on Thu Oct 17 2019
@@ -33,42 +32,19 @@ export class CryptoManager {
     }
 
     toAESEncrypted(buffer: Buffer, iv: Buffer): Buffer {
-        let cipher = Forge.cipher.createCipher('AES-CFB', this.bufferToBinaryString(this.key));
+        let cipher = crypto.createCipheriv('aes-128-cfb', this.key, iv);
 
-        cipher.start({
-            iv: Forge.util.createBuffer(iv)
-        });
-
-        cipher.update(Forge.util.createBuffer(buffer));
-        cipher.finish();
-
-        return this.binaryStringToBuffer(cipher.output.data);
+        return Buffer.concat([ cipher.update(buffer), cipher.final() ]);
     }
 
     toAESDecrypted(buffer: Buffer, iv: Buffer): Buffer {
-        let cipher = Forge.cipher.createDecipher('AES-CFB', this.bufferToBinaryString(this.key));
-
-        cipher.start({
-            iv: Forge.util.createBuffer(iv)
-        });
-
-        cipher.update(Forge.util.createBuffer(buffer));
-        cipher.finish();
-
-        return this.binaryStringToBuffer(cipher.output.data);
+        let cipher = crypto.createDecipheriv('aes-128-cfb', this.key, iv);
+        
+        return Buffer.concat([ cipher.update(buffer), cipher.final() ]);
     }
 
     toRSAEncrypted(buffer: Buffer): Buffer {
-        let publicKey = Forge.pki.publicKeyFromPem(this.PEMPublicKey) as Forge.pki.rsa.PublicKey;
-
-        let encrypted: string = publicKey.encrypt(this.bufferToBinaryString(buffer), "RSA-OAEP", {
-            md: Forge.md.sha1.create(),
-            mgf: Forge.mgf.mgf1.create(Forge.md.sha1.create()),
-        });
-
-        let encryptedBuffer = this.binaryStringToBuffer(encrypted);
-
-        return encryptedBuffer;
+        return crypto.publicEncrypt(this.PEMPublicKey, buffer);
     }
 
     toEncryptedPacket(packetBuffer: Buffer, cipherIV: Buffer): Buffer {

@@ -25,7 +25,6 @@
     "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.11",
-    "@types/node-forge": "^0.8.6",
     "@types/request-promise": "^4.1.44",
     "chai": "^4.2.0",
     "mocha": "^6.2.1",
@@ -41,7 +40,6 @@
     "bson": "^4.0.2",
     "json-proxy-mapper": "^1.1.2",
     "lossless-json": "^1.0.3",
-    "node-forge": "^0.9.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   }
