@@ -188,7 +188,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel) return;
 
-        channel.updateMeta(packet.Meta);
+        channel.updateMeta(packet.Meta.type, packet.Meta);
         
         channel.emit('meta_changed', channel, packet.Meta.type, packet.Meta);
         this.Client.emit('meta_changed', channel, packet.Meta.type, packet.Meta);

@@ -7,7 +7,7 @@ import { MessageTemplate } from "../chat/template/message-template";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { LocoClient } from "../../client";
 import { OpenMemberType } from "../open/open-link-type";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-struct";
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
@@ -52,6 +52,9 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     readonly UserCount: number;
 
+    getDisplayName(): string;
+    getDisplayProfileList(): string[];
+
     getUserInfoList(): I[];
 
     hasUserInfo(id: Long): boolean;
@@ -64,6 +67,9 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     getLatestUserInfo(user: ChatUser): Promise<ChatUserInfo | null>;
     getLatestUserInfoId(id: Long): Promise<ChatUserInfo | null>;
+
+    hasChannelMeta(type: ChannelMetaType): boolean;
+    getChannelMeta(type: ChannelMetaType): ChannelMetaStruct | null;
 
     chatON(): Promise<RequestResult<boolean>>;
 

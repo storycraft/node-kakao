@@ -31,18 +31,16 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     private roomImageURL: string;
     private roomFullImageURL: string;
 
-    private name: string;
-
     private clientRoomImageURL: string;
     private clientRoomFullImageURL: string;
 
     private clientName: string;
 
-    private clientPushSound: string;
+    private clientPushSound: boolean | null;
 
     private isFavorite: boolean;
 
-    private channelMetaList: ChannelMetaStruct[];
+    private metaMap: Map<ChannelMetaType, ChannelMetaStruct>;
 
     private displayUserInfoList: ManagedDisplayUserInfo[];
 
@@ -51,25 +49,22 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     constructor(private manager: ChannelManager, private id: Long, private dataStruct: ChannelDataStruct) {
         super();
 
-        this.lastChat = null;
-
         this.roomImageURL = '';
         this.roomFullImageURL = '';
-
-        this.name = '';
+        this.lastChat = null;
 
         this.clientRoomImageURL = '';
         this.clientRoomFullImageURL = '';
 
         this.clientName = '';
-        this.clientPushSound = '';
+        this.clientPushSound = null;
         this.isFavorite = false;
 
         this.displayUserInfoList = [];
 
         this.userInfoMap = new Map();
 
-        this.channelMetaList = [];
+        this.metaMap = new Map();
     }
 
     get Client() {
@@ -101,7 +96,8 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     }
 
     get Name() {
-        return this.name;
+        let titleMeta = this.metaMap.get(ChannelMetaType.TITLE);
+        return titleMeta ? titleMeta.content : '';
     }
 
     get IsFavorite() {
@@ -129,7 +125,7 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     }
 
     get ChannelMetaList() {
-        return this.channelMetaList;
+        return Array.from(this.metaMap.values());
     }
 
     get DisplayUserInfoList() {
@@ -139,6 +135,26 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     // include client user
     get UserCount() {
         return this.userInfoMap.size + 1;
+    }
+
+    getDisplayName(): string {
+        let name = this.clientName || this.Name;
+
+        if (!name) {
+            let size = Math.min(5, this.displayUserInfoList.length);
+            name = this.displayUserInfoList.slice(0, size).map(info => info.Nickname).join(', ');
+
+            if (size > this.displayUserInfoList.length) name += ', ...';
+        }
+
+        return name;
+    }
+
+    getDisplayProfileList(): string[] {
+        if (this.clientRoomImageURL) return [ this.clientRoomImageURL ];
+
+        let size = Math.min(4, this.displayUserInfoList.length);
+        return this.displayUserInfoList.slice(0, size).map(info => info.ProfileImageURL);
     }
 
     getUserInfoList() {
@@ -191,6 +207,14 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
 
     protected getUserInfoIdMap(id: Long) {
         return this.userInfoMap.get(id.toString()) || null;
+    }
+
+    getChannelMeta(type: ChannelMetaType): ChannelMetaStruct | null {
+        return this.metaMap.get(type) || null;
+    }
+
+    hasChannelMeta(type: ChannelMetaType): boolean {
+        return this.metaMap.has(type);
     }
 
     async markChannelRead(lastWatermark: Long) {
@@ -253,36 +277,19 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
         this.dataStruct = dataStruct;
     }
 
-    protected updateRoomName(name: string) {
-        this.name = name;
-    }
-
     updateMetaList(metaList: ChannelMetaStruct[]) {
         for (let meta of metaList) {
-            this.updateMeta(meta);
+            this.updateMeta(meta.type, meta);
         }
     }
 
-    updateMeta(changed: ChannelMetaStruct) {
-        let len = this.channelMetaList.length;
-        for (let i = 0; i < len; i++) {
-            let meta = this.channelMetaList[i];
-            
-            if (meta.type === changed.type) {
-                this.channelMetaList.splice(i, 1);
-                break;
-            }
+    updateMeta(type: ChannelMetaType, meta: ChannelMetaStruct | null) {
+        if (!meta) {
+            this.metaMap.delete(type);
+            return;
         }
 
-        this.addMeta(changed);
-    }
-
-    protected addMeta(meta: ChannelMetaStruct) {
-        this.channelMetaList.push(meta);
-
-        if (meta.type === ChannelMetaType.TITLE) {
-            this.updateRoomName(meta.content);
-        }
+        this.metaMap.set(type, meta);
 
         if (meta.type === ChannelMetaType.PROFILE) {
             try {
@@ -302,7 +309,7 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
         if (clientMeta.imageUrl) this.clientRoomImageURL = clientMeta.imageUrl;
         if (clientMeta.full_image_url) this.clientRoomFullImageURL = clientMeta.full_image_url;
 
-        if (clientMeta.push_sound) {}//this.clientPushSound = clientMeta.push_sound;
+        if (clientMeta.push_sound) this.clientPushSound = clientMeta.push_sound;
 
         if (clientMeta.favorite) this.isFavorite = clientMeta.favorite;
     }
