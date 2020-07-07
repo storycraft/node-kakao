@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { KakaoAPI } from "../kakao-api";
+import { Configuration } from "../configuration";
 import { JsonUtil } from "../util/json-util";
 import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { Long } from "bson";
@@ -97,11 +97,11 @@ export class FriendClient extends SessionApiClient {
     }
 
     static getFriendsApiPath(api: string) {
-        return `${KakaoAPI.Agent}/friends/${api}`;
+        return `${Configuration.Agent}/friends/${api}`;
     }
 
     static getProfile3ApiPath(api: string) {
-        return `${KakaoAPI.Agent}/profile3/${api}`;
+        return `${Configuration.Agent}/profile3/${api}`;
     }
 
 }

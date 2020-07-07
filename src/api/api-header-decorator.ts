@@ -5,7 +5,7 @@
  */
 
 import { RequestHeader } from "./web-api-client";
-import { KakaoAPI } from "../kakao-api";
+import { Configuration } from "../configuration";
 
 export interface ApiHeaderDecorator {
 
@@ -22,11 +22,11 @@ export class BasicHeaderDecorator implements ApiHeaderDecorator {
     }
 
     get Language() {
-        return KakaoAPI.Language;
+        return Configuration.Language;
     }
 
     get UserAgent() {
-        return KakaoAPI.AuthUserAgent;
+        return `KT/${Configuration.Version} Wd/${Configuration.OSVersion} ${Configuration.Language}`;
     }
 
     fillHeader(header: RequestHeader) {
@@ -46,7 +46,7 @@ export class AHeaderDecorator implements ApiHeaderDecorator {
     }
 
     fillHeader(header: RequestHeader) {
-        header['A'] = KakaoAPI.AuthHeaderAgent;
+        header['A'] = `${Configuration.Agent}/${Configuration.Version}/${Configuration.Language}`;
     }
 
 }

@@ -5,15 +5,15 @@
  */
 
 import { LocoBsonRequestPacket } from "../loco-bson-packet";
-import { KakaoAPI } from "../../kakao-api";
+import { Configuration } from "../../configuration";
 import { Long } from "bson";
 
 export abstract class MediaRequestBasePacket extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: Long = Long.ZERO,
-        public Os: string = KakaoAPI.Agent,
-        public Version: string = KakaoAPI.Version,
+        public Os: string = Configuration.Agent,
+        public Version: string = Configuration.Version,
         public NetworkType: number = 0,
         public NetworkMccMnc: string = '999',
 

@@ -5,6 +5,7 @@
  */
 
 export * from './event/events';
+export * from './configuration';
 export * from './kakao-api';
 
 export * from './api/web-api-client';

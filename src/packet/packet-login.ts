@@ -1,4 +1,4 @@
-import { KakaoAPI } from "../kakao-api";
+import { Configuration } from "../configuration";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
 import { JsonUtil } from "../util/json-util";
@@ -16,8 +16,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     constructor(
         public DeviceUUID: string = '',
         public OAuthToken: string = '',
-        public Appver: string = KakaoAPI.InternalAppVersion,
-        public Os: string = KakaoAPI.Agent,
+        public Appver: string = Configuration.AppVersion,
+        public Os: string = Configuration.Agent,
         public DeviceType: number = 2,
         public NetType: number = 0,
         public NetworkMccMnc: string = '999',

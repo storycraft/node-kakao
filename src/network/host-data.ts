@@ -4,13 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { KakaoAPI } from "../kakao-api";
+import { Configuration } from "../configuration";
 
 export namespace HostData {
 
     export const BookingHost: HostData = {
-        host: KakaoAPI.LocoEntry,
-        port: KakaoAPI.LocoEntryPort,
+        host: Configuration.LocoEntry,
+        port: Configuration.LocoEntryPort,
         keepAlive: false
     }
 

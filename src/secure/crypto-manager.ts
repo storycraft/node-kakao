@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { KakaoAPI } from "../kakao-api";
+import { Configuration } from "../configuration";
 
 /*
  * Created on Thu Oct 17 2019
@@ -20,7 +20,7 @@ export class CryptoManager {
     }
 
     get PEMPublicKey(): string {
-        return KakaoAPI.LocoPEMPublicKey;
+        return Configuration.LocoPEMPublicKey;
     }
 
     protected bufferToBinaryString(buffer: Buffer): string {

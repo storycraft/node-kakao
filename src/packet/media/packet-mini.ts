@@ -5,10 +5,9 @@
  */
 
 import { MediaRequestBasePacket } from "./media-request-base-packet";
-import { KakaoAPI } from "../../kakao-api";
+import { Configuration } from "../../configuration";
 import { Long } from "bson";
 import { LocoBsonResponsePacket } from "../loco-bson-packet";
-import { JsonUtil } from "../../util/json-util";
 
 export class PacketMiniReq extends MediaRequestBasePacket {
 
@@ -20,8 +19,8 @@ export class PacketMiniReq extends MediaRequestBasePacket {
         public Height: number = 0,
         
         userId: Long = Long.ZERO,
-        os: string = KakaoAPI.Agent,
-        version: string = KakaoAPI.Version,
+        os: string = Configuration.Agent,
+        version: string = Configuration.Version,
         networkType: number = 0,
         networkMccMnc: string = '999',
     ) {

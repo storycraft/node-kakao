@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
 import { Long } from "bson";
-import { KakaoAPI } from "../../kakao-api";
+import { Configuration } from "../../configuration";
 import { ChatType } from "../../talk/chat/chat-type";
 import { JsonUtil } from "../../util/json-util";
 import { MediaRequestBasePacket } from "./media-request-base-packet";
@@ -26,8 +26,8 @@ export class PacketPostReq extends MediaRequestBasePacket {
         public NoSeen: boolean = false,
 
         userId: Long = Long.ZERO,
-        os: string = KakaoAPI.Agent,
-        version: string = KakaoAPI.Version,
+        os: string = Configuration.Agent,
+        version: string = Configuration.Version,
         networkType: number = 0,
         networkMccMnc: string = '999',
     ) {

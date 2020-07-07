@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import * as FormData from "form-data";
+import { AHeaderDecorator } from "./api/api-header-decorator";
 
 /*
  * Created on Sun Oct 13 2019
@@ -18,38 +19,6 @@ export class KakaoAPI {
             n: Buffer.from('a44960441c7e83bb27898156ecb13c8afaf05d284a4d1155f255cd22d3176cde50482f2f27f71348e4d2eb5f57bf9671ef15c9224e042b1b567ac1066e06691143f6c50f88787f68cf42716b210cbef0f59d53405a0a56138a6872212802bb0aeea6376305dbd428831e8f61a232efedd8dba377305ef972321e1352b5f64630993e5549c64fcb563cdc97da2124b925ddea12adfd00138910f66937fab68486ae43bfe203c4a617f9f232b5458a9ab409bac8edadef685545f9b013986747737b3fd76a9bac121516226981ea67225577d15d0f082b8207eaf7cdcb13123937cb12145837648c2f3a65018162315e77ead2d2dd5986e46251764a43b9ba8f79', 'hex'),
             e: 0x03
         };
-    }
-    
-    static get Agent() {
-        return 'win32';
-    }
-
-    static get Version() {
-        return '3.1.2';
-    }
-
-    static get InternalAppVersion() {
-        return `${this.Version}.${this.InternalAppSubVersion}`;
-    }
-
-    static get InternalAppSubVersion() {
-        return '2478';
-    }
-
-    static get OSVersion() {
-        return '10.0';
-    }
-
-    static get Language() {
-        return 'ko';
-    }
-
-    static get AuthUserAgent() {
-        return `KT/${KakaoAPI.Version} Wd/${KakaoAPI.OSVersion} ${KakaoAPI.Language}`;
-    }
-
-    static get AuthHeaderAgent() {
-        return `${KakaoAPI.Agent}/${KakaoAPI.Version}/${KakaoAPI.Language}`;
     }
 
     static get InternalProtocol() {
@@ -215,11 +184,12 @@ export class KakaoAPI {
         formData.append('attachment_type', type);
         formData.append('attachment', attachment, { filename: name });
 
+        let headers = {};
+        AHeaderDecorator.INSTANCE.fillHeader(headers);
+        
         let req = fetch(KakaoAPI.getUploadURL(type), {
             method: 'POST',
-            headers: {
-                'A': KakaoAPI.AuthHeaderAgent
-            },
+            headers: headers,
             body: formData
         });
 
@@ -240,10 +210,6 @@ export class KakaoAPI {
 
     static getUploadedFileKey(uploadPath: string) {
         return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
-    }
-
-    static get LocoEntryPort() {
-        return 443;
     }
 
     static get AccountInternalURL() {
