@@ -48,8 +48,8 @@ export class ChannelManager extends IdStore<ChatChannel> {
         return this.client;
     }
 
-    getChannelIdList() {
-        return Array.from(super.values()).map((channel) => channel.Id);
+    getChannelList(): ChatChannel[] {
+        return Array.from(super.values());
     }
 
     findOpenChatChannel(linkId: Long): OpenChatChannel | null {
