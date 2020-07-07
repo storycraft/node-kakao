@@ -25,7 +25,6 @@
     "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.11",
-    "@types/request-promise": "^4.1.44",
     "chai": "^4.2.0",
     "mocha": "^6.2.1",
     "ts-node": "^8.4.1",
@@ -38,9 +37,9 @@
   },
   "dependencies": {
     "bson": "^4.0.2",
+    "form-data": "^3.0.0",
     "json-proxy-mapper": "^1.1.2",
     "lossless-json": "^1.0.3",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "node-fetch": "^3.0.0-beta.7"
   }
 }

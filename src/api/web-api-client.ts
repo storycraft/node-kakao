@@ -5,13 +5,16 @@
  */
 
 import { JsonUtil } from "../util/json-util";
-import * as request from "request-promise";
+import fetch, { RequestInit } from "node-fetch";
+import * as FormData from "form-data";
 import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
 import { AccessDataProvider } from "../oauth/access-data-provider";
 import { ObjectMapper, Serializer } from "json-proxy-mapper";
-import { StructBase } from "../talk/struct/struct-base";
+import { StructBase, StructType } from "../talk/struct/struct-base";
+import { URLSearchParams } from "url";
 
-export type RequestForm = { [key: string]: any };
+export type RequestForm = { [key: string]: FileRequestData | StructType };
+export type FileRequestData = { value: Buffer, options: { filename: string, contentType?: string } };
 export type RequestHeader = { [key: string]: any };
 
 export abstract class WebApiClient implements ApiHeaderDecorator {
@@ -32,12 +35,13 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return `${this.Scheme}://${this.Host}/${path}`;
     }
 
-    protected buildRequestData(method: string, headers: RequestHeader | null = null): request.RequestPromiseOptions {
+    protected buildRequestData(method: string, headers: RequestHeader | null = null): RequestInit {
         let reqHeader = this.createClientHeader();
         this.fillHeader(reqHeader);
 
-        let reqData: request.RequestPromiseOptions = {
+        let reqData: RequestInit = {
             headers: reqHeader,
+            
             method: method
         };
 
@@ -48,9 +52,14 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
     async request<T extends StructBase>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let reqData = this.buildRequestData(method, headers);
-        if (form) reqData.form = form;
 
-        let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
+        if (form) {
+            let formData = this.convertToFormData(form);
+
+            reqData.body = formData;
+        }
+
+        let res = JsonUtil.parseLoseless(await (await fetch(this.toApiURL(path), reqData)).text());
 
         return res;
     }
@@ -63,13 +72,52 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return res;
     }
 
-    async requestMultipart<T extends StructBase>(method: string, path: string, formData: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    async requestMultipart<T extends StructBase>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let reqData = this.buildRequestData(method, headers);
-        if (formData) reqData.formData = formData;
 
-        let res = JsonUtil.parseLoseless(await request(this.toApiURL(path), reqData));
+        if (form) {
+            let formData = this.convertToMultipart(form);
+
+            Object.assign(formData.getHeaders(), reqData.headers);
+
+            reqData.body = formData;
+        }
+
+        let res = JsonUtil.parseLoseless(await (await fetch(this.toApiURL(path), reqData)).text());
 
         return res;
+    }
+
+    protected convertToMultipart(form: RequestForm): FormData {
+        let formData = new FormData();
+
+        let entries = Object.entries(form);
+        for (let [ key, value ] of entries) {
+            if (value && (value as FileRequestData).value && (value as FileRequestData).options) {
+                let file = value as FileRequestData;
+                let options: FormData.AppendOptions = { filename: file.options.filename };
+                
+                if (file.options.contentType) options.contentType = file.options.contentType;
+
+                formData.append(key, file.value, options);
+            } else {
+                formData.append(key, value + '');
+            }
+        }
+
+        return formData;
+    }
+
+    protected convertToFormData(form: RequestForm): URLSearchParams {
+        let formData = new URLSearchParams();
+
+        let entries = Object.entries(form);
+        for (let [ key, value ] of entries) {
+            // hax for undefined, null values
+            formData.append(key, value + '');
+        }
+
+        return formData;
     }
 
 }

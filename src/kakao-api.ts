@@ -1,6 +1,5 @@
-import * as request from "request-promise";
-import * as querystring from "querystring";
-import * as Crypto from "crypto";
+import fetch from "node-fetch";
+import * as FormData from "form-data";
 
 /*
  * Created on Sun Oct 13 2019
@@ -159,22 +158,17 @@ export class KakaoAPI {
     
     // This will return path. Use getUploadedFile to get Full URL
     static async uploadProfile(img: Buffer, name: string, userId: number = -1): Promise<string> {
-        let data: any = {
-            'user_id': userId,
-            'photo': {
-                value: img,
-                options: {
-                    'filename': name
-                }
-            }
-        };
+        let formData = new FormData();
 
-        let value = await request(KakaoAPI.ProfileUploadURL, {
+        formData.append('user_id', userId.toString());
+        formData.append('photo', img, { filename: name });
+
+        let res = await fetch(KakaoAPI.ProfileUploadURL, {
             method: 'POST',
-            formData: data
+            body: formData
         });
 
-        return value as string;
+        return res.text();
     }
 
     static getUploadURL(type: KakaoAPI.AttachmentType) {
@@ -215,30 +209,28 @@ export class KakaoAPI {
     }
 
     static async uploadAttachment(type: KakaoAPI.AttachmentType, attachment: Buffer, name: string, userId: number = -1): Promise<string> {
-        let req = request(KakaoAPI.getUploadURL(type), {
+        let formData = new FormData();
+
+        formData.append('user_id', userId.toString());
+        formData.append('attachment_type', type);
+        formData.append('attachment', attachment, { filename: name });
+
+        let req = fetch(KakaoAPI.getUploadURL(type), {
             method: 'POST',
             headers: {
                 'A': KakaoAPI.AuthHeaderAgent
             },
-            formData: {
-                'user_id': userId,
-                'attachment_type': type,
-                'attachment': {
-                    value: attachment,
-                    options: {
-                        'filename': name,
-                        'contentType': null
-                    }
-                }
-            }
+            body: formData
         });
 
-        let str: string = await req;
+        let res = await req;
+
+        let data = await res.json() as any;
 
         try {
-            return JSON.parse(str)['path']; //For some types
+            return data['path']; //For some types
         } catch (e) {
-            return str;
+            return '';
         }
     }
 
@@ -298,26 +290,20 @@ export class KakaoAPI {
 
 
     static getEmoticonImage(path: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonImageURL(path, lang),
+        return fetch(KakaoAPI.getEmoticonImageURL(path, lang), {
             headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
         });
     }
 
     static getEmoticonPack(id: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonPackURL(id, lang),
-            headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
+        return fetch(KakaoAPI.getEmoticonPackURL(id, lang), {
+            headers: KakaoAPI.getEmoticonHeader()
         });
     }
 
     static getEmoticonThumbnailPack(id: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonThumbnailPackURL(id, lang),
-            headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
+        return fetch(KakaoAPI.getEmoticonThumbnailPackURL(id, lang), {
+            headers: KakaoAPI.getEmoticonHeader()
         });
     }
 
