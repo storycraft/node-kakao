@@ -22,7 +22,7 @@ import { PacketKickoutRes, LocoKickoutType } from "../packet/packet-kickout";
 import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed, OpenRewriteFeed, OpenHandOverHostFeed } from "../talk/chat/chat-feed";
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { NetworkManager } from "./network-manager";
-import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
+import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet/loco-packet-base";
 import { FeedType } from "../talk/feed/feed-type";
 import { Long } from "bson";
 import { PacketMetaChangeRes } from "../packet/packet-meta-change";
@@ -125,16 +125,32 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         await this.Client.updateStatus();
     }
 
-    onMessagePacket(packet: PacketMessageRes) {
+    async onMessagePacket(packet: PacketMessageRes) {
         if (!packet.Chatlog) return;
 
+        let channel = this.getManagedChannel(packet.ChannelId) as (ManagedChatChannel | ManagedOpenChatChannel | null);
+
         let chatLog = packet.Chatlog;
+        
+        let isNewChannel: boolean = false;
+        if (!channel) {
+            channel = await this.ChannelManager.addChannel(packet.ChannelId);
+
+            if (!channel) return;
+
+            isNewChannel = true;
+        }
+
         let chat = this.ChatManager.chatFromChatlog(chatLog);
 
         if (!chat) return;
-        
-        let channel = chat.Channel as (ManagedChatChannel | ManagedOpenChatChannel);
 
+        if (isNewChannel) {
+            this.Client.ClientUser.emit('user_join', channel, this.Client.ClientUser, chat);
+            channel.emit('user_join', channel, this.Client.ClientUser, chat);
+            this.Client.emit('user_join', channel, this.Client.ClientUser, chat);
+        }
+        
         let managedInfo = channel.getManagedUserInfo(chat.Sender);
         if (managedInfo) managedInfo.updateNickname(packet.SenderNickname);
 
@@ -260,8 +276,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel) return;
 
-        // get ignored on DM channels
-        if (channel.Type === ChannelType.DIRECT || channel.Type === ChannelType.SELFCHAT || channel.Type === ChannelType.OPENCHAT_GROUP) return;
+        if (packet.StatusCode !== StatusCode.SUCCESS) return;
 
         this.Client.ClientUser.emit('user_left', channel, this.Client.ClientUser);
         channel.emit('user_left', channel, this.Client.ClientUser);
