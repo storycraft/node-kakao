@@ -9,7 +9,7 @@ import { Long } from "bson";
 import { BasicHeaderDecorator } from "./api-header-decorator";
 import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
-import { OpenPostListStruct } from "../talk/struct/api/open/open-post-struct";
+import { OpenPostListStruct, OpenPostReactStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
 import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct/api/open/open-search-struct";
 import { LinkReactionType } from "../talk/struct/open/open-link-struct";
@@ -97,11 +97,11 @@ export class OpenChatClient extends SessionApiClient {
         return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`));
     }
 
-    async reactToPost(linkId: Long, postId: Long, userLinkId: Long, type: LinkReactionType): Promise<unknown> {
-        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?type=${type}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    async reactToPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenPostReactStruct> {
+        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?type=${LinkReactionType.NORMAL}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
-    async unReactPost(linkId: Long, postId: Long, userLinkId: Long): Promise<unknown> {
+    async unReactPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenStruct> {
         return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 

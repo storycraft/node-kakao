@@ -90,3 +90,9 @@ export namespace OpenPostListStruct {
     export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
+
+export interface OpenPostReactStruct extends OpenStruct {
+
+    postId: Long
+
+}
