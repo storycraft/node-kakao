@@ -33,7 +33,7 @@ export namespace OpenRecommend {
         ownerNickname: string;
         ownerProfileImageURL: string;
 
-        writtenAt: number;
+        lastChatAt: number;
 
         reactCount: number;
 
@@ -84,7 +84,7 @@ export namespace OpenRecommend {
             ownerNickname: 'nn',
             ownerProfileImageURL: 'pi',
 
-            writtenAt: 'writtenAt',
+            lastChatAt: 'writtenAt',
 
             reactCount: 'rc',
 
@@ -107,7 +107,7 @@ export namespace OpenRecommend {
 
         export const ConvertMap = {
 
-            'items': new Converter.Array(TagItem.Mappings)
+            items: new Converter.Array(TagItem.Mappings)
     
         }
     
@@ -126,7 +126,7 @@ export namespace OpenRecommend {
 
         export const ConvertMap = {
 
-            'items': new Converter.Array(LinkItem.Mappings)
+            items: new Converter.Array(LinkItem.Mappings)
     
         }
     
@@ -154,8 +154,8 @@ export namespace OpenRecommendStruct {
 
     export const ConvertMap = {
 
-        'tag': new Converter.Object(OpenRecommend.TagList.Mappings, OpenRecommend.TagList.ConvertMap),
-        'links': new Converter.Array(OpenRecommend.LinkList.Mappings, OpenRecommend.LinkList.ConvertMap),
+        tag: new Converter.Object(OpenRecommend.TagList.Mappings, OpenRecommend.TagList.ConvertMap),
+        links: new Converter.Array(OpenRecommend.LinkList.Mappings, OpenRecommend.LinkList.ConvertMap),
 
     }
 

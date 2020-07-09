@@ -11,7 +11,7 @@ import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-stru
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
 import { OpenPostListStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
-import { OpenSearchType } from "../talk/struct/api/open/open-search-struct";
+import { OpenSearchType, OpenSearchStruct } from "../talk/struct/api/open/open-search-struct";
 import { LinkReactionType } from "../talk/struct/open/open-link-struct";
 import { JsonUtil } from "../util/json-util";
 
@@ -105,12 +105,12 @@ export class OpenChatClient extends SessionApiClient {
         return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
-    async searchAll(query: string, searchType: OpenSearchType | null = null, page: number = 1, exceptLock: boolean = false, count: number = 30): Promise<unknown> {
+    async searchAll(query: string, searchType: OpenSearchType | null = null, page: number = 1, exceptLock: boolean = false, count: number = 30): Promise<OpenSearchStruct> {
         let queries = `q=${encodeURIComponent(query)}&s=l&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}&exceptLock=${exceptLock ? 'Y' : 'N'}`;
 
         if (searchType) queries += `&resultType=${searchType}`;
 
-        return this.request('GET', OpenChatClient.getChannelApiPath(`search/unified?${queries}`));
+        return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/unified?${queries}`), OpenSearchStruct.MAPPER);
     }
 
     async searchPost(query: string, page: number = 0, count: number = 30): Promise<unknown> {
