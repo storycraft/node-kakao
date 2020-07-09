@@ -20,10 +20,55 @@ export interface OpenPostDataStruct extends StructBase {
 
 }
 
+export enum OpenPostTagType {
+
+    SHARP = 2
+
+}
+
+export interface OpenPostTagStruct extends StructBase {
+
+    type: OpenPostTagType;
+    text: string;
+
+}
+
+export namespace OpenPostTagStruct {
+    
+    export const Mappings = {
+
+        type: 't',
+        text: 'c'
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+
+}
+
 export interface OpenPostDescStruct extends StructBase {
 
     text: string;
-    tags: string[]
+    tagList: OpenPostTagStruct[];
+
+}
+
+export namespace OpenPostDescStruct {
+    
+    export const Mappings = {
+
+        text: 'text',
+        tagList: 'tags'
+
+    }
+
+    export const ConvertMap = {
+
+        tagList: new Converter.Array(OpenPostTagStruct.Mappings)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
@@ -32,11 +77,12 @@ export interface OpenPostStruct extends StructBase {
     id: Long;
     linkId: Long;
 
-    description: OpenPostDescStruct;
+    description?: OpenPostDescStruct;
     postDataList?: OpenPostDataStruct[];
 
     date: number;
     reactionList?: { type: LinkReactionType, count: number }[];
+    reactionUserList?: { reactId: number, linkId: Long, type: LinkReactionType, name: string, description: string, profileImagePath: string }[];
     postURL: string;
     latestUpdateToken: number;
     
@@ -56,12 +102,18 @@ export namespace OpenPostStruct {
         postURL: 'postUrl',
 
         reactionList: 'reacts',
-
+        reactionUserList: 'reactUsers',
         
         latestUpdateToken: 'latestUpdateToken'
     }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+    export const ConvertMap = {
+
+        description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
     
 }
 
@@ -83,7 +135,7 @@ export namespace OpenPostListStruct {
 
     export const ConvertMap = {
 
-        postList: new Converter.Array(OpenPostStruct.Mappings)
+        postList: new Converter.Array(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
 
     }
 
@@ -93,13 +145,31 @@ export namespace OpenPostListStruct {
 
 export interface OpenPostReactStruct extends OpenStruct {
 
-    postId: Long
+    postId: Long;
+
+}
+
+export interface OpenPostReactNotiStruct extends OpenStruct {
+
+    linkIdList: Long[];
+
+}
+
+export namespace OpenPostReactNotiStruct {
+
+    export const Mappings = {
+
+        linkIdList: 'linkIds',
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostApiStruct extends OpenStruct {
 
-    post: OpenPostStruct
+    post: OpenPostStruct;
 
 }
 
@@ -113,7 +183,7 @@ export namespace OpenPostApiStruct {
 
     export const ConvertMap = {
 
-        post: new Converter.Object(OpenPostStruct.Mappings)
+        post: new Converter.Object(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
 
     }
 

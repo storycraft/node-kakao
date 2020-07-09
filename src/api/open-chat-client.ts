@@ -7,9 +7,9 @@
 import { SessionApiClient, RequestHeader } from "./web-api-client";
 import { Long } from "bson";
 import { BasicHeaderDecorator } from "./api-header-decorator";
-import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
+import { OpenRecommendStruct, OpenPostRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
-import { OpenPostListStruct, OpenPostReactStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostApiStruct } from "../talk/struct/api/open/open-post-struct";
+import { OpenPostListStruct, OpenPostReactStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostApiStruct, OpenPostReactNotiStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
 import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct/api/open/open-search-struct";
 import { LinkReactionType } from "../talk/struct/open/open-link-struct";
@@ -42,12 +42,12 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath('recommend'), OpenRecommendStruct.MAPPER);
     }
 
-    async requestRecommendPostList(): Promise<unknown> {
-        return this.request('GET', OpenChatClient.getProfileApiPath('recommend'));
+    async requestRecommendPostList(): Promise<OpenPostRecommendStruct> {
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath('recommend'), OpenPostRecommendStruct.MAPPER);
     }
 
-    async requestNewReactionList(): Promise<unknown> {
-        return this.request('GET', OpenChatClient.getProfileApiPath('reacts/newMark')); 
+    async requestNewReactionList(): Promise<OpenPostReactNotiStruct> {
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath('reacts/newMark'), OpenPostReactNotiStruct.MAPPER); 
     }
 
     async setRecommend(linkId: Long): Promise<OpenStruct> {
@@ -62,8 +62,8 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`), OpenPostListStruct.MAPPER);
     }
 
-    async getPostFromId(linkId: Long, postId: Long, userLinkId: Long): Promise<unknown>  {
-        return this.request('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    async getPostFromId(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenPostApiStruct>  {
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostApiStruct.MAPPER);
     }
 
     async getPostFromURL(postURL: string, userLinkId: Long): Promise<unknown>  {

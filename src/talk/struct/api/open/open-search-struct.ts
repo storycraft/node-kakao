@@ -8,7 +8,7 @@ import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
 import { StructBase } from "../../struct-base";
-import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct } from "./open-post-struct";
+import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct, OpenPostDescStruct } from "./open-post-struct";
 import { Long } from "bson";
 import { LinkReactionType } from "../../open/open-link-struct";
 
@@ -94,7 +94,7 @@ export namespace OpenSearchStruct {
         nickname: string;
         profileImageURL: string;
     
-        description: { text: string, tags: string[] };
+        description?: OpenPostDescStruct;
         postDataList?: OpenPostDataStruct[];
     
         date: number;
@@ -117,6 +117,12 @@ export namespace OpenSearchStruct {
     
             reactionList: 'reacts'
 
+        }
+
+        export const ConvertMap = {
+            
+            description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap)
+        
         }
     
         export const MAPPER = new ObjectMapper(Mappings);
@@ -174,7 +180,7 @@ export namespace OpenPostSearchStruct {
 
     export const ConvertMap = {
 
-        postList: new Converter.Array(OpenSearchStruct.PostItem.Mappings)
+        postList: new Converter.Array(OpenSearchStruct.PostItem.Mappings, OpenSearchStruct.PostItem.ConvertMap)
 
     }
 

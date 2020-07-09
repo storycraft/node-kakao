@@ -8,6 +8,8 @@ import { OpenStruct } from "./open-struct";
 import { StructBase } from "../../struct-base";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
+import { OpenPostStruct } from "./open-post-struct";
+import { OpenSearchStruct } from "./open-search-struct";
 
 export namespace OpenRecommend {
 
@@ -139,7 +141,7 @@ export namespace OpenRecommend {
 export interface OpenRecommendStruct extends OpenStruct {
 
     tag: OpenRecommend.TagList;
-    links: OpenRecommend.LinkList[];
+    linkList: OpenRecommend.LinkList[];
 
 }
 
@@ -148,14 +150,41 @@ export namespace OpenRecommendStruct {
     export const Mappings = {
 
         tag: 'tag',
-        links: 'links'
+        linkList: 'links'
 
     }
 
     export const ConvertMap = {
 
         tag: new Converter.Object(OpenRecommend.TagList.Mappings, OpenRecommend.TagList.ConvertMap),
-        links: new Converter.Array(OpenRecommend.LinkList.Mappings, OpenRecommend.LinkList.ConvertMap),
+        linkList: new Converter.Array(OpenRecommend.LinkList.Mappings, OpenRecommend.LinkList.ConvertMap),
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+
+}
+
+
+export interface OpenPostRecommendStruct extends OpenStruct {
+
+    title: string;
+    postList: OpenSearchStruct.PostItem[];
+
+}
+
+export namespace OpenPostRecommendStruct {
+
+    export const Mappings = {
+
+        title: 'title',
+        postList: 'recommendPosts'
+
+    }
+
+    export const ConvertMap = {
+
+        postList: new Converter.Array(OpenSearchStruct.PostItem.Mappings, OpenSearchStruct.PostItem.ConvertMap),
 
     }
 

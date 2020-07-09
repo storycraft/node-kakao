@@ -9,7 +9,7 @@ import { Long } from "bson";
 
 export interface OpenPostTemplate {
     
-    text: string;
+    text?: string;
     postDataList?: OpenPostDataStruct[];
     scrapData?: unknown;
 
