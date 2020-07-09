@@ -9,11 +9,12 @@ import { Long } from "bson";
 import { BasicHeaderDecorator } from "./api-header-decorator";
 import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
-import { OpenPostListStruct, OpenPostReactStruct } from "../talk/struct/api/open/open-post-struct";
+import { OpenPostListStruct, OpenPostReactStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostApiStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
 import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct/api/open/open-search-struct";
 import { LinkReactionType } from "../talk/struct/open/open-link-struct";
 import { JsonUtil } from "../util/json-util";
+import { OpenPostTemplate } from "../talk/struct/api/open/template/open-post-template";
 
 export class OpenChatClient extends SessionApiClient {
 
@@ -69,31 +70,34 @@ export class OpenChatClient extends SessionApiClient {
         return this.request('GET', OpenChatClient.getProfileApiPath(`post?postUrl=${encodeURIComponent(postURL)}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
-    async createPost(userLinkId: Long, description: string, postDataList: unknown[], scrapData: unknown, shareChannelList: Long[]): Promise<unknown> {
-        let postForm = {
+    async createPost(userLinkId: Long, template: OpenPostTemplate): Promise<OpenPostApiStruct> {
+        let postForm: any = {
 
-            description: description,
-            postDatas: JsonUtil.stringifyLoseless(postDataList),
-            scrapData: JsonUtil.stringifyLoseless(scrapData),
-            chatIds: JsonUtil.stringifyLoseless(shareChannelList)
+            description: template.text
+
+        };
+        
+        if (template.postDataList) postForm['postDatas'] = JsonUtil.stringifyLoseless(template.postDataList);
+        if (template.scrapData) postForm['scrapData'] = JsonUtil.stringifyLoseless(template.scrapData);
+        if (template.shareChannelList) postForm['chatIds'] = JsonUtil.stringifyLoseless(template.shareChannelList);
+
+        return this.requestMapped('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts`), OpenPostApiStruct.MAPPER, postForm);
+    }
+
+    async updatePost(userLinkId: Long, postId: Long, template: OpenPostTemplate): Promise<OpenPostApiStruct> {
+        let postForm: any = {
+
+            description: template.text
 
         };
 
-        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts`), postForm);
+        if (template.postDataList) postForm['postDatas'] = JsonUtil.stringifyLoseless(template.postDataList);
+        if (template.scrapData) postForm['scrapData'] = JsonUtil.stringifyLoseless(template.scrapData);
+
+        return this.requestMapped('PUT', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`), OpenPostApiStruct.MAPPER, postForm);
     }
 
-    async updatePost(userLinkId: Long, postId: Long, description: string, scrapData: unknown): Promise<unknown> {
-        let postForm = {
-
-            description: description,
-            scrapData: JsonUtil.stringifyLoseless(scrapData)
-
-        };
-
-        return this.request('PUT', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`), postForm);
-    }
-
-    async deletePost(userLinkId: Long, postId: Long): Promise<unknown> {
+    async deletePost(userLinkId: Long, postId: Long): Promise<OpenStruct> {
         return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(userLinkId.toString())}/posts/${encodeURIComponent(postId.toString())}`));
     }
 

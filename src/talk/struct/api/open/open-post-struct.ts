@@ -20,7 +20,7 @@ export interface OpenPostDataStruct extends StructBase {
 
 }
 
-export interface OpenPostDescription extends StructBase {
+export interface OpenPostDescStruct extends StructBase {
 
     text: string;
     tags: string[]
@@ -32,11 +32,11 @@ export interface OpenPostStruct extends StructBase {
     id: Long;
     linkId: Long;
 
-    description: OpenPostDescription;
+    description: OpenPostDescStruct;
     postDataList?: OpenPostDataStruct[];
 
     date: number;
-    reactionList: { type: LinkReactionType, count: number }[];
+    reactionList?: { type: LinkReactionType, count: number }[];
     postURL: string;
     latestUpdateToken: number;
     
@@ -94,5 +94,29 @@ export namespace OpenPostListStruct {
 export interface OpenPostReactStruct extends OpenStruct {
 
     postId: Long
+
+}
+
+export interface OpenPostApiStruct extends OpenStruct {
+
+    post: OpenPostStruct
+
+}
+
+export namespace OpenPostApiStruct {
+
+    export const Mappings = {
+
+        post: 'post',
+
+    }
+
+    export const ConvertMap = {
+
+        post: new Converter.Object(OpenPostStruct.Mappings)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
