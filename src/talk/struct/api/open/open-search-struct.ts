@@ -11,6 +11,7 @@ import { StructBase } from "../../struct-base";
 import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct, OpenPostDescStruct } from "./open-post-struct";
 import { Long } from "bson";
 import { LinkReactionType } from "../../open/open-link-struct";
+import { JsonUtil } from "../../../../util/json-util";
 
 export enum OpenSearchType {
 
@@ -89,7 +90,7 @@ export namespace OpenSearchStruct {
     export interface PostItem extends StructBase {
 
         id: Long;
-        linkId: number;
+        linkId: Long;
 
         nickname: string;
         profileImageURL: string;
@@ -121,6 +122,7 @@ export namespace OpenSearchStruct {
 
         export const ConvertMap = {
             
+            linkId: JsonUtil.LongConverter,
             description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap)
         
         }

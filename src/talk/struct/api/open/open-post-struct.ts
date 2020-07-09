@@ -9,6 +9,7 @@ import { OpenStruct } from "./open-struct";
 import { Long } from "bson";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
 import { LinkReactionType } from "../../open/open-link-struct";
+import { JsonUtil } from "../../../../util/json-util";
 
 export interface OpenPostDataStruct extends StructBase {
 
@@ -72,6 +73,41 @@ export namespace OpenPostDescStruct {
 
 }
 
+export interface OpenPostReactionStruct extends StructBase {
+
+    reactionId: Long;
+    linkId: Long;
+    type: LinkReactionType;
+    name: string;
+    description: string;
+    profileImageURL: string;
+
+}
+
+export namespace OpenPostReactionStruct {
+    
+    export const Mappings = {
+
+        reactionId: 'reactId',
+        linkId: 'linkId',
+        type: 'type',
+        name: 'name',
+        description: 'description',
+        profileImageURL: 'profileImagePath'
+
+    }
+
+    export const ConvertMap = {
+
+        linkId: JsonUtil.LongConverter,
+        reactionId: JsonUtil.LongConverter
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+
+}
+
 export interface OpenPostStruct extends StructBase {
 
     id: Long;
@@ -81,8 +117,8 @@ export interface OpenPostStruct extends StructBase {
     postDataList?: OpenPostDataStruct[];
 
     date: number;
-    reactionList?: { type: LinkReactionType, count: number }[];
-    reactionUserList?: { reactId: number, linkId: Long, type: LinkReactionType, name: string, description: string, profileImagePath: string }[];
+    reactionInfoList?: { type: LinkReactionType, count: number }[];
+    reactionList?: OpenPostReactionStruct[];
     postURL: string;
     latestUpdateToken: number;
     
@@ -109,7 +145,9 @@ export namespace OpenPostStruct {
 
     export const ConvertMap = {
 
-        description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap)
+        linkId: JsonUtil.LongConverter,
+        description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap),
+        reactionUserList: new Converter.Array(OpenPostReactionStruct.Mappings, OpenPostReactionStruct.ConvertMap),
 
     }
 
@@ -149,9 +187,27 @@ export interface OpenPostReactStruct extends OpenStruct {
 
 }
 
+export namespace OpenPostReactStruct {
+
+    export const Mappings = {
+
+        postId: 'postId',
+
+    }
+
+    export const ConvertMap = {
+        
+        postId: JsonUtil.LongConverter
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings);
+
+}
+
 export interface OpenPostReactNotiStruct extends OpenStruct {
 
-    linkIdList: Long[];
+    linkIdList: number[];
 
 }
 

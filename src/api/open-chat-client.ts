@@ -102,7 +102,7 @@ export class OpenChatClient extends SessionApiClient {
     }
 
     async reactToPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenPostReactStruct> {
-        return this.request('POST', OpenChatClient.getProfileApiPath(`${linkId.toString()}/reacts/${encodeURIComponent(postId.toString())}?type=${LinkReactionType.NORMAL}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+        return this.requestMapped('POST', OpenChatClient.getProfileApiPath(`${linkId.toString()}/reacts/${encodeURIComponent(postId.toString())}?type=${LinkReactionType.NORMAL}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostReactStruct.MAPPER);
     }
 
     async unReactPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenStruct> {
