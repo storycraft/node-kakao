@@ -8,6 +8,7 @@ import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
 import { StructBase } from "../../struct-base";
+import { OpenPostListStruct } from "./open-post-struct";
 
 export enum OpenSearchType {
 
@@ -81,8 +82,6 @@ export namespace OpenSearchStruct {
         export const MAPPER = new ObjectMapper(Mappings);
 
     }
-
-
 
     export const Mappings = {
 

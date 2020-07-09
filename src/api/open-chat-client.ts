@@ -58,7 +58,7 @@ export class OpenChatClient extends SessionApiClient {
     }
 
     async requestPostList(linkId: Long): Promise<OpenPostListStruct> {
-        return this.request('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`));
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`), OpenPostListStruct.MAPPER);
     }
 
     async getPostFromId(linkId: Long, postId: Long, userLinkId: Long): Promise<unknown>  {
@@ -113,8 +113,8 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/unified?${queries}`), OpenSearchStruct.MAPPER);
     }
 
-    async searchPost(query: string, page: number = 0, count: number = 30): Promise<unknown> {
-        return this.request('GET', OpenChatClient.getChannelApiPath(`search/post?q=${encodeURIComponent(query)}&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}`));
+    async searchPost(query: string, page: number = 1, count: number = 30): Promise<OpenPostListStruct> {
+        return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/post?q=${encodeURIComponent(query)}&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}`), OpenPostListStruct.MAPPER);
     }
 
     static getProfileApiPath(api: string) {
