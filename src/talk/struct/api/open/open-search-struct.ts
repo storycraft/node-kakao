@@ -8,7 +8,7 @@ import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
 import { StructBase } from "../../struct-base";
-import { OpenPostListStruct } from "./open-post-struct";
+import { OpenPostListStruct, OpenPostStruct } from "./open-post-struct";
 
 export enum OpenSearchType {
 
@@ -28,6 +28,43 @@ export interface OpenSearchStruct extends OpenStruct {
     itemList: OpenSearchStruct.LinkItem[];
 
     pageReferrer: string;
+
+}
+
+export interface OpenPostSearchStruct extends OpenStruct {
+
+    page: number;
+    count: number;
+
+    totalCount: number;
+
+    postList: OpenPostStruct[];
+
+    pageReferrer: string;
+
+}
+
+export namespace OpenPostSearchStruct {
+
+    export const Mappings = {
+
+        page: 'page',
+        count: 'count',
+        
+        totalCount: 'totalCount',
+
+        postList: 'postItems',
+        pageReferrer: 'apr'
+
+    }
+
+    export const ConvertMap = {
+
+        postList: new Converter.Array(OpenPostStruct.Mappings)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
 
@@ -87,6 +124,7 @@ export namespace OpenSearchStruct {
 
         page: 'page',
         count: 'count',
+        totalCount: 'totalCount',
         itemList: 'items',
         pageReferrer: 'apr'
 

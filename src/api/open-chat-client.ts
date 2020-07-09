@@ -11,7 +11,7 @@ import { OpenRecommendStruct } from "../talk/struct/api/open/open-recommend-stru
 import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
 import { OpenPostListStruct } from "../talk/struct/api/open/open-post-struct";
 import { OpenStruct } from "../talk/struct/api/open/open-struct";
-import { OpenSearchType, OpenSearchStruct } from "../talk/struct/api/open/open-search-struct";
+import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct/api/open/open-search-struct";
 import { LinkReactionType } from "../talk/struct/open/open-link-struct";
 import { JsonUtil } from "../util/json-util";
 
@@ -113,8 +113,8 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/unified?${queries}`), OpenSearchStruct.MAPPER);
     }
 
-    async searchPost(query: string, page: number = 1, count: number = 30): Promise<OpenPostListStruct> {
-        return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/post?q=${encodeURIComponent(query)}&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}`), OpenPostListStruct.MAPPER);
+    async searchPost(query: string, page: number = 1, count: number = 30): Promise<OpenPostSearchStruct> {
+        return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/post?q=${encodeURIComponent(query)}&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}`), OpenPostSearchStruct.MAPPER);
     }
 
     static getProfileApiPath(api: string) {
