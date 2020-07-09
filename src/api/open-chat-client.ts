@@ -51,19 +51,19 @@ export class OpenChatClient extends SessionApiClient {
     }
 
     async setRecommend(linkId: Long): Promise<OpenStruct> {
-        return this.request('GET', OpenChatClient.getChannelApiPath(`search/recommend?li=${encodeURIComponent(linkId.toString())}`));
+        return this.request('GET', OpenChatClient.getChannelApiPath(`search/recommend?li=${linkId.toString()}`));
     }
 
     async excludeRecommend(linkId: Long): Promise<OpenStruct> {
-        return this.request('GET', OpenChatClient.getChannelApiPath(`search/exclude?li=${encodeURIComponent(linkId.toString())}`));
+        return this.request('GET', OpenChatClient.getChannelApiPath(`search/exclude?li=${linkId.toString()}`));
     }
 
     async requestPostList(linkId: Long): Promise<OpenPostListStruct> {
-        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/all`), OpenPostListStruct.MAPPER);
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${linkId.toString()}/posts/all`), OpenPostListStruct.MAPPER);
     }
 
     async getPostFromId(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenPostApiStruct>  {
-        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostApiStruct.MAPPER);
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${linkId.toString()}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostApiStruct.MAPPER);
     }
 
     async getPostFromURL(postURL: string, userLinkId: Long): Promise<OpenPostApiStruct>  {
@@ -102,11 +102,11 @@ export class OpenChatClient extends SessionApiClient {
     }
 
     async reactToPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenPostReactStruct> {
-        return this.request('POST', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?type=${LinkReactionType.NORMAL}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+        return this.request('POST', OpenChatClient.getProfileApiPath(`${linkId.toString()}/reacts/${encodeURIComponent(postId.toString())}?type=${LinkReactionType.NORMAL}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
     async unReactPost(linkId: Long, postId: Long, userLinkId: Long): Promise<OpenStruct> {
-        return this.request('DELETE', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/reacts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+        return this.request('DELETE', OpenChatClient.getProfileApiPath(`${linkId.toString()}/reacts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
     }
 
     async searchAll(query: string, searchType: OpenSearchType | null = null, page: number = 1, exceptLock: boolean = false, count: number = 30): Promise<OpenSearchStruct> {
