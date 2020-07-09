@@ -73,6 +73,13 @@ export namespace OpenPostDescStruct {
 
 }
 
+export interface OpenPostReactionInfoStruct extends StructBase {
+
+    type: LinkReactionType;
+    count: number;
+
+}
+
 export interface OpenPostReactionStruct extends StructBase {
 
     reactionId: Long;
@@ -117,7 +124,7 @@ export interface OpenPostStruct extends StructBase {
     postDataList?: OpenPostDataStruct[];
 
     date: number;
-    reactionInfoList?: { type: LinkReactionType, count: number }[];
+    reactionInfoList?: OpenPostReactionInfoStruct[];
     reactionList?: OpenPostReactionStruct[];
     postURL: string;
     latestUpdateToken: number;

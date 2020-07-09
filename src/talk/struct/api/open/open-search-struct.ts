@@ -8,7 +8,7 @@ import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
 import { StructBase } from "../../struct-base";
-import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct, OpenPostDescStruct } from "./open-post-struct";
+import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostReactionInfoStruct } from "./open-post-struct";
 import { Long } from "bson";
 import { LinkReactionType } from "../../open/open-link-struct";
 import { JsonUtil } from "../../../../util/json-util";
@@ -99,7 +99,7 @@ export namespace OpenSearchStruct {
         postDataList?: OpenPostDataStruct[];
     
         date: number;
-        reactionList: { type: LinkReactionType, count: number }[];
+        reactionInfoList: OpenPostReactionInfoStruct[];
         
     }
     
