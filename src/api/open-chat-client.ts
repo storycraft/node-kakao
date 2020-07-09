@@ -66,8 +66,8 @@ export class OpenChatClient extends SessionApiClient {
         return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`${encodeURIComponent(linkId.toString())}/posts/${encodeURIComponent(postId.toString())}?actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostApiStruct.MAPPER);
     }
 
-    async getPostFromURL(postURL: string, userLinkId: Long): Promise<unknown>  {
-        return this.request('GET', OpenChatClient.getProfileApiPath(`post?postUrl=${encodeURIComponent(postURL)}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`));
+    async getPostFromURL(postURL: string, userLinkId: Long): Promise<OpenPostApiStruct>  {
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath(`post?postUrl=${encodeURIComponent(postURL)}&actorLinkId=${encodeURIComponent(userLinkId.toString())}`), OpenPostApiStruct.MAPPER);
     }
 
     async createPost(userLinkId: Long, template: OpenPostTemplate): Promise<OpenPostApiStruct> {
