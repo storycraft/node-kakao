@@ -8,7 +8,9 @@ import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { OpenLinkType } from "../../../open/open-link-type";
 import { StructBase } from "../../struct-base";
-import { OpenPostListStruct, OpenPostStruct } from "./open-post-struct";
+import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct } from "./open-post-struct";
+import { Long } from "bson";
+import { LinkReactionType } from "../../open/open-link-struct";
 
 export enum OpenSearchType {
 
@@ -28,43 +30,6 @@ export interface OpenSearchStruct extends OpenStruct {
     itemList: OpenSearchStruct.LinkItem[];
 
     pageReferrer: string;
-
-}
-
-export interface OpenPostSearchStruct extends OpenStruct {
-
-    page: number;
-    count: number;
-
-    totalCount: number;
-
-    postList: OpenPostStruct[];
-
-    pageReferrer: string;
-
-}
-
-export namespace OpenPostSearchStruct {
-
-    export const Mappings = {
-
-        page: 'page',
-        count: 'count',
-        
-        totalCount: 'totalCount',
-
-        postList: 'postItems',
-        pageReferrer: 'apr'
-
-    }
-
-    export const ConvertMap = {
-
-        postList: new Converter.Array(OpenPostStruct.Mappings)
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
 
@@ -120,6 +85,46 @@ export namespace OpenSearchStruct {
 
     }
 
+
+    export interface PostItem extends StructBase {
+
+        id: Long;
+        linkId: number;
+
+        nickname: string;
+        profileImageURL: string;
+    
+        description: { text: string, tags: string[] };
+        postDataList?: OpenPostDataStruct[];
+    
+        date: number;
+        reactionList: { type: LinkReactionType, count: number }[];
+        
+    }
+    
+    export namespace PostItem {
+    
+        export const Mappings = {
+    
+            id: 'postId',
+            linkId: 'linkId',
+
+            nickname: 'nickname',
+            profileImageURL: 'profileImagePath',
+    
+            description: 'postDescription',
+            postDataList: 'postDatas',
+    
+            reactionList: 'reacts'
+
+        }
+    
+        export const MAPPER = new ObjectMapper(Mappings);
+        
+    }
+
+
+
     export const Mappings = {
 
         page: 'page',
@@ -133,6 +138,43 @@ export namespace OpenSearchStruct {
     export const ConvertMap = {
 
         itemList: new Converter.Array(LinkItem.Mappings)
+
+    }
+
+    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+
+}
+
+export interface OpenPostSearchStruct extends OpenStruct {
+
+    page: number;
+    count: number;
+
+    totalCount: number;
+
+    postList: OpenSearchStruct.PostItem[];
+
+    pageReferrer: string;
+
+}
+
+export namespace OpenPostSearchStruct {
+
+    export const Mappings = {
+
+        page: 'page',
+        count: 'count',
+        
+        totalCount: 'totalCount',
+
+        postList: 'postItems',
+        pageReferrer: 'apr'
+
+    }
+
+    export const ConvertMap = {
+
+        postList: new Converter.Array(OpenSearchStruct.PostItem.Mappings)
 
     }
 

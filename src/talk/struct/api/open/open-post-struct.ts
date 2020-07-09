@@ -10,18 +10,30 @@ import { Long } from "bson";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
 import { LinkReactionType } from "../../open/open-link-struct";
 
+export interface OpenPostDataStruct extends StructBase {
+
+    originalFileName: string;
+    path: string,
+    imagePaths: { originalImagePath: string, largeImagePath: string, smallImagePath: string };
+    width: number;
+    height: number;
+
+}
+
+export interface OpenPostDescription extends StructBase {
+
+    text: string;
+    tags: string[]
+
+}
+
 export interface OpenPostStruct extends StructBase {
 
     id: Long;
     linkId: Long;
 
-    description: { text: string, tags: string[] };
-    postDataList?: {
-        originalFileName: string,
-        path: string, imagePaths: { originalImagePath: string, largeImagePath: string, smallImagePath: string },
-        width: number,
-        height: number
-    }[];
+    description: OpenPostDescription;
+    postDataList?: OpenPostDataStruct[];
 
     date: number;
     reactionList: { type: LinkReactionType, count: number }[];
