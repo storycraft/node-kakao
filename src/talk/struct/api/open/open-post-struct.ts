@@ -115,6 +115,22 @@ export namespace OpenPostReactionStruct {
 
 }
 
+export interface OpenPostScrapData extends StructBase {
+
+    url: string;
+    canonicalUrl: string;
+
+    title: string;
+    contentType: string;
+
+    mainImageUrl: string;
+
+    description: string;
+
+    suspected: number;
+
+}
+
 export interface OpenPostStruct extends StructBase {
 
     id: Long;
@@ -126,6 +142,7 @@ export interface OpenPostStruct extends StructBase {
     date: number;
     reactionInfoList?: OpenPostReactionInfoStruct[];
     reactionList?: OpenPostReactionStruct[];
+    scrapData?: OpenPostScrapData;
     postURL: string;
     latestUpdateToken: number;
     
@@ -146,6 +163,8 @@ export namespace OpenPostStruct {
 
         reactionList: 'reacts',
         reactionUserList: 'reactUsers',
+
+        scrapData: 'scrapData',
         
         latestUpdateToken: 'latestUpdateToken'
     }
