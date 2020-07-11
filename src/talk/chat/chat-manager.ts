@@ -22,6 +22,7 @@ import { ChatType } from "./chat-type";
 import { MessageTemplate } from "./template/message-template";
 import { RequestResult } from "../request/request-result";
 import { MediaTemplates } from "./template/media-template";
+import { StructType } from "../struct/struct-base";
 
 export class ChatManager {
 
@@ -96,9 +97,13 @@ export class ChatManager {
     async sendText(channel: ChatChannel, ...textFormat: (string | ChatContent)[]): Promise<Chat | null> {
         let { text, extra } = ChatBuilder.buildMessage(...textFormat);
 
+        return this.sendRaw(channel, ChatType.Text, text, extra);
+    }
+
+    async sendRaw(channel: ChatChannel, type: ChatType, text: string, extra: { [ key: string ]: StructType }): Promise<Chat | null> {
         let extraText = JsonUtil.stringifyLoseless(extra);
         
-        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, ChatType.Text, true, extraText));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, type, true, extraText));
         
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
