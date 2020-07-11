@@ -262,8 +262,8 @@ export class TalkClient extends TalkApiClient implements LocoClient {
 
         this.clientUser = new TalkClientChatUser(this, accessData.userId, res, loginRes.OpenChatToken);
 
-        this.userManager.initalizeClient();
-        await this.channelManager.initalizeLoginData(loginRes.ChatDataList);
+        this.userManager.initializeClient();
+        await this.channelManager.initializeLoginData(loginRes.ChatDataList);
         await this.openLinkManager.initOpenSession();
 
         this.emit('login', this.clientUser);

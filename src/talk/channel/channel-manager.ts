@@ -329,7 +329,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         return channel;
     }
     
-    async initalizeLoginData(chatDataList: ChannelDataStruct[]) {
+    async initializeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
 
         return Promise.all(chatDataList.map(this.initWithChannelData.bind(this)));
