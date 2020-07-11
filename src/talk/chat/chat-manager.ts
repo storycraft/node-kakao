@@ -52,7 +52,7 @@ export class ChatManager {
         return this.messageId++;
     }
 
-    async getChatListFrom(channelId: Long, sinceLogId: number): Promise<RequestResult<Chat[]>> {
+    async getChatListFrom(channelId: Long, sinceLogId: Long): Promise<RequestResult<Chat[]>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketMultiChatlogRes>(new PacketMultiChatlogReq([ channelId ], [ sinceLogId ]));
 
         let chatList: Chat[] = [];
