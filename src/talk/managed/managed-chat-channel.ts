@@ -13,6 +13,7 @@ import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaCont
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { MessageTemplate } from "../chat/template/message-template";
 import { Chat } from "../chat/chat";
+import { ChatType } from "../chat/chat-type";
 import { ChannelSettings } from "../channel/channel-settings";
 import { ChannelManager } from "../channel/channel-manager";
 import { ChannelDataStruct } from "../struct/channel-data-struct";
@@ -548,11 +549,15 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
     }
 
     async hideChat(chat: Chat): Promise<RequestResult<boolean>> {
-        return this.hideChatId(chat.LogId);
+        return this.hideChatIdType(chat.LogId, chat.Type);
     }
 
     async hideChatId(logId: Long): Promise<RequestResult<boolean>> {
-        return this.Client.OpenLinkManager.hideChat(this, logId);
+        return this.hideChatIdType(logId, ChatType.Text);
+    }
+
+    async hideChatIdType(logId: Long, type: ChatType): Promise<RequestResult<boolean>> {
+        return this.Client.OpenLinkManager.hideChat(this, logId, type);
     }
 
     async changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>> {

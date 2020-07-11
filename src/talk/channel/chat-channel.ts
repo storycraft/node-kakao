@@ -2,6 +2,7 @@ import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo, No
 import { Long } from "bson";
 import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
+import { ChatType } from "../chat/chat-type";
 import { Chat, FeedChat } from "../chat/chat";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatContent } from "../chat/attachment/chat-attachment";
@@ -152,6 +153,7 @@ export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> 
 
     hideChat(chat: Chat): Promise<RequestResult<boolean>>;
     hideChatId(logId: Long): Promise<RequestResult<boolean>>;
+    hideChatIdType(logId: Long, type: ChatType): Promise<RequestResult<boolean>>;
 
     changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>>;
 
