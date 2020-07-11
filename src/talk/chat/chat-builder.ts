@@ -29,6 +29,7 @@ export namespace ChatBuilder {
 
             if (type === 'string') {
                 text += fragment;
+                mentionCount += ((fragment as string).match(new RegExp(mentionPrefix,"g")) || []).length;
             } else if (type === 'object') {
                 let content = fragment as ChatContent;
                 switch (content.ContentType) {
@@ -46,6 +47,7 @@ export namespace ChatBuilder {
                         }
 
                         mentionContentList.IndexList.push(mentionCount++);
+                        mentionCount += (nickname.match(new RegExp(mentionPrefix,"g")) || []).length;
 
                         text += `${mentionPrefix}${nickname}`;
                         break;
