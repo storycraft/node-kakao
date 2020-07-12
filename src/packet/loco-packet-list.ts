@@ -14,7 +14,7 @@ import { PacketSyncJoinChannelRes } from "./packet-sync-join-channel";
 import { PacketGetMemberRes, PacketGetMemberReq } from "./packet-get-member";
 import { DefaultBsonRequestPacket, DefaultBsonResponsePacket } from "./loco-bson-packet";
 import { PacketGetMetaReq, PacketGetMetaRes, PacketGetMetaListReq, PacketGetMetaListRes } from "./packet-get-meta";
-import { PacketGetChannelBoardMetaReq, PacketGetMoimMetaRes } from "./packet-get-channel-board-meta";
+import { PacketGetChannelBoardMetaReq, PacketGetChannelBoardMetaRes } from "./packet-get-channel-board-meta";
 import { PacketSyncLinkReq, PacketSyncLinkRes } from "./packet-sync-link";
 import { PacketRewriteReq, PacketRewriteRes } from "./packet-rewrite";
 import { PacketKickMemberReq, PacketKickMemberRes } from "./packet-kick-member";
@@ -204,7 +204,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('CHGMETA', PacketMetaChangeRes);
         responsePacketMap.set('GETMEM', PacketGetMemberRes);
         responsePacketMap.set('MEMBER', PacketMemberRes);
-        responsePacketMap.set('GETMOMETA', PacketGetMoimMetaRes);
+        responsePacketMap.set('GETMOMETA', PacketGetChannelBoardMetaRes);
 
         responsePacketMap.set('JOININFO', PacketJoinInfoRes);
 

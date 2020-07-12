@@ -7,7 +7,6 @@
 import { StructBase } from "./struct-base";
 import { ObjectMapper } from "json-proxy-mapper";
 import { Long } from "bson";
-import { JsonUtil } from "../../util/json-util";
 
 export interface ChannelBoardMetaStruct extends StructBase {
 
@@ -30,14 +29,7 @@ export namespace ChannelBoardMetaStruct {
 
     }
 
-    export const ConvertMap = {
-
-        'boardRevision': JsonUtil.LongConverter,
-        'userRevision': JsonUtil.LongConverter
-
-    }
-
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+    export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
