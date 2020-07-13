@@ -49,7 +49,7 @@ declare interface UserEvent extends Event {
     on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => void): this;
 
     // 유저가 방에서 나갈시 호출  (클라이언트 유저 포함, 킥 미포함)
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
+    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed | OpenKickFeed>) => void): this;
 
     // 유저가 킥 되었을시 호출
     on(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
@@ -61,7 +61,7 @@ declare interface UserEvent extends Event {
     on(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;
     
     once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => void): this;
-    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
+    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed | OpenKickFeed>) => void): this;
     once(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
     once(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo) => void): this;
     once(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;

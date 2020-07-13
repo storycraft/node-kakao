@@ -513,6 +513,10 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.emit('user_left', channel, leftUser, chat);
         this.Client.emit('user_left', channel, leftUser, chat);
 
+        leftUser.emit('user_kicked', channel, leftUser, chat);
+        channel.emit('user_kicked', channel, leftUser, chat);
+        this.Client.emit('user_kicked', channel, leftUser, chat);
+
         leftUser.emit('feed', chat);
         channel.emit('feed', chat);
         this.Client.emit('feed', chat);
