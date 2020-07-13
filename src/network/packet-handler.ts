@@ -424,14 +424,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let user = this.UserManager.get(packet.UpdatedProfile.userId);
         let lastInfo = channel.getUserInfo(user);
+
+        let changedProfileType = packet.UpdatedProfile.profileType;
         
         if (!lastInfo) return;
 
         (channel as ManagedOpenChatChannel).updateUserInfo(user.Id, this.UserManager.getInfoFromStruct(packet.UpdatedProfile) as ManagedOpenChatUserInfo);
         
-        user.emit('profile_changed', channel, user, lastInfo);
-        channel.emit('profile_changed', channel, user, lastInfo);
-        this.Client.emit('profile_changed', channel, user, lastInfo);
+        user.emit('profile_changed', channel, user, lastInfo, changedProfileType);
+        channel.emit('profile_changed', channel, user, lastInfo, changedProfileType);
+        this.Client.emit('profile_changed', channel, user, lastInfo, changedProfileType);
     }
     
     syncProfileUpdate(packet: PacketSyncProfileRes) {
@@ -445,14 +447,16 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         let user = this.UserManager.get(packet.OpenMember.userId);
         let lastInfo = channel.getUserInfo(user);
+
+        let changedProfileType = packet.OpenMember.profileType;
         
         if (!lastInfo) return;
 
         (channel as ManagedOpenChatChannel).updateUserInfo(user.Id, this.UserManager.getInfoFromStruct(packet.OpenMember) as ManagedOpenChatUserInfo);
         
-        user.emit('profile_changed', channel, user, lastInfo);
-        channel.emit('profile_changed', channel, user, lastInfo);
-        this.Client.emit('profile_changed', channel, user, lastInfo);
+        user.emit('profile_changed', channel, user, lastInfo, changedProfileType);
+        channel.emit('profile_changed', channel, user, lastInfo, changedProfileType);
+        this.Client.emit('profile_changed', channel, user, lastInfo, changedProfileType);
     }
 
     syncRewrite(packet: PacketSyncRewriteRes) {

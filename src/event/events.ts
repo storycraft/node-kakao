@@ -12,7 +12,7 @@ import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed,
 import { LocoKickoutType } from "../packet/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
 import { OpenLinkChannel } from "../talk/open/open-link";
-import { OpenMemberType } from "../talk/open/open-link-type";
+import { OpenMemberType, OpenProfileType } from "../talk/open/open-link-type";
 
 declare interface Event {
 
@@ -55,7 +55,7 @@ declare interface UserEvent extends Event {
     on(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
     
     // 유저가 오픈프로필 변경시 호출
-    on(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo) => void): this;
+    on(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo, changedProfileType: OpenProfileType) => void): this;
 
     // 오픈채팅 유저 타입 변경시 호출
     on(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;
@@ -63,7 +63,7 @@ declare interface UserEvent extends Event {
     once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => void): this;
     once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed | OpenKickFeed>) => void): this;
     once(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
-    once(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo) => void): this;
+    once(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo, changedProfileType: OpenProfileType) => void): this;
     once(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;
     
 }
