@@ -188,10 +188,12 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
 
         if (!channel) return;
 
+        let lastMeta = channel.getChannelMeta(packet.Meta.type);
+
         channel.updateMeta(packet.Meta.type, packet.Meta);
         
-        channel.emit('meta_changed', channel, packet.Meta.type, packet.Meta);
-        this.Client.emit('meta_changed', channel, packet.Meta.type, packet.Meta);
+        channel.emit('meta_changed', channel, packet.Meta.type, packet.Meta, lastMeta);
+        this.Client.emit('meta_changed', channel, packet.Meta.type, packet.Meta, lastMeta);
     }
 
     async onNewMember(packet: PacketNewMemberRes) {

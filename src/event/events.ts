@@ -71,9 +71,9 @@ declare interface UserEvent extends Event {
 declare interface ChannelEvent extends Event {
 
     // 채널 meta 정보가 수정될시 호출
-    on(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct) => void): this;
+    on(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct, lastMeta: ChannelMetaStruct | null) => void): this;
 
-    once(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct) => void): this;
+    once(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct, lastMeta: ChannelMetaStruct | null) => void): this;
 
 }
 
