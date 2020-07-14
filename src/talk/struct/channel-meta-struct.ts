@@ -86,7 +86,7 @@ export interface TvMetaContent extends StructBase {
 export interface TvLiveMetaContent extends StructBase {
 
     url: string;
-    live: string;
+    live?: "on";
 
 }
 
