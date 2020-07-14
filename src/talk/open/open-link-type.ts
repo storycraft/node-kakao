@@ -21,8 +21,8 @@ export enum OpenMemberType {
 
 export enum OpenProfileType {
 
-    MAIN = 1, //?
-    KAKAO_ANON = 2,
+    MAIN = 1,
+    KAKAO_ANON = 4,
     OPEN_PROFILE = 16
 
 }
