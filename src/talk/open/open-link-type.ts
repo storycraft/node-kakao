@@ -24,6 +24,7 @@ export enum OpenProfileType {
     MAIN = 1,
     KAKAO_ANON = 2,
     KAKAO_ANON_2 = 4,
+    UNKNOWN_1 = 8,
     OPEN_PROFILE = 16
 
 }
