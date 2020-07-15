@@ -22,7 +22,8 @@ export enum OpenMemberType {
 export enum OpenProfileType {
 
     MAIN = 1,
-    KAKAO_ANON = 4,
+    KAKAO_ANON = 2,
+    KAKAO_ANON_2 = 4,
     OPEN_PROFILE = 16
 
 }
