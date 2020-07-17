@@ -9,6 +9,7 @@ import { StructBase } from "./struct-base";
 export enum WebApiStatusCode {
 
     SUCCESS = 0,
+    INVALID_SESSION = -950,
     OPERATION_DENIED = -500
     
 }
