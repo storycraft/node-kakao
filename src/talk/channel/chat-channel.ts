@@ -157,9 +157,9 @@ export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> 
 
     changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>>;
 
-    setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
+    setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>>;
 
-    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
+    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>>;
 
     handOverHost(newHost: ChatUser): Promise<RequestResult<boolean>>;
     handOverHostId(newHostId: Long): Promise<RequestResult<boolean>>;

@@ -181,7 +181,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>> {
+    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(channel.LinkId, channel.Id, [ userId ], [ type ]));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };

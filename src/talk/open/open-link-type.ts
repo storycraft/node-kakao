@@ -15,7 +15,8 @@ export enum OpenMemberType {
 
     OWNER = 1,
     NONE = 2,
-    MANAGER = 4
+    MANAGER = 4,
+    BOT = 8
 
 }
 

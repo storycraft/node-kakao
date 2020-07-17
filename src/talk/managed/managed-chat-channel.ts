@@ -564,11 +564,11 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
         return this.Client.OpenLinkManager.changeProfile(this, profile);
     }
 
-    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER) {
+    async setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT) {
         return this.setOpenMemberTypeId(user.Id, memberType);
     }
 
-    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>> {
+    async setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>> {
         return this.Client.OpenLinkManager.setOpenMemberType(this, userId, memberType);
     }
 
