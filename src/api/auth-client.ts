@@ -169,13 +169,15 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     async requestPasscode(email: string, password: string, forced: boolean = false): Promise<AuthApiStruct> {
         let form = this.createLoginForm(email, password, undefined, forced);
 
-        return this.request('POST', AuthClient.getAccountApiPath('request_passcode.json'), form);
+        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
+        return this.request('POST', AuthClient.getAccountApiPath('request_passcode.json'), form, { 'X-VC': xvc });
     }
 
     async registerDevice(passcode: string, email: string, password: string, permanent: boolean, forced: boolean = false): Promise<AuthApiStruct> {
         let form = this.createRegisterForm(passcode, email, password, permanent, forced);
 
-        return this.request('POST', AuthClient.getAccountApiPath('register_device.json'), form);
+        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
+        return this.request('POST', AuthClient.getAccountApiPath('register_device.json'), form, { 'X-VC': xvc });
     }
 
     async relogin() {
