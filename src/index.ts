@@ -16,6 +16,7 @@ export * from './api/friend-client';
 export * from './api/open-chat-client';
 export * from './api/open-upload-api';
 export * from './api/channel-board-client';
+export * from './api/scrap-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
