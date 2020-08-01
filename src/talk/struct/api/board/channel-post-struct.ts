@@ -13,6 +13,9 @@ export enum PostType {
 
     TEXT = 'TEXT',
     POLL = 'POLL',
+    FILE = 'FILE',
+    IMAGE = 'IMAGE',
+    VIDEO = 'VIDEO'
 
 
 }
@@ -100,6 +103,49 @@ export namespace ChannelPost {
         created_at: string;
     }
 
+    export interface File {
+
+        id: string;
+        filename: string;
+
+        size: number;
+
+        ext: string;
+
+        download_url: string;
+        repo: string;
+
+        valid_until: Long;
+
+        post_id: string;
+        owner_id: Long;
+        created_at: string;
+    }
+
+    export interface Media {
+
+        id: string;
+        
+        media_type: string;
+
+        small_url?: string;
+        medium_url?: string;
+        large_url?: string;
+        original_url?: string;
+
+        video_download_low_quality_url?: string;
+        video_download_high_quality_url?: string;
+
+        video_streaming_low_quality_url?: string;
+        video_streaming_high_quality_url?: string;
+
+        valid_until: Long;
+
+        post_id: string;
+        owner_id: Long;
+        created_at: string;
+    }
+
     export interface Text {
 
         text: string;
@@ -132,6 +178,8 @@ export interface SimpleChannelPostStruct extends StructBase {
     // JSON ChannelPost.Text
     content?: string;
     poll?: ChannelPost.Poll;
+    files?: ChannelPost.File[];
+    media?: ChannelPost.Media;
 
 }
 
