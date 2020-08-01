@@ -7,7 +7,7 @@ import { UserManager } from "./talk/user/user-manager";
 import { ChannelManager } from "./talk/channel/channel-manager";
 import { ChatManager } from "./talk/chat/chat-manager";
 import { OpenLinkManager } from "./talk/open/open-link-manager";
-import { FriendClient } from "./api/friend-client";
+import { ServiceClient } from "./api/service-client";
 import { WebApiStatusCode } from "./talk/struct/web-api-struct";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet/packet-set-status";
 import { StatusCode } from "./packet/loco-packet-base";
@@ -40,7 +40,7 @@ export interface ApiClient {
 
     readonly Auth: AuthClient;
 
-    readonly Friends: FriendClient;
+    readonly Service: ServiceClient;
 
     readonly OpenChat: OpenChatClient;
     readonly OpenUploadApi: OpenUploadApi;
@@ -85,7 +85,7 @@ export class TalkApiClient extends EventEmitter {
 
     private auth: AuthClient;
 
-    private friends: FriendClient;
+    private service: ServiceClient;
 
     private openchatWeb: OpenChatClient;
     private openUploadApi: OpenUploadApi;
@@ -98,7 +98,7 @@ export class TalkApiClient extends EventEmitter {
 
         this.auth = new AuthClient(name, deviceUUID);
 
-        this.friends = new FriendClient(this.auth);
+        this.service = new ServiceClient(this.auth);
 
         this.openchatWeb = new OpenChatClient(this.auth);
         this.openUploadApi = new OpenUploadApi();
@@ -115,8 +115,8 @@ export class TalkApiClient extends EventEmitter {
         return this.auth;
     }
 
-    get Friends() {
-        return this.friends;
+    get Service() {
+        return this.service;
     }
 
     get OpenChat() {

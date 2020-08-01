@@ -12,11 +12,10 @@ export * from './api/web-api-client';
 export * from './api/api-header-decorator';
 
 export * from './api/auth-client';
-export * from './api/friend-client';
+export * from './api/service-client';
 export * from './api/open-chat-client';
 export * from './api/open-upload-api';
 export * from './api/channel-board-client';
-export * from './api/scrap-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
@@ -131,7 +130,7 @@ export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 
-export * from './api/friend-client';
+export * from './api/service-client';
 
 export * from './oauth/access-data-provider';
 
