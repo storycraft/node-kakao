@@ -5,7 +5,7 @@
  */
 
 import { JsonUtil } from "../util/json-util";
-import fetch, { RequestInit } from "node-fetch";
+import Axios, { AxiosRequestConfig } from "axios";
 import * as FormData from "form-data";
 import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
 import { AccessDataProvider } from "../oauth/access-data-provider";
@@ -16,6 +16,7 @@ import { URLSearchParams } from "url";
 export type RequestForm = { [key: string]: FileRequestData | StructType };
 export type FileRequestData = { value: Buffer, options: { filename: string, contentType?: string } };
 export type RequestHeader = { [key: string]: any };
+export type Method = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
 
 export abstract class WebApiClient implements ApiHeaderDecorator {
 
@@ -35,14 +36,20 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return `${this.Scheme}://${this.Host}/${path}`;
     }
 
-    protected buildRequestData(method: string, headers: RequestHeader | null = null): RequestInit {
+    protected buildRequestData(method: Method, headers: RequestHeader | null = null): AxiosRequestConfig {
         let reqHeader = this.createClientHeader();
         this.fillHeader(reqHeader);
 
-        let reqData: RequestInit = {
+        let reqData: AxiosRequestConfig = {
             headers: reqHeader,
             
-            method: method
+            method: method,
+
+            // https://github.com/axios/axios/issues/811
+            // https://github.com/axios/axios/issues/907
+            transformResponse: (data) => { return data; },
+
+            responseType: 'text'
         };
 
         if (headers) Object.assign(reqHeader, headers);
@@ -50,21 +57,22 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return reqData;
     }
 
-    async request<T extends StructBase>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    async request<T extends StructBase>(method: Method, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let reqData = this.buildRequestData(method, headers);
+        reqData.url = this.toApiURL(path);
 
         if (form) {
             let formData = this.convertToFormData(form);
 
-            reqData.body = formData;
+            reqData.data = formData;
         }
 
-        let res = JsonUtil.parseLoseless(await (await fetch(this.toApiURL(path), reqData)).text());
+        let res = JsonUtil.parseLoseless((await Axios.request(reqData)).data);
 
         return res;
     }
 
-    async requestMapped<T extends StructBase>(method: string, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    async requestMapped<T extends StructBase>(method: Method, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let rawRes = await this.request(method, path, form, headers);
 
         let res = Serializer.deserialize<T>(rawRes, mapper);
@@ -72,18 +80,19 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         return res;
     }
 
-    async requestMultipart<T extends StructBase>(method: string, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+    async requestMultipart<T extends StructBase>(method: Method, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let reqData = this.buildRequestData(method, headers);
+        reqData.url = this.toApiURL(path);
 
         if (form) {
             let formData = this.convertToMultipart(form);
 
             Object.assign(formData.getHeaders(), reqData.headers);
 
-            reqData.body = formData;
+            reqData.data = formData;
         }
 
-        let res = JsonUtil.parseLoseless(await (await fetch(this.toApiURL(path), reqData)).text());
+        let res = JsonUtil.parseLoseless((await Axios.request(reqData)).data);
 
         return res;
     }

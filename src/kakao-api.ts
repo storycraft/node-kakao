@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import Axios from "axios";
 import * as FormData from "form-data";
 import { AHeaderDecorator } from "./api/api-header-decorator";
 
@@ -10,38 +10,9 @@ import { AHeaderDecorator } from "./api/api-header-decorator";
 
 export class KakaoAPI {
 
-    static get LocoPEMPublicKey() {
-        return `-----BEGIN PUBLIC KEY-----\nMIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKCAQEApElgRBx+g7sniYFW7LE8ivrwXShKTRFV8lXNItMXbN5QSC8vJ/cTSOTS619Xv5Zx7xXJIk4EKxtWesEGbgZpEUP2xQ+IeH9oz0JxayEMvvD1nVNAWgpWE4pociEoArsK7qY3YwXb1CiDHo9hojLv7djbo3cwXvlyMh4TUrX2RjCZPlVJxk/LVjzcl9ohJLkl3eoSrf0AE4kQ9mk3+raEhq5Dv+IDxKYX+fIytUWKmrQJusjtre9oVUX5sBOYZ0dzez/XapusEhUWImmB6mciVXfRXQ8IK4IH6vfNyxMSOTfLEhRYN2SMLzplAYFiMV536tLS3VmG5GJRdkpDubqPeQIBAw==\n-----END PUBLIC KEY-----`;
-    }
-
-    static get LocoPublicKey() {
-        return {
-            n: Buffer.from('a44960441c7e83bb27898156ecb13c8afaf05d284a4d1155f255cd22d3176cde50482f2f27f71348e4d2eb5f57bf9671ef15c9224e042b1b567ac1066e06691143f6c50f88787f68cf42716b210cbef0f59d53405a0a56138a6872212802bb0aeea6376305dbd428831e8f61a232efedd8dba377305ef972321e1352b5f64630993e5549c64fcb563cdc97da2124b925ddea12adfd00138910f66937fab68486ae43bfe203c4a617f9f232b5458a9ab409bac8edadef685545f9b013986747737b3fd76a9bac121516226981ea67225577d15d0f082b8207eaf7cdcb13123937cb12145837648c2f3a65018162315e77ead2d2dd5986e46251764a43b9ba8f79', 'hex'),
-            e: 0x03
-        };
-    }
-
     static get InternalProtocol() {
         return 'https';
     }
-
-    static get AccountInternalHost() {
-        return 'ac-sb-talk.kakao.com';
-    }
-
-    static get InternalHost() {
-        return 'sb-talk.kakao.com';
-    }
-
-    static get ServiceHost() {
-        return 'katalk.kakao.com';
-    }
-
-    static get LocoEntry() {
-        return 'booking-loco.kakao.com';
-    }
-
-
 
     static get ProfileUploadHost() {
         return `up-p.talk.kakao.com`;
@@ -132,12 +103,14 @@ export class KakaoAPI {
         formData.append('user_id', userId.toString());
         formData.append('photo', img, { filename: name });
 
-        let res = await fetch(KakaoAPI.ProfileUploadURL, {
+        let res = await Axios.request({
+            url: KakaoAPI.ProfileUploadURL,
             method: 'POST',
-            body: formData
+            data: formData,
+            responseType: 'text'
         });
 
-        return res.text();
+        return res.data;
     }
 
     static getUploadURL(type: KakaoAPI.AttachmentType) {
@@ -187,15 +160,17 @@ export class KakaoAPI {
         let headers = {};
         AHeaderDecorator.INSTANCE.fillHeader(headers);
         
-        let req = fetch(KakaoAPI.getUploadURL(type), {
+        let req = Axios.request({
+            url: KakaoAPI.getUploadURL(type),
             method: 'POST',
             headers: headers,
-            body: formData
+            data: formData,
+            responseType: 'json'
         });
 
         let res = await req;
 
-        let data = await res.json() as any;
+        let data = await res.data as any;
 
         try {
             return data['path']; //For some types
@@ -210,22 +185,6 @@ export class KakaoAPI {
 
     static getUploadedFileKey(uploadPath: string) {
         return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
-    }
-
-    static get AccountInternalURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AccountInternalHost}`;
-    }
-
-    static get InternalURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.InternalHost}`;
-    }
-
-    static get ServiceURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.ServiceHost}`;
-    }
-
-    static get AccountPath() {
-        return 'account';
     }
 
     static getEmoticonHeader(screenWidth: number = 1080, screenHeight: number = 1920) {
@@ -256,19 +215,19 @@ export class KakaoAPI {
 
 
     static getEmoticonImage(path: string, lang: string = 'kr') {
-        return fetch(KakaoAPI.getEmoticonImageURL(path, lang), {
+        return Axios.get(KakaoAPI.getEmoticonImageURL(path, lang), {
             headers: KakaoAPI.getEmoticonHeader(),
         });
     }
 
     static getEmoticonPack(id: string, lang: string = 'kr') {
-        return fetch(KakaoAPI.getEmoticonPackURL(id, lang), {
+        return Axios.get(KakaoAPI.getEmoticonPackURL(id, lang), {
             headers: KakaoAPI.getEmoticonHeader()
         });
     }
 
     static getEmoticonThumbnailPack(id: string, lang: string = 'kr') {
-        return fetch(KakaoAPI.getEmoticonThumbnailPackURL(id, lang), {
+        return Axios.get(KakaoAPI.getEmoticonThumbnailPackURL(id, lang), {
             headers: KakaoAPI.getEmoticonHeader()
         });
     }
