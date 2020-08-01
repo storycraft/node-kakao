@@ -9,7 +9,7 @@ import { LoginError } from "../client";
 import * as crypto from "crypto";
 import { Configuration } from "../configuration";
 import { AccessDataProvider } from "../oauth/access-data-provider";
-import { RequestHeader, WebApiClient, RequestForm } from "./web-api-client";
+import { RequestHeader, WebApiClient } from "./web-api-client";
 import { AHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
 import { WebApiStatusCode } from "../talk/struct/web-api-struct";
 import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";

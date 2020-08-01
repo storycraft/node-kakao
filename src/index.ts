@@ -93,6 +93,12 @@ export * from './talk/struct/web-api-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 export * from './talk/struct/api/account/login-token-struct';
 
+export * from './talk/struct/api/board/channel-board-struct';
+export * from './talk/struct/api/board/channel-post-struct';
+export * from './talk/struct/api/board/channel-post-comment-struct';
+export * from './talk/struct/api/board/channel-post-emotion-struct';
+export * from './talk/struct/api/board/channel-post-list-struct';
+
 export * from './talk/struct/api/friends/friend-struct';
 export * from './talk/struct/api/friends/friend-delete-struct';
 export * from './talk/struct/api/friends/friend-blocked-list-struct';
