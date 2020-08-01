@@ -41,6 +41,7 @@ import { PacketLinkDeletedRes } from "../packet/packet-link-deleted";
 import { OpenMemberType } from "../talk/open/open-link-type";
 import { ManagedOpenLink } from "../talk/managed/managed-open-link";
 import { PacketSetMemTypeRes } from "../packet/packet-set-mem-type";
+import { PacketRelayEventRes } from "../packet/packet-relay-event";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -79,6 +80,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('LEAVE', this.onChannelLeave.bind(this));
+        this.on('RELAYEVENT', this.onRelayEvent.bind(this));
         this.on('CHANGESVR', this.onSwitchServerReq.bind(this));
         this.on('KICKOUT', this.onLocoKicked.bind(this));
     }
@@ -530,7 +532,18 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         channel.updateUserInfo(feed.member.userId, null);
     }
 
-     onSwitchServerReq(packet: PacketChangeServerRes) {
+    onRelayEvent(packet: PacketRelayEventRes) {
+        let openChannel = this.getManagedChannel(packet.ChannelId);
+
+        if (!openChannel) return;
+
+        let user = this.UserManager.get(packet.AutherId);
+
+        openChannel.emit('chat_event', openChannel, user, packet.EventType, packet.EventCount, packet.LogId);
+        this.Client.emit('chat_event', openChannel, user, packet.EventType, packet.EventCount, packet.LogId);
+    }
+
+    onSwitchServerReq(packet: PacketChangeServerRes) {
         let accessData = this.Client.Auth.getLatestAccessData();
 
         this.Client.emit('switch_server');

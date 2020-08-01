@@ -13,6 +13,7 @@ import { LocoKickoutType } from "../packet/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
 import { OpenLinkChannel } from "../talk/open/open-link";
 import { OpenMemberType, OpenProfileType } from "../talk/open/open-link-type";
+import { RelayEventType } from "../talk/relay/relay-event-type";
 
 declare interface Event {
 
@@ -91,12 +92,16 @@ declare interface OpenChannelEvent extends Event {
     // 채널의 오픈링크 소유자가 바뀌었을시 호출
     on(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, newHost: ChatUser, prevHost: ChatUser) => void): this;
 
+    // 외치기 등 이벤트성 기능 사용시
+    on(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
+
     once(event: 'user_join', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed>) => void): this;
     once(event: 'user_left', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
     
     once(event: 'message_hidden', listener: (channel: OpenChatChannel, logId: Long, feed?: FeedChat<OpenRewriteFeed>) => void): this;
     once(event: 'link_deleted', listener: (channel: OpenChatChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void): this;
     once(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, feed: FeedChat<OpenHandOverHostFeed>) => void): this;
+    once(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
 
 }
 
