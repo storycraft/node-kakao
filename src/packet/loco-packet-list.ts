@@ -63,6 +63,7 @@ import { PacketReactRes, PacketReactReq } from "./packet-react";
 import { PacketSyncRewriteRes } from "./packet-sync-rewrite";
 import { PacketLinkDeletedRes } from "./packet-link-deleted";
 import { PacketAddMemberReq, PacketAddMemberRes } from "./packet-add-member";
+import { PacketRelayEventReq, PacketRelayEventRes } from "./packet-relay-event";
 
 
 /*
@@ -111,6 +112,8 @@ export namespace LocoPacketList {
 
         requestPacketMap.set('MINI', PacketMiniReq);
         requestPacketMap.set('DOWN', PacketDownReq);
+
+        requestPacketMap.set('RELAYEVENT', PacketRelayEventReq);
 
         requestPacketMap.set('GETMETA', PacketGetMetaReq);
         requestPacketMap.set('GETMCMETA', PacketGetClientMetaReq);
@@ -184,6 +187,8 @@ export namespace LocoPacketList {
 
         responsePacketMap.set('MINI', PacketMiniRes);
         responsePacketMap.set('DOWN', PacketDownRes);
+
+        responsePacketMap.set('RELAYEVENT', PacketRelayEventRes);
 
         responsePacketMap.set('COMPLETE', PacketCompleteRes);
 
