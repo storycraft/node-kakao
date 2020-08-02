@@ -132,6 +132,10 @@ export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 
+export * from './talk/managed/managed-chat-channel';
+export * from './talk/managed/managed-chat-user';
+export * from './talk/managed/managed-open-link';
+
 export * from './api/service-client';
 
 export * from './oauth/access-data-provider';
