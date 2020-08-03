@@ -27,6 +27,16 @@ export class ServiceClient extends SessionApiClient {
     get Host() {
         return 'katalk.kakao.com';
     }
+	
+	// account
+	
+	async canChangeUUID(uuid: string): Promise<WebApiStruct> {
+		return this.request("POST", ServiceClient.getAccountApiPath('can_change_uuid.json'), { uuid: uuid });
+	}
+
+	async changeUUID(uuid: string): Promise<WebApiStruct> {
+		return this.request("POST", ServiceClient.getAccountApiPath('change_uuid.json'), { uuid: uuid });
+	}
 
     // friends
 
@@ -103,7 +113,11 @@ export class ServiceClient extends SessionApiClient {
     async getPreviewURL(url: string): Promise<WebApiStruct> {
         return this.request('POST', ServiceClient.getScrapApiPath('preview.json'), { url: url });
     }
-
+	
+    static getAccountApiPath(api: string) {
+        return `${Configuration.Agent}/account/${api}`;
+    }
+	
     static getFriendsApiPath(api: string) {
         return `${Configuration.Agent}/friends/${api}`;
     }
