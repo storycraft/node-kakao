@@ -206,6 +206,10 @@ export class NetworkManager implements LocoListener, LocoInterface {
         this.Handler.onResponse(packetId, packet, reqPacket);
     }
 
+    onError(err: Error) {
+        this.Client.emit('error', err);
+    }
+
     disconnected(): void {
         this.Handler.onDisconnected();
     }

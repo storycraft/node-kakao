@@ -195,6 +195,8 @@ export abstract class LocoBasicSocket implements LocoSocket {
 
     protected abstract onEnd(buffer: Buffer): void;
 
-    protected abstract onError(e: any): void;
+    protected onError(err: Error) {
+        this.receiver.onError(err);
+    }
 
 }

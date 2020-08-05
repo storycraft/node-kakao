@@ -103,8 +103,8 @@ export class LocoSecureSocket extends LocoBasicSocket {
         
     }
 
-    protected onError(e: any): void {
-        throw e;
+    protected onError(err: Error) {
+        super.onError(err);
     }
 
 

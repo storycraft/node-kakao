@@ -22,6 +22,8 @@ export interface LocoInterface {
     sendPacket(packet: LocoRequestPacket): Promise<boolean>;
     requestPacketRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T>;
 
+    onError(err: Error): void;
+
 }
 
 export interface LocoRequestInterface {
@@ -34,6 +36,9 @@ export interface LocoRequestInterface {
 export interface LocoReceiver {
 
     responseReceived(header: PacketHeader, data: Buffer): LocoResponsePacket;
+
+    onError(err: Error): void;
+
     disconnected(): void;
 
 }
@@ -42,6 +47,8 @@ export interface LocoListener {
 
     packetSent(packetId: number, packet: LocoRequestPacket): void;
     packetReceived(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void;
+
+    onError(err: Error): void;
 
     disconnected(): void;
 
@@ -169,6 +176,10 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         packet.readBody(bodyBuf);
 
         return packet as T;
+    }
+
+    onError(err: Error) {
+        this.listener?.onError(err);
     }
 
     disconnected() {

@@ -116,6 +116,15 @@ declare interface ClientEvent extends Event {
     // 연결이 끊어졌을시 호출 (서버 변경)
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
 
+    // 클라이언트 처리 에러
+    on(event: 'error', listener: (error: Error) => void): this;
+
+    once(event: 'login', listener: (user: ClientChatUser) => void): this;
+    once(event: 'switch_server', listener: () => void): this;
+    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
+    once(event: 'error', listener: (error: Error) => void): this;
+
+
 }
 
 export type ClientEvents = ClientEvent & UserEvent & ChannelEvent & OpenChannelEvent & ChatEvent;
