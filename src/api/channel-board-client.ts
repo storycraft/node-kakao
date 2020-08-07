@@ -4,13 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SessionApiClient } from "./web-api-client";
+import { SessionApiClient, RequestForm } from "./web-api-client";
 import { Long } from "bson";
 import { ChannelPostListStruct } from "../talk/struct/api/board/channel-post-list-struct";
-import { ChannelPostReqStruct } from "../talk/struct/api/board/channel-post-struct";
+import { ChannelPostReqStruct, BoardEmotionType } from "../talk/struct/api/board/channel-post-struct";
 import { ChannelPostCommentStruct } from "../talk/struct/api/board/channel-post-comment-struct";
 import { ChannelPostEmotionStruct } from "../talk/struct/api/board/channel-post-emotion-struct";
 import { ChannelBoardStruct } from "../talk/struct/api/board/channel-board-struct";
+import { BoardCommentTemplate, CommentContent, CommentText } from "../talk/struct/api/board/template/board-comment-template";
+import { JsonUtil } from "../util/json-util";
 
 export class ChannelBoardClient extends SessionApiClient {
 
@@ -38,6 +40,40 @@ export class ChannelBoardClient extends SessionApiClient {
         return this.request('GET', `posts/${postId}/comments`);
     }
 
+    async reactToPost(postId: string): Promise<ChannelPostReqStruct> {
+        return this.request('POST', `posts/${postId}/emotions`, { emotion: BoardEmotionType.LIKE });
+    }
+
+    async unreactPost(postId: string, reactionId: string): Promise<ChannelPostReqStruct> {
+        return this.request('DELETE', `posts/${postId}/emotions/${reactionId}`);
+    }
+
+    async commentToPost(postId: string, content: BoardCommentTemplate | string): Promise<ChannelPostReqStruct> {
+        let contentList: CommentContent[] = [];
+
+        let form: RequestForm = {};
+        
+        if (typeof(content) === 'string') {
+            contentList.push({ type: 'text', text: content } as CommentText);
+        } else {
+            if (typeof(content.text) === 'string') {
+                contentList.push({ type: 'text', text: content.text } as CommentText);
+            } else if (content.text && content.text instanceof Array) {
+                contentList.push(...content.text);
+            }
+
+            if (content.emoticon) form['sticon'] = content.emoticon.toJsonAttachment();
+        }
+
+        form['content'] = JsonUtil.stringifyLoseless(contentList);
+
+        return this.request('POST', `posts/${postId}/comments`, form);
+    }
+
+    async deleteComment(postId: string, commentId: string): Promise<ChannelPostReqStruct> {
+        return this.request('DELETE', `posts/${postId}/comments/${commentId}`);
+    }
+
     async setPostNotice(postId: string): Promise<ChannelBoardStruct> {
         return this.request('POST', `posts/${postId}/set_notice`);
     }
@@ -63,31 +99,70 @@ export class OpenChannelBoardClient extends SessionApiClient {
     }
 
     async requestPostList(linkId: Long, channelId: Long): Promise<ChannelPostListStruct> {
-        return this.request('GET', `moim/chats/${channelId.toString()}/posts?link_id=${linkId.toString()}`);
+        return this.request('GET', this.toOpenApiPath(linkId, `chats/${channelId.toString()}/posts`));
     }
 
     async getPost(linkId: Long, postId: string): Promise<ChannelPostReqStruct> {
-        return this.request('GET', `moim/posts/${postId}?link_id=${linkId.toString()}`);
+        return this.request('GET', this.toOpenApiPath(linkId, `posts/${postId}`));
     }
 
     async getPostEmotionList(linkId: Long, postId: string): Promise<ChannelPostEmotionStruct> {
-        return this.request('GET', `moim/posts/${postId}/emotions?link_id=${linkId.toString()}`);
+        return this.request('GET', this.toOpenApiPath(linkId, `posts/${postId}`));
     }
 
     async getPostCommentList(linkId: Long, postId: string): Promise<ChannelPostCommentStruct> {
-        return this.request('GET', `moim/posts/${postId}/comments?link_id=${linkId.toString()}`);
+        return this.request('GET', this.toOpenApiPath(linkId, `posts/${postId}/comments`));
+    }
+
+    async reactToPost(linkId: Long, postId: string): Promise<ChannelPostReqStruct> {
+        return this.request('POST', this.toOpenApiPath(linkId, `posts/${postId}/emotions`), { emotion: BoardEmotionType.LIKE });
+    }
+
+    async unreactPost(linkId: Long, postId: string, reactionId: string): Promise<ChannelPostReqStruct> {
+        // they don't check reactionId ok
+        return this.request('DELETE', this.toOpenApiPath(linkId, `posts/${postId}/emotions/${reactionId}`));
+    }
+
+    async commentToPost(linkId: Long, postId: string, content: BoardCommentTemplate | string): Promise<ChannelPostReqStruct> {
+        let contentList: CommentContent[] = [];
+
+        let form: RequestForm = {};
+        
+        if (typeof(content) === 'string') {
+            contentList.push({ type: 'text', text: content } as CommentText);
+        } else {
+            if (typeof(content.text) === 'string') {
+                contentList.push({ type: 'text', text: content.text } as CommentText);
+            } else if (content.text && content.text instanceof Array) {
+                contentList.push(...content.text);
+            }
+
+            if (content.emoticon) form['sticon'] = content.emoticon.toJsonAttachment();
+        }
+
+        form['content'] = JsonUtil.stringifyLoseless(contentList);
+
+        return this.request('POST', this.toOpenApiPath(linkId, `posts/${postId}/comments`), form);
+    }
+
+    async deleteComment(linkId: Long, postId: string, commentId: string): Promise<ChannelPostReqStruct> {
+        return this.request('DELETE', this.toOpenApiPath(linkId, `posts/${postId}/comments/${commentId}`));
     }
 
     async setPostNotice(linkId: Long, postId: string): Promise<ChannelBoardStruct> {
-        return this.request('POST', `moim/posts/${postId}/set_notice?link_id=${linkId.toString()}`);
+        return this.request('POST', this.toOpenApiPath(linkId, `posts/${postId}/set_notice`));
     }
 
     async unsetPostNotice(linkId: Long, postId: string): Promise<ChannelBoardStruct> {
-        return this.request('POST', `moim/posts/${postId}/unset_notice?link_id=${linkId.toString()}`);
+        return this.request('POST', this.toOpenApiPath(linkId, `posts/${postId}/unset_notice`));
     }
 
     async sharePostToChannel(linkId: Long, postId: string): Promise<ChannelBoardStruct> {
-        return this.request('POST', `moim/posts/${postId}/share?link_id=${linkId.toString()}`);
+        return this.request('POST', this.toOpenApiPath(linkId, `posts/${postId}/share`));
+    }
+
+    toOpenApiPath(linkId: Long, path: string) {
+        return `moim/${path}?link_id=${linkId.toString()}`;
     }
 
 }

@@ -6,8 +6,7 @@
 
 import { StructBase } from "../../struct-base";
 import { Long } from "bson";
-import { ObjectMapper, Converter } from "json-proxy-mapper";
-import { WebApiStruct } from "../../web-api-struct";
+import { ChannelBoardStruct } from "./channel-board-struct";
 
 export enum PostType {
 
@@ -23,6 +22,12 @@ export enum PostType {
 export enum PostPermission {
 
 
+
+}
+
+export enum BoardEmotionType {
+
+    LIKE = 'LIKE'
 
 }
 
@@ -46,16 +51,10 @@ export namespace ChannelPost {
     
     }
 
-    export enum EmotionType {
-
-        LIKE = 'LIKE'
-
-    }
-
     export interface Emotion {
 
         id: string;
-        emotion: EmotionType;
+        emotion: BoardEmotionType;
         owner_id: Long;
         created_at: string;
 
@@ -146,6 +145,19 @@ export namespace ChannelPost {
         created_at: string;
     }
 
+    export interface Scrap {
+        
+        url: string;
+        canonicalUrl: string;
+
+        contentType: string;
+
+        title: string;
+        description: string;
+        mainImageUrl: string;
+
+    }
+
     export interface Text {
 
         text: string;
@@ -181,6 +193,9 @@ export interface SimpleChannelPostStruct extends StructBase {
     files?: ChannelPost.File[];
     media?: ChannelPost.Media;
 
+    // JSON ChannelPost.Scrap
+    scrap?: string;
+
 }
 
 export interface ChannelPostStruct extends SimpleChannelPostStruct {
@@ -189,9 +204,11 @@ export interface ChannelPostStruct extends SimpleChannelPostStruct {
     has_more_comments: boolean;
     
     emotions: ChannelPost.Emotion[];
+    my_emotion?: ChannelPost.Emotion;
 
 }
 
-export interface ChannelPostReqStruct extends WebApiStruct, ChannelPostStruct {
+type ChannelPostReqMix = ChannelBoardStruct & ChannelPostStruct;
+export interface ChannelPostReqStruct extends ChannelPostReqMix {
 
 }

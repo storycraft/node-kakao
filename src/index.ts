@@ -49,6 +49,8 @@ export * from './talk/chat/chat-builder';
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-feed';
 
+export * from './talk/chat/option/chat-option';
+
 export * from './talk/feed/feed-type';
 export * from './talk/voip/voip-type';
 
@@ -99,6 +101,7 @@ export * from './talk/struct/api/board/channel-post-struct';
 export * from './talk/struct/api/board/channel-post-comment-struct';
 export * from './talk/struct/api/board/channel-post-emotion-struct';
 export * from './talk/struct/api/board/channel-post-list-struct';
+export * from './talk/struct/api/board/template/board-comment-template';
 
 export * from './talk/struct/api/friends/friend-struct';
 export * from './talk/struct/api/friends/friend-delete-struct';

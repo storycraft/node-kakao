@@ -5,6 +5,7 @@
  */
 
 import { WebApiStruct, WebApiStatusCode } from "../../web-api-struct";
+import { PostPermission } from "./channel-post-struct";
 
 export enum ChannelBoardStatusCode {
     
@@ -15,7 +16,7 @@ export enum ChannelBoardStatusCode {
 export interface ChannelBoardStruct extends WebApiStruct {
 
     status: WebApiStatusCode | ChannelBoardStatusCode;
-    permission?: number;
+    permission?: PostPermission;
     error_message?: string;
 
 }
