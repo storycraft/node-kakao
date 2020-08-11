@@ -298,10 +298,11 @@ export class MultiPhotoChat extends PhotoChat {
                 attachmentJson['wl'][i],
                 attachmentJson['hl'][i],
                 attachmentJson['imageUrls'][i],
+                attachmentJson['sl'][i],
+                attachmentJson['mtl'][i],
                 attachmentJson['thumbnailUrls'][i],
                 attachmentJson['thumbnailWidths'][i],
-                attachmentJson['thumbnailHeights'][i],
-                attachmentJson['sl'][i]
+                attachmentJson['thumbnailHeights'][i]
             );
 
             attachmentList.push(photoAttachment);
