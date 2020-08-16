@@ -196,7 +196,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
     protected async requestChannelInfo(channelId: Long): Promise<ChannelInfoStruct | null> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketChannelInfoRes>(new PacketChannelInfoReq(channelId));
 
-        if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.CHATROOM_NOT_FOUND) {
+        if (res.StatusCode === StatusCode.SUCCESS || res.StatusCode === StatusCode.INVALID_CHATROOM_OPERATION) {
             return res.ChatInfo!;
         } else {
             return null;
