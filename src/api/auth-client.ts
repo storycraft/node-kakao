@@ -7,7 +7,7 @@
 import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
 import { LoginError } from "../client";
 import * as crypto from "crypto";
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 import { AccessDataProvider } from "../oauth/access-data-provider";
 import { RequestHeader, WebApiClient } from "./web-api-client";
 import { AHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
@@ -90,11 +90,11 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         return this.currentLogin !== null;
     }
 
-    async requestMoreSettings(since: number = 0, language: string = Configuration.Language): Promise<MoreSettingsStruct> {
+    async requestMoreSettings(since: number = 0, language: string = DefaultConfiguration.language): Promise<MoreSettingsStruct> {
         return this.request('GET', `${AuthClient.getAccountApiPath('more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
-    async requestLessSettings(since: number = 0, language: string = Configuration.Language): Promise<LessSettingsStruct> {
+    async requestLessSettings(since: number = 0, language: string = DefaultConfiguration.language): Promise<LessSettingsStruct> {
         return this.request('GET', `${AuthClient.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
@@ -111,7 +111,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
             'email': email,
             'password': password,
             'device_uuid': this.deviceUUID,
-            'os_version': Configuration.OSVersion,
+            'os_version': DefaultConfiguration.osVersion,
             'device_name': this.name
         };
 
@@ -187,7 +187,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     static getAccountApiPath(api: string) {
-        return `${Configuration.Agent}/account/${api}`;
+        return `${DefaultConfiguration.agent}/account/${api}`;
     }
 
     calculateXVCKey(userAgent: string, email: string): string {

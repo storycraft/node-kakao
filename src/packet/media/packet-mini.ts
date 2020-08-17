@@ -5,7 +5,7 @@
  */
 
 import { MediaRequestBasePacket } from "./media-request-base-packet";
-import { Configuration } from "../../configuration";
+import { DefaultConfiguration } from "../../config/client-config";
 import { Long } from "bson";
 import { LocoBsonResponsePacket } from "../loco-bson-packet";
 
@@ -19,8 +19,8 @@ export class PacketMiniReq extends MediaRequestBasePacket {
         public Height: number = 0,
         
         userId: Long = Long.ZERO,
-        os: string = Configuration.Agent,
-        version: string = Configuration.Version,
+        os: string = DefaultConfiguration.agent,
+        version: string = DefaultConfiguration.version,
         networkType: number = 0,
         networkMccMnc: string = '999',
     ) {

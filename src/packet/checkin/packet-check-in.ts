@@ -1,4 +1,4 @@
-import { Configuration } from "../../configuration";
+import { DefaultConfiguration } from "../../config/client-config";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
 import { Long } from "bson";
 
@@ -12,9 +12,9 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: Long = Long.ZERO,
-        public Os: string = Configuration.Agent,
+        public Os: string = DefaultConfiguration.agent,
         public NetType: number = 0,
-        public Appver: string = Configuration.AppVersion,
+        public Appver: string = DefaultConfiguration.appVersion,
         public NetworkMccMnc: string = '999',
         public language: string = 'ko',
         public CountryIso: string = 'KR',

@@ -4,13 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 
 export namespace HostData {
 
     export const BookingHost: HostData = {
-        host: Configuration.LocoEntry,
-        port: Configuration.LocoEntryPort,
+        host: DefaultConfiguration.locoBookingURL,
+        port: DefaultConfiguration.locoBookingPort,
         keepAlive: false
     }
 

@@ -5,7 +5,8 @@
  */
 
 export * from './event/events';
-export * from './configuration';
+export * from './config/client-config';
+export * from './config/client-config-provider';
 export * from './kakao-api';
 
 export * from './api/web-api-client';
@@ -102,6 +103,7 @@ export * from './talk/struct/api/board/channel-post-comment-struct';
 export * from './talk/struct/api/board/channel-post-emotion-struct';
 export * from './talk/struct/api/board/channel-post-list-struct';
 export * from './talk/struct/api/board/template/board-comment-template';
+export * from './talk/struct/api/board/template/board-post-template';
 
 export * from './talk/struct/api/friends/friend-struct';
 export * from './talk/struct/api/friends/friend-delete-struct';

@@ -5,7 +5,7 @@
  */
 
 import { RequestHeader } from "./web-api-client";
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 
 export interface ApiHeaderDecorator {
 
@@ -22,11 +22,11 @@ export class BasicHeaderDecorator implements ApiHeaderDecorator {
     }
 
     get Language() {
-        return Configuration.Language;
+        return DefaultConfiguration.language;
     }
 
     get UserAgent() {
-        return `KT/${Configuration.Version} Wd/${Configuration.OSVersion} ${Configuration.Language}`;
+        return `KT/${DefaultConfiguration.version} Wd/${DefaultConfiguration.osVersion} ${DefaultConfiguration.language}`;
     }
 
     fillHeader(header: RequestHeader) {
@@ -46,7 +46,7 @@ export class AHeaderDecorator implements ApiHeaderDecorator {
     }
 
     fillHeader(header: RequestHeader) {
-        header['A'] = `${Configuration.Agent}/${Configuration.Version}/${Configuration.Language}`;
+        header['A'] = `${DefaultConfiguration.agent}/${DefaultConfiguration.version}/${DefaultConfiguration.language}`;
     }
 
 }

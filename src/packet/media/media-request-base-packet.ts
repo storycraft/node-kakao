@@ -5,15 +5,15 @@
  */
 
 import { LocoBsonRequestPacket } from "../loco-bson-packet";
-import { Configuration } from "../../configuration";
+import { DefaultConfiguration } from "../../config/client-config";
 import { Long } from "bson";
 
 export abstract class MediaRequestBasePacket extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: Long = Long.ZERO,
-        public Os: string = Configuration.Agent,
-        public Version: string = Configuration.Version,
+        public Os: string = DefaultConfiguration.agent,
+        public Version: string = DefaultConfiguration.version,
         public NetworkType: number = 0,
         public NetworkMccMnc: string = '999',
 

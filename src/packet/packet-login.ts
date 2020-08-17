@@ -1,4 +1,4 @@
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
 import { JsonUtil } from "../util/json-util";
@@ -16,8 +16,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     constructor(
         public DeviceUUID: string = '',
         public OAuthToken: string = '',
-        public Appver: string = Configuration.AppVersion,
-        public Os: string = Configuration.Agent,
+        public Appver: string = DefaultConfiguration.AppVersion,
+        public Os: string = DefaultConfiguration.Agent,
         public DeviceType: number = 2,
         public NetType: number = 0,
         public NetworkMccMnc: string = '999',

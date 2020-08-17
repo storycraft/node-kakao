@@ -115,13 +115,9 @@ export class ChatManager {
     }
     
     async sendTemplate(channel: ChatChannel, template: MessageTemplate): Promise<Chat | null> {
-        if (!template.Valid) {
-            throw new Error('Invalid template');
-        }
-
-        let sentType = template.getMessageType();
-        let text = template.getPacketText();
-        let extra = template.getPacketExtra();
+        let sentType = template.getType();
+        let text = template.getText();
+        let extra = template.getExtra();
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, sentType, true, extra));
 

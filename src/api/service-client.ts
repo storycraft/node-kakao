@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 import { JsonUtil } from "../util/json-util";
 import { WebApiStruct } from "../talk/struct/web-api-struct";
 import { Long } from "bson";
@@ -115,19 +115,19 @@ export class ServiceClient extends SessionApiClient {
     }
 	
     static getAccountApiPath(api: string) {
-        return `${Configuration.Agent}/account/${api}`;
+        return `${DefaultConfiguration.agent}/account/${api}`;
     }
 	
     static getFriendsApiPath(api: string) {
-        return `${Configuration.Agent}/friends/${api}`;
+        return `${DefaultConfiguration.agent}/friends/${api}`;
     }
 
     static getProfile3ApiPath(api: string) {
-        return `${Configuration.Agent}/profile3/${api}`;
+        return `${DefaultConfiguration.agent}/profile3/${api}`;
     }
 
     static getScrapApiPath(api: string) {
-        return `${Configuration.Agent}/scrap/${api}`;
+        return `${DefaultConfiguration.agent}/scrap/${api}`;
     }
 
 }

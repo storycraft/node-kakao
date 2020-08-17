@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { Configuration } from "../configuration";
+import { DefaultConfiguration } from "../config/client-config";
 
 /*
  * Created on Thu Oct 17 2019
@@ -20,7 +20,7 @@ export class CryptoManager {
     }
 
     get PEMPublicKey(): string {
-        return Configuration.LocoPEMPublicKey;
+        return DefaultConfiguration.locoPEMPublicKey;
     }
 
     protected bufferToBinaryString(buffer: Buffer): string {

@@ -20,6 +20,8 @@ import { AuthClient } from "./api/auth-client";
 import { OpenChatClient } from "./api/open-chat-client";
 import { OpenUploadApi } from "./api/open-upload-api";
 import { ChannelBoardClient, OpenChannelBoardClient } from "./api/channel-board-client";
+import { ClientConfig } from "./config/client-config";
+import { ClientConfigProvider, DefaultClientConfigProvider } from "./config/client-config-provider";
 
 /*
  * Created on Fri Nov 01 2019
@@ -37,6 +39,8 @@ export interface LoginError {
 export interface ApiClient {
 
     readonly Name: string;
+
+    ConfigProvider: ClientConfigProvider;
 
     readonly Auth: AuthClient;
 
@@ -81,7 +85,9 @@ export interface LocoClient extends ApiClient, ClientEvents {
 
 }
 
-export class TalkApiClient extends EventEmitter {
+export class TalkApiClient extends EventEmitter implements ApiClient {
+
+    private configProvider: DefaultClientConfigProvider;
 
     private auth: AuthClient;
 
@@ -93,8 +99,10 @@ export class TalkApiClient extends EventEmitter {
     private channelBoard: ChannelBoardClient;
     private openChannelBoard: OpenChannelBoardClient;
     
-    constructor(name: string, deviceUUID: string) {
+    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfig>) {
         super();
+
+        this.configProvider = new DefaultClientConfigProvider(config);
 
         this.auth = new AuthClient(name, deviceUUID);
 
@@ -109,6 +117,14 @@ export class TalkApiClient extends EventEmitter {
 
     get Name() {
         return this.auth.Name;
+    }
+
+    get ConfigProvider() {
+        return this.configProvider;
+    }
+
+    set ConfigProvider(provider) {
+        this.configProvider = provider;
     }
 
     get Auth() {
@@ -179,8 +195,8 @@ export class TalkClient extends TalkApiClient implements LocoClient {
 
     private status: ClientStatus;
 
-    constructor(name: string, deviceUUID: string) {
-        super(name, deviceUUID);
+    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfig>) {
+        super(name, deviceUUID, config);
 
         this.networkManager = new NetworkManager(this);
         this.channelManager = new ChannelManager(this);
