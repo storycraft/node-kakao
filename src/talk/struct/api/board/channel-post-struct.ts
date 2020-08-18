@@ -14,8 +14,8 @@ export enum PostType {
     POLL = 'POLL',
     FILE = 'FILE',
     IMAGE = 'IMAGE',
-    VIDEO = 'VIDEO'
-
+    VIDEO = 'VIDEO',
+    SCHEDULE = 'SCHEDULE'
 
 }
 
@@ -35,7 +35,9 @@ export namespace ChannelPost {
 
     export enum TextType {
 
-        TEXT = 'text'
+        TEXT = 'text',
+        MENTION = 'user',
+        EVERYONE_MENTION = 'user_all'
 
     }
 
@@ -64,7 +66,7 @@ export namespace ChannelPost {
 
     export enum PollItemType {
 
-        TEXT = 'text'
+        TEXT = 'text',
 
     }
     
@@ -121,6 +123,22 @@ export namespace ChannelPost {
         created_at: string;
     }
 
+    export interface Schedule {
+
+        subject: string;
+
+        start_at: number;
+        end_at: number;
+
+        all_day: string;
+
+        location?: string;
+        alarm_at?: number;
+
+        ask_attend: boolean;
+
+    }
+
     export interface Media {
 
         id: string;
@@ -161,11 +179,27 @@ export namespace ChannelPost {
     export interface Text {
 
         text: string;
-        type: TextType;
+        type: TextType.TEXT;
 
     }
 
+    export interface Mention {
+
+        type: TextType.MENTION,
+        id: Long;
+    
+    }
+
+    export interface EveryoneMention {
+
+        type: TextType.EVERYONE_MENTION
+    
+    }
+
 }
+
+
+export type PostContents = string | ChannelPost.Text | ChannelPost.Mention | ChannelPost.EveryoneMention;
 
 export interface SimpleChannelPostStruct extends StructBase {
 

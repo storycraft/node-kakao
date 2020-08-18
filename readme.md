@@ -16,7 +16,7 @@ Many functions that I may not know are disabled or tricked to keep this client s
 ## Example code
 
 ```javascript
-let client = new TalkClient('TEST_CLIENT');
+let client = new TalkClient('TEST_CLIENT', 'random base64 device id');
 
 client.on('message', (chat: Chat) => {
     let userInfo = chat.Channel.getUserInfo(chat.Sender);
@@ -35,7 +35,7 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-await client.login('123456789@email.com', '123456' /* nice password k*/, 'random base64 device id');
+await client.login('123456789@email.com', '123456');
 ```
 
 License

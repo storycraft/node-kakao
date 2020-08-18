@@ -7,11 +7,11 @@
 import { SessionApiClient, RequestForm } from "./web-api-client";
 import { Long } from "bson";
 import { ChannelPostListStruct } from "../talk/struct/api/board/channel-post-list-struct";
-import { ChannelPostReqStruct, BoardEmotionType } from "../talk/struct/api/board/channel-post-struct";
+import { ChannelPostReqStruct, BoardEmotionType, PostContents, ChannelPost } from "../talk/struct/api/board/channel-post-struct";
 import { ChannelPostCommentStruct } from "../talk/struct/api/board/channel-post-comment-struct";
 import { ChannelPostEmotionStruct } from "../talk/struct/api/board/channel-post-emotion-struct";
 import { ChannelBoardStruct } from "../talk/struct/api/board/channel-board-struct";
-import { BoardCommentTemplate, CommentContent, CommentText } from "../talk/struct/api/board/template/board-comment-template";
+import { BoardCommentTemplate } from "../talk/struct/api/board/template/board-comment-template";
 import { JsonUtil } from "../util/json-util";
 
 export class ChannelBoardClient extends SessionApiClient {
@@ -49,15 +49,15 @@ export class ChannelBoardClient extends SessionApiClient {
     }
 
     async commentToPost(postId: string, content: BoardCommentTemplate | string): Promise<ChannelPostReqStruct> {
-        let contentList: CommentContent[] = [];
+        let contentList: PostContents[] = [];
 
         let form: RequestForm = {};
         
         if (typeof(content) === 'string') {
-            contentList.push({ type: 'text', text: content } as CommentText);
+            contentList.push({ type: 'text', text: content } as ChannelPost.Text);
         } else {
             if (typeof(content.text) === 'string') {
-                contentList.push({ type: 'text', text: content.text } as CommentText);
+                contentList.push({ type: 'text', text: content.text } as ChannelPost.Text);
             } else if (content.text && content.text instanceof Array) {
                 contentList.push(...content.text);
             }
@@ -124,15 +124,15 @@ export class OpenChannelBoardClient extends SessionApiClient {
     }
 
     async commentToPost(linkId: Long, postId: string, content: BoardCommentTemplate | string): Promise<ChannelPostReqStruct> {
-        let contentList: CommentContent[] = [];
+        let contentList: PostContents[] = [];
 
         let form: RequestForm = {};
         
         if (typeof(content) === 'string') {
-            contentList.push({ type: 'text', text: content } as CommentText);
+            contentList.push({ type: 'text', text: content } as ChannelPost.Text);
         } else {
             if (typeof(content.text) === 'string') {
-                contentList.push({ type: 'text', text: content.text } as CommentText);
+                contentList.push({ type: 'text', text: content.text } as ChannelPost.Text);
             } else if (content.text && content.text instanceof Array) {
                 contentList.push(...content.text);
             }

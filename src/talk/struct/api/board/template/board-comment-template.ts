@@ -5,39 +5,11 @@
  */
 
 import { EmoticonAttachment } from "../../../../chat/attachment/chat-attachment";
-import { Long } from "bson";
-
-export interface CommentContent {
-
-    type: string;
-
-}
-
-export interface CommentText {
-
-    type: 'text',
-    text: string;
-
-}
-
-export interface CommentMention {
-
-    type: 'user',
-    id: Long;
-
-}
-
-export interface EveryoneMention {
-
-    type: 'user_all'
-
-}
-
-export type CommentContentType = string | CommentText | CommentMention | EveryoneMention;
+import { PostContents } from "../channel-post-struct";
 
 export interface BoardCommentTemplate {
 
-    text: CommentContentType;
+    text: PostContents;
 
     emoticon?: EmoticonAttachment;
 
