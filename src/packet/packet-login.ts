@@ -16,8 +16,8 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     constructor(
         public DeviceUUID: string = '',
         public OAuthToken: string = '',
-        public Appver: string = DefaultConfiguration.AppVersion,
-        public Os: string = DefaultConfiguration.Agent,
+        public Appver: string = DefaultConfiguration.appVersion,
+        public Os: string = DefaultConfiguration.agent,
         public DeviceType: number = 2,
         public NetType: number = 0,
         public NetworkMccMnc: string = '999',
