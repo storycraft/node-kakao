@@ -126,7 +126,9 @@ export class ChannelBoardClient extends BaseBoardClient {
     async updatePost(postId: string, template: BoardPostTemplates): Promise<ChannelPostReqStruct> {
         let form: RequestForm = {};
 
-        return this.request('PUT', `posts/${postId}`);
+        this.fillPostForm(form, template);
+
+        return this.request('PUT', `posts/${postId}`, form);
     }
 
     async deletePost(postId: string): Promise<WebApiStruct> {
@@ -205,7 +207,9 @@ export class OpenChannelBoardClient extends BaseBoardClient {
     async updatePost(linkId: Long, postId: string, template: BoardPostTemplates): Promise<ChannelPostReqStruct> {
         let form: RequestForm = {};
 
-        return this.request('PUT', this.toOpenApiPath(linkId, `posts/${postId}`));
+        this.fillPostForm(form, template);
+
+        return this.request('PUT', this.toOpenApiPath(linkId, `posts/${postId}`), form);
     }
 
     async deletePost(linkId: Long, postId: string): Promise<WebApiStruct> {
