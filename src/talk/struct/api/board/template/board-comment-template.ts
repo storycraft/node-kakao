@@ -5,11 +5,11 @@
  */
 
 import { EmoticonAttachment } from "../../../../chat/attachment/chat-attachment";
-import { PostContents } from "../channel-post-struct";
+import { PostContent } from "../channel-post-struct";
 
 export interface BoardCommentTemplate {
 
-    text: PostContents;
+    text: PostContent;
 
     emoticon?: EmoticonAttachment;
 

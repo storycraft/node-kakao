@@ -4,22 +4,24 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChannelPost, PostType, PostContents } from "../channel-post-struct";
+import { ChannelPost, PostType, PostContent } from "../channel-post-struct";
 import { EmoticonAttachment } from "../../../../chat/attachment/chat-attachment";
 
 export interface BoardPostTemplate<T = PostType> {
 
     object_type: T;
 
-    content?: PostContents;
+    content?: PostContent[] | string;
 
-    sticon?: EmoticonAttachment;
+    emoticon?: EmoticonAttachment;
 
     scrap?: ChannelPost.Scrap;
 
     notice: boolean;
     
 }
+
+export type BoardPostFileMap = { [name: string]: string };
 
 export interface BoardTextPostTemplate extends BoardPostTemplate<PostType.TEXT> {
 
@@ -29,19 +31,19 @@ export interface BoardTextPostTemplate extends BoardPostTemplate<PostType.TEXT> 
 
 export interface BoardImagePostTemplate extends BoardPostTemplate<PostType.IMAGE> {
 
-    images: { [name: string]: string };
+    images: BoardPostFileMap;
 
 }
 
 export interface BoardVideoPostTemplate extends BoardPostTemplate<PostType.VIDEO> {
 
-    vidoes: { [name: string]: string };
+    vidoes: BoardPostFileMap;
 
 }
 
 export interface BoardFilePostTemplate extends BoardPostTemplate<PostType.FILE> {
 
-    files: { [name: string]: string };
+    files: BoardPostFileMap;
 
 }
 

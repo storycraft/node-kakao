@@ -33,7 +33,7 @@ export enum BoardEmotionType {
 
 export namespace ChannelPost {
 
-    export enum TextType {
+    export enum ContentType {
 
         TEXT = 'text',
         MENTION = 'user',
@@ -179,27 +179,27 @@ export namespace ChannelPost {
     export interface Text {
 
         text: string;
-        type: TextType.TEXT;
+        type: ContentType.TEXT;
 
     }
 
     export interface Mention {
 
-        type: TextType.MENTION,
+        type: ContentType.MENTION,
         id: Long;
     
     }
 
     export interface EveryoneMention {
 
-        type: TextType.EVERYONE_MENTION
+        type: ContentType.EVERYONE_MENTION
     
     }
 
 }
 
 
-export type PostContents = string | ChannelPost.Text | ChannelPost.Mention | ChannelPost.EveryoneMention;
+export type PostContent = ChannelPost.Text | ChannelPost.Mention | ChannelPost.EveryoneMention;
 
 export interface SimpleChannelPostStruct extends StructBase {
 
