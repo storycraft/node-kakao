@@ -13,9 +13,11 @@ Note: this implemention can stop working anytime.
 
 Many functions that I may not know are disabled or tricked to keep this client simple.
 
-## Example code
+## Example
 
 ```javascript
+import { TalkClient, Chat, ChatType, ChatMention, LoginError } from '@storycraft/node-kakao'
+
 let client = new TalkClient('TEST_CLIENT', 'random base64 device id');
 
 client.on('message', (chat: Chat) => {
@@ -35,12 +37,11 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-try {
-    await client.login('123456789@email.com', '123456');
-} catch (err) {
-    let e: LoginError = err;
-    console.error(`Login failed. status: ${e.status}, message: ${e.message}`);
-} 
+client.login('123456789@email.com', '123456')
+        .then(() => console.log('Login succeed'))
+        .catch((err: LoginError) => {
+            console.error(`Login failed. status: ${err.status}, message: ${err.message}`);
+        });
 
 ```
 
