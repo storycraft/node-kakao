@@ -16,7 +16,7 @@ Many functions that I may not know are disabled or tricked to keep this client s
 ## Example
 
 ```javascript
-import { TalkClient, Chat, ChatType, ChatMention, LoginError } from '@storycraft/node-kakao'
+import { TalkClient, Chat, ChatType, ChatMention, LoginError } from '@storycraft/node-kakao';
 
 let client = new TalkClient('TEST_CLIENT', 'random base64 device id');
 
