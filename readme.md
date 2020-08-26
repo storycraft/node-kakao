@@ -11,11 +11,11 @@ Note: this implemention can stop working anytime.
 
 ## Warning
 
-Many functions that I may not know are disabled or tricked to keep this client simple.
+Client can act differently from official client. Abusing this client can cause permanent service restriction.
 
 ## Example
 
-```javascript
+```typescript
 import { TalkClient, Chat, ChatType, ChatMention, LoginError } from '@storycraft/node-kakao';
 
 let client = new TalkClient('TEST_CLIENT', 'random base64 device id');
@@ -51,7 +51,7 @@ node-kakao is following MIT License.
 
 Basic Reference
 ---------
-[pykakao](https://github.com/hallazzang/pykakao/)(hallazzang)
+[pykakao](https://github.com/hallazzang/pykakao/)(hallazzang)  
 [pykakao](https://github.com/ssut/pykakao)(ssut)
 - [[KakaoTalk+] LOCO 프로토콜 분석 (1)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-1/)
 - [[KakaoTalk+] LOCO 프로토콜 분석 (2)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-2/)
