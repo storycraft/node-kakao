@@ -11,6 +11,7 @@ import { LocoPacketList } from "../packet/loco-packet-list";
 import { HostData } from "../network/host-data";
 import { LocoSecureSocket } from "../network/loco-secure-socket";
 import { LocoTLSSocket } from "../network/loco-tls-socket";
+import { ClientConfigProvider } from "../config/client-config-provider";
 
 export interface LocoInterface {
 
@@ -198,8 +199,16 @@ export class LocoTLSCommandInterface extends LocoCommandInterface {
 
 export class LocoSecureCommandInterface extends LocoCommandInterface {
 
+    constructor(hostData: HostData, listener: LocoListener | null = null, private configProvider: ClientConfigProvider) {
+        super(hostData, listener);
+    }
+
+    get ConfigProvider() {
+        return this.configProvider;
+    }
+
     protected createSocket(hostData: HostData): LocoSocket {
-        return new LocoSecureSocket(this, hostData.host, hostData.port, hostData.keepAlive);
+        return new LocoSecureSocket(this.configProvider.Configuration.locoPEMPublicKey, this, hostData.host, hostData.port, hostData.keepAlive);
     }
 
 }

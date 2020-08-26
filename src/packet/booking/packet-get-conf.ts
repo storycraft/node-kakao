@@ -1,5 +1,3 @@
-import { DefaultConfiguration } from "../../config/client-config";
-import { LocoRequestPacket } from "../loco-packet-base";
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
 
 /*
@@ -12,8 +10,8 @@ import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-pack
 export class PacketGetConfReq extends LocoBsonRequestPacket {
 
     constructor(
-        public NetworkMccMnc: string = '999',
-        public Os: string = DefaultConfiguration.agent,
+        public NetworkMccMnc: string = '',
+        public Os: string = '',
         public model: string = ''
     ) {
         super();

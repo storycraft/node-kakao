@@ -18,11 +18,18 @@ export const DefaultConfiguration: ClientConfig = {
 
     osVersion: '10.0',
 
+    // sub(pc)
+    deviceType: 2,
+    // wired
+    netType: 0,
     // 999: pc
     mccmnc: '999',
 
+    countryIso: 'KR',
     language: 'ko',
 
+    subDevice: true,
+    deviceModel: ''
 }
 
 export interface ClientConfig {
@@ -39,8 +46,14 @@ export interface ClientConfig {
 
     osVersion: string;
     
+    deviceType: number;
+    netType: number;
     mccmnc: string;
 
+    countryIso: string;
     language: string;
+
+    subDevice: boolean;
+    deviceModel: string;
 
 }

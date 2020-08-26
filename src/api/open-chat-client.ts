@@ -30,7 +30,7 @@ export class OpenChatClient extends SessionApiClient {
         try {
             super.fillHeader(header);
         } catch (e) { // try without auth
-            BasicHeaderDecorator.INSTANCE.fillHeader(header);
+            this.BasicHeader.fillHeader(header);
         }
     }
 
@@ -119,6 +119,10 @@ export class OpenChatClient extends SessionApiClient {
 
     async searchPost(query: string, page: number = 1, count: number = 30): Promise<OpenPostSearchStruct> {
         return this.requestMapped('GET', OpenChatClient.getChannelApiPath(`search/post?q=${encodeURIComponent(query)}&p=${encodeURIComponent(page)}&c=${encodeURIComponent(count)}`), OpenPostSearchStruct.MAPPER);
+    }
+
+    createJoinLinkURL(code: string, ref: string = 'EW') {
+        return `kakaoopen://join?l=${code}&r=${ref}`;
     }
 
     static getProfileApiPath(api: string) {

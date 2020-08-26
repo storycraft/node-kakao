@@ -5,18 +5,17 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
-import { DefaultConfiguration } from "../../config/client-config";
 import { Long } from "bson";
 
 export class PacketBuyCallServerReq extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: Long = Long.ZERO,
-        public Os: string = DefaultConfiguration.agent,
+        public Os: string = '',
         public NetType: number = 0,
-        public Appver: string = DefaultConfiguration.appVersion,
-        public NetworkMccMnc: string = '999',
-        public CountryIso: string = 'KR'
+        public Appver: string = '',
+        public NetworkMccMnc: string = '',
+        public CountryIso: string = ''
     ) {
         super();
     }

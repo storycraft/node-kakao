@@ -4,16 +4,17 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoSecureCommandInterface, LocoListener } from "../../loco/loco-interface";
+import { Long } from "bson";
+import { ClientConfigProvider } from "../../config/client-config-provider";
+import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
 import { HostData } from "../../network/host-data";
+import { LocoSecureSocket } from "../../network/loco-secure-socket";
 import { LocoResponsePacket, StatusCode } from "../../packet/loco-packet-base";
-import { PacketHeader } from "../../packet/packet-header-struct";
 import { PacketCompleteRes } from "../../packet/media/packet-complete";
 import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
-import { LocoSecureSocket } from "../../network/loco-secure-socket";
-import { ChatType } from "../chat/chat-type";
-import { Long } from "bson";
+import { PacketHeader } from "../../packet/packet-header-struct";
 import { PromiseTicket } from "../../ticket/promise-ticket";
+import { ChatType } from "../chat/chat-type";
 
 export class MediaUploadInterface extends LocoSecureCommandInterface {
 
@@ -21,8 +22,8 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
     private ticketObj: PromiseTicket<PacketCompleteRes>;
 
-    constructor(hostData: HostData, listener: LocoListener | null = null) {
-        super(hostData, listener);
+    constructor(hostData: HostData, listener: LocoListener | null = null, configProvider: ClientConfigProvider) {
+        super(hostData, listener, configProvider);
 
         this.uploading = false;
         this.ticketObj = new PromiseTicket();
@@ -57,7 +58,12 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
         if (!this.Connected) await this.connect();
 
-        let postRes = await this.requestPacketRes<PacketPostRes>(new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false, clientUserId));
+        let config = this.ConfigProvider.Configuration;
+
+        let postRes = await this.requestPacketRes<PacketPostRes>(
+            new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false,
+                clientUserId, config.agent, config.version, config.netType, config.mccmnc)
+        );
         this.uploading = true;
 
         // ok so destroying structure makes the transaction secure?

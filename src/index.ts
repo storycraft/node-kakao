@@ -7,7 +7,6 @@
 export * from './event/events';
 export * from './config/client-config';
 export * from './config/client-config-provider';
-export * from './kakao-api';
 
 export * from './api/web-api-client';
 export * from './api/api-header-decorator';

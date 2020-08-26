@@ -4,17 +4,18 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
-import { LoginError } from "../client";
 import * as crypto from "crypto";
+import { LoginError } from "../client";
 import { DefaultConfiguration } from "../config/client-config";
+import { ClientConfigProvider } from "../config/client-config-provider";
 import { AccessDataProvider } from "../oauth/access-data-provider";
-import { RequestHeader, WebApiClient } from "./web-api-client";
-import { AHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
-import { WebApiStatusCode } from "../talk/struct/web-api-struct";
-import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";
-import { MoreSettingsStruct, LessSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
+import { LessSettingsStruct, MoreSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
 import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
+import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";
+import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
+import { WebApiStatusCode } from "../talk/struct/web-api-struct";
+import { AHeaderDecorator } from "./api-header-decorator";
+import { RequestHeader, WebApiClient } from "./web-api-client";
 
 export type LoginForm = {
 
@@ -48,14 +49,22 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
 
     private accessData: LoginAccessDataStruct | null;
 
-    constructor(name: string, deviceUUID: string) {
-        super();
+    private aHeader: AHeaderDecorator;
+
+    constructor(name: string, deviceUUID: string, configProvider: ClientConfigProvider) {
+        super(configProvider);
+
+        this.aHeader = new AHeaderDecorator(configProvider);
 
         this.name = name;
         this.deviceUUID = deviceUUID;
 
         this.currentLogin = null;
         this.accessData = null;
+    }
+
+    get AHeader() {
+        return this.aHeader;
     }
 
     get Scheme() {
@@ -66,10 +75,14 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         return 'ac-sb-talk.kakao.com';
     }
 
+    get Agent() {
+        return this.ConfigProvider.Configuration.agent;
+    }
+
     fillHeader(header: RequestHeader) {
         super.fillHeader(header);
 
-        AHeaderDecorator.INSTANCE.fillHeader(header);
+        this.aHeader.fillHeader(header);
         
         if (this.accessData) this.fillSessionHeader(header);
     }
@@ -90,20 +103,32 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         return this.currentLogin !== null;
     }
 
-    async requestMoreSettings(since: number = 0, language: string = DefaultConfiguration.language): Promise<MoreSettingsStruct> {
-        return this.request('GET', `${AuthClient.getAccountApiPath('more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
+    async requestMoreSettings(since: number = 0, language: string = this.ConfigProvider.Configuration.language): Promise<MoreSettingsStruct> {
+        return this.request('GET', `${AuthClient.getAccountApiPath(this.Agent, 'more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
-    async requestLessSettings(since: number = 0, language: string = DefaultConfiguration.language): Promise<LessSettingsStruct> {
-        return this.request('GET', `${AuthClient.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
+    async requestLessSettings(since: number = 0, language: string = this.ConfigProvider.Configuration.language): Promise<LessSettingsStruct> {
+        return this.request('GET', `${AuthClient.getAccountApiPath(this.Agent, 'less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(language)}`);
     }
 
     async updateSettings(settings: Partial<unknown>): Promise<AuthApiStruct> {
-        return this.request('POST', AuthClient.getAccountApiPath('update_settings.json'), settings);
+        return this.request('POST', AuthClient.getAccountApiPath(this.Agent, 'update_settings.json'), settings);
     }
 
     async requestWebLoginToken(): Promise<LoginTokenStruct> {
-        return this.request('GET', AuthClient.getAccountApiPath('login_token.json'));
+        return this.request('GET', AuthClient.getAccountApiPath(this.Agent, 'login_token.json'));
+    }
+
+    createSessionURL(token: string, redirectURL: string) {
+        return `https://accounts.kakao.com/weblogin/login_redirect?continue=${encodeURIComponent(redirectURL)}&token=${token}`;
+    }
+
+    async requestSessionURL(redirectURL: string): Promise<string> {
+        let res = await this.requestWebLoginToken();
+
+        if (res.status !== WebApiStatusCode.SUCCESS) throw new Error('Cannot request login token');
+
+        return this.createSessionURL(res.token, redirectURL);
     }
 
     protected createLoginForm(email: string, password: string, permanent?: boolean, forced?: boolean): LoginForm {
@@ -111,7 +136,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
             'email': email,
             'password': password,
             'device_uuid': this.deviceUUID,
-            'os_version': DefaultConfiguration.osVersion,
+            'os_version': this.ConfigProvider.Configuration.osVersion,
             'device_name': this.name
         };
 
@@ -144,8 +169,8 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
 
         let form = this.createLoginForm(email, password, undefined, forced);
 
-        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
-        this.loginAccessData(await this.requestMapped<LoginAccessDataStruct>('POST', AuthClient.getAccountApiPath('login.json'), LoginAccessDataStruct.MAPPER, form, { 'X-VC': xvc }));
+        let xvc = this.calculateXVCKey(this.BasicHeader.UserAgent, email);
+        this.loginAccessData(await this.requestMapped<LoginAccessDataStruct>('POST', AuthClient.getAccountApiPath(this.Agent, 'login.json'), LoginAccessDataStruct.MAPPER, form, { 'X-VC': xvc }));
     }
 
     async loginToken(email: string, token: string, forced: boolean = false, locked: boolean = true) {
@@ -154,8 +179,8 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
 
         let form = this.createAutologinForm(email, token, locked, undefined, forced);
 
-        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
-        this.loginAccessData(await this.requestMapped<LoginAccessDataStruct>('POST', AuthClient.getAccountApiPath('login.json'), LoginAccessDataStruct.MAPPER, form, { 'X-VC': xvc }));
+        let xvc = this.calculateXVCKey(this.BasicHeader.UserAgent, email);
+        this.loginAccessData(await this.requestMapped<LoginAccessDataStruct>('POST', AuthClient.getAccountApiPath(this.Agent, 'login.json'), LoginAccessDataStruct.MAPPER, form, { 'X-VC': xvc }));
     }
 
     protected loginAccessData(accessData: LoginAccessDataStruct) {
@@ -169,15 +194,15 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     async requestPasscode(email: string, password: string, forced: boolean = false): Promise<AuthApiStruct> {
         let form = this.createLoginForm(email, password, undefined, forced);
 
-        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
-        return this.request('POST', AuthClient.getAccountApiPath('request_passcode.json'), form, { 'X-VC': xvc });
+        let xvc = this.calculateXVCKey(this.BasicHeader.UserAgent, email);
+        return this.request('POST', AuthClient.getAccountApiPath(this.Agent, 'request_passcode.json'), form, { 'X-VC': xvc });
     }
 
     async registerDevice(passcode: string, email: string, password: string, permanent: boolean, forced: boolean = false): Promise<AuthApiStruct> {
         let form = this.createRegisterForm(passcode, email, password, permanent, forced);
 
-        let xvc = this.calculateXVCKey(BasicHeaderDecorator.INSTANCE.UserAgent, email);
-        return this.request('POST', AuthClient.getAccountApiPath('register_device.json'), form, { 'X-VC': xvc });
+        let xvc = this.calculateXVCKey(this.BasicHeader.UserAgent, email);
+        return this.request('POST', AuthClient.getAccountApiPath(this.Agent, 'register_device.json'), form, { 'X-VC': xvc });
     }
 
     async relogin() {
@@ -186,8 +211,8 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
         return this.currentLogin();
     }
 
-    static getAccountApiPath(api: string) {
-        return `${DefaultConfiguration.agent}/account/${api}`;
+    static getAccountApiPath(agent: string, api: string) {
+        return `${agent}/account/${api}`;
     }
 
     calculateXVCKey(userAgent: string, email: string): string {

@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-import { DefaultConfiguration } from "../config/client-config";
 
 /*
  * Created on Thu Oct 17 2019
@@ -11,7 +10,7 @@ export class CryptoManager {
 
     private key: Buffer;
 
-    constructor(key: Buffer = crypto.randomBytes(16)) {
+    constructor(private pubKey: string, key: Buffer = crypto.randomBytes(16)) {
         this.key = key;
     }
 
@@ -20,7 +19,7 @@ export class CryptoManager {
     }
 
     get PEMPublicKey(): string {
-        return DefaultConfiguration.locoPEMPublicKey;
+        return this.pubKey;
     }
 
     protected bufferToBinaryString(buffer: Buffer): string {

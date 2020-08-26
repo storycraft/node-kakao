@@ -232,17 +232,6 @@ export class KakaoAPI {
         });
     }
 
-    static createSendTextURL(message: string) {
-        return `kakaotalk://leverage?action=sendtext&message=${encodeURIComponent(message)}`;
-    }
-
-    static createJoinLinkURL(code: string, ref: string = 'EW') {
-        return `kakaoopen://join?l=${code}&r=${ref}`;
-    }
-
-    static createSessionURL(token: string, redirectURL: string) {
-        return `https://accounts.kakao.com/weblogin/login_redirect?continue=${encodeURIComponent(redirectURL)}&token=${token}`;
-    }
 }
 
 

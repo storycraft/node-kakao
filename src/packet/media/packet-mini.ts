@@ -4,10 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { MediaRequestBasePacket } from "./media-request-base-packet";
-import { DefaultConfiguration } from "../../config/client-config";
 import { Long } from "bson";
 import { LocoBsonResponsePacket } from "../loco-bson-packet";
+import { MediaRequestBasePacket } from "./media-request-base-packet";
 
 export class PacketMiniReq extends MediaRequestBasePacket {
 
@@ -19,10 +18,10 @@ export class PacketMiniReq extends MediaRequestBasePacket {
         public Height: number = 0,
         
         userId: Long = Long.ZERO,
-        os: string = DefaultConfiguration.agent,
-        version: string = DefaultConfiguration.version,
+        os: string = '',
+        version: string = '',
         networkType: number = 0,
-        networkMccMnc: string = '999',
+        networkMccMnc: string = '',
     ) {
         super(userId, os, version, networkType, networkMccMnc);
     }

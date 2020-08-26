@@ -1,9 +1,8 @@
-import { DefaultConfiguration } from "../config/client-config";
-import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
-import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";
+import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
+import { JsonUtil } from "../util/json-util";
+import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 
 /*
  * Created on Fri Oct 18 2019
@@ -16,12 +15,12 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
     constructor(
         public DeviceUUID: string = '',
         public OAuthToken: string = '',
-        public Appver: string = DefaultConfiguration.appVersion,
-        public Os: string = DefaultConfiguration.agent,
-        public DeviceType: number = 2,
+        public Appver: string = '',
+        public Os: string = '',
+        public DeviceType: number = 0,
         public NetType: number = 0,
-        public NetworkMccMnc: string = '999',
-        public Language: string = 'ko',
+        public NetworkMccMnc: string = '',
+        public Language: string = '',
         public Revision: number = 0, //Always 0 since I didnt implement revision data and dunno what
         public RevisionData: null | Buffer = null, // idk
         public ChannelIdList: Long[] = [],

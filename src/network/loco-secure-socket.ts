@@ -18,12 +18,12 @@ export class LocoSecureSocket extends LocoBasicSocket {
     
     private handshaked: boolean;
 
-    constructor(receiver: LocoReceiver, host: string, port: number, keepAlive: boolean) {
+    constructor(pubKey: string, receiver: LocoReceiver, host: string, port: number, keepAlive: boolean) {
         super(receiver, host, port, keepAlive);
 
         this.handshaked = false;
 
-        this.crypto = new CryptoManager();
+        this.crypto = new CryptoManager(pubKey);
     }
 
     get Handshaked() {

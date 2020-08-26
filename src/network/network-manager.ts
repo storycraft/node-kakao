@@ -18,6 +18,7 @@ import { Long } from "bson";
 import { HostData } from "./host-data";
 import { MediaUploadInterface } from "../talk/media/media-upload-interface";
 import { MediaDownloadInterface } from "../talk/media/media-download-interface";
+import { ClientConfigProvider } from "../config/client-config-provider";
 
 export class NetworkManager implements LocoListener, LocoInterface {
 
@@ -31,7 +32,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
 
     private handler: LocoPacketHandler;
 
-    constructor(private client: LocoClient) {
+    constructor(private client: LocoClient, private configProvider: ClientConfigProvider) {
         this.cachedBookingData = null;
         this.cachedCheckinData = null;
         this.lastCheckinReq = -1;
@@ -85,24 +86,28 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return new LocoTLSCommandInterface(hostInfo, listener);
     }
 
-    protected createCheckinInterface(hostInfo: HostData, listener: LocoListener = this): LocoCommandInterface {
-        return new LocoSecureCommandInterface(hostInfo, listener);
+    protected createCheckinInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): LocoCommandInterface {
+        return new LocoSecureCommandInterface(hostInfo, listener, configProvider);
     }
 
-    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this): LocoMainInterface {
-        return new MainInterface(hostInfo, listener);
+    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): LocoMainInterface {
+        return new MainInterface(hostInfo, listener, configProvider);
     }
 
-    createUploadInterface(hostInfo: HostData): MediaUploadInterface {
-        return new MediaUploadInterface(hostInfo, this);
+    createUploadInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): MediaUploadInterface {
+        return new MediaUploadInterface(hostInfo, listener, configProvider);
     }
 
-    createDownloadInterface(hostInfo: HostData): MediaDownloadInterface {
-        return new MediaDownloadInterface(hostInfo, this);
+    createDownloadInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): MediaDownloadInterface {
+        return new MediaDownloadInterface(hostInfo, listener, configProvider);
     }
 
     async requestCheckinData(userId: Long): Promise<CheckinData> {
-        let res = await this.requestCheckinRes<PacketCheckInRes>(new PacketCheckInReq(userId));
+        let config = this.configProvider.Configuration;
+
+        let res = await this.requestCheckinRes<PacketCheckInRes>(
+            new PacketCheckInReq(userId, config.agent, config.netType, config.appVersion, config.mccmnc, config.language, config.countryIso, config.subDevice)
+        );
 
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
@@ -114,7 +119,11 @@ export class NetworkManager implements LocoListener, LocoInterface {
     }
 
     async requestCallServerData(userId: Long): Promise<PacketBuyCallServerRes> {
-        let res = await this.requestCheckinRes<PacketBuyCallServerRes>(new PacketBuyCallServerReq(userId));
+        let config = this.configProvider.Configuration;
+
+        let res = await this.requestCheckinRes<PacketBuyCallServerRes>(
+            new PacketBuyCallServerReq(userId, config.agent, config.netType, config.appVersion, config.mccmnc, config.countryIso)
+        );
 
         if (res.StatusCode !== StatusCode.SUCCESS) throw res.StatusCode;
 
@@ -122,7 +131,9 @@ export class NetworkManager implements LocoListener, LocoInterface {
     }
 
     async requestBookingData(): Promise<BookingData> {
-        let res = await this.requestBookingRes<PacketGetConfRes>(new PacketGetConfReq());
+        let config = this.configProvider.Configuration;
+
+        let res = await this.requestBookingRes<PacketGetConfRes>(new PacketGetConfReq(config.mccmnc, config.agent, config.deviceModel));
 
         return new BookingData({
             host: res.HostList[0],
@@ -132,7 +143,13 @@ export class NetworkManager implements LocoListener, LocoInterface {
     }
 
     async requestBookingRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
-        let bookingInterface = this.createBookingInterface(HostData.BookingHost);
+        let config = this.configProvider.Configuration;
+
+        let bookingInterface = this.createBookingInterface({
+            host: config.locoBookingURL,
+            port: config.locoBookingPort,
+            keepAlive: false
+        });
 
         if (!(await bookingInterface.connect())) {
             throw new Error('Cannot contact to booking server');
@@ -251,6 +268,10 @@ export class MainInterface extends LocoSecureCommandInterface implements LocoMai
 
     private pingSchedulerId: NodeJS.Timeout | null = null;
 
+    constructor(hostData: HostData, listener: LocoListener, configProvider: ClientConfigProvider) {
+        super(hostData, listener, configProvider);
+    }
+
     get Logon() {
         return this.locoLogon;
     }
@@ -264,7 +285,17 @@ export class MainInterface extends LocoSecureCommandInterface implements LocoMai
             throw new Error('Already logon to LOCO');
         }
 
-        let packet = new PacketLoginReq(deviceUUID, accessToken);
+        let config = this.ConfigProvider.Configuration;
+        let packet = new PacketLoginReq(
+            deviceUUID,
+            accessToken,
+            config.appVersion,
+            config.agent,
+            config.deviceType,
+            config.netType,
+            config.mccmnc,
+            config.language
+        );
 
         let res = await this.requestPacketRes<PacketLoginRes>(packet);
 

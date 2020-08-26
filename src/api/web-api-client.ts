@@ -4,14 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { JsonUtil } from "../util/json-util";
 import Axios, { AxiosRequestConfig } from "axios";
 import * as FormData from "form-data";
-import { BasicHeaderDecorator, ApiHeaderDecorator, AHeaderDecorator } from "./api-header-decorator";
-import { AccessDataProvider } from "../oauth/access-data-provider";
 import { ObjectMapper, Serializer } from "json-proxy-mapper";
-import { StructBase, StructType } from "../talk/struct/struct-base";
 import { URLSearchParams } from "url";
+import { ClientConfigProvider } from "../config/client-config-provider";
+import { AccessDataProvider } from "../oauth/access-data-provider";
+import { StructBase, StructType } from "../talk/struct/struct-base";
+import { JsonUtil } from "../util/json-util";
+import { ApiHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
 
 export type RequestForm = { [key: string]: FileRequestData | StructType };
 export type FileRequestData = { value: Buffer, options: { filename: string, contentType?: string } };
@@ -20,12 +21,26 @@ export type Method = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'P
 
 export abstract class WebApiClient implements ApiHeaderDecorator {
 
+    private basicHeader: BasicHeaderDecorator;
+
+    constructor(private configProvider: ClientConfigProvider) {
+        this.basicHeader = new BasicHeaderDecorator(configProvider);
+    }
+
+    get ConfigProvider() {
+        return this.configProvider;
+    }
+
+    get BasicHeader() {
+        return this.basicHeader;
+    }
+
     protected createClientHeader(): RequestHeader {
         return { 'Host': this.Host };
     }
 
     fillHeader(header: RequestHeader) {
-        BasicHeaderDecorator.INSTANCE.fillHeader(header);
+        this.basicHeader.fillHeader(header);
     }
 
     abstract get Scheme(): string;
@@ -133,8 +148,8 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
 export abstract class SessionApiClient extends WebApiClient {
 
-    constructor(private provider: AccessDataProvider) {
-        super();
+    constructor(private provider: AccessDataProvider, configProvider: ClientConfigProvider) {
+        super(configProvider);
     }
 
     fillHeader(header: RequestHeader) {

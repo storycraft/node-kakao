@@ -4,11 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
 import { Long } from "bson";
-import { DefaultConfiguration } from "../../config/client-config";
 import { ChatType } from "../../talk/chat/chat-type";
 import { JsonUtil } from "../../util/json-util";
+import { LocoBsonResponsePacket } from "../loco-bson-packet";
 import { MediaRequestBasePacket } from "./media-request-base-packet";
 
 export class PacketPostReq extends MediaRequestBasePacket {
@@ -26,10 +25,10 @@ export class PacketPostReq extends MediaRequestBasePacket {
         public NoSeen: boolean = false,
 
         userId: Long = Long.ZERO,
-        os: string = DefaultConfiguration.agent,
-        version: string = DefaultConfiguration.version,
+        os: string = '',
+        version: string = '',
         networkType: number = 0,
-        networkMccMnc: string = '999',
+        networkMccMnc: string = '',
     ) {
         super(userId, os, version, networkType, networkMccMnc);
     }
