@@ -61,15 +61,15 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
     private socket: LocoSocket;
 
     private packetMap: Map<number, LocoRequestPacket>;
-    
-    constructor(hostData: HostData, private listener: LocoListener | null = null) {
+
+    constructor(hostData: HostData, private listener: LocoListener | null = null, initaloption?: any) {
         this.packetCount = 0;
         this.packetMap = new Map();
 
-        this.socket = this.createSocket(hostData);
+        this.socket = this.createSocket(hostData, initaloption);
     }
 
-    protected abstract createSocket(hostData: HostData): LocoSocket;
+    protected abstract createSocket(hostData: HostData, initaloption?: any): LocoSocket;
 
     protected get Socket() {
         return this.socket;
@@ -105,7 +105,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         if (!this.Connected) {
             return false;
         }
-        
+
         let packetId = this.getNextPacketId();
 
         this.packetMap.set(packetId, packet);
@@ -113,7 +113,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
             throw new Error(`Tried to send invalid packet ${packet.PacketName}`);
         }
-        
+
         let header: PacketHeader = {
             packetId: packetId,
             statusCode: 0,
@@ -200,15 +200,15 @@ export class LocoTLSCommandInterface extends LocoCommandInterface {
 export class LocoSecureCommandInterface extends LocoCommandInterface {
 
     constructor(hostData: HostData, listener: LocoListener | null = null, private configProvider: ClientConfigProvider) {
-        super(hostData, listener);
+        super(hostData, listener, configProvider);
     }
 
     get ConfigProvider() {
         return this.configProvider;
     }
 
-    protected createSocket(hostData: HostData): LocoSocket {
-        return new LocoSecureSocket(this.configProvider.Configuration.locoPEMPublicKey, this, hostData.host, hostData.port, hostData.keepAlive);
+    protected createSocket(hostData: HostData, configProvider?: ClientConfigProvider): LocoSocket {
+        return new LocoSecureSocket((this.configProvider||configProvider).Configuration.locoPEMPublicKey, this, hostData.host, hostData.port, hostData.keepAlive);
     }
 
 }
