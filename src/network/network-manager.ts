@@ -82,23 +82,23 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return this.mainInterface.requestPacketRes<T>(packet);
     }
 
-    protected createBookingInterface(hostInfo: HostData, listener: LocoListener = this): LocoCommandInterface {
-        return new LocoTLSCommandInterface(hostInfo, listener);
+    protected createBookingInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoCommandInterface {
+        return new LocoTLSCommandInterface(hostInfo, listener, configProvider);
     }
 
-    protected createCheckinInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): LocoCommandInterface {
+    protected createCheckinInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoCommandInterface {
         return new LocoSecureCommandInterface(hostInfo, listener, configProvider);
     }
 
-    protected createMainInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): LocoMainInterface {
+    protected createMainInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoMainInterface {
         return new MainInterface(hostInfo, listener, configProvider);
     }
 
-    createUploadInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): MediaUploadInterface {
+    createUploadInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): MediaUploadInterface {
         return new MediaUploadInterface(hostInfo, listener, configProvider);
     }
 
-    createDownloadInterface(hostInfo: HostData, listener: LocoListener = this, configProvider: ClientConfigProvider = this.configProvider): MediaDownloadInterface {
+    createDownloadInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): MediaDownloadInterface {
         return new MediaDownloadInterface(hostInfo, listener, configProvider);
     }
 

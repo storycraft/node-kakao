@@ -62,11 +62,15 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
 
     private packetMap: Map<number, LocoRequestPacket>;
     
-    constructor(hostData: HostData, private listener: LocoListener | null = null) {
+    constructor(hostData: HostData, private listener: LocoListener | null = null, private configProvider: ClientConfigProvider) {
         this.packetCount = 0;
         this.packetMap = new Map();
 
         this.socket = this.createSocket(hostData);
+    }
+
+    get ConfigProvider() {
+        return this.configProvider;
     }
 
     protected abstract createSocket(hostData: HostData): LocoSocket;
@@ -199,16 +203,8 @@ export class LocoTLSCommandInterface extends LocoCommandInterface {
 
 export class LocoSecureCommandInterface extends LocoCommandInterface {
 
-    constructor(hostData: HostData, listener: LocoListener | null = null, private configProvider: ClientConfigProvider) {
-        super(hostData, listener);
-    }
-
-    get ConfigProvider() {
-        return this.configProvider;
-    }
-
     protected createSocket(hostData: HostData): LocoSocket {
-        return new LocoSecureSocket(this.configProvider.Configuration.locoPEMPublicKey, this, hostData.host, hostData.port, hostData.keepAlive);
+        return new LocoSecureSocket(this.ConfigProvider.Configuration.locoPEMPublicKey, this, hostData.host, hostData.port, hostData.keepAlive);
     }
 
 }
