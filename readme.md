@@ -35,7 +35,13 @@ client.on('message', (chat: Chat) => {
     }
 });
 
-await client.login('123456789@email.com', '123456');
+try {
+    await client.login('123456789@email.com', '123456');
+} catch (err) {
+    let e: LoginError = err;
+    console.error(`Login failed. status: ${e.status}, message: ${e.message}`);
+} 
+
 ```
 
 License

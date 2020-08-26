@@ -241,18 +241,14 @@ export class TalkClient extends TalkApiClient implements LocoClient {
     }
 
     async login(email: string, password: string, forced: boolean = false) {
-        if (this.LocoLogon) {
-            throw new Error('Already logon to loco');
-        }
+        if (this.LocoLogon) throw { status: WebApiStatusCode.OPERATION_DENIED, message: `Already logon to loco` } as LoginError;
 
         await super.login(email, password, forced);
         await this.locoLogin();
     }
 
     async loginToken(email: string, token: string, forced: boolean = false, locked: boolean = false) {
-        if (this.LocoLogon) {
-            throw new Error('Already logon to loco');
-        }
+        if (this.LocoLogon) throw { status: WebApiStatusCode.OPERATION_DENIED, message: `Already logon to loco` } as LoginError;
 
         await super.loginToken(email, token, forced, locked);
         await this.locoLogin();
@@ -271,7 +267,7 @@ export class TalkClient extends TalkApiClient implements LocoClient {
         let res: MoreSettingsStruct = await this.Auth.requestMoreSettings(0);
 
         if (res.status !== WebApiStatusCode.SUCCESS) {
-            throw new Error(`more_settings.json ERR: ${res.status}`);
+            throw { status: WebApiStatusCode.OPERATION_DENIED, message: `more_settings.json request failed` } as LoginError;
         }
 
         let loginRes = await this.networkManager.locoLogin(this.Auth.DeviceUUID, accessData.userId, accessData.accessToken);
