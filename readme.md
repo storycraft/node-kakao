@@ -51,9 +51,8 @@ node-kakao is following MIT License.
 
 Basic Reference
 ---------
-hallazzang([pykakao](https://github.com/hallazzang/pykakao/))  
-ssut([pykakao](https://github.com/ssut/pykakao))  
-Cai([0x90 :: Cai's Blog](http://www.bpak.org/blog/))
+[pykakao](https://github.com/hallazzang/pykakao/)(hallazzang)
+[pykakao](https://github.com/ssut/pykakao)(ssut)
 - [[KakaoTalk+] LOCO 프로토콜 분석 (1)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-1/)
 - [[KakaoTalk+] LOCO 프로토콜 분석 (2)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-2/)
 - [[KakaoTalk+] LOCO 프로토콜 분석 (3)](http://www.bpak.org/blog/2012/12/kakaotalk-loco-프로토콜-분석-3/)
