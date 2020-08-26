@@ -245,15 +245,5 @@ export namespace KakaoAPI {
         FILE = 'image/jpeg'//'application/*' //THIS DOESNT WORK WTF WHY
 
     }
-
-    export enum LogonAccount {
     
-        LOGIN_TOKEN = 'login_token.json',
-        REQUEST_VERIFY_EMAIL = 'request_verify_email.json',
-        RENEW_TOKEN = 'renew_token.json',
-        CHANGE_UUID = 'change_uuid.json',
-        CAN_CHANGE_UUID = 'can_change_uuid.json'
-    
-    }
-
 }
