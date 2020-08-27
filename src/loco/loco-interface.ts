@@ -153,7 +153,10 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
             let packet = this.structToPacket(header, data);
             let reqPacket = this.packetMap.get(packetId);
 
-            if (reqPacket) reqPacket.onResponse(packet);
+            if (reqPacket) {
+                this.packetMap.delete(packetId);
+                reqPacket.onResponse(packet);
+            }
 
             if (this.listener) this.listener.packetReceived(packetId, packet, reqPacket);
 
