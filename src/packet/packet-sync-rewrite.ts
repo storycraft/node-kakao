@@ -22,7 +22,7 @@ export class PacketSyncRewriteRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any): void {
-        if (!rawData['chatLog']) {
+        if (rawData['chatLog']) {
             this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawData['chatLog'], ChatlogStruct.MAPPER);
         }
     }
