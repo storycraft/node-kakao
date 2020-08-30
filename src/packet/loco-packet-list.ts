@@ -64,6 +64,7 @@ import { PacketSyncRewriteRes } from "./packet-sync-rewrite";
 import { PacketLinkDeletedRes } from "./packet-link-deleted";
 import { PacketAddMemberReq, PacketAddMemberRes } from "./packet-add-member";
 import { PacketRelayEventReq, PacketRelayEventRes } from "./packet-relay-event";
+import { PacketKickLeaveRes, PacketKickLeaveReq } from "./packet-kick-leave";
 
 
 /*
@@ -153,6 +154,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('PING', PacketPingReq);
 
         requestPacketMap.set('LEAVE', PacketLeaveReq);
+        requestPacketMap.set('KICKLEAVE', PacketKickLeaveReq);
 
         requestPacketMap.set('CREATELINK', PacketCreateOpenLinkReq);
         requestPacketMap.set('UPDATELINK', PacketUpdateOpenLinkReq);
@@ -220,6 +222,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('NEWMEM', PacketNewMemberRes);
         responsePacketMap.set('LEFT', PacketLeftRes);
         responsePacketMap.set('LEAVE', PacketLeaveRes);
+        responsePacketMap.set('KICKLEAVE', PacketKickLeaveRes);
         responsePacketMap.set('SYNCJOIN', PacketSyncJoinChannelRes);
 
         responsePacketMap.set('SYNCLINK', PacketSyncLinkRes);

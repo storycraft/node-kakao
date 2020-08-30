@@ -35,6 +35,7 @@ import { ManagedChatChannel, ManagedOpenChatChannel, ManagedMemoChatChannel, Man
 import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { PacketAddMemberReq, PacketAddMemberRes } from "../../packet/packet-add-member";
+import { PacketKickLeaveReq, PacketKickLeaveRes } from "../../packet/packet-kick-leave";
 
 export class ChannelManager extends IdStore<ChatChannel> {
 
@@ -217,6 +218,12 @@ export class ChannelManager extends IdStore<ChatChannel> {
     
     async leave(channel: ChatChannel, block: boolean = false): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
+
+        return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
+    }
+
+    async leaveKicked(channel: OpenChatChannel): Promise<RequestResult<boolean>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketKickLeaveRes>(new PacketKickLeaveReq(channel.LinkId, channel.Id));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
