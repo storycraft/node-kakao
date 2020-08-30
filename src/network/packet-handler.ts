@@ -23,7 +23,6 @@ import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed, OpenRe
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
 import { NetworkManager } from "./network-manager";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet/loco-packet-base";
-import { FeedType } from "../talk/feed/feed-type";
 import { Long } from "bson";
 import { PacketMetaChangeRes } from "../packet/packet-meta-change";
 import { PacketSetMetaRes } from "../packet/packet-set-meta";
@@ -36,12 +35,12 @@ import { ManagedChatChannel, ManagedOpenChatChannel } from "../talk/managed/mana
 import { ManagedOpenChatUserInfo } from "../talk/managed/managed-chat-user";
 import { PacketSyncRewriteRes } from "../packet/packet-sync-rewrite";
 import { PacketRewriteRes, PacketRewriteReq } from "../packet/packet-rewrite";
-import { ChannelType } from "../talk/channel/channel-type";
 import { PacketLinkDeletedRes } from "../packet/packet-link-deleted";
 import { OpenMemberType } from "../talk/open/open-link-type";
 import { ManagedOpenLink } from "../talk/managed/managed-open-link";
 import { PacketSetMemTypeRes } from "../packet/packet-set-mem-type";
 import { PacketRelayEventRes } from "../packet/packet-relay-event";
+import { PacketKickLeaveRes, PacketKickLeaveReq } from "../packet/packet-kick-leave";
 
 export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler {
 
@@ -80,6 +79,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.on('SYNCDLMSG', this.syncMessageDelete.bind(this));
         this.on('LEFT', this.onChannelLeft.bind(this));
         this.on('LEAVE', this.onChannelLeave.bind(this));
+        this.on('KICKLEAVE', this.onChannelLeave.bind(this));
         this.on('RELAYEVENT', this.onRelayEvent.bind(this));
         this.on('CHANGESVR', this.onSwitchServerReq.bind(this));
         this.on('KICKOUT', this.onLocoKicked.bind(this));
@@ -217,7 +217,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         let feed = chat.getFeed() as InviteFeed | OpenJoinFeed;
 
         let idList: Long[];
-        if (feed.members) idList = feed.members.map((feedMemberStruct) => feedMemberStruct.userId);
+        if ('members' in feed) idList = feed.members.map((feedMemberStruct) => feedMemberStruct.userId);
         else idList = [];
 
         let infoList: ChatUserInfo[];
@@ -273,7 +273,7 @@ export class TalkPacketHandler extends EventEmitter implements LocoPacketHandler
         this.ChannelManager.removeChannel(channel.Id);
     }
 
-    onChannelLeave(packet: PacketLeaveRes, reqPacket?: PacketLeaveReq) {
+    onChannelLeave(packet: PacketLeaveRes | PacketKickLeaveRes, reqPacket?: PacketLeaveReq | PacketKickLeaveReq) {
         if (!reqPacket || !reqPacket.ChannelId) return;
 
         let channel = this.getManagedChannel(reqPacket.ChannelId);
