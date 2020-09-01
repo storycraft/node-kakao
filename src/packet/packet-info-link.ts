@@ -45,13 +45,15 @@ export class PacketInfoLinkRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawBody: any) {
-        let list = rawBody['ols'];
-
         this.LinkList = [];
 
-        for (let raw of list) {
-            this.LinkList.push(Serializer.deserialize<OpenLinkStruct>(raw, OpenLinkStruct.MAPPER));
+        let list = rawBody['ols'];
+        if (list) {
+            for (let raw of list) {
+                this.LinkList.push(Serializer.deserialize<OpenLinkStruct>(raw, OpenLinkStruct.MAPPER));
+            }
         }
+        
     }
 
 }
