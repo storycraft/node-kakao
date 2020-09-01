@@ -31,6 +31,8 @@ export abstract class Chat {
 
     private text: string;
 
+    private rawAttachment: any = {};
+
     private attachmentList: ChatAttachment[];
     private mentionMap: Map<string, MentionContentList>;
 
@@ -83,6 +85,10 @@ export abstract class Chat {
 
     get AttachmentList() {
         return this.attachmentList;
+    }
+
+    get RawAttachment() {
+        return this.rawAttachment;
     }
 
     get MentionMap() {
@@ -146,6 +152,7 @@ export abstract class Chat {
             
         }
 
+        this.rawAttachment = json;
         this.readAttachment(json, this.attachmentList);
 
         if (json['mentions']) this.processMention(json['mentions']);
@@ -194,19 +201,13 @@ export abstract class Chat {
 }
 
 export class UnknownChat extends Chat {
-
-    private rawAttachment: any = {};
     
     get Type() {
         return ChatType.Unknown;
     }
 
-    get RawAttachment() {
-        return this.rawAttachment;
-    }
-
-    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        this.rawAttachment = attachmentJson;
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void {
+        
     }
 
 }

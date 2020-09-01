@@ -15,6 +15,7 @@ import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
 import { PacketHeader } from "../../packet/packet-header-struct";
 import { PromiseTicket } from "../../ticket/promise-ticket";
 import { ChatType } from "../chat/chat-type";
+import { PacketMultiPostReq, PacketMultiPostRes } from "../../packet/media/packet-multi-post";
 
 export class MediaUploadInterface extends LocoSecureCommandInterface {
 
@@ -51,6 +52,24 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         return res;
     }
 
+    protected async uploadRawBuffer(offset: Long, data: Buffer) {
+        this.uploading = true;
+
+        let rawSocket = this.Socket as LocoSecureSocket;
+
+        let buf: Buffer;
+        if (offset.toNumber() > 0) {
+            buf = Buffer.alloc(data.length + offset.toNumber());
+            data.copy(buf, offset.toNumber());
+        } else {
+            buf = data;
+        }
+
+        rawSocket.sendBuffer(buf);
+
+        return this.ticketObj.createTicket();
+    }
+
     async upload(clientUserId: Long, key: string, channelId: Long, type: ChatType, name: string, data: Buffer, width: number, height: number): Promise<PacketCompleteRes> {
         if (this.uploading) {
             throw new Error(`Uploading already started`);
@@ -61,24 +80,28 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         let config = this.ConfigProvider.Configuration;
 
         let postRes = await this.requestPacketRes<PacketPostRes>(
-            new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false,
+            new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), true,
                 clientUserId, config.agent, config.version, config.netType, config.mccmnc)
         );
-        this.uploading = true;
 
-        // ok so destroying structure makes the transaction secure?
-        let rawSocket = this.Socket as LocoSecureSocket;
-        let buf: Buffer;
-        if (postRes.Offset.toNumber() > 0) {
-            buf = Buffer.alloc(data.byteLength + postRes.Offset.toNumber());
-            data.copy(buf, postRes.Offset.toNumber());
-        } else {
-            buf = data;
+        return this.uploadRawBuffer(postRes.Offset, data);
+    }
+
+    async uploadMulti(clientUserId: Long, key: string, type: ChatType, data: Buffer): Promise<PacketCompleteRes> {
+        if (this.uploading) {
+            throw new Error(`Uploading already started`);
         }
 
-        rawSocket.sendBuffer(data);
-        
-        return this.ticketObj.createTicket();
+        if (!this.Connected) await this.connect();
+
+        let config = this.ConfigProvider.Configuration;
+
+        let postRes = await this.requestPacketRes<PacketMultiPostRes>(
+            new PacketMultiPostReq(key, Long.fromNumber(data.byteLength), type,
+                clientUserId, config.agent, config.version, config.netType, config.mccmnc)
+        );
+
+        return this.uploadRawBuffer(postRes.Offset, data);
     }
 
 }

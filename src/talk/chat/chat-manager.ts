@@ -23,6 +23,7 @@ import { MessageTemplate } from "./template/message-template";
 import { RequestResult } from "../request/request-result";
 import { MediaTemplates } from "./template/media-template";
 import { StructType } from "../struct/struct-base";
+import { PacketForwardReq, PacketForwardRes } from "../../packet/packet-forward";
 
 export class ChatManager {
 
@@ -100,6 +101,10 @@ export class ChatManager {
         return this.sendRaw(channel, ChatType.Text, text, extra);
     }
 
+    async forwardChat(channel: ChatChannel, chat: Chat): Promise<Chat | null> {
+        return this.forwardRaw(channel, chat.Type, chat.Text, chat.RawAttachment);
+    }
+
     async sendRaw(channel: ChatChannel, type: ChatType, text: string, extra: { [ key: string ]: StructType }): Promise<Chat | null> {
         let extraText = JsonUtil.stringifyLoseless(extra);
         
@@ -108,6 +113,16 @@ export class ChatManager {
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
         return this.chatFromWriteRes(res, text, extraText);
+    }
+
+    async forwardRaw(channel: ChatChannel, type: ChatType, text: string, extra: { [ key: string ]: StructType }): Promise<Chat | null> {
+        let extraText = JsonUtil.stringifyLoseless(extra);
+        
+        let res = await this.client.NetworkManager.requestPacketRes<PacketForwardRes>(new PacketForwardReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, type, true, extraText));
+        
+        if (res.StatusCode !== StatusCode.SUCCESS) return null;
+
+        return this.chatFromChatlog(res.Chatlog!);
     }
 
     async sendMedia(channel: ChatChannel, template: MediaTemplates): Promise<Chat | null> {

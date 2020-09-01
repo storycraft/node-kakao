@@ -50,8 +50,6 @@ export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
         public ImageURL: string = '',
         public Size: Long = Long.ZERO,
         public MediaType: string = '',
-
-        //NO NEED TO FILL PROPERTIES AFTER THIS COMMENT
         
         public ThumbnailURL: string = '',
 
@@ -121,6 +119,61 @@ export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
         let path = await KakaoAPI.uploadAttachment(KakaoAPI.AttachmentType.IMAGE, data, name);
 
         return new PhotoAttachment(KakaoAPI.getUploadedFileKey(path), width, height, KakaoAPI.getUploadedFile(path, KakaoAPI.AttachmentType.IMAGE), Long.fromNumber(size));
+    }
+
+}
+
+export class MultiPhotoAttachment implements ChatAttachment {
+
+    constructor(
+        public KeyList: string[] = [],
+        public SizeList: Long[] = [],
+        public WidthList: number[] = [],
+        public HeightList: number[] = [],
+        public MediaTypeList: string[] = [],
+        public ImageURLList: string[] = [],
+        
+        public ThumbnailURLList: string[] = [],
+
+        public ThumbnailWidthList: number[] = [],
+        public ThumbnailHeightList: number[] = [],
+        ) {
+            
+    }
+
+    get RequiredMessageType() {
+        return ChatType.MultiPhoto;
+    }
+
+    readAttachment(rawJson: any) {
+        if (rawJson['kl']) this.KeyList = rawJson['kl'];
+
+        if (rawJson['wl']) this.WidthList = rawJson['wl'];
+        if (rawJson['hl']) this.HeightList = rawJson['hl'];
+
+        if (rawJson['imageUrls']) this.ImageURLList = rawJson['imageUrls'];
+        if (rawJson['thumbnailUrls']) this.ThumbnailURLList = rawJson['thumbnailUrls'];
+
+        if (rawJson['mtl']) this.MediaTypeList = rawJson['mtl'];
+        
+        if (rawJson['thumbnailWidths']) this.ThumbnailWidthList = rawJson['thumbnailWidths'];
+        if (rawJson['thumbnailHeights']) this.ThumbnailHeightList = rawJson['thumbnailHeights'];
+        
+        if (rawJson['sl']) this.SizeList = rawJson['sl'];
+    }
+
+    toJsonAttachment() {
+        return {
+            'kl': this.KeyList,
+            'wl': this.WidthList,
+            'hl': this.HeightList,
+            'imageUrls': this.ImageURLList,
+            'thumbnailUrls': this.ThumbnailURLList,
+            'mtl': this.MediaTypeList,
+            'thumbnailWidths': this.ThumbnailWidthList,
+            'thumbnailHeights': this.ThumbnailHeightList,
+            'sl': this.SizeList
+        };
     }
 
 }
