@@ -20,7 +20,7 @@ import { PacketChatOnRoomReq, PacketChatOnRoomRes } from "../../packet/packet-ch
 import { PacketMessageNotiReadReq } from "../../packet/packet-noti-read";
 import { PacketUpdateChannelRes, PacketUpdateChannelReq } from "../../packet/packet-update-channel";
 import { PacketSetMetaReq, PacketSetMetaRes } from "../../packet/packet-set-meta";
-import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../struct/channel-meta-struct";
+import { ChannelMetaType, ChannelClientMetaType, ChannelMetaStruct, PrivilegeMetaContent, ProfileMetaContent, TvLiveMetaContent, TvMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from "../struct/channel-meta-struct";
 import { PacketSetClientMetaRes, PacketSetClientMetaReq } from "../../packet/packet-set-client-meta";
 import { PacketGetMetaRes, PacketGetMetaReq, PacketGetMetaListReq, PacketGetMetaListRes } from "../../packet/packet-get-meta";
 import { ChannelSettings } from "./channel-settings";
@@ -36,6 +36,7 @@ import { RequestResult } from "../request/request-result";
 import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { PacketAddMemberReq, PacketAddMemberRes } from "../../packet/packet-add-member";
 import { PacketKickLeaveReq, PacketKickLeaveRes } from "../../packet/packet-kick-leave";
+import { JsonUtil } from "../../util/json-util";
 
 export class ChannelManager extends IdStore<ChatChannel> {
 
@@ -295,27 +296,31 @@ export class ChannelManager extends IdStore<ChatChannel> {
     }
 
     async setPrivilegeMeta(channel: ChatChannel, content: PrivilegeMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.PRIVILEGE, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.PRIVILEGE, JsonUtil.stringifyLoseless(content));
     }
 
     async setProfileMeta(channel: ChatChannel, content: ProfileMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.PROFILE, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.PROFILE, JsonUtil.stringifyLoseless(content));
     }
 
     async setTvMeta(channel: ChatChannel, content: TvMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.TV, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.TV, JsonUtil.stringifyLoseless(content));
     }
 
     async setTvLiveMeta(channel: ChatChannel, content: TvLiveMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.TV_LIVE, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
     }
 
     async setLiveTalkCountMeta(channel: ChatChannel, content: LiveTalkCountMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.LIVE_TALK_COUNT, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.LIVE_TALK_COUNT, JsonUtil.stringifyLoseless(content));
     }
 
     async setGroupMeta(channel: ChatChannel, content: GroupMetaContent): Promise<RequestResult<boolean>> {
-        return this.updateChannelMeta(channel, ChannelMetaType.GROUP, JSON.stringify(content));
+        return this.updateChannelMeta(channel, ChannelMetaType.GROUP, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setBotMeta(channel: ChatChannel, content: BotMetaContent): Promise<RequestResult<boolean>> {
+        return this.updateChannelMeta(channel, ChannelMetaType.BOT, JsonUtil.stringifyLoseless(content));
     }
 
     removeChannel(channelId: Long) {

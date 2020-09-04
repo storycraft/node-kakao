@@ -8,7 +8,7 @@ import { MessageTemplate } from "../chat/template/message-template";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { LocoClient } from "../../client";
 import { OpenMemberType } from "../open/open-link-type";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct, ChannelMetaType } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct, ChannelMetaType, BotMetaContent } from "../struct/channel-meta-struct";
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
@@ -101,6 +101,8 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
     setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<RequestResult<boolean>>;
 
     setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>>;
+
+    setBotMeta(content: BotMetaContent): Promise<RequestResult<boolean>>;
 
 }
 

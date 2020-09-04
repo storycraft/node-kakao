@@ -124,6 +124,8 @@ export * from './talk/struct/api/open/open-upload-key-struct';
 
 export * from './talk/struct/api/open/template/open-post-template';
 
+export * from './talk/struct/bot/bot-command-struct';
+
 export * from './talk/struct/channel-data-struct';
 export * from './talk/struct/channel-info-struct';
 export * from './talk/struct/chatlog-struct';

@@ -9,7 +9,7 @@ import { OpenMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../str
 import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo, NormalChatUserInfo } from "../user/chat-user";
 import { OpenMemberType } from "../open/open-link-type";
 import { Long } from "bson";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct, BotMetaContent } from "../struct/channel-meta-struct";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { MessageTemplate } from "../chat/template/message-template";
 import { Chat } from "../chat/chat";
@@ -272,6 +272,10 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
 
     async setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>> {
         return this.manager.setGroupMeta(this, content);
+    }
+
+    async setBotMeta(content: BotMetaContent): Promise<RequestResult<boolean>> {
+        return this.manager.setBotMeta(this, content);
     }
 
     updateData(dataStruct: ChannelDataStruct) {

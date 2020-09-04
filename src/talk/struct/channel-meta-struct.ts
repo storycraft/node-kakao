@@ -6,6 +6,7 @@
 
 import { StructBase } from "./struct-base";
 import { Long } from "bson";
+import { BotAddCommandStruct, BotDelCommandStruct } from "./bot/bot-command-struct";
 
 export enum ChannelMetaType {
     
@@ -19,7 +20,8 @@ export enum ChannelMetaType {
     TV_LIVE = 7,
     PLUS_BACKGROUND = 8,
     LIVE_TALK_INFO = 11,
-    LIVE_TALK_COUNT = 12
+    LIVE_TALK_COUNT = 12,
+    BOT = 14
 
 }
 
@@ -102,5 +104,12 @@ export interface GroupMetaContent extends StructBase {
     group_name: string;
     group_profile_thumbnail_url: string;
     group_profile_url: string;
+
+}
+
+export interface BotMetaContent extends StructBase {
+
+    add?: BotAddCommandStruct[];
+    del?: BotDelCommandStruct[];
 
 }
