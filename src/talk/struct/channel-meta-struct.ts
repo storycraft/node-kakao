@@ -21,7 +21,9 @@ export enum ChannelMetaType {
     PLUS_BACKGROUND = 8,
     LIVE_TALK_INFO = 11,
     LIVE_TALK_COUNT = 12,
-    BOT = 14
+    OPEN_CHANNEL_CHAT = 13,
+    BOT = 14,
+    
 
 }
 
