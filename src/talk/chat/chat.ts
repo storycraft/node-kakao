@@ -2,7 +2,7 @@ import { ChatType } from "./chat-type";
 import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
-import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
+import { ChatAttachment, PhotoAttachment, MessageTemplate, MediaTemplates } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment, ReplyAttachment } from "./attachment/chat-attachment";
 import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
@@ -174,6 +174,10 @@ export abstract class Chat {
 
     async replyText(...textFormat: (string | ChatMention)[]) {
         return this.Channel.sendText(...textFormat);
+    }
+
+    async replyMedia(template: MediaTemplates) {
+        return this.Channel.sendMedia(template);
     }
 
     async replyTemplate(template: MessageTemplate) {
