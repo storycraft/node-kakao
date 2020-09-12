@@ -50,7 +50,8 @@ client.on('message', (chat: Chat) => {
 
 ```typescript
 
-import { Chat, ChatMention } from '@storycraft/node-kakao';
+import { Chat, ChatType } from '@storycraft/node-kakao';
+import * as fs from 'fs';
 
 client.on('message', (chat: Chat) => {
     let userInfo = chat.Channel.getUserInfo(chat.Sender);
@@ -63,7 +64,7 @@ client.on('message', (chat: Chat) => {
             name: 'nyancat.png',
             width: 800,
             height: 800,
-            data: readFileSync('C:\\nyancat.png'),
+            data: fs.readFileSync('C:\\nyancat.png'), // sync method is not recommended
             ext: 'png'
         });
     }
