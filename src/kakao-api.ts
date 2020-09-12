@@ -1,8 +1,6 @@
-import * as request from "request-promise";
-import * as querystring from "querystring";
-import { Stream } from "stream";
-import { strict } from "assert";
-import * as Crypto from "crypto";
+import Axios from "axios";
+import * as FormData from "form-data";
+import { AHeaderDecorator } from "./api/api-header-decorator";
 
 /*
  * Created on Sun Oct 13 2019
@@ -10,72 +8,12 @@ import * as Crypto from "crypto";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+// Deprecated and won't show on production
 export class KakaoAPI {
-
-    static get LocoPEMPublicKey() {
-        return `-----BEGIN PUBLIC KEY-----\nMIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKCAQEApElgRBx+g7sniYFW7LE8ivrwXShKTRFV8lXNItMXbN5QSC8vJ/cTSOTS619Xv5Zx7xXJIk4EKxtWesEGbgZpEUP2xQ+IeH9oz0JxayEMvvD1nVNAWgpWE4pociEoArsK7qY3YwXb1CiDHo9hojLv7djbo3cwXvlyMh4TUrX2RjCZPlVJxk/LVjzcl9ohJLkl3eoSrf0AE4kQ9mk3+raEhq5Dv+IDxKYX+fIytUWKmrQJusjtre9oVUX5sBOYZ0dzez/XapusEhUWImmB6mciVXfRXQ8IK4IH6vfNyxMSOTfLEhRYN2SMLzplAYFiMV536tLS3VmG5GJRdkpDubqPeQIBAw==\n-----END PUBLIC KEY-----`;
-    }
-
-    static get LocoPublicKey() {
-        return {
-            n: Buffer.from('a44960441c7e83bb27898156ecb13c8afaf05d284a4d1155f255cd22d3176cde50482f2f27f71348e4d2eb5f57bf9671ef15c9224e042b1b567ac1066e06691143f6c50f88787f68cf42716b210cbef0f59d53405a0a56138a6872212802bb0aeea6376305dbd428831e8f61a232efedd8dba377305ef972321e1352b5f64630993e5549c64fcb563cdc97da2124b925ddea12adfd00138910f66937fab68486ae43bfe203c4a617f9f232b5458a9ab409bac8edadef685545f9b013986747737b3fd76a9bac121516226981ea67225577d15d0f082b8207eaf7cdcb13123937cb12145837648c2f3a65018162315e77ead2d2dd5986e46251764a43b9ba8f79', 'hex'),
-            e: 0x03
-        };
-    }
-    
-    static get Agent() {
-        return 'win32';
-    }
-
-    static get Version() {
-        return '3.1.2';
-    }
-
-    static get InternalAppVersion() {
-        return `${this.Version}.${this.InternalAppSubVersion}`;
-    }
-
-    static get InternalAppSubVersion() {
-        return '2478';
-    }
-
-    static get OSVersion() {
-        return '10.0';
-    }
-
-    static get Language() {
-        return 'ko';
-    }
-
-    static get AuthUserAgent() {
-        return `KT/${KakaoAPI.Version} Wd/${KakaoAPI.OSVersion} ${KakaoAPI.Language}`;
-    }
-
-    static get AuthHeaderAgent() {
-        return `${KakaoAPI.Agent}/${KakaoAPI.Version}/${KakaoAPI.Language}`;
-    }
 
     static get InternalProtocol() {
         return 'https';
     }
-
-    static get AccountInternalHost() {
-        return 'ac-sb-talk.kakao.com';
-    }
-
-    static get InternalHost() {
-        return 'sb-talk.kakao.com';
-    }
-
-    static get ServiceHost() {
-        return 'katalk.kakao.com';
-    }
-
-    static get LocoEntry() {
-        return 'booking-loco.kakao.com';
-    }
-
-
 
     static get ProfileUploadHost() {
         return `up-p.talk.kakao.com`;
@@ -161,22 +99,19 @@ export class KakaoAPI {
     
     // This will return path. Use getUploadedFile to get Full URL
     static async uploadProfile(img: Buffer, name: string, userId: number = -1): Promise<string> {
-        let data: any = {
-            'user_id': userId,
-            'photo': {
-                value: img,
-                options: {
-                    'filename': name
-                }
-            }
-        };
+        let formData = new FormData();
 
-        let value = await request(KakaoAPI.ProfileUploadURL, {
+        formData.append('user_id', userId.toString());
+        formData.append('photo', img, { filename: name });
+
+        let res = await Axios.request({
+            url: KakaoAPI.ProfileUploadURL,
             method: 'POST',
-            formData: data
+            data: formData,
+            responseType: 'text'
         });
 
-        return value as string;
+        return res.data;
     }
 
     static getUploadURL(type: KakaoAPI.AttachmentType) {
@@ -217,30 +152,31 @@ export class KakaoAPI {
     }
 
     static async uploadAttachment(type: KakaoAPI.AttachmentType, attachment: Buffer, name: string, userId: number = -1): Promise<string> {
-        let req = request(KakaoAPI.getUploadURL(type), {
+        let formData = new FormData();
+
+        formData.append('user_id', userId.toString());
+        formData.append('attachment_type', type);
+        formData.append('attachment', attachment, { filename: name });
+
+        let headers = {};
+        AHeaderDecorator.INSTANCE.fillHeader(headers);
+        
+        let req = Axios.request({
+            url: KakaoAPI.getUploadURL(type),
             method: 'POST',
-            headers: {
-                'A': KakaoAPI.AuthHeaderAgent
-            },
-            formData: {
-                'user_id': userId,
-                'attachment_type': type,
-                'attachment': {
-                    value: attachment,
-                    options: {
-                        'filename': name,
-                        'contentType': null
-                    }
-                }
-            }
+            headers: headers,
+            data: formData,
+            responseType: 'json'
         });
 
-        let str: string = await req;
+        let res = await req;
+
+        let data = await res.data as any;
 
         try {
-            return JSON.parse(str)['path']; //For some types
+            return data['path']; //For some types
         } catch (e) {
-            return str;
+            return '';
         }
     }
 
@@ -251,34 +187,6 @@ export class KakaoAPI {
     static getUploadedFileKey(uploadPath: string) {
         return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
     }
-
-    static get LocoEntryPort() {
-        return 443;
-    }
-
-    static get AccountInternalURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.AccountInternalHost}`;
-    }
-
-    static get InternalURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.InternalHost}`;
-    }
-
-    static get ServiceURL() {
-        return `${KakaoAPI.InternalProtocol}://${KakaoAPI.ServiceHost}`;
-    }
-
-    static get AccountPath() {
-        return 'account';
-    }
-
-
-    
-    static getAccountInternalURL(type: KakaoAPI.Account) {
-        return `${KakaoAPI.AccountInternalURL}/${KakaoAPI.Agent}/${KakaoAPI.AccountPath}/${type}`;
-    }
-
-
 
     static getEmoticonHeader(screenWidth: number = 1080, screenHeight: number = 1920) {
         return {
@@ -308,159 +216,23 @@ export class KakaoAPI {
 
 
     static getEmoticonImage(path: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonImageURL(path, lang),
+        return Axios.get(KakaoAPI.getEmoticonImageURL(path, lang), {
             headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
         });
     }
 
     static getEmoticonPack(id: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonPackURL(id, lang),
-            headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
+        return Axios.get(KakaoAPI.getEmoticonPackURL(id, lang), {
+            headers: KakaoAPI.getEmoticonHeader()
         });
     }
 
     static getEmoticonThumbnailPack(id: string, lang: string = 'kr') {
-        return request({
-            url: KakaoAPI.getEmoticonThumbnailPackURL(id, lang),
-            headers: KakaoAPI.getEmoticonHeader(),
-            method: 'GET'
+        return Axios.get(KakaoAPI.getEmoticonThumbnailPackURL(id, lang), {
+            headers: KakaoAPI.getEmoticonHeader()
         });
     }
 
-
-
-    static getAuthHeader(verifyCodeExtra: string, contentLength: number) {
-        return {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': contentLength,
-            'Host': KakaoAPI.AccountInternalHost,
-            'A': KakaoAPI.AuthHeaderAgent,
-            'X-VC': verifyCodeExtra,
-            'User-Agent': KakaoAPI.AuthUserAgent,
-            'Accept': '*/*',
-            'Accept-Language': KakaoAPI.Language
-        };
-    }
-
-    static getLoginData(email: string, password: string, deviceUUID: string, deviceName: string, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
-        return {
-            'email': email,
-            'password': password,
-            'device_uuid': deviceUUID,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'permanent': permanent,
-            'forced': forced
-        }
-    }
-
-    static getAutoLoginData(email: string, token: string, deviceUUID: string, deviceName: string, locked: boolean, permanent = true, osVersion: string = KakaoAPI.OSVersion, forced: boolean = false) {
-        return {
-            'email': email,
-            'password': token,
-            'device_uuid': deviceUUID,
-            'permanent': permanent,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'forced': forced,
-            'autowithlock': locked,
-            'auto_login': true
-        }
-    }
-
-    static getDeviceRegisterData(email: string, password: string, deviceUUID: string, deviceName: string, passcode: string, permanent = true, osVersion: string = KakaoAPI.OSVersion) {
-        return {
-            'email': email,
-            'password': password,
-            'device_uuid': deviceUUID,
-            'os_version': osVersion,
-            'device_name': deviceName,
-            'permanent': permanent,
-            'passcode': passcode
-        }
-    }
-    
-    static requestLogin(email: string, password: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion, forced);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.LOGIN),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static requestAutoLogin(locked: boolean, email: string, token: string, deviceUUID: string, deviceName: string, forced?: boolean, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getAutoLoginData(email, token, deviceUUID, deviceName, locked, permanent, osVersion, forced);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.LOGIN),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static requestPasscode(email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let loginData = KakaoAPI.getLoginData(email, password, deviceUUID, deviceName, permanent, osVersion);
-
-        let queryData = querystring.stringify(loginData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.REQUEST_PASSCODE),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static registerDevice(passcode: string, email: string, password: string, deviceUUID: string, deviceName: string, permanent?: boolean, osVersion?: string, verifyCodeExtra: string = this.calculateXVCKey(this.AuthUserAgent, email, deviceUUID)) {
-        let deviceRegisterData = KakaoAPI.getDeviceRegisterData(email, password, deviceUUID, deviceName, passcode, permanent, osVersion);
-
-        let queryData = querystring.stringify(deviceRegisterData);
-        
-        return request({
-            url: KakaoAPI.getAccountInternalURL(KakaoAPI.Account.REGISTER_DEVICE),
-            headers: KakaoAPI.getAuthHeader(verifyCodeExtra, queryData.length),
-            body: queryData,
-            method: 'POST'
-        });
-    }
-
-    static calculateXVCKey(aHeader: string, email: string, deviceUUID: string): string {
-        return this.calculateFullXVCKey(aHeader, email, deviceUUID).substring(0, 16);
-    }
-
-    static calculateFullXVCKey(userAgent: string, email: string, deviceUUID: string): string {
-        let res = `HEATH|${userAgent}|DEMIAN|${email}|${deviceUUID}`;
-
-        let hash = Crypto.createHash('sha512');
-
-        hash.update(res);
-
-        return hash.digest('hex');
-    }
-
-    static createSendTextURL(message: string) {
-        return `kakaotalk://leverage?action=sendtext&message=${encodeURIComponent(message)}`;
-    }
-
-    static createJoinLinkURL(code: string, ref: string = 'EW') {
-        return `kakaoopen://join?l=${code}&r=${ref}`;
-    }
-
-    static createSessionURL(token: string, redirectURL: string) {
-        return `https://accounts.kakao.com/weblogin/login_redirect?continue=${encodeURIComponent(redirectURL)}&token=${token}`;
-    }
 }
 
 
@@ -474,38 +246,5 @@ export namespace KakaoAPI {
         FILE = 'image/jpeg'//'application/*' //THIS DOESNT WORK WTF WHY
 
     }
-
-    export enum Account {
-        
-        LOGIN = 'login.json',
-        REGISTER_DEVICE = 'register_device.json',
-        REQUEST_PASSCODE = 'request_passcode.json'
     
-    }
-
-    export enum RequestStatusCode { // Note StatusCode in loco-packet-base.ts uses almost same code. (loco packets were https requests before)
-
-        SUCCESS = 0,
-        LOGIN_FAILED_REASON = 12,
-        LOGIN_FAILED = 30,
-        MOBILE_UNREGISTERED = 32,
-        DEVICE_NOT_REGISTERED = -100,
-        ANOTHER_LOGON = -101,
-        DEVICE_REGISTER_FAILED = -102,
-        PASSCODE_REQUEST_FAILED = -112,
-        OPERATION_DENIED = -500,
-        ACCOUNT_RESTRICTED = -997
-
-    }
-
-    export enum LogonAccount {
-    
-        LOGIN_TOKEN = 'login_token.json',
-        REQUEST_VERIFY_EMAIL = 'request_verify_email.json',
-        RENEW_TOKEN = 'renew_token.json',
-        CHANGE_UUID = 'change_uuid.json',
-        CAN_CHANGE_UUID = 'can_change_uuid.json'
-    
-    }
-
 }

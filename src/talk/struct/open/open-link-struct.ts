@@ -88,7 +88,7 @@ export namespace OpenLinkMemberStruct {
         fullProfileImageUrl: 'fpi',
         memberType: 'lmt',
         profileType: 'ptp',
-        linkId: 'li',
+        linkId: 'pli',
         openToken: 'opt',
         pv: 'pv'
 

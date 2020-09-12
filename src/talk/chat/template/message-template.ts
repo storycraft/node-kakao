@@ -13,12 +13,10 @@ import { ChatFeeds } from "../chat-feed";
 
 export interface MessageTemplate {
 
-    readonly Valid: boolean;
+    getType(): ChatType;
 
-    getMessageType(): ChatType;
-
-    getPacketText(): string;
-    getPacketExtra(): string;
+    getText(): string;
+    getExtra(): string;
 
 }
 
@@ -56,15 +54,11 @@ export class AttachmentTemplate implements MessageTemplate {
         this.textExtra = msg.extra;
     }
 
-    get Valid() {
-        return true;
-    }
-
-    getMessageType() {
+    getType() {
         return this.attachment.RequiredMessageType;
     }
 
-    getPacketText() {
+    getText() {
         return this.packetText;
     }
 
@@ -72,7 +66,7 @@ export class AttachmentTemplate implements MessageTemplate {
         return { ...this.textExtra, ...this.attachment.toJsonAttachment() };
     }
 
-    getPacketExtra() {
+    getExtra() {
         return JsonUtil.stringifyLoseless(this.getRawExtra());
     }
 
@@ -97,33 +91,6 @@ export class ReplyContentTemplate extends AttachmentTemplate {
 
     protected getRawExtra() {
         return Object.assign(super.getRawExtra(), this.getReplyContent());
-    }
-
-}
-
-export class FeedTemplate implements MessageTemplate {
-
-    constructor(
-        private feed: ChatFeeds,
-        private extraContent?: RichFeedAttachment
-    ) {
-
-    }
-    
-    get Valid() {
-        return !!this.feed;
-    }
-
-    getMessageType(): ChatType {
-        return ChatType.Feed;
-    }
-
-    getPacketText(): string {
-        return JsonUtil.stringifyLoseless(this.feed);
-    }
-
-    getPacketExtra(): string {
-        return this.extraContent && JsonUtil.stringifyLoseless(this.extraContent.toJsonAttachment());
     }
 
 }

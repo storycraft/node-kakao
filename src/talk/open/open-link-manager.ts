@@ -17,6 +17,7 @@ import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet/packet-ki
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet/packet-delete-link";
 import { PacketRewriteReq, PacketRewriteRes } from "../../packet/packet-rewrite";
 import { FeedType } from "../feed/feed-type";
+import { ChatType } from "../chat/chat-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet/packet-set-mem-type";
 import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "../../packet/packet-update-link-profile";
 import { OpenMemberType, OpenLinkType } from "./open-link-type";
@@ -174,13 +175,13 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async hideChat(channel: OpenChatChannel, logId: Long): Promise<RequestResult<boolean>> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, 1, FeedType.OPENLINK_REWRITE_FEED));
+    async hideChat(channel: OpenChatChannel, logId: Long, type: ChatType): Promise<RequestResult<boolean>> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, type, FeedType.OPENLINK_REWRITE_FEED));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
 
-    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>> {
+    async setOpenMemberType(channel: OpenChatChannel, userId: Long, type: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(channel.LinkId, channel.Id, [ userId ], [ type ]));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };

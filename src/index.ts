@@ -5,9 +5,17 @@
  */
 
 export * from './event/events';
-export * from './kakao-api';
+export * from './config/client-config';
+export * from './config/client-config-provider';
 
-export * from './api/api-client';
+export * from './api/web-api-client';
+export * from './api/api-header-decorator';
+
+export * from './api/auth-client';
+export * from './api/service-client';
+export * from './api/open-chat-client';
+export * from './api/open-upload-api';
+export * from './api/channel-board-client';
 
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
@@ -41,6 +49,8 @@ export * from './talk/chat/chat-builder';
 export * from './talk/chat/chat';
 export * from './talk/chat/chat-feed';
 
+export * from './talk/chat/option/chat-option';
+
 export * from './talk/feed/feed-type';
 export * from './talk/voip/voip-type';
 
@@ -55,6 +65,8 @@ export * from './talk/chat/attachment/rich-feed-attachment';
 
 export * from './talk/chat/template/message-template';
 export * from './talk/chat/template/media-template';
+
+export * from './talk/relay/relay-event-type';
 
 export * from './talk/chat/chat-manager';
 
@@ -77,11 +89,20 @@ export * from './talk/user/user-manager';
 
 export * from './talk/struct/struct-base';
 
+export * from './talk/struct/auth/auth-api-struct';
 export * from './talk/struct/auth/login-access-data-struct';
 
-export * from './talk/struct/api/api-struct';
+export * from './talk/struct/web-api-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 export * from './talk/struct/api/account/login-token-struct';
+
+export * from './talk/struct/api/board/channel-board-struct';
+export * from './talk/struct/api/board/channel-post-struct';
+export * from './talk/struct/api/board/channel-post-comment-struct';
+export * from './talk/struct/api/board/channel-post-emotion-struct';
+export * from './talk/struct/api/board/channel-post-list-struct';
+export * from './talk/struct/api/board/template/board-comment-template';
+export * from './talk/struct/api/board/template/board-post-template';
 
 export * from './talk/struct/api/friends/friend-struct';
 export * from './talk/struct/api/friends/friend-delete-struct';
@@ -93,6 +114,17 @@ export * from './talk/struct/api/friends/friend-search-struct';
 
 export * from './talk/struct/api/profile/profile-struct';
 export * from './talk/struct/api/profile/profile-req-struct';
+
+export * from './talk/struct/api/open/open-struct';
+export * from './talk/struct/api/open/open-post-struct';
+export * from './talk/struct/api/open/open-preset-struct';
+export * from './talk/struct/api/open/open-recommend-struct';
+export * from './talk/struct/api/open/open-search-struct';
+export * from './talk/struct/api/open/open-upload-key-struct';
+
+export * from './talk/struct/api/open/template/open-post-template';
+
+export * from './talk/struct/bot/bot-command-struct';
 
 export * from './talk/struct/channel-data-struct';
 export * from './talk/struct/channel-info-struct';
@@ -106,7 +138,7 @@ export * from './talk/struct/auth/login-access-data-struct';
 export * from './talk/struct/channel-board-meta-struct';
 export * from './talk/struct/api/account/client-settings-struct';
 
-export * from './api/api-client';
+export * from './api/service-client';
 
 export * from './oauth/access-data-provider';
 

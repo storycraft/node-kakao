@@ -13,7 +13,7 @@ export class PacketMultiChatlogReq extends LocoBsonRequestPacket {
 
     constructor(
         public ChannelIdList: Long[] = [],
-        public SinceList: number[] = [],
+        public SinceList: Long[] = [],
     ) {
         super();
     }

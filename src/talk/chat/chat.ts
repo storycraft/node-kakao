@@ -2,7 +2,7 @@ import { ChatType } from "./chat-type";
 import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
-import { ChatAttachment, PhotoAttachment, MessageTemplate } from "../..";
+import { ChatAttachment, PhotoAttachment, MessageTemplate, MediaTemplates } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment, ReplyAttachment } from "./attachment/chat-attachment";
 import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
@@ -30,6 +30,8 @@ export abstract class Chat {
     private messageId: number;
 
     private text: string;
+
+    private rawAttachment: any = {};
 
     private attachmentList: ChatAttachment[];
     private mentionMap: Map<string, MentionContentList>;
@@ -83,6 +85,10 @@ export abstract class Chat {
 
     get AttachmentList() {
         return this.attachmentList;
+    }
+
+    get RawAttachment() {
+        return this.rawAttachment;
     }
 
     get MentionMap() {
@@ -146,6 +152,7 @@ export abstract class Chat {
             
         }
 
+        this.rawAttachment = json;
         this.readAttachment(json, this.attachmentList);
 
         if (json['mentions']) this.processMention(json['mentions']);
@@ -167,6 +174,10 @@ export abstract class Chat {
 
     async replyText(...textFormat: (string | ChatMention)[]) {
         return this.Channel.sendText(...textFormat);
+    }
+
+    async replyMedia(template: MediaTemplates) {
+        return this.Channel.sendMedia(template);
     }
 
     async replyTemplate(template: MessageTemplate) {
@@ -194,19 +205,13 @@ export abstract class Chat {
 }
 
 export class UnknownChat extends Chat {
-
-    private rawAttachment: any = {};
     
     get Type() {
         return ChatType.Unknown;
     }
 
-    get RawAttachment() {
-        return this.rawAttachment;
-    }
-
-    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
-        this.rawAttachment = attachmentJson;
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void {
+        
     }
 
 }
@@ -298,10 +303,11 @@ export class MultiPhotoChat extends PhotoChat {
                 attachmentJson['wl'][i],
                 attachmentJson['hl'][i],
                 attachmentJson['imageUrls'][i],
+                attachmentJson['sl'][i],
+                attachmentJson['mtl'][i],
                 attachmentJson['thumbnailUrls'][i],
                 attachmentJson['thumbnailWidths'][i],
-                attachmentJson['thumbnailHeights'][i],
-                attachmentJson['sl'][i]
+                attachmentJson['thumbnailHeights'][i]
             );
 
             attachmentList.push(photoAttachment);
@@ -334,6 +340,21 @@ export class StaticEmoticonChat extends EmoticonChat {
 }
 
 export class AnimatedEmoticonChat extends EmoticonChat {
+    
+    get Type() {
+        return ChatType.StickerAni;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new EmoticonAttachment();
+        attachment.readAttachment(attachmentJson);
+
+        attachmentList.push(attachment);
+    }
+
+}
+
+export class GifEmoticonChat extends EmoticonChat {
     
     get Type() {
         return ChatType.StickerAni;
@@ -483,6 +504,7 @@ export namespace TypeMap {
     typeMap.set(ChatType.Video, VideoChat);
     typeMap.set(ChatType.Sticker, StaticEmoticonChat);
     typeMap.set(ChatType.StickerAni, AnimatedEmoticonChat);
+    typeMap.set(ChatType.StickerGif, GifEmoticonChat);
     typeMap.set(ChatType.Search, SharpSearchChat);
     typeMap.set(ChatType.Map, MapChat);
     typeMap.set(ChatType.Reply, ReplyChat);

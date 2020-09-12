@@ -5,18 +5,17 @@
  */
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "../loco-bson-packet";
-import { KakaoAPI } from "../../kakao-api";
 import { Long } from "bson";
 
 export class PacketBuyCallServerReq extends LocoBsonRequestPacket {
 
     constructor(
         public UserId: Long = Long.ZERO,
-        public Os: string = KakaoAPI.Agent,
+        public Os: string = '',
         public NetType: number = 0,
-        public Appver: string = KakaoAPI.InternalAppVersion,
-        public NetworkMccMnc: string = '999',
-        public CountryIso: string = 'KR'
+        public Appver: string = '',
+        public NetworkMccMnc: string = '',
+        public CountryIso: string = ''
     ) {
         super();
     }

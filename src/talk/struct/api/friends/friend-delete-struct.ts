@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ApiStruct } from "../api-struct";
+import { WebApiStruct } from "../../web-api-struct";
 
-export interface FriendDeleteStruct extends ApiStruct {
+export interface FriendDeleteStruct extends WebApiStruct {
 
     friend_ids: number[];
 

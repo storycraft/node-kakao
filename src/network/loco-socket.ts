@@ -128,10 +128,14 @@ export abstract class LocoBasicSocket implements LocoSocket {
     }
 
     dataReceived(header: PacketHeader, data: Buffer) {
-        this.receiver.responseReceived(header, data);
+        try {
+            this.receiver.responseReceived(header, data);
 
-        if (!this.keepAlive) {
-            this.disconnect();
+            if (!this.keepAlive) {
+                this.disconnect();
+            }
+        } catch (err) {
+            this.onError(err);
         }
     }
 
@@ -195,6 +199,8 @@ export abstract class LocoBasicSocket implements LocoSocket {
 
     protected abstract onEnd(buffer: Buffer): void;
 
-    protected abstract onError(e: any): void;
+    protected onError(err: Error) {
+        this.receiver.onError(err);
+    }
 
 }

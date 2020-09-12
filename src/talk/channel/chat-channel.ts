@@ -1,13 +1,14 @@
-import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo } from "../user/chat-user";
+import { ChatUser, UserInfo, OpenChatUserInfo, ChatUserInfo, DisplayUserInfo, NormalChatUserInfo } from "../user/chat-user";
 import { Long } from "bson";
 import { ChannelType } from "./channel-type";
 import { EventEmitter } from "events";
+import { ChatType } from "../chat/chat-type";
 import { Chat, FeedChat } from "../chat/chat";
 import { MessageTemplate } from "../chat/template/message-template";
 import { ChatContent } from "../chat/attachment/chat-attachment";
 import { LocoClient } from "../../client";
 import { OpenMemberType } from "../open/open-link-type";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, ChannelMetaStruct, ChannelMetaType, BotMetaContent } from "../struct/channel-meta-struct";
 import { ChannelSettings } from "./channel-settings";
 import { OpenLinkChannel } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
@@ -50,6 +51,11 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     readonly DisplayUserInfoList: DisplayUserInfo[];
 
+    readonly UserCount: number;
+
+    getDisplayName(): string;
+    getDisplayProfileList(): string[];
+
     getUserInfoList(): I[];
 
     hasUserInfo(id: Long): boolean;
@@ -62,6 +68,9 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     getLatestUserInfo(user: ChatUser): Promise<ChatUserInfo | null>;
     getLatestUserInfoId(id: Long): Promise<ChatUserInfo | null>;
+
+    hasChannelMeta(type: ChannelMetaType): boolean;
+    getChannelMeta(type: ChannelMetaType): ChannelMetaStruct | null;
 
     chatON(): Promise<RequestResult<boolean>>;
 
@@ -93,11 +102,25 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
 
     setGroupMeta(content: GroupMetaContent): Promise<RequestResult<boolean>>;
 
+    setBotMeta(content: BotMetaContent): Promise<RequestResult<boolean>>;
+
 }
 
-export interface MemoChatChannel<I extends ChatUserInfo = ChatUserInfo> extends ChatChannel<I> {
+export interface NormalChatChannel<I extends NormalChatUserInfo = NormalChatUserInfo> extends ChatChannel<I> {
 
-    
+    inviteUser(user: ChatUser): Promise<RequestResult<boolean>>;
+    inviteUserId(userId: Long): Promise<RequestResult<boolean>>;
+
+    inviteUserList(userList: ChatUser[]): Promise<RequestResult<boolean>>;
+    inviteUserIdList(userIdList: Long[]): Promise<RequestResult<boolean>>;
+
+    isOpenChat(): false;
+
+}
+
+export interface MemoChatChannel<I extends NormalChatUserInfo = NormalChatUserInfo> extends ChatChannel<I> {
+
+    isOpenChat(): false;
 
 }
 
@@ -132,12 +155,13 @@ export interface OpenChatChannel<I extends OpenChatUserInfo = OpenChatUserInfo> 
 
     hideChat(chat: Chat): Promise<RequestResult<boolean>>;
     hideChatId(logId: Long): Promise<RequestResult<boolean>>;
+    hideChatIdType(logId: Long, type: ChatType): Promise<RequestResult<boolean>>;
 
     changeProfile(profile: OpenProfileTemplates): Promise<RequestResult<boolean>>;
 
-    setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
+    setOpenMemberType(user: ChatUser, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>>;
 
-    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER): Promise<RequestResult<boolean>>;
+    setOpenMemberTypeId(userId: Long, memberType: OpenMemberType.NONE | OpenMemberType.MANAGER | OpenMemberType.BOT): Promise<RequestResult<boolean>>;
 
     handOverHost(newHost: ChatUser): Promise<RequestResult<boolean>>;
     handOverHostId(newHostId: Long): Promise<RequestResult<boolean>>;

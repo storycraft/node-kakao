@@ -12,7 +12,8 @@ import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed,
 import { LocoKickoutType } from "../packet/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
 import { OpenLinkChannel } from "../talk/open/open-link";
-import { OpenMemberType } from "../talk/open/open-link-type";
+import { OpenMemberType, OpenProfileType } from "../talk/open/open-link-type";
+import { RelayEventType } from "../talk/relay/relay-event-type";
 
 declare interface Event {
 
@@ -49,21 +50,21 @@ declare interface UserEvent extends Event {
     on(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => void): this;
 
     // 유저가 방에서 나갈시 호출  (클라이언트 유저 포함, 킥 미포함)
-    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
+    on(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed | OpenKickFeed>) => void): this;
 
     // 유저가 킥 되었을시 호출
     on(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
     
     // 유저가 오픈프로필 변경시 호출
-    on(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo) => void): this;
+    on(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo, changedProfileType: OpenProfileType) => void): this;
 
     // 오픈채팅 유저 타입 변경시 호출
     on(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;
     
     once(event: 'user_join', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => void): this;
-    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
+    once(event: 'user_left', listener: (channel: ChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed | OpenKickFeed>) => void): this;
     once(event: 'user_kicked', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void): this;
-    once(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo) => void): this;
+    once(event: 'profile_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastUserInfo: OpenChatUserInfo, changedProfileType: OpenProfileType) => void): this;
     once(event: 'member_type_changed', listener: (channel: OpenChatChannel, user: ChatUser, lastType: OpenMemberType) => void): this;
     
 }
@@ -71,9 +72,9 @@ declare interface UserEvent extends Event {
 declare interface ChannelEvent extends Event {
 
     // 채널 meta 정보가 수정될시 호출
-    on(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct) => void): this;
+    on(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct, lastMeta: ChannelMetaStruct | null) => void): this;
 
-    once(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct) => void): this;
+    once(event: 'meta_changed', listener: (channel: ChatChannel, type: ChannelMetaType, meta: ChannelMetaStruct, lastMeta: ChannelMetaStruct | null) => void): this;
 
 }
 
@@ -91,12 +92,16 @@ declare interface OpenChannelEvent extends Event {
     // 채널의 오픈링크 소유자가 바뀌었을시 호출
     on(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, newHost: ChatUser, prevHost: ChatUser) => void): this;
 
+    // 외치기 등 이벤트성 기능 사용시
+    on(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
+
     once(event: 'user_join', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed>) => void): this;
     once(event: 'user_left', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
     
     once(event: 'message_hidden', listener: (channel: OpenChatChannel, logId: Long, feed?: FeedChat<OpenRewriteFeed>) => void): this;
     once(event: 'link_deleted', listener: (channel: OpenChatChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void): this;
     once(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, feed: FeedChat<OpenHandOverHostFeed>) => void): this;
+    once(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
 
 }
 
@@ -110,6 +115,15 @@ declare interface ClientEvent extends Event {
 
     // 연결이 끊어졌을시 호출 (서버 변경)
     on(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
+
+    // 클라이언트 처리 에러
+    on(event: 'error', listener: (error: Error) => void): this;
+
+    once(event: 'login', listener: (user: ClientChatUser) => void): this;
+    once(event: 'switch_server', listener: () => void): this;
+    once(event: 'disconnected', listener: (reason: LocoKickoutType) => void): this;
+    once(event: 'error', listener: (error: Error) => void): this;
+
 
 }
 

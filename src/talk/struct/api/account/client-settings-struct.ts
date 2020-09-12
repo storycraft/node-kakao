@@ -1,6 +1,6 @@
 import { Long } from "bson";
 import { NameMapping, ObjectMapper, ConvertMap } from "json-proxy-mapper";
-import { ApiStruct, ApiStatusCode } from "../api-struct";
+import { WebApiStruct, WebApiStatusCode } from "../../web-api-struct";
 import { JsonUtil } from "../../../../util/json-util";
 import { StructBase } from "../../struct-base";
 
@@ -22,7 +22,7 @@ export interface OpenChatSettingsStruct extends StructBase {
 
 }
 
-export interface MoreSettingsStruct extends ApiStruct {
+export interface MoreSettingsStruct extends WebApiStruct {
 
     since: number;
 
@@ -78,7 +78,7 @@ export interface MoreSettingsStruct extends ApiStruct {
 
 }
 
-export interface LessSettingsStruct extends ApiStruct {
+export interface LessSettingsStruct extends WebApiStruct {
 
     kakaoAutoLoginDomain: string[];
     daumSsoDomain: string[];

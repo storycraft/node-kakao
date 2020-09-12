@@ -4,10 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ApiStruct } from "../api-struct";
+import { WebApiStruct } from "../../web-api-struct";
 import { ProfileStruct } from "./profile-struct";
 
-export interface ProfileReqStruct extends ApiStruct {
+export interface ProfileReqStruct extends WebApiStruct {
 
     profile: ProfileStruct;
 

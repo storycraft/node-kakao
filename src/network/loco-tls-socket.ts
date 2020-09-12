@@ -34,7 +34,7 @@ export class LocoTLSSocket extends LocoBasicSocket {
 
     }
 
-    protected onError(e: any) {
-
+    protected onError(err: Error) {
+        super.onError(err);
     }
 }

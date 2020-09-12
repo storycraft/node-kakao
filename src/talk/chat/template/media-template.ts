@@ -6,23 +6,37 @@
 
 import { ChatType } from "../chat-type";
 
-export interface SizedMediaParam {
+export interface MediaItemTemplate {
+
+    name: string;
+    data: Buffer;
+
+    ext?: string;
+
+}
+
+export interface SizedMediaItemTemplate extends MediaItemTemplate {
 
     width: number;
     height: number;
 
-    ext: string;
-
 }
 
-export interface MediaTemplate<T extends ChatType> extends Partial<SizedMediaParam> {
-
-    name: string;
+export interface BaseMediaTemplate<T extends ChatType> {
 
     type: T;
 
-    data: Buffer;
+}
+
+export interface MediaTemplate<T extends ChatType> extends BaseMediaTemplate<T>, MediaItemTemplate {
 
 }
 
-export type MediaTemplates = MediaTemplate<ChatType.Audio> | MediaTemplate<ChatType.File> | (MediaTemplate<ChatType.Photo> | MediaTemplate<ChatType.Video>) & SizedMediaParam | MediaTemplate<ChatType.Text>;
+export interface MultiMediaTemplate<T extends ChatType> extends BaseMediaTemplate<T> {
+
+    mediaList: SizedMediaItemTemplate[];
+
+}
+
+export type MultiMediaTemplates = MultiMediaTemplate<ChatType.MultiPhoto>;
+export type MediaTemplates = MediaTemplate<ChatType.Audio> | MediaTemplate<ChatType.File> | (MediaTemplate<ChatType.Photo> | MediaTemplate<ChatType.Video>) & SizedMediaItemTemplate | MediaTemplate<ChatType.Text> | MultiMediaTemplates;

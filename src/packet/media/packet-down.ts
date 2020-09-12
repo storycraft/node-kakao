@@ -4,11 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { MediaRequestBasePacket } from "./media-request-base-packet";
 import { Long } from "bson";
-import { KakaoAPI } from "../../kakao-api";
 import { LocoBsonResponsePacket } from "../loco-bson-packet";
-import { JsonUtil } from "../../util/json-util";
+import { MediaRequestBasePacket } from "./media-request-base-packet";
 
 export class PacketDownReq extends MediaRequestBasePacket {
 
@@ -19,10 +17,10 @@ export class PacketDownReq extends MediaRequestBasePacket {
         public Rt: boolean = true,
         
         userId: Long = Long.ZERO,
-        os: string = KakaoAPI.Agent,
-        version: string = KakaoAPI.Version,
+        os: string = '',
+        version: string = '',
         networkType: number = 0,
-        networkMccMnc: string = '999',
+        networkMccMnc: string = '',
     ) {
         super(userId, os, version, networkType, networkMccMnc);
     }

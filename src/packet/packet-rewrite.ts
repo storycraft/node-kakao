@@ -1,6 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { FeedType } from "../talk/feed/feed-type";
+import { ChatType } from "../talk/chat/chat-type";
 
 /*
  * Created on Sat Dec 14 2019
@@ -14,7 +15,7 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
-        public Time: number = 0,
+        public Type: ChatType = ChatType.Text,
         public RewriteFeedType: FeedType = FeedType.OPENLINK_REWRITE_FEED,
         public Unknown1: string = '', //Chat Reporting?
         public Unknown2: string = '',
@@ -31,7 +32,7 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
             'li': this.LinkId,
             'c': this.ChannelId,
             'logId': this.LogId,
-            't': this.Time
+            't': this.Type
         };
 
         if (this.Unknown1 !== '') {

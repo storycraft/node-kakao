@@ -64,7 +64,7 @@ export class UserManager extends IdInstanceStore<ChatUser> {
         return { status: res.StatusCode, result: this.getInfoFromStruct(memberStruct) };
     }
 
-    initalizeClient() {
+    initializeClient() {
         this.clear();
     }
 

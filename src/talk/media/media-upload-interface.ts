@@ -4,16 +4,18 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoSecureCommandInterface, LocoListener } from "../../loco/loco-interface";
+import { Long } from "bson";
+import { ClientConfigProvider } from "../../config/client-config-provider";
+import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
 import { HostData } from "../../network/host-data";
+import { LocoSecureSocket } from "../../network/loco-secure-socket";
 import { LocoResponsePacket, StatusCode } from "../../packet/loco-packet-base";
-import { PacketHeader } from "../../packet/packet-header-struct";
 import { PacketCompleteRes } from "../../packet/media/packet-complete";
 import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
-import { LocoSecureSocket } from "../../network/loco-secure-socket";
-import { ChatType } from "../chat/chat-type";
-import { Long } from "bson";
+import { PacketHeader } from "../../packet/packet-header-struct";
 import { PromiseTicket } from "../../ticket/promise-ticket";
+import { ChatType } from "../chat/chat-type";
+import { PacketMultiPostReq, PacketMultiPostRes } from "../../packet/media/packet-multi-post";
 
 export class MediaUploadInterface extends LocoSecureCommandInterface {
 
@@ -21,8 +23,8 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
     private ticketObj: PromiseTicket<PacketCompleteRes>;
 
-    constructor(hostData: HostData, listener: LocoListener | null = null) {
-        super(hostData, listener);
+    constructor(hostData: HostData, listener: LocoListener | null = null, configProvider: ClientConfigProvider) {
+        super(hostData, listener, configProvider);
 
         this.uploading = false;
         this.ticketObj = new PromiseTicket();
@@ -50,6 +52,24 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
         return res;
     }
 
+    protected async uploadRawBuffer(offset: Long, data: Buffer) {
+        this.uploading = true;
+
+        let rawSocket = this.Socket as LocoSecureSocket;
+
+        let buf: Buffer;
+        if (offset.toNumber() > 0) {
+            buf = Buffer.alloc(data.length + offset.toNumber());
+            data.copy(buf, offset.toNumber());
+        } else {
+            buf = data;
+        }
+
+        rawSocket.sendBuffer(buf);
+
+        return this.ticketObj.createTicket();
+    }
+
     async upload(clientUserId: Long, key: string, channelId: Long, type: ChatType, name: string, data: Buffer, width: number, height: number): Promise<PacketCompleteRes> {
         if (this.uploading) {
             throw new Error(`Uploading already started`);
@@ -57,22 +77,31 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
 
         if (!this.Connected) await this.connect();
 
-        let postRes = await this.requestPacketRes<PacketPostRes>(new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), false, clientUserId));
-        this.uploading = true;
+        let config = this.ConfigProvider.Configuration;
 
-        // ok so destroying structure makes the transaction secure?
-        let rawSocket = this.Socket as LocoSecureSocket;
-        let buf: Buffer;
-        if (postRes.Offset.toNumber() > 0) {
-            buf = Buffer.alloc(data.byteLength + postRes.Offset.toNumber());
-            data.copy(buf, postRes.Offset.toNumber());
-        } else {
-            buf = data;
+        let postRes = await this.requestPacketRes<PacketPostRes>(
+            new PacketPostReq(key, Long.fromNumber(data.byteLength), name, width, height, channelId, type, Long.fromNumber(1172892), true,
+                clientUserId, config.agent, config.version, config.netType, config.mccmnc)
+        );
+
+        return this.uploadRawBuffer(postRes.Offset, data);
+    }
+
+    async uploadMulti(clientUserId: Long, key: string, type: ChatType, data: Buffer): Promise<PacketCompleteRes> {
+        if (this.uploading) {
+            throw new Error(`Uploading already started`);
         }
 
-        rawSocket.sendBuffer(data);
-        
-        return this.ticketObj.createTicket();
+        if (!this.Connected) await this.connect();
+
+        let config = this.ConfigProvider.Configuration;
+
+        let postRes = await this.requestPacketRes<PacketMultiPostRes>(
+            new PacketMultiPostReq(key, Long.fromNumber(data.byteLength), type,
+                clientUserId, config.agent, config.version, config.netType, config.mccmnc)
+        );
+
+        return this.uploadRawBuffer(postRes.Offset, data);
     }
 
 }

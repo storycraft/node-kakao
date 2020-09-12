@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ApiStruct } from "../api-struct";
+import { WebApiStruct } from "../../web-api-struct";
 
-export interface LoginTokenStruct extends ApiStruct {
+export interface LoginTokenStruct extends WebApiStruct {
 
     token: string;
     expires: number; // usage or days?

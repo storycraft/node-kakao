@@ -1,0 +1,10 @@
+{
+    "mode": "file",
+    "out": "docs",
+    "excludeExternals": true,
+    "excludeProtected": false,
+    "excludeNotExported": true,
+    "excludePrivate": false,
+    "name": "NodeKakao",
+    "includeVersion": true
+}
