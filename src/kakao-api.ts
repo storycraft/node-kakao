@@ -8,6 +8,7 @@ import { AHeaderDecorator } from "./api/api-header-decorator";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+// Deprecated and won't show on production
 export class KakaoAPI {
 
     static get InternalProtocol() {

@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/node-kakao.svg)](https://www.npmjs.com/package/node-kakao)
 # NodeKakao - Loco protocol compatible library
 
 Note: this implemention can stop working anytime.
@@ -17,7 +18,7 @@ Client can act differently unlike official client. Abusing this client can cause
 
 Common code
 ```typescript
-import { TalkClient, LoginError } from '@storycraft/node-kakao';
+import { TalkClient, LoginError } from 'node-kakao';
 
 let client = new TalkClient('TEST_CLIENT', 'random base64 device id');
 
@@ -32,7 +33,7 @@ client.login('123456789@email.com', '123456')
 
 ```typescript
 
-import { Chat, ChatMention } from '@storycraft/node-kakao';
+import { Chat, ChatMention } from 'node-kakao';
 
 client.on('message', (chat: Chat) => {
     let userInfo = chat.Channel.getUserInfo(chat.Sender);
@@ -50,7 +51,7 @@ client.on('message', (chat: Chat) => {
 
 ```typescript
 
-import { Chat, ChatType } from '@storycraft/node-kakao';
+import { Chat, ChatType } from 'node-kakao';
 import * as fs from 'fs';
 
 client.on('message', (chat: Chat) => {
@@ -75,7 +76,7 @@ client.on('message', (chat: Chat) => {
 
 ```typescript
 
-import { Chat, SharpAttachment } from '@storycraft/node-kakao';
+import { Chat, SharpAttachment } from 'node-kakao';
 
 client.on('message', (chat: Chat) => {
     let userInfo = chat.Channel.getUserInfo(chat.Sender);
@@ -90,11 +91,11 @@ client.on('message', (chat: Chat) => {
 });
 ```
 
-### join message
+### Join message
 
 ```typescript
 
-import { ChatChannel, ChatUser, FeedChat, OpenJoinFeed, InviteFeed } from '@storycraft/node-kakao';
+import { ChatChannel, ChatUser, FeedChat, OpenJoinFeed, InviteFeed } from 'node-kakao';
 
 client.on('user_join', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed | InviteFeed>) => {
     let info = channel.getUserInfo(user);
@@ -108,7 +109,7 @@ client.on('user_join', (channel: ChatChannel, user: ChatUser, feed?: FeedChat<Op
 ### Web api only
 
 ```typescript
-import { TalkApiClient, OpenRecommendStruct } from '@storycraft/node-kakao';
+import { TalkApiClient, OpenRecommendStruct } from 'node-kakao';
 
 let client = new TalkApiClient('TEST_CLIENT', 'random base64 device id');
 

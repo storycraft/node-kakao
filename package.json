@@ -1,6 +1,6 @@
 {
-  "name": "@storycraft/node-kakao",
-  "version": "3.1.0-preview.0",
+  "name": "node-kakao",
+  "version": "3.1.0",
   "description": "Loco protocol compatible library",
   "main": "dist/index.js",
   "scripts": {
@@ -15,9 +15,6 @@
     "name": "storycraft",
     "email": "storycraft@pancake.sh",
     "url": "https://pancake.sh"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "devDependencies": {
