@@ -73,7 +73,7 @@ export interface OpenLinkMemberStruct extends OpenMemberStruct {
     profileType: OpenProfileType;
 
     linkId: Long;
-    pv: Long;
+    privilege: Long;
 
 }
 
@@ -90,7 +90,7 @@ export namespace OpenLinkMemberStruct {
         profileType: 'ptp',
         linkId: 'pli',
         openToken: 'opt',
-        pv: 'pv'
+        privilege: 'pv'
 
     }
 
@@ -167,11 +167,12 @@ export interface OpenLinkStruct extends StructBase {
     canSearchLink: boolean;
 
     activated: boolean;
-    UNKNOWN2: true;
+    pushAlert: true;
 
     description: string;
 
     linkCoverURL: string;
+    privilege: Long;
 
     owner: OpenMemberStruct;
 
@@ -196,9 +197,10 @@ export namespace OpenLinkStruct {
         maxUserLimit: 'ml',
         maxChannelLimit: 'dcl',
         activated: 'ac',
-        UNKNOWN2: 'pa',
+        pushAlert: 'pa',
 
         passcode: 'pc',
+        privilege: 'pv',
         owner: 'olu',
         description: 'desc',
         
@@ -230,5 +232,18 @@ export interface OpenLinkReactionInfo {
 
     reactionCount: number;
     reactionType: LinkReactionType;
+
+}
+
+export enum LinkPrivilegeMask {
+
+    URL_SHARABLE = 2,
+    REPORTABLE = 4,
+    PROFILE_EDITABLE = 8,
+    ANY_PROFILE_ALLOWED = 32,
+    USE_PASS_CODE = 64,
+    BLINDABLE = 128,
+    NON_SPECIAL_LINK = 512,
+    USE_BOT = 1024,
 
 }
