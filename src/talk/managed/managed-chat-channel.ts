@@ -332,6 +332,10 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     }
 
     updateUserInfo(userId: Long, userInfo: ChatUserInfo | null) {
+        if (this.Client.ClientUser.Id.equals(userId)) {
+            return;
+        }
+
         if (userInfo) this.userInfoMap.set(userId.toString(), userInfo);
         else this.userInfoMap.delete(userId.toString());
     }
@@ -448,7 +452,7 @@ export class ManagedMemoChatChannel extends ManagedChatChannel implements MemoCh
 export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenChatChannel {
 
     //lazy initialization hax
-    private clientUserInfo: ManagedOpenChatUserInfo | null;
+    private clientUserInfo: OpenChatUserInfo | null;
 
     constructor(manager: ChannelManager, id: Long, dataStruct: ChannelDataStruct, private linkId: Long, private openToken: number, private openLink: OpenLinkChannel) {
         super(manager, id, dataStruct);
@@ -507,7 +511,7 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
     }
 
     getManagedUserInfoId(id: Long): ManagedOpenChatUserInfo | null {
-        if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo;
+        if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo as ManagedOpenChatUserInfo;
         
         return this.getUserInfoIdMap(id) as ManagedOpenChatUserInfo || null;
     }
@@ -596,17 +600,21 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
         this.openLink = link;
     }
 
+    updateUserInfo(id: Long, userInfo: OpenChatUserInfo | null) {
+        if (this.Client.ClientUser.Id.equals(id)) {
+            this.clientUserInfo = userInfo;
+            return;
+        }
+
+        super.updateUserInfo(id, userInfo);
+    }
+
     updateOpenMemberList(memberList: OpenMemberStruct[]) {
         memberList.forEach(this.updateOpenMember.bind(this));
     }
 
     updateOpenMember(memberStruct: OpenMemberStruct) {
         let userInfo = this.Client.UserManager.getInfoFromStruct(memberStruct) as ManagedOpenChatUserInfo;
-
-        if (this.Client.ClientUser.Id.equals(userInfo.Id)) {
-            this.clientUserInfo = userInfo;
-            return;
-        }
 
         this.updateUserInfo(userInfo.Id, userInfo);
     }

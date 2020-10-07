@@ -7,7 +7,7 @@
 import { OpenLinkManager } from "../open/open-link-manager";
 import { OpenUserInfo, OpenKickedUserInfo } from "../user/chat-user";
 import { Long } from "bson";
-import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkPrivilegeMask } from "../struct/open/open-link-struct";
 import { OpenLinkChannel, OpenLinkProfile, OpenLink } from "../open/open-link";
 import { RequestResult } from "../request/request-result";
 
@@ -180,6 +180,15 @@ export class ManagedOpenLink implements OpenLink<ManagedOpenUserInfo>, OpenLinkC
 
     get LinkOwnerInfo() {
         return this.userInfo;
+    }
+
+    get PrivilegeMask() {
+        return this.linkStruct.privilege;
+    }
+
+    hasPrivilege(mask: LinkPrivilegeMask) {
+        let longMask = Long.fromNumber(mask);
+        return this.linkStruct.privilege.and(longMask).equals(longMask);
     }
 
     async requestReactionInfo(): Promise<RequestResult<OpenLinkReactionInfo>> {

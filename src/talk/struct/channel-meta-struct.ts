@@ -112,6 +112,8 @@ export interface GroupMetaContent extends StructBase {
 export interface BotMetaContent extends StructBase {
 
     add?: BotAddCommandStruct[];
+    update?: BotAddCommandStruct[];
+    full?: BotAddCommandStruct[];
     del?: BotDelCommandStruct[];
 
 }
