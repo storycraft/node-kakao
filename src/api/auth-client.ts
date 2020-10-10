@@ -228,6 +228,18 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
 
         return hash.digest('hex');
     }
+	
+	generateAutoLoginToken(): string {
+        if (!this.accessData) throw new Error('Not logon');
+		console.log(this.accessData);
+		let res = `PITT|${this.accessData.autoLoginEmail}|${this.accessData.refreshToken}|${this.deviceUUID}|INORAN`;
+
+        let hash = crypto.createHash('sha512');
+
+        hash.update(res);
+
+        return hash.digest('hex');
+	}
 
     logout() {
         this.currentLogin = null;
