@@ -72,7 +72,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     get Host() {
-        return 'ac-sb-talk.kakao.com';
+        return 'katalk.kakao.com';
     }
 
     get Agent() {
