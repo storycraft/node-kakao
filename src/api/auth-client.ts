@@ -220,23 +220,22 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     calculateFullXVCKey(userAgent: string, email: string): string {
-        let res = `HEATH|${userAgent}|DEMIAN|${email}|${this.deviceUUID}`;
+        let config = this.ConfigProvider.Configuration;
+
+        let source = `${config.xvcSeedList[0]}|${userAgent}|${config.xvcSeedList[1]}|${email}|${this.deviceUUID}`;
 
         let hash = crypto.createHash('sha512');
-
-        hash.update(res);
-
+        hash.update(source);
         return hash.digest('hex');
     }
 	
 	generateAutoLoginToken(): string {
-        if (!this.accessData) throw new Error('Not logon');
-	    let res = `PITT|${this.accessData.autoLoginEmail}|${this.accessData.refreshToken}|${this.deviceUUID}|INORAN`;
+        let accessData = this.getLatestAccessData();
+        let config = this.ConfigProvider.Configuration;
+	    let source = `${config.loginTokenSeedList[0]}|${accessData.autoLoginEmail}|${accessData.refreshToken}|${this.deviceUUID}|${config.loginTokenSeedList[1]}`;
 
         let hash = crypto.createHash('sha512');
-
-        hash.update(res);
-
+        hash.update(source);
         return hash.digest('hex');
 	}
 
