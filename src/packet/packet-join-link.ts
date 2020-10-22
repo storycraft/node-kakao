@@ -16,7 +16,7 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
     constructor(
         public LinkId: Long = Long.ZERO,
         public Referer: string = '',
-        public ChannelKey: string = '',
+        public JoinToken: string = '',
         
         public ProfileType: OpenProfileType = OpenProfileType.MAIN,
 
@@ -36,9 +36,10 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
         let obj: any = {
             'li': this.LinkId,
             'ref': this.Referer,
-            'tk': this.ChannelKey,
             'ptp': this.ProfileType
         };
+
+        if (this.JoinToken) obj['tk'] = this.JoinToken;
 
         if (this.ProfileType === OpenProfileType.KAKAO_ANON) {
             if (this.Nickname !== '') obj['nn'] = this.Nickname;

@@ -68,6 +68,7 @@ import { PacketKickLeaveRes, PacketKickLeaveReq } from "./packet-kick-leave";
 import { PacketMultiPostReq, PacketMultiPostRes } from "./media/packet-multi-post";
 import { PacketMultiShipReq, PacketMultiShipRes } from "./packet-multi-ship";
 import { PacketForwardReq, PacketForwardRes } from "./packet-forward";
+import { PacketCheckJoinReq, PacketCheckJoinRes } from "./packet-check-join";
 
 
 /*
@@ -145,6 +146,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('JOININFO', PacketJoinInfoReq);
         requestPacketMap.set('SETMEMTYPE', PacketSetMemTypeReq);
         requestPacketMap.set('JOINLINK', PacketJoinLinkReq);
+        requestPacketMap.set('CHECKJOIN', PacketCheckJoinReq);
         requestPacketMap.set('UPLINKPROF', PacketUpdateLinkProfileReq);
 
         requestPacketMap.set('SYNCMSG', PacketSyncMessageReq);
@@ -245,6 +247,7 @@ export namespace LocoPacketList {
         responsePacketMap.set('SETMEMTYPE', PacketSetMemTypeRes);
         responsePacketMap.set('LINKKICKED', PacketLinkKickedRes);
         responsePacketMap.set('JOINLINK', PacketJoinLinkRes);
+        responsePacketMap.set('CHECKJOIN', PacketCheckJoinRes);
         responsePacketMap.set('UPLINKPROF', PacketUpdateLinkProfileRes);
 
         responsePacketMap.set('SYNCLINKPF', PacketSyncProfileRes);

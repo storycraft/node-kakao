@@ -37,6 +37,7 @@ import { OpenProfileTemplates } from "../open/open-link-profile-template";
 import { PacketAddMemberReq, PacketAddMemberRes } from "../../packet/packet-add-member";
 import { PacketKickLeaveReq, PacketKickLeaveRes } from "../../packet/packet-kick-leave";
 import { JsonUtil } from "../../util/json-util";
+import { PacketCheckJoinReq, PacketCheckJoinRes } from "../../packet/packet-check-join";
 
 export class ChannelManager extends IdStore<ChatChannel> {
 
@@ -182,9 +183,20 @@ export class ChannelManager extends IdStore<ChatChannel> {
     }
 
     async joinOpenChannel(linkId: Long, profileTemplate: OpenProfileTemplates, passcode: string = ''): Promise<RequestResult<OpenChatChannel>> {
-        let packet = new PacketJoinLinkReq(linkId, 'EW:', passcode, profileTemplate.type, profileTemplate.anonNickname, profileTemplate.anonProfilePath, profileTemplate.profileLinkId);
+        let joinToken: string = '';
 
-        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(packet);
+        if (passcode) {
+            let checkPacket = new PacketCheckJoinReq(linkId, passcode);
+            let checkRes = await this.client.NetworkManager.requestPacketRes<PacketCheckJoinRes>(checkPacket);
+
+            if (checkRes.StatusCode !== StatusCode.SUCCESS) return { status: checkRes.StatusCode };
+
+            joinToken = checkRes.Token;
+        }
+
+        let joinPacket = new PacketJoinLinkReq(linkId, 'EW:', joinToken, profileTemplate.type, profileTemplate.anonNickname, profileTemplate.anonProfilePath, profileTemplate.profileLinkId);
+
+        let res = await this.client.NetworkManager.requestPacketRes<PacketJoinLinkRes>(joinPacket);
 
         if (!res.ChatInfo || !res.LinkInfo) return { status: res.StatusCode };
 
