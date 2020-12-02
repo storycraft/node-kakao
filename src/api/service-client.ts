@@ -103,6 +103,10 @@ export class ServiceClient extends SessionApiClient {
 
     // profile
 
+    async requestMusicList(id: Long): Promise<WebApiStruct> {
+        return this.request('GET', ServiceClient.getProfileApiPath(this.Agent, 'music/list.json'), { id: id.toString() });
+    }
+
     async requestMyProfile(): Promise<ProfileReqStruct> {
         return this.request('GET', ServiceClient.getProfile3ApiPath(this.Agent, 'me.json'));
     }
@@ -123,6 +127,10 @@ export class ServiceClient extends SessionApiClient {
 	
     static getFriendsApiPath(agent: string, api: string) {
         return `${agent}/friends/${api}`;
+    }
+
+    static getProfileApiPath(agent: string, api: string) {
+        return `${agent}/profile/${api}`;
     }
 
     static getProfile3ApiPath(agent: string, api: string) {
