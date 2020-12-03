@@ -93,7 +93,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
             
         }
 
-        let memberList = await this.requestDetailedMemberList(channel.Id);
+        let memberList = await this.requestMemberList(channel.Id);
 
         if (memberList) {
             this.updateUserInfoList(channel, memberList);
