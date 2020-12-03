@@ -38,6 +38,8 @@ import { PacketAddMemberReq, PacketAddMemberRes } from "../../packet/packet-add-
 import { PacketKickLeaveReq, PacketKickLeaveRes } from "../../packet/packet-kick-leave";
 import { JsonUtil } from "../../util/json-util";
 import { PacketCheckJoinReq, PacketCheckJoinRes } from "../../packet/packet-check-join";
+import { PacketGetMemberReq, PacketGetMemberRes } from "../../packet/packet-get-member";
+import { PacketMemberReq, PacketMemberRes } from "../../packet/packet-member";
 
 export class ChannelManager extends IdStore<ChatChannel> {
 
@@ -91,7 +93,14 @@ export class ChannelManager extends IdStore<ChatChannel> {
             
         }
 
+        let memberList = await this.requestMemberList(channel.Id);
+
+        if (memberList) {
+            this.updateUserInfoList(channel, memberList);
+        }
+
         await this.sendChatOn(channel);
+
         this.set(id, channel);
         
         return channel;
@@ -122,7 +131,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         if (channelInfo.displayMemberList) channel.updateDisplayUserInfoList(channelInfo.displayMemberList.map(this.getDisplayUserInfoFromStruct.bind(this)));
     }
 
-    protected initUserInfoList(channel: ManagedChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
+    protected updateUserInfoList(channel: ManagedChatChannel, memberList: (MemberStruct | OpenMemberStruct)[], openProfile?: OpenMemberStruct) {
         if (!channel.isOpenChat()) {
             let normal = channel as ManagedChatChannel;
 
@@ -217,6 +226,34 @@ export class ChannelManager extends IdStore<ChatChannel> {
         }
     }
 
+    protected async requestMemberList(channelId: Long): Promise<(MemberStruct | OpenMemberStruct)[] | null> {
+        let res = await this.client.NetworkManager.requestPacketRes<PacketGetMemberRes>(new PacketGetMemberReq(channelId));
+
+        if (res.StatusCode === StatusCode.SUCCESS) {
+            return res.MemberList!;
+        } else {
+            return null;
+        }
+    }
+
+    protected async requestDetailedMemberList(channelId: Long, memberIdList?: Long[]): Promise<(MemberStruct | OpenMemberStruct)[] | null> {
+        if (!memberIdList) {
+            let simplfiedList = await this.requestMemberList(channelId);
+
+            if (!simplfiedList) return null;
+            
+            memberIdList = simplfiedList.map(member => member.userId);
+            
+        }
+        let res = await this.client.NetworkManager.requestPacketRes<PacketMemberRes>(new PacketMemberReq(channelId, memberIdList));
+
+        if (res.StatusCode === StatusCode.SUCCESS) {
+            return res.MemberList!;
+        } else {
+            return null;
+        }
+    }
+
     async sendChatOn(channel: ChatChannel): Promise<RequestResult<boolean>> {
         let token = channel.LastChat ? channel.LastChat.LogId : Long.ZERO;
         let openToken;
@@ -224,8 +261,10 @@ export class ChannelManager extends IdStore<ChatChannel> {
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(new PacketChatOnRoomReq(channel.Id, token, openToken));
     
-        this.initUserInfoList(channel as ManagedChatChannel, res.MemberList, res.ClientOpenProfile);
-
+        if (res.MemberList) {
+            this.updateUserInfoList(channel as ManagedChatChannel, res.MemberList, res.ClientOpenProfile);
+        }
+        
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
     
