@@ -79,7 +79,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         if (form) {
             let formData = this.convertToFormData(form);
 
-            reqData.data = formData;
+            reqData.data = formData.toString();
         }
 
         let res = JsonUtil.parseLoseless((await Axios.request(reqData)).data);

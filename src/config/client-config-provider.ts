@@ -17,7 +17,7 @@ export class DefaultClientConfigProvider implements ClientConfigProvider {
     private configuration: ClientConfig;
 
     constructor(config?: Partial<ClientConfig>) {
-        this.configuration = config ? Object.assign(config, DefaultConfiguration) : DefaultConfiguration;
+        this.configuration = config ? Object.assign(DefaultConfiguration, config) : DefaultConfiguration;
     }
 
     get Configuration() {
