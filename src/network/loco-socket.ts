@@ -176,6 +176,10 @@ export abstract class LocoBasicSocket implements LocoSocket {
 
         let headerBuffer = this.createHeaderBuffer(header);
 
+        if (!Buffer.isBuffer(bodyBuffer)) {
+            bodyBuffer = Buffer.from(bodyBuffer);
+        }
+
         headerBuffer.copy(buffer, offset, 0);
         bodyBuffer.copy(buffer, offset + 22, 0);
         
