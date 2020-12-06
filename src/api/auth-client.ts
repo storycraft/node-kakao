@@ -100,7 +100,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     get Logon() {
-        return this.currentLogin !== null;
+        return this.accessData !== null;
     }
 
     async requestMoreSettings(since: number = 0, language: string = this.ConfigProvider.Configuration.language): Promise<MoreSettingsStruct> {
@@ -184,11 +184,11 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     protected loginAccessData(accessData: LoginAccessDataStruct) {
-        this.accessData = accessData;
-
-        if (this.accessData.status !== WebApiStatusCode.SUCCESS) {
+        if (accessData.status !== WebApiStatusCode.SUCCESS) {
             throw accessData as LoginError;
         }
+
+        this.accessData = accessData;
     }
 
     async requestPasscode(email: string, password: string, forced: boolean = false): Promise<AuthApiStruct> {
