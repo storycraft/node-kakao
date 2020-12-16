@@ -57,7 +57,7 @@ export interface ChannelClientMetaStruct extends StructBase {
     favorite?: boolean,
     push_sound?: boolean,
     chat_hide?: boolean,
-    full_image_url?: string;
+    fullImageUrl?: string;
     imageUrl?: string;
 
 }
