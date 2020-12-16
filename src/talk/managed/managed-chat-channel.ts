@@ -312,7 +312,7 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
         if (clientMeta.name) this.clientName = clientMeta.name;
 
         if (clientMeta.imageUrl) this.clientRoomImageURL = clientMeta.imageUrl;
-        if (clientMeta.full_image_url) this.clientRoomFullImageURL = clientMeta.full_image_url;
+        if (clientMeta.fullImageUrl) this.clientRoomFullImageURL = clientMeta.fullImageUrl;
 
         if (clientMeta.push_sound) this.clientPushSound = clientMeta.push_sound;
 
