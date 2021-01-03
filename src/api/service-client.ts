@@ -82,7 +82,7 @@ export class ServiceClient extends SessionApiClient {
     }
 
     async requestFriendList(types: string[] = [ 'plus', 'normal' ], eventTypes: string[] = [ 'create' ], token: Long = Long.ZERO): Promise<FriendListStruct> {
-        return this.request('GET', `${ServiceClient.getFriendsApiPath(this.Agent, 'list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token: token.toString() });
+        return this.requestParams('GET', `${ServiceClient.getFriendsApiPath(this.Agent, 'list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token });
     }
 
     async requestBlockedFriendList(): Promise<FriendBlockedListStruct> {
