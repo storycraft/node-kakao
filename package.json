@@ -33,7 +33,7 @@
     "url": "https://github.com/storycraft/node-kakao.git"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bson": "^4.0.2",
     "form-data": "^3.0.0",
     "json-proxy-mapper": "^1.1.2",
