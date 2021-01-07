@@ -72,7 +72,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     get Host() {
-        return 'ac-sb-talk.kakao.com';
+        return 'katalk.kakao.com';
     }
 
     get Agent() {
@@ -100,7 +100,7 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     get Logon() {
-        return this.currentLogin !== null;
+        return this.accessData !== null;
     }
 
     async requestMoreSettings(since: number = 0, language: string = this.ConfigProvider.Configuration.language): Promise<MoreSettingsStruct> {
@@ -184,11 +184,11 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     protected loginAccessData(accessData: LoginAccessDataStruct) {
-        this.accessData = accessData;
-
-        if (this.accessData.status !== WebApiStatusCode.SUCCESS) {
+        if (accessData.status !== WebApiStatusCode.SUCCESS) {
             throw accessData as LoginError;
         }
+
+        this.accessData = accessData;
     }
 
     async requestPasscode(email: string, password: string, forced: boolean = false): Promise<AuthApiStruct> {
@@ -220,14 +220,24 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     }
 
     calculateFullXVCKey(userAgent: string, email: string): string {
-        let res = `HEATH|${userAgent}|DEMIAN|${email}|${this.deviceUUID}`;
+        let config = this.ConfigProvider.Configuration;
+
+        let source = `${config.xvcSeedList[0]}|${userAgent}|${config.xvcSeedList[1]}|${email}|${this.deviceUUID}`;
 
         let hash = crypto.createHash('sha512');
-
-        hash.update(res);
-
+        hash.update(source);
         return hash.digest('hex');
     }
+	
+	generateAutoLoginToken(): string {
+        let accessData = this.getLatestAccessData();
+        let config = this.ConfigProvider.Configuration;
+	    let source = `${config.loginTokenSeedList[0]}|${accessData.autoLoginEmail}|${accessData.refreshToken}|${this.deviceUUID}|${config.loginTokenSeedList[1]}`;
+
+        let hash = crypto.createHash('sha512');
+        hash.update(source);
+        return hash.digest('hex');
+	}
 
     logout() {
         this.currentLogin = null;

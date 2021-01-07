@@ -29,7 +29,11 @@ export const DefaultConfiguration: ClientConfig = {
     language: 'ko',
 
     subDevice: true,
-    deviceModel: ''
+    deviceModel: '',
+
+    xvcSeedList: [ 'HEATH', 'DEMIAN' ],
+    loginTokenSeedList: [ 'PITT', 'INORAN' ]
+
 }
 
 export interface ClientConfig {
@@ -55,5 +59,8 @@ export interface ClientConfig {
 
     subDevice: boolean;
     deviceModel: string;
+
+    xvcSeedList: [ string, string ];
+    loginTokenSeedList: [ string, string ];
 
 }

@@ -192,6 +192,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
 
     disconnected() {
         this.packetMap.clear();
+        this.listener?.disconnected();
     }
 
 }

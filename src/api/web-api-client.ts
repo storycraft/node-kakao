@@ -79,7 +79,22 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
         if (form) {
             let formData = this.convertToFormData(form);
 
-            reqData.data = formData;
+            reqData.data = formData.toString();
+        }
+
+        let res = JsonUtil.parseLoseless((await Axios.request(reqData)).data);
+
+        return res;
+    }
+
+    async requestParams<T extends StructBase>(method: Method, path: string, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+        let reqData = this.buildRequestData(method, headers);
+        reqData.url = this.toApiURL(path);
+
+        if (form) {
+            let formData = this.convertToFormData(form);
+
+            reqData.params = formData;
         }
 
         let res = JsonUtil.parseLoseless((await Axios.request(reqData)).data);
@@ -89,6 +104,14 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
     async requestMapped<T extends StructBase>(method: Method, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
         let rawRes = await this.request(method, path, form, headers);
+
+        let res = Serializer.deserialize<T>(rawRes, mapper);
+
+        return res;
+    }
+
+    async requestParamsMapped<T extends StructBase>(method: Method, path: string, mapper: ObjectMapper, form: RequestForm | null = null, headers: RequestHeader | null = null): Promise<T> {
+        let rawRes = await this.requestParams(method, path, form, headers);
 
         let res = Serializer.deserialize<T>(rawRes, mapper);
 

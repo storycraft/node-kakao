@@ -5,7 +5,6 @@
  */
 
 import { Long } from "bson";
-import { FriendBlockedListStruct } from "../talk/struct/api/friends/friend-blocked-list-struct";
 import { FriendDeleteStruct } from "../talk/struct/api/friends/friend-delete-struct";
 import { FriendFindIdStruct, FriendFindUUIDStruct } from "../talk/struct/api/friends/friend-find-struct";
 import { FriendListStruct } from "../talk/struct/api/friends/friend-list-struct";
@@ -82,11 +81,7 @@ export class ServiceClient extends SessionApiClient {
     }
 
     async requestFriendList(types: string[] = [ 'plus', 'normal' ], eventTypes: string[] = [ 'create' ], token: Long = Long.ZERO): Promise<FriendListStruct> {
-        return this.request('GET', `${ServiceClient.getFriendsApiPath(this.Agent, 'list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token: token.toString() });
-    }
-
-    async requestBlockedFriendList(): Promise<FriendBlockedListStruct> {
-        return this.request('GET', `${ServiceClient.getFriendsApiPath(this.Agent, 'blocked.json')}`);
+        return this.requestParams('GET', `${ServiceClient.getFriendsApiPath(this.Agent, 'list.json')}`, { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token });
     }
 
     async setNickname(id: Long, nickname: string): Promise<FriendNicknameStruct> {
@@ -102,6 +97,10 @@ export class ServiceClient extends SessionApiClient {
     }
 
     // profile
+
+    async requestMusicList(id: Long): Promise<WebApiStruct> {
+        return this.request('GET', ServiceClient.getProfileApiPath(this.Agent, 'music/list.json'), { id: id.toString() });
+    }
 
     async requestMyProfile(): Promise<ProfileReqStruct> {
         return this.request('GET', ServiceClient.getProfile3ApiPath(this.Agent, 'me.json'));
@@ -123,6 +122,10 @@ export class ServiceClient extends SessionApiClient {
 	
     static getFriendsApiPath(agent: string, api: string) {
         return `${agent}/friends/${api}`;
+    }
+
+    static getProfileApiPath(agent: string, api: string) {
+        return `${agent}/profile/${api}`;
     }
 
     static getProfile3ApiPath(agent: string, api: string) {

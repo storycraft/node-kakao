@@ -47,7 +47,7 @@ export class OpenChatClient extends SessionApiClient {
     }
 
     async requestNewReactionList(): Promise<OpenPostReactNotiStruct> {
-        return this.requestMapped('GET', OpenChatClient.getProfileApiPath('reacts/newMark'), OpenPostReactNotiStruct.MAPPER); 
+        return this.requestMapped('GET', OpenChatClient.getProfileApiPath('reacts/newMark'), OpenPostReactNotiStruct.MAPPER);
     }
 
     async setRecommend(linkId: Long): Promise<OpenStruct> {
