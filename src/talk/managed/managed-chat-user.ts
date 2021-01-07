@@ -87,7 +87,7 @@ export class ManagedChatUserInfo implements ChatUserInfo {
     }
 
     updateNickname(nickname: string) {
-        if (this.memberStruct.nickname !== nickname) {
+        if (nickname && this.memberStruct.nickname !== nickname) {
             this.memberStruct.nickname = nickname;
         }
     }
