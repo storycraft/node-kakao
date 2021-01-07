@@ -159,7 +159,7 @@ export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
     }
 
     updateNickname(nickname: string) {
-        if (this.memberStruct.nickname !== nickname) {
+        if (nickname && this.memberStruct.nickname !== nickname) {
             this.memberStruct.nickname = nickname;
         }
     }
