@@ -19,7 +19,14 @@ import { HostData } from "./host-data";
 import { MediaUploadInterface } from "../talk/media/media-upload-interface";
 import { MediaDownloadInterface } from "../talk/media/media-download-interface";
 import { ClientConfigProvider } from "../config/client-config-provider";
+import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
+import { NodeSocket } from "./node-net-socket";
+import { BsonDataCodec } from "../packet/bson-data-codec";
+import { LocoBsonRequestPacket, LocoPacketList } from "..";
+import { LocoBsonResponsePacket } from "../packet/loco-bson-packet";
 
+// TODO: Rewrite entire class
+// TODO: Eliminate all unnecessary management functions increasing complexity.
 export class NetworkManager implements LocoListener, LocoInterface {
 
     public static readonly PING_INTERVAL = 600000;
@@ -82,16 +89,12 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return this.mainInterface.requestPacketRes<T>(packet);
     }
 
-    protected createBookingInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoCommandInterface {
-        return new LocoTLSCommandInterface(hostInfo, listener, configProvider);
+    protected createMainInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoMainInterface {
+        return new MainInterface(hostInfo, listener, configProvider);
     }
 
     protected createCheckinInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoCommandInterface {
         return new LocoSecureCommandInterface(hostInfo, listener, configProvider);
-    }
-
-    protected createMainInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): LocoMainInterface {
-        return new MainInterface(hostInfo, listener, configProvider);
     }
 
     createUploadInterface(hostInfo: HostData, listener = this, configProvider = this.configProvider): MediaUploadInterface {
@@ -102,6 +105,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return new MediaDownloadInterface(hostInfo, listener, configProvider);
     }
 
+    
     async requestCheckinData(userId: Long): Promise<CheckinData> {
         let config = this.configProvider.Configuration;
 
@@ -142,20 +146,37 @@ export class NetworkManager implements LocoListener, LocoInterface {
         });
     }
 
-    async requestBookingRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
-        let config = this.configProvider.Configuration;
+    // Legacy port test
+    async requestBookingRes<T extends LocoResponsePacket>(packet: LocoBsonRequestPacket): Promise<T> {
+        const config = this.configProvider.Configuration;
 
-        let bookingInterface = this.createBookingInterface({
+        const bookingDispatcher = new LocoPacketDispatcher(await NodeSocket.connectTls({
             host: config.locoBookingURL,
             port: config.locoBookingPort,
-            keepAlive: false
+        }));
+
+        // Listen dispatcher
+        (async () => {
+            for await (const push of bookingDispatcher.listen()) {
+
+            }
+        })();
+
+        const res = await bookingDispatcher.sendPacket({
+            header: {
+                id: 0,
+                method: 'GETCONF',
+                status: 0
+            },
+
+            data: BsonDataCodec.encode(packet.toBodyJson())
         });
+        bookingDispatcher.stream.close();
 
-        if (!(await bookingInterface.connect())) {
-            throw new Error('Cannot contact to booking server');
-        }
+        const resLegacyPacket = LocoPacketList.getResPacketByName(res.header.method, 0) as LocoBsonResponsePacket;
+        resLegacyPacket.readBodyJson(BsonDataCodec.decode(res.data[1]));
 
-        return bookingInterface.requestPacketRes<T>(packet);
+        return resLegacyPacket as any as T;
     }
 
     async requestCheckinRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {

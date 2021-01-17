@@ -5,11 +5,6 @@ Note: this implemention can stop working anytime.
 
 ## Version Information
 
-| v3 | (Recommended) Current |
-|----|-----------------------|
-| v2 |      deprecated       |
-| v1 | experimental. buggy   |
-
 ## Warning
 
 Client can act differently unlike official client. Abusing this client can cause permanent service restriction.

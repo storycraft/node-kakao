@@ -69,7 +69,7 @@ export abstract class LocoBasicSocket implements LocoSocket {
         }
 
         await new Promise((resolve, reject) => {
-            this.socket = this.createSocketConnection(this.host, this.port, resolve);
+            this.socket = this.createSocketConnection(this.host, this.port, () => resolve);
             this.pipeTranformation(this.socket);
 
             this.socket.on('error', this.connectionError.bind(this));
