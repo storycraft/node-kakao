@@ -32,10 +32,10 @@ export function newCryptoStore(pubKey: string): CryptoStore {
             const encrypted = cipher.update(new Uint8Array(buffer));
             const final = cipher.final();
 
-            const res = new Uint8Array(encrypted.byteOffset + final.byteLength);
+            const res = new Uint8Array(encrypted.byteLength + final.byteLength);
 
             res.set(encrypted, 0);
-            res.set(final, encrypted.byteOffset);
+            res.set(final, encrypted.byteLength);
 
             return res;
         },
@@ -45,10 +45,10 @@ export function newCryptoStore(pubKey: string): CryptoStore {
             const decrypted = cipher.update(new Uint8Array(buffer));
             const final = cipher.final();
 
-            const res = new Uint8Array(decrypted.byteOffset + final.byteLength);
+            const res = new Uint8Array(decrypted.byteLength + final.byteLength);
 
             res.set(decrypted, 0);
-            res.set(final, decrypted.byteOffset);
+            res.set(final, decrypted.byteLength);
 
             return res;
         },

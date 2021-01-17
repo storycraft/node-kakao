@@ -24,6 +24,8 @@ import { NodeSocket } from "./node-net-socket";
 import { BsonDataCodec } from "../packet/bson-data-codec";
 import { LocoBsonRequestPacket, LocoPacketList } from "..";
 import { LocoBsonResponsePacket } from "../packet/loco-bson-packet";
+import { LocoSecureLayer } from "./loco-secure-layer";
+import { newCryptoStore } from "../secure/crypto-store";
 
 // TODO: Rewrite entire class
 // TODO: Eliminate all unnecessary management functions increasing complexity.
@@ -165,7 +167,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         const res = await bookingDispatcher.sendPacket({
             header: {
                 id: 0,
-                method: 'GETCONF',
+                method: packet.PacketName,
                 status: 0
             },
 
@@ -179,14 +181,37 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return resLegacyPacket as any as T;
     }
 
-    async requestCheckinRes<T extends LocoResponsePacket>(packet: LocoRequestPacket): Promise<T> {
-        let checkinInterface = this.createCheckinInterface((await this.getBookingData()).CheckinHost);
+    async requestCheckinRes<T extends LocoResponsePacket>(packet: LocoBsonRequestPacket): Promise<T> {
+        const config = this.configProvider.Configuration;
+        const checkinHost = (await this.getBookingData()).CheckinHost;
 
-        if (!(await checkinInterface.connect())) {
-            throw new Error('Cannot contact to checkin server');
-        }
+        const checkinDispatcher = new LocoPacketDispatcher(new LocoSecureLayer(await NodeSocket.connect({
+            host: checkinHost.host,
+            port: checkinHost.port,
+        }), newCryptoStore(config.locoPEMPublicKey)));
 
-        return checkinInterface.requestPacketRes<T>(packet);
+        // Listen dispatcher
+        (async () => {
+            for await (const push of checkinDispatcher.listen()) {
+
+            }
+        })();
+
+        const res = await checkinDispatcher.sendPacket({
+            header: {
+                id: 0,
+                method: packet.PacketName,
+                status: 0
+            },
+
+            data: BsonDataCodec.encode(packet.toBodyJson())
+        });
+        checkinDispatcher.stream.close();
+
+        const resLegacyPacket = LocoPacketList.getResPacketByName(res.header.method, 0) as LocoBsonResponsePacket;
+        resLegacyPacket.readBodyJson(BsonDataCodec.decode(res.data[1]));
+
+        return resLegacyPacket as any as T;
     }
 
     async getBookingData(forceRecache: boolean = false): Promise<BookingData> {

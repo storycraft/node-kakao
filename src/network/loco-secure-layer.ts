@@ -107,7 +107,7 @@ export class LocoSecureLayer implements Stream {
 
         const packet = new ArrayBuffer(encrypted.byteLength + 20);
         
-        new DataView(packet).setUint32(encrypted.byteLength + 16, 0, true);
+        new DataView(packet).setUint32(0, encrypted.byteLength + 16, true);
         
         const packetArr = new Uint8Array(packet);
         packetArr.set(new Uint8Array(iv), 4);
@@ -125,6 +125,7 @@ export class LocoSecureLayer implements Stream {
         view.setUint32(0, encryptedKey.byteLength, true);
         view.setUint32(4, 12, true); // RSA OAEP SHA1 MGF1 SHA1
         view.setUint32(8, 2, true); // AES_CFB128 NOPADDING
+        new Uint8Array(handshakePacket).set(new Uint8Array(encryptedKey), 12);
 
         this._stream.write(handshakePacket);
     }
