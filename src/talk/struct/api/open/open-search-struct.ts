@@ -6,7 +6,7 @@
 
 import { OpenStruct } from "./open-struct";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
-import { OpenLinkType } from "../../../open/open-link-type";
+import { OpenLinkType } from "../../../open_old/open-link-type";
 import { StructBase } from "../../struct-base";
 import { OpenPostListStruct, OpenPostStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostReactionInfoStruct } from "./open-post-struct";
 import { Long } from "bson";

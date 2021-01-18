@@ -4,14 +4,4 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum ChannelType {
-
-    UNKNOWN = 'UNKNOWN',
-    GROUP = 'MultiChat',
-    DIRECT = 'DirectChat',
-    PLUSCHAT = 'PlusChat',
-    SELFCHAT = 'MemoChat',
-    OPENCHAT_GROUP = 'OM',
-    OPENCHAT_DIRECT = 'OD'
-
-}
+export type ChannelType = 'MultiChat' | 'DirectChat' | 'PlusChat' | 'MemoChat' | 'OM' | 'OD' | string;

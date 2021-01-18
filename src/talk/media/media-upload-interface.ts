@@ -7,15 +7,15 @@
 import { Long } from "bson";
 import { ClientConfigProvider } from "../../config/client-config-provider";
 import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
-import { HostData } from "../../network/host-data";
-import { LocoSecureSocket } from "../../network/loco-secure-socket";
-import { LocoResponsePacket, StatusCode } from "../../packet/loco-packet-base";
-import { PacketCompleteRes } from "../../packet/media/packet-complete";
-import { PacketPostReq, PacketPostRes } from "../../packet/media/packet-post";
-import { PacketHeader } from "../../packet/packet-header-struct";
+import { HostData } from "../../network_old/host-data";
+import { LocoSecureSocket } from "../../network_old/loco-secure-socket";
+import { LocoResponsePacket, StatusCode } from "../../packet_old/loco-packet-base";
+import { PacketCompleteRes } from "../../packet_old/media/packet-complete";
+import { PacketPostReq, PacketPostRes } from "../../packet_old/media/packet-post";
+import { PacketHeader } from "../../packet_old/packet-header-struct";
 import { PromiseTicket } from "../../ticket/promise-ticket";
-import { ChatType } from "../chat/chat-type";
-import { PacketMultiPostReq, PacketMultiPostRes } from "../../packet/media/packet-multi-post";
+import { ChatType } from "../chat_old/chat-type";
+import { PacketMultiPostReq, PacketMultiPostRes } from "../../packet_old/media/packet-multi-post";
 
 export class MediaUploadInterface extends LocoSecureCommandInterface {
 

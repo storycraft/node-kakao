@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CryptoStore } from "../secure/crypto-store";
+import { CryptoStore } from "../crypto/crypto-store";
 import { ChunkedArrayBufferList } from "./chunk/chunked-arraybuffer-list";
 import { Stream } from "./stream";
 

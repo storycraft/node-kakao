@@ -1,9 +1,9 @@
 import { StructBase } from "../struct-base";
 import { Long } from "bson";
-import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open/open-link-type";
+import { OpenLinkType, OpenMemberType, OpenProfileType } from "../../open_old/open-link-type";
 import { Converter, ObjectMapper } from "json-proxy-mapper";
 import { BaseMemberStruct, BaseChatMemberStruct } from "../member-struct";
-import { UserType } from "../../user/user-type";
+import { UserType } from "../../user_old/user-type";
 
 /*
  * Created on Fri Nov 22 2019

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { EmoticonAttachment } from "../../../../chat/attachment/chat-attachment";
+import { EmoticonAttachment } from "../../../../chat_old/attachment/chat-attachment";
 import { PostContent } from "../channel-post-struct";
 
 export interface BoardCommentTemplate {

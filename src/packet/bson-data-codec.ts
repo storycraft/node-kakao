@@ -5,7 +5,7 @@
  */
 
 import * as Bson from "bson";
-import { LocoPacketDataCodec } from "./loco-packet";
+import { LocoPacketDataCodec } from "../packet_old/loco-packet";
 
 export const BsonDataCodec: LocoPacketDataCodec<Record<string, any>> = {
     canDecode(dataType: number): boolean {

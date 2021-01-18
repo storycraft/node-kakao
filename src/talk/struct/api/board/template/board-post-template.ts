@@ -5,7 +5,7 @@
  */
 
 import { ChannelPost, PostType, PostContent } from "../channel-post-struct";
-import { EmoticonAttachment } from "../../../../chat/attachment/chat-attachment";
+import { EmoticonAttachment } from "../../../../chat_old/attachment/chat-attachment";
 
 export interface BoardPostTemplate<T = PostType> {
 

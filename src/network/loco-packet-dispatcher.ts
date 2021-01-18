@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket } from "../packet/loco-packet";
+import { LocoPacket } from "../packet_old/loco-packet";
 import { LocoPacketCodec } from "./loco-packet-codec";
 import { Stream } from "./stream";
 

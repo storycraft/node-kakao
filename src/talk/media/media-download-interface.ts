@@ -9,15 +9,15 @@ import { Socket } from "net";
 import { Transform, TransformCallback } from "stream";
 import { ClientConfigProvider } from "../../config/client-config-provider";
 import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
-import { ChunkedBufferList } from "../../network/chunk/chunked-buffer-list";
-import { HostData } from "../../network/host-data";
-import { LocoSecureSocket } from "../../network/loco-secure-socket";
-import { LocoSocket } from "../../network/loco-socket";
-import { LocoEncryptedTransformer } from "../../network/stream/loco-encrypted-transformer";
-import { LocoPacketResolver } from "../../network/stream/loco-packet-resolver";
-import { StatusCode } from "../../packet/loco-packet-base";
-import { PacketDownReq, PacketDownRes } from "../../packet/media/packet-down";
-import { PacketMiniReq, PacketMiniRes } from "../../packet/media/packet-mini";
+import { ChunkedBufferList } from "../../network_old/chunk/chunked-buffer-list";
+import { HostData } from "../../network_old/host-data";
+import { LocoSecureSocket } from "../../network_old/loco-secure-socket";
+import { LocoSocket } from "../../network_old/loco-socket";
+import { LocoEncryptedTransformer } from "../../network_old/stream/loco-encrypted-transformer";
+import { LocoPacketResolver } from "../../network_old/stream/loco-packet-resolver";
+import { StatusCode } from "../../packet_old/loco-packet-base";
+import { PacketDownReq, PacketDownRes } from "../../packet_old/media/packet-down";
+import { PacketMiniReq, PacketMiniRes } from "../../packet_old/media/packet-mini";
 import { PromiseTicket } from "../../ticket/promise-ticket";
 
 export class MediaDownloadInterface extends LocoSecureCommandInterface {

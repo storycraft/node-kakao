@@ -4,22 +4,22 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoClient } from "../../client";
-import { PacketShipReq, PacketShipRes } from "../../packet/packet-ship";
-import { ChatChannel } from "../channel/chat-channel";
+import { LocoClient } from "../../client_old";
+import { PacketShipReq, PacketShipRes } from "../../packet_old/packet-ship";
+import { ChatChannel } from "../channel_old/chat-channel";
 import { Long } from "bson";
 import * as Crypto from "crypto";
-import { Chat } from "../chat/chat";
-import { StatusCode } from "../../packet/loco-packet-base";
-import { MediaAttachment, MediaHasThumbnail, MultiPhotoAttachment } from "../chat/attachment/chat-attachment";
-import { PacketGetTrailerRes, PacketGetTrailerReq } from "../../packet/packet-get-trailer";
+import { Chat } from "../chat_old/chat";
+import { StatusCode } from "../../packet_old/loco-packet-base";
+import { MediaAttachment, MediaHasThumbnail, MultiPhotoAttachment } from "../chat_old/attachment/chat-attachment";
+import { PacketGetTrailerRes, PacketGetTrailerReq } from "../../packet_old/packet-get-trailer";
 import { MediaDownloadInterface } from "./media-download-interface";
-import { MediaTemplates, MultiMediaTemplates } from "../chat/template/media-template";
-import { PacketCompleteRes } from "../../packet/media/packet-complete";
-import { PacketMultiShipReq, PacketMultiShipRes } from "../../packet/packet-multi-ship";
-import { AttachmentTemplate } from "../chat/template/message-template";
-import { PacketForwardReq } from "../../packet/packet-forward";
-import { ChatType } from "../chat/chat-type";
+import { MediaTemplates, MultiMediaTemplates } from "../chat_old/template/media-template";
+import { PacketCompleteRes } from "../../packet_old/media/packet-complete";
+import { PacketMultiShipReq, PacketMultiShipRes } from "../../packet_old/packet-multi-ship";
+import { AttachmentTemplate } from "../chat_old/template/message-template";
+import { PacketForwardReq } from "../../packet_old/packet-forward";
+import { ChatType } from "../chat_old/chat-type";
 import { JsonUtil } from "../../util/json-util";
 
 export class MediaManager {

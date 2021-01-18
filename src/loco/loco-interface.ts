@@ -4,13 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoResponsePacket, LocoRequestPacket } from "../packet/loco-packet-base";
-import { PacketHeader } from "../packet/packet-header-struct";
-import { LocoSocket } from "../network/loco-socket";
-import { LocoPacketList } from "../packet/loco-packet-list";
-import { HostData } from "../network/host-data";
-import { LocoSecureSocket } from "../network/loco-secure-socket";
-import { LocoTLSSocket } from "../network/loco-tls-socket";
+import { LocoResponsePacket, LocoRequestPacket } from "../packet_old/loco-packet-base";
+import { PacketHeader } from "../packet_old/packet-header-struct";
+import { LocoSocket } from "../network_old/loco-socket";
+import { LocoPacketList } from "../packet_old/loco-packet-list";
+import { HostData } from "../network_old/host-data";
+import { LocoSecureSocket } from "../network_old/loco-secure-socket";
+import { LocoTLSSocket } from "../network_old/loco-tls-socket";
 import { ClientConfigProvider } from "../config/client-config-provider";
 
 export interface LocoInterface {

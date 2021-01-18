@@ -4,23 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum VoipType {
+export type CallVoipType = 'invite' | 'cinvite' | 'canceled' | 'bye' | 'noanswer' | 'deny' | 'maintenance' | 'busy' | 'add' | 'transferred';
+export type VideoCallVoipType = 'v_invite' | 'v_canceled' | 'v_bye' | 'v_noanswer' | 'v_deny' | 'v_busy';
 
-    INVITE = 'invite',
-    CINVITE = 'cinvite',
-    CANCELED = 'canceled',
-    BYE = 'bye',
-    NO_ANSWER = 'noanswer',
-    DENY = 'deny',
-    MAINTENANCE = 'maintenance',
-    BUSY = 'busy',
-    ADD = 'add',
-    FACE_INVITE = 'v_invite',
-    FACE_CANCELED = 'v_canceled',
-    FACE_BYE = 'v_bye',
-    FACE_NO_ANSWER = 'v_noanswer',
-    FACE_DENY = 'v_deny',
-    FACE_BUSY = 'v_busy',
-    TRANSFERRED = 'transferred'
-
-}
+export type VoipType = CallVoipType | VideoCallVoipType;

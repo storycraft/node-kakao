@@ -1,5 +1,5 @@
 import { StructBase } from "./struct-base";
-import { UserType } from "../user/user-type";
+import { UserType } from "../user_old/user-type";
 import { Long } from "bson";
 import { ObjectMapper } from "json-proxy-mapper";
 import { CommonOpenMemberStruct } from "./open/open-link-struct";

@@ -1,4 +1,4 @@
-import { LocoResponsePacket, LocoRequestPacket } from "../packet/loco-packet-base";
+import { LocoResponsePacket, LocoRequestPacket } from "../packet_old/loco-packet-base";
 
 /*
  * Created on Wed Oct 30 2019

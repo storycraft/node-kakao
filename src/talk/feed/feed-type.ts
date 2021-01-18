@@ -4,9 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum FeedType {
+/**
+ * Known feed types
+ */
+export enum KnownFeedType {
 
-    UNDEFINED = -999999,
     LOCAL_LEAVE = -1,
     INVITE = 1,
     LEAVE = 2,
@@ -24,3 +26,5 @@ export enum FeedType {
     OPENLINK_HAND_OVER_HOST = 15,
 
 }
+
+export type FeedType = KnownFeedType | number;

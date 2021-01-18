@@ -4,49 +4,57 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum ChatType {
+/**
+ * Known chat type.
+ */
+export export enum KnownChatType {
     
-    Unknown = -1,
-    Feed = 0,
-    Text = 1,
-    Photo = 2,
-    Video = 3,
-    Contact = 4,
-    Audio = 5,
-    DitemEmoticon = 6,
-    DitemGift = 7,
-    DitemImg = 8,
-    KakaoLinkV1 = 9,
-    Avatar = 11,
-    Sticker = 12,
-    Schedule = 13,
-    Vote = 14,
-    Lottery = 15,
-    Map = 16,
-    Profile = 17,
-    File = 18,
-    StickerAni = 20,
-    Nudge = 21,
-    Actioncon = 22,
-    Search = 23,
-    Post = 24,
-    StickerGif = 25,
-    Reply = 26,
-    MultiPhoto = 27,
-    Voip = 51,
-    LiveTalk = 52,
-    Custom = 71,
-    Alim = 72,
-    PlusFriend = 81,
-    PlusEvent = 82,
-    PlusFriendViral = 83,
-    OpenVote = 97,
-    OpenPost = 98,
+    FEED = 0,
+    TEXT = 1,
+    PHOTO = 2,
+    VIDEO = 3,
+    CONTACT = 4,
+    AUDIO = 5,
+    DITEMEMOTICON = 6,
+    DITEMGIFT = 7,
+    DITEMIMG = 8,
+    KAKAOLINKV1 = 9,
+    AVATAR = 11,
+    STICKER = 12,
+    SCHEDULE = 13,
+    VOTE = 14,
+    LOTTERY = 15,
+    MAP = 16,
+    PROFILE = 17,
+    FILE = 18,
+    STICKERANI = 20,
+    NUDGE = 21,
+    ACTIONCON = 22,
+    SEARCH = 23,
+    POST = 24,
+    STICKERGIF = 25,
+    REPLY = 26,
+    MULTIPHOTO = 27,
+    VOIP = 51,
+    LIVETALK = 52,
+    CUSTOM = 71,
+    ALIM = 72,
+    PLUSFRIEND = 81,
+    PLUSEVENT = 82,
+    PLUSFRIENDVIRAL = 83,
+    OPENVOTE = 97,
+    OPENPOST = 98
 
 }
 
-export namespace MessageTypeOffset {
+export type ChatType = KnownChatType | number;
 
-    export const DELETED_MESSAGE_OFFSET = 16384;
+export const DELETED_MESSAGE_OFFSET = 16384;
 
+export function isDeletedChat(type: ChatType) {
+    return type >= 16384;
+}
+
+export function getOriginalType(type: ChatType): ChatType {
+    return type & 0xffffbfff;
 }

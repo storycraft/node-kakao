@@ -1,4 +1,4 @@
-import { ChannelType } from "../channel/channel-type";
+import { ChannelType } from "../channel_old/channel-type";
 import { StructBase } from "./struct-base";
 import { Long } from "bson";
 import { ObjectMapper } from "json-proxy-mapper";

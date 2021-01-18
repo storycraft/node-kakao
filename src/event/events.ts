@@ -4,15 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChatChannel, OpenChatChannel } from "../talk/channel/chat-channel";
-import { FeedChat, Chat } from "../talk/chat/chat";
-import { ChatUser, ClientChatUser, OpenUserInfo, OpenChatUserInfo } from "../talk/user/chat-user";
+import { ChatChannel, OpenChatChannel } from "../talk/channel_old/chat-channel";
+import { FeedChat, Chat } from "../talk/chat_old/chat";
+import { ChatUser, ClientChatUser, OpenUserInfo, OpenChatUserInfo } from "../talk/user_old/chat-user";
 import { Long } from "bson";
-import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed, OpenLinkDeletedFeed, OpenHandOverHostFeed, LeaveFeed } from "../talk/chat/chat-feed";
-import { LocoKickoutType } from "../packet/packet-kickout";
+import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed, OpenLinkDeletedFeed, OpenHandOverHostFeed, LeaveFeed } from "../talk/chat_old/chat-feed";
+import { LocoKickoutType } from "../packet_old/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
-import { OpenLinkChannel } from "../talk/open/open-link";
-import { OpenMemberType, OpenProfileType } from "../talk/open/open-link-type";
+import { OpenLinkChannel } from "../talk/open_old/open-link";
+import { OpenMemberType, OpenProfileType } from "../talk/open_old/open-link-type";
 import { RelayEventType } from "../talk/relay/relay-event-type";
 
 declare interface Event {

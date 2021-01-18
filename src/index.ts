@@ -20,36 +20,36 @@ export * from './api/channel-board-client';
 export * from './loco/loco-interface';
 export * from './loco/loco-packet-handler';
 
-export * from './network/host-data';
+export * from './network_old/host-data';
 
-export * from './network/loco-socket';
-export * from './network/loco-tls-socket';
-export * from './network/loco-secure-socket';
+export * from './network_old/loco-socket';
+export * from './network_old/loco-tls-socket';
+export * from './network_old/loco-secure-socket';
 
-export * from './network/network-manager';
-export * from './network/packet-handler';
+export * from './network_old/network-manager';
+export * from './network_old/packet-handler';
 
-export * from './network/stream/loco-encrypted-transformer';
-export * from './network/stream/loco-packet-resolver';
+export * from './network_old/stream/loco-encrypted-transformer';
+export * from './network_old/stream/loco-packet-resolver';
 
-export * from './packet/loco-packet-base';
-export * from './packet/loco-bson-packet';
-export * from './packet/packet-header-struct';
+export * from './packet_old/loco-packet-base';
+export * from './packet_old/loco-bson-packet';
+export * from './packet_old/packet-header-struct';
 
-export * from './packet/loco-packet-list';
+export * from './packet_old/loco-packet-list';
 
-export { LocoKickoutType } from './packet/packet-kickout';
+export { LocoKickoutType } from './packet_old/packet-kickout';
 
-export * from './secure/crypto-manager';
+export * from './crypto/crypto-manager';
 
-export * from './talk/chat/chat-type';
-export * from './talk/channel/channel-type';
-export * from './talk/chat/chat-builder';
+export * from './talk/chat_old/chat-type';
+export * from './talk/channel_old/channel-type';
+export * from './talk/chat_old/chat-builder';
 
-export * from './talk/chat/chat';
-export * from './talk/chat/chat-feed';
+export * from './talk/chat_old/chat';
+export * from './talk/chat_old/chat-feed';
 
-export * from './talk/chat/option/chat-option';
+export * from './talk/chat_old/option/chat-option';
 
 export * from './talk/feed/feed-type';
 export * from './talk/voip/voip-type';
@@ -58,34 +58,34 @@ export * from './talk/media/media-download-interface';
 export * from './talk/media/media-upload-interface';
 export * from './talk/media/media-manager';
 
-export * from './talk/chat/attachment/chat-attachment';
-export * from './talk/chat/attachment/sharp-attachment';
-export * from './talk/chat/attachment/custom-attachment';
-export * from './talk/chat/attachment/rich-feed-attachment';
+export * from './talk/chat_old/attachment/chat-attachment';
+export * from './talk/chat_old/attachment/sharp-attachment';
+export * from './talk/chat_old/attachment/custom-attachment';
+export * from './talk/chat_old/attachment/rich-feed-attachment';
 
-export * from './talk/chat/template/message-template';
-export * from './talk/chat/template/media-template';
+export * from './talk/chat_old/template/message-template';
+export * from './talk/chat_old/template/media-template';
 
 export * from './talk/relay/relay-event-type';
 
-export * from './talk/chat/chat-manager';
+export * from './talk/chat_old/chat-manager';
 
-export * from './talk/channel/chat-channel';
-export * from './talk/channel/channel-settings';
+export * from './talk/channel_old/chat-channel';
+export * from './talk/channel_old/channel-settings';
 
-export * from './talk/channel/channel-manager';
+export * from './talk/channel_old/channel-manager';
 
-export * from './talk/open/open-link-type';
-export * from './talk/open/open-link-manager';
-export * from './talk/open/open-link-profile-template';
-export * from './talk/open/open-link-settings';
-export * from './talk/open/open-link-template';
-export * from './talk/open/open-link';
+export * from './talk/open_old/open-link-type';
+export * from './talk/open_old/open-link-manager';
+export * from './talk/open_old/open-link-profile-template';
+export * from './talk/open_old/open-link-settings';
+export * from './talk/open_old/open-link-template';
+export * from './talk/open_old/open-link';
 
-export * from './talk/user/chat-user';
-export * from './talk/user/user-type';
+export * from './talk/user_old/chat-user';
+export * from './talk/user_old/user-type';
 
-export * from './talk/user/user-manager';
+export * from './talk/user_old/user-manager';
 
 export * from './talk/struct/struct-base';
 
@@ -143,7 +143,7 @@ export * from './api/service-client';
 export * from './oauth/access-data-provider';
 
 export * from './client-status';
-export * from './client';
+export * from './client_old';
 
 import { Long } from 'bson';
 export { Long };

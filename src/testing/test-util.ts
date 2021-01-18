@@ -5,12 +5,12 @@
  */
 
 import { LocoPacketHandler } from "../loco/loco-packet-handler";
-import { LocoRequestPacket, LocoResponsePacket } from "../packet/loco-packet-base";
-import { TalkClient } from "../client";
-import { LocoKickoutType, PacketKickoutRes } from "../packet/packet-kickout";
+import { LocoRequestPacket, LocoResponsePacket } from "../packet_old/loco-packet-base";
+import { TalkClient } from "../client_old";
+import { LocoKickoutType, PacketKickoutRes } from "../packet_old/packet-kickout";
 import * as Util from 'util';
 import * as Crypto from 'crypto';
-import { NetworkManager } from "../network/network-manager";
+import { NetworkManager } from "../network_old/network-manager";
 
 export namespace TestUtil {
 

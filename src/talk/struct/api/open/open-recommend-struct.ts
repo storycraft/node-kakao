@@ -7,7 +7,7 @@
 import { OpenStruct } from "./open-struct";
 import { StructBase } from "../../struct-base";
 import { ObjectMapper, Converter } from "json-proxy-mapper";
-import { OpenLinkType } from "../../../open/open-link-type";
+import { OpenLinkType } from "../../../open_old/open-link-type";
 import { OpenPostStruct } from "./open-post-struct";
 import { OpenSearchStruct } from "./open-search-struct";
 
