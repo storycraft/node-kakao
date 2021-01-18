@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { LinkComponent } from "../openlink/open-link";
+import { OpenLinkComponent } from "../openlink/open-link";
 
 /**
  * Normal channel
@@ -22,6 +22,8 @@ export interface Channel {
 /**
  * Open chat channel
  */
-export interface OpenChannel extends Channel, LinkComponent {
+export interface OpenChannel extends Channel, OpenLinkComponent {
 
+    
+    
 }

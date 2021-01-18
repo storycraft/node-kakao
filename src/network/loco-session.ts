@@ -4,21 +4,22 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket, LocoPacketDataCodec } from "../packet_old/loco-packet";
+import { BsonDataCodec, DefaultReq, DefaultRes } from "../packet/bson-data-codec";
+import { LocoPacket } from "../packet_old/loco-packet";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
-import { PacketBuilder } from "./packet-builder";
+import { PacketAssembler } from "./packet-assembler";
 
 /**
  * Holds current loco session.
- * Default implementation encodes 
+ * Default implementation encodes to bson.
  */
-export class LocoSession<T = Record<string, any>> {
+export class LocoSession {
 
-    private _builder: PacketBuilder<T>;
+    private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
     private _dispatcher: LocoPacketDispatcher;
 
-    constructor(codec: LocoPacketDataCodec<T>, dispatcher: LocoPacketDispatcher) {
-        this._builder = new PacketBuilder(codec);
+    constructor(dispatcher: LocoPacketDispatcher) {
+        this._assembler = new PacketAssembler(BsonDataCodec);
         this._dispatcher = dispatcher;
     }
 
@@ -36,8 +37,9 @@ export class LocoSession<T = Record<string, any>> {
      * @param method Packet method
      * @param data Packet data
      */
-    sendData(method: string, data: T) {
-        return this._dispatcher.sendPacket(this._builder.construct(method, data));
+    async sendData(method: string, data: DefaultReq) {
+        const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
+        return this._assembler.deconstruct(res);
     }
 
 }

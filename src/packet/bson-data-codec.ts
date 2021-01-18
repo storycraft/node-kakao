@@ -7,18 +7,31 @@
 import * as Bson from "bson";
 import { LocoPacketDataCodec } from "../packet_old/loco-packet";
 
-export const BsonDataCodec: LocoPacketDataCodec<Record<string, any>> = {
+export interface DefaultReq {
+
+    [key: string]: any;
+
+};
+
+export interface DefaultRes {
+
+    status: number;
+    [key: string]: any;
+
+};
+
+export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     canDecode(dataType: number): boolean {
         return dataType == 0;
     },
 
-    decode(data: ArrayBuffer): Record<string, any> {
+    decode(data: ArrayBuffer): DefaultRes {
         return Bson.deserialize(Buffer.from(data), {
             promoteLongs: false
         });
     },
 
-    encode(data: Record<string, any>): [number, ArrayBuffer] {
+    encode(data: DefaultReq): [number, ArrayBuffer] {
         return [0, Bson.serialize(data)];
     }
 

@@ -5,9 +5,16 @@
  */
 
 import { Long } from "bson";
+import { OpenLinkType } from "./open-link-type";
 
-export interface LinkComponent {
+export interface OpenLinkComponent {
 
     readonly linkId: Long;
+
+}
+
+export interface OpenLink extends OpenLinkComponent {
+
+    readonly type: OpenLinkType;
 
 }

@@ -26,7 +26,7 @@ export interface LocoPacketHeader {
 
 }
 
-export interface LocoPacketDataCodec<T> {
+export interface LocoPacketDataCodec<T, R = T> {
 
     /**
      *  Returns true if codec can decode data with supplied type.
@@ -38,7 +38,7 @@ export interface LocoPacketDataCodec<T> {
      * Decode packet data buffer to data
      * @param data 
      */
-    decode(data: ArrayBuffer): T;
+    decode(data: ArrayBuffer): R;
 
     /**
      * Encode data to packet data

@@ -155,6 +155,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         const bookingDispatcher = new LocoPacketDispatcher(await NodeSocket.connectTls({
             host: config.locoBookingURL,
             port: config.locoBookingPort,
+            keepAlive: false
         }));
 
         // Listen dispatcher
@@ -162,6 +163,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
             for await (const push of bookingDispatcher.listen()) {
 
             }
+            console.log('closed');
         })();
 
         const res = await bookingDispatcher.sendPacket({
@@ -173,7 +175,6 @@ export class NetworkManager implements LocoListener, LocoInterface {
 
             data: BsonDataCodec.encode(packet.toBodyJson())
         });
-        bookingDispatcher.stream.close();
 
         const resLegacyPacket = LocoPacketList.getResPacketByName(res.header.method, 0) as LocoBsonResponsePacket;
         resLegacyPacket.readBodyJson(BsonDataCodec.decode(res.data[1]));
@@ -188,6 +189,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         const checkinDispatcher = new LocoPacketDispatcher(new LocoSecureLayer(await NodeSocket.connect({
             host: checkinHost.host,
             port: checkinHost.port,
+            keepAlive: false,
         }), newCryptoStore(config.locoPEMPublicKey)));
 
         // Listen dispatcher
@@ -206,7 +208,6 @@ export class NetworkManager implements LocoListener, LocoInterface {
 
             data: BsonDataCodec.encode(packet.toBodyJson())
         });
-        checkinDispatcher.stream.close();
 
         const resLegacyPacket = LocoPacketList.getResPacketByName(res.header.method, 0) as LocoBsonResponsePacket;
         resLegacyPacket.readBodyJson(BsonDataCodec.decode(res.data[1]));
