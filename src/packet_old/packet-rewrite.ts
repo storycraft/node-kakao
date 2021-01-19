@@ -1,6 +1,6 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { FeedType } from "../talk/feed/feed-type";
+import { FeedType } from "../feed/feed-type";
 import { ChatType } from "../talk/chat_old/chat-type";
 
 /*

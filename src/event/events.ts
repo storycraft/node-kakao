@@ -13,7 +13,7 @@ import { LocoKickoutType } from "../packet_old/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
 import { OpenLinkChannel } from "../talk/open_old/open-link";
 import { OpenMemberType, OpenProfileType } from "../talk/open_old/open-link-type";
-import { RelayEventType } from "../talk/relay/relay-event-type";
+import { RelayEventType } from "../relay/relay-event-type";
 
 declare interface Event {
 

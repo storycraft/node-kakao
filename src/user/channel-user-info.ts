@@ -5,11 +5,12 @@
  */
 
 import { OpenChatUserPerm } from "../openlink/open-link-type";
+import { ChannelUser, OpenChannelUser } from "./channel-user";
 
 /**
  * Channel user info
  */
-export interface ChannelUserInfo {
+export interface ChannelUserInfo extends ChannelUser {
 
     nickname: string;
 
@@ -18,7 +19,7 @@ export interface ChannelUserInfo {
 /**
  * OpenChannel user info
  */
-export interface OpenChannelUserInfo extends ChannelUserInfo {
+export interface OpenChannelUserInfo extends OpenChannelUser, ChannelUserInfo {
 
     readonly perm: OpenChatUserPerm;
 

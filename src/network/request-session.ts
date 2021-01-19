@@ -5,15 +5,25 @@
  */
 
 import { BsonDataCodec, DefaultReq, DefaultRes } from "../packet/bson-data-codec";
-import { LocoPacket } from "../packet_old/loco-packet";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
 import { PacketAssembler } from "./packet-assembler";
 
+export interface CommandSession {
+
+    /**
+     * Request command response
+     * 
+     * @param method method
+     * @param data data
+     */
+    request(method: string, data: DefaultReq): Promise<DefaultRes>;
+
+}
+
 /**
  * Holds current loco session.
- * Default implementation encodes to bson.
  */
-export class LocoSession {
+export class LocoSession implements CommandSession {
 
     private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
     private _dispatcher: LocoPacketDispatcher;
@@ -23,21 +33,20 @@ export class LocoSession {
         this._dispatcher = dispatcher;
     }
 
-    get dispatcher() {
-        return this._dispatcher;
-    }
-
-    sendPacket(packet: LocoPacket) {
-        return this._dispatcher.sendPacket(packet);
+    listen() {
+        return this._dispatcher.listen();
     }
 
     /**
-     * Construct to packet and send using dispatcher
-     * 
-     * @param method Packet method
-     * @param data Packet data
+     * Create proxy that can be used safely without exposing dispatcher
      */
-    async sendData(method: string, data: DefaultReq) {
+    createProxy(): CommandSession {
+        return {
+            request: this.request.bind(this)
+        }
+    }
+
+    async request(method: string, data: DefaultReq) {
         const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
         return this._assembler.deconstruct(res);
     }

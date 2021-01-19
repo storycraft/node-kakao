@@ -19,6 +19,7 @@ export enum StatusCode {
     AUTH_REQUIRED = -998,
     UPDATE_REQUIRED = -999,
     SERVER_UNDER_MAINTENANCE = -9797
+
 }
 
 interface LocoPacketBase {

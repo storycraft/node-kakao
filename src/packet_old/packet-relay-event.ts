@@ -7,7 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { ChatType } from "../talk/chat_old/chat-type";
-import { RelayEventType } from "../talk/relay/relay-event-type";
+import { RelayEventType } from "../relay/relay-event-type";
 
 export class PacketRelayEventReq extends LocoBsonRequestPacket {
 

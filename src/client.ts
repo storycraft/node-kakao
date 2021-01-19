@@ -5,25 +5,28 @@
  */
 
 import { Long } from ".";
-import { LocoSession } from "./network/loco-session";
-import { ClientSession } from "./talk/client/client-session";
-import { ManagedChannel, ManagedOpenChannel } from "./talk/managed/managed-channel";
-import { Sessioned } from "./talk/sessioned"
-import { ChannelUser } from "./talk/user/channel-user";
+import { LocoSession } from "./network/request-session";
+import { ClientSession } from "./client/client-session";
+import { TalkChannel, TalkOpenChannel } from "./talk/channel/talk-channel";
+import { ChannelUser } from "./user/channel-user";
 
 /**
  * Simple client implementation.
  */
-export class TalkClient implements Sessioned {
+export class TalkClient {
 
-    private _session: ClientSession;
+    private _session: LocoSession;
+
+    private _clientSession: ClientSession;
 
     private _cilentUser: ChannelUser;
 
-    private _channelMap: Map<string, ManagedChannel | ManagedOpenChannel>;
+    private _channelMap: Map<string, TalkChannel | TalkOpenChannel>;
 
     constructor(session: LocoSession) {
-        this._session = new ClientSession(session);
+        this._session = session;
+
+        this._clientSession = new ClientSession(session.createProxy());
 
         this._cilentUser = { userId: Long.ZERO };
 
@@ -31,15 +34,11 @@ export class TalkClient implements Sessioned {
     }
 
     get session() {
-        return this._session.session;
+        return this._session;
     }
 
     get cilentUser() {
         return this._cilentUser;
-    }
-
-    static login() {
-
     }
 
 }

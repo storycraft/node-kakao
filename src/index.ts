@@ -51,8 +51,8 @@ export * from './talk/chat_old/chat-feed';
 
 export * from './talk/chat_old/option/chat-option';
 
-export * from './talk/feed/feed-type';
-export * from './talk/voip/voip-type';
+export * from './feed/feed-type';
+export * from './voip/voip-type';
 
 export * from './talk/media/media-download-interface';
 export * from './talk/media/media-upload-interface';
@@ -66,7 +66,7 @@ export * from './talk/chat_old/attachment/rich-feed-attachment';
 export * from './talk/chat_old/template/message-template';
 export * from './talk/chat_old/template/media-template';
 
-export * from './talk/relay/relay-event-type';
+export * from './relay/relay-event-type';
 
 export * from './talk/chat_old/chat-manager';
 

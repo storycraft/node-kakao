@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../packet/bson-data-codec";
 
 export interface Managed {
 

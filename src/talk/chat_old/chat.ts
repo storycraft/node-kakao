@@ -9,7 +9,7 @@ import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { CustomAttachment } from "./attachment/custom-attachment";
 import { ChannelType } from "../channel_old/channel-type";
-import { FeedType } from "../feed/feed-type";
+import { FeedType } from "../../feed/feed-type";
 import { RichFeedAttachment } from "./attachment/rich-feed-attachment";
 import { RequestResult } from "../../request/request-result";
 
