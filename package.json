@@ -6,6 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
+    "locotest-2": "./node_modules/.bin/ts-node loco-test-2.ts",
     "build": "./node_modules/.bin/tsc",
     "docs": "./node_modules/.bin/typedoc src",
     "prepublishOnly": "npm run test && npm run build"
@@ -35,6 +36,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bson": "^4.0.2",
+    "event-target-shim": "^6.0.2",
     "form-data": "^3.0.0",
     "json-proxy-mapper": "^1.1.2",
     "lossless-json": "^1.0.3"

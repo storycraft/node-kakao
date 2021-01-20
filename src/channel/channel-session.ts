@@ -9,8 +9,20 @@ import { DefaultReq, DefaultRes } from "../packet/bson-data-codec";
 import { createIdGen } from "../util/id-generator";
 import { Chat, ChatLogged } from "../chat/chat";
 import { KnownChatType } from "../chat/chat-type";
-import { Channel, OpenChannel } from "./channel";
+import { Channel } from "./channel";
 import { CommandResult } from "../request/command-result";
+import { Long } from "..";
+import { ChannelUser } from "../user/channel-user";
+import { KnownDataStatusCode } from "../packet/status-code";
+
+export interface ChannelTemplate {
+
+    userList: ChannelUser[],
+
+    name?: string;
+    profileURL?: string;
+
+}
 
 /**
  * Classes which provides channel session operations should implement this.
@@ -50,15 +62,33 @@ export interface ChannelSessionOp {
 }
 
 /**
- * Classes which provides openchannel session operations should implement this.
+ * Classes which can manage channels should implement this. 
  */
-export interface OpenChannelSessionOp {
+export interface ChannelManageSessionOp {
 
     /**
-     * Mark every chat as read until this chat.
-     * @param chat 
+     * Create channel.
+     * Perform CREATE command.
+     * 
+     * @param userList Users to be included.
      */
-    markRead(chat: ChatLogged): Promise<DefaultRes>;
+    createChannel(template: ChannelTemplate): Promise<DefaultRes>;
+
+    /**
+     * Create memo channel.
+     * Perform CREATE command.
+     */
+    createMemoChannel(): Promise<DefaultRes>;
+
+   /**
+    * Leave channel.
+    * Perform LEAVE command.
+    * Returns last channel token on success.
+    * 
+    * @param channel Channel to leave.
+    * @param block If true block channel to prevent inviting.
+    */
+    leaveChannel(channel: Channel, block?: boolean): Promise<CommandResult<Long>>;
 
 }
 
@@ -112,59 +142,78 @@ export class ChannelSession implements ChannelSessionOp {
             data['extra'] = chat.attachment;
         }
 
-        return { status: (await this._session.request('FORWARD', data)).status };
+        const status = (await this._session.request('FORWARD', data)).status;
+
+        return { success: status === KnownDataStatusCode.SUCCESS, status };
     }
 
     async deleteChat(chat: ChatLogged) {
+        const status = (await this._session.request(
+            'DELETEMSG',
+            {
+                'chatId': this._channel.channelId,
+                'logId': chat.logId
+            }
+        )).status;
+
         return {
-            status: (await this._session.request(
-                'DELETEMSG',
-                {
-                    'chatId': this._channel.channelId,
-                    'logId': chat.logId
-                }
-            )).status
+            success: status === KnownDataStatusCode.SUCCESS,
+            status
         };
     }
     
     async markRead(chat: ChatLogged) {
+        const status = (await this._session.request(
+            'NOTIREAD',
+            {
+                'chatId': this._channel.channelId,
+                'watermark': chat.logId
+            }
+        )).status;
         return {
-            status: (await this._session.request(
-                'NOTIREAD',
-                {
-                    'chatId': this._channel.channelId,
-                    'watermark': chat.logId
-                }
-            )).status
+            success: status === KnownDataStatusCode.SUCCESS,
+            status
         };
     }
 
 }
 
 /**
- * Default OpenChannelSessionOp implementation.
+ * Default ChannelManageSessionOp implementation.
  */
-export class OpenChannelSession implements OpenChannelSessionOp {
+export class ChannelManageSession implements ChannelManageSessionOp {
 
-    private _channel: OpenChannel;
     private _session: CommandSession;
 
-    constructor(channel: OpenChannel, session: CommandSession) {
-        this._channel = channel;
+    constructor(session: CommandSession) {
         this._session = session;
     }
-    
-    async markRead(chat: ChatLogged) {
-        return {
-            status: (await this._session.request(
-                'NOTIREAD',
-                {
-                    'chatId': this._channel.channelId,
-                    'li': this._channel.linkId,
-                    'watermark': chat.logId
-                }
-            )).status
+
+    createChannel(template: ChannelTemplate) {
+        const data: Record<string, any> = {
+            'memberIds': template.userList.map(user => user.userId)
         };
+
+        if (template.name) data['nickname'] = template.name;
+        if (template.profileURL) data['profileImageUrl'] = template.profileURL;
+
+        return this._session.request('CREATE', data);
     }
 
-};
+    createMemoChannel() {
+        return this._session.request('CREATE', { 'memoChat': true });
+    }
+
+    async leaveChannel(channel: Channel, block: boolean = false): Promise<CommandResult<Long>> {
+        const res = await this._session.request(
+            'LEAVE',
+            {
+                'chatId': channel.channelId,
+                'block': block
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res['lastTokenId'] };
+    }
+
+}

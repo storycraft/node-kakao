@@ -7,23 +7,21 @@
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
 import { ChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
-import { ChannelSession, ChannelSessionOp, OpenChannelSession, OpenChannelSessionOp } from "../../channel/channel-session";
+import { ChannelSession, ChannelSessionOp } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { Chat, ChatLogged } from "../../chat/chat";
 import { CommandSession } from "../../network/request-session";
+import { OpenChannelSession, OpenChannelSessionOp } from "../../channel/open-channel-session";
 
 export class TalkChannel implements Channel, ChannelSessionOp {
-
-    private _channel: Channel;
 
     private _channelSession: ChannelSession;
 
     private _info: ChannelInfo;
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
-    constructor(channel: Channel, session: CommandSession) {
-        this._channel = channel;
+    constructor(private _channel: Channel, session: CommandSession) {
         this._channelSession = new ChannelSession(this, session);
 
         this._info = {} as any;
@@ -116,11 +114,11 @@ export class TalkOpenChannel implements OpenChannel, ChannelSessionOp, OpenChann
         return this._channelSession.forwardChat(chat);
     }
 
-    deleteChat(chat: ChatLogged): Promise<DefaultRes> {
+    deleteChat(chat: ChatLogged) {
         return this._channelSession.deleteChat(chat);
     }
 
-    markRead(chat: ChatLogged): Promise<DefaultRes> {
+    markRead(chat: ChatLogged) {
         return this._openChannelSession.markRead(chat);
     }
 

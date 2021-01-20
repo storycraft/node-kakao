@@ -11,14 +11,24 @@ import { DataStatusCode, KnownDataStatusCode } from "../packet/status-code";
  */
 interface CommandResultFailed {
 
+    readonly success: false;
     readonly status: DataStatusCode;
 
 }
+
 interface CommandResultDone<T> {
 
-    readonly status: KnownDataStatusCode.SUCCESS;
+    readonly success: true;
+    readonly status: DataStatusCode;
     readonly result: T;
 
 }
 
-export type CommandResult<T = void> = CommandResultDone<T> | CommandResultFailed;
+interface CommandResultDoneVoid {
+
+    readonly success: true;
+    readonly status: DataStatusCode;
+
+}
+
+export type CommandResult<T = void> = CommandResultFailed | (T extends void ? CommandResultDoneVoid : CommandResultDone<T>);

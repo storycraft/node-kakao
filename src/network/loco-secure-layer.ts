@@ -27,6 +27,10 @@ export class LocoSecureLayer implements Stream {
 
     iterate() {
         const instance = this;
+        const iterator = instance._stream.iterate();
+        
+        const headerBufferList = new ChunkedArrayBufferList();
+        const packetBufferList = new ChunkedArrayBufferList();
 
         return {
             [Symbol.asyncIterator](): AsyncIterator<ArrayBuffer> {
@@ -34,16 +38,16 @@ export class LocoSecureLayer implements Stream {
             },
 
             async next(): Promise<IteratorResult<ArrayBuffer>> {
-                const headerBufferList = new ChunkedArrayBufferList();
-                const packetBufferList = new ChunkedArrayBufferList();
-
-                for await (const data of instance._stream.iterate()) {
-                    headerBufferList.append(data);
-
-                    if (headerBufferList.byteLength >= 20) break;
-                }
                 if (instance._stream.ended) {
                     return { done: true, value: null };
+                }
+                
+                if (headerBufferList.byteLength < 20) {
+                    for await (const data of iterator) {
+                        headerBufferList.append(data);
+    
+                        if (headerBufferList.byteLength >= 20) break;
+                    }
                 }
 
                 const headerBuffer = headerBufferList.toBuffer();
@@ -51,26 +55,26 @@ export class LocoSecureLayer implements Stream {
                 const dataSize = new DataView(headerBuffer).getUint32(0, true) - 16;
                 const iv = headerBuffer.slice(4, 20);
 
-                const headerLeftBuffer = headerBuffer.slice(20);
-                if (headerLeftBuffer.byteLength > 0) {
-                    packetBufferList.append(headerLeftBuffer);
+                if (headerBuffer.byteLength > 20) {
+                    packetBufferList.append(headerBuffer.slice(20));
                 }
+                headerBufferList.clear();
 
                 if (packetBufferList.byteLength < dataSize) {
-                    for await (const data of instance._stream.iterate()) {
+                    for await (const data of iterator) {
                         packetBufferList.append(data);
     
                         if (packetBufferList.byteLength >= dataSize) break;
                     }
                 }
                 
-                if (instance._stream.ended) {
-                    return { done: true, value: null };
-                }
-                
                 const dataBuffer = packetBufferList.toBuffer();
+                if (dataBuffer.byteLength > dataSize) {
+                    headerBufferList.append(dataBuffer.slice(dataSize));
+                }
+                packetBufferList.clear();
 
-                return { done: false, value: instance._crypto.toAESDecrypted(dataBuffer, iv) };
+                return { done: false, value: instance._crypto.toAESDecrypted(dataBuffer.slice(0, dataSize), iv) };
             }
         };
     }

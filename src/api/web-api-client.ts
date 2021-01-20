@@ -8,8 +8,8 @@ import Axios, { AxiosRequestConfig } from "axios";
 import * as FormData from "form-data";
 import { ObjectMapper, Serializer } from "json-proxy-mapper";
 import { URLSearchParams } from "url";
-import { ClientConfigProvider } from "../config/client-config-provider";
-import { AccessDataProvider } from "../oauth/access-data-provider";
+import { ClientConfigProvider } from "../config/client-config-provider_old";
+import { AccessDataProvider } from "../oauth_old/access-data-provider";
 import { StructBase, StructType } from "../talk/struct/struct-base";
 import { JsonUtil } from "../util/json-util";
 import { ApiHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
@@ -62,7 +62,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
             // https://github.com/axios/axios/issues/811
             // https://github.com/axios/axios/issues/907
-            transformResponse: (data) => { return data; },
+            transformResponse: (data) => data,
 
             responseType: 'text'
         };

@@ -9,7 +9,7 @@ import { JsonUtil } from "../../util/json-util";
 import { ChatFeed } from "./chat-feed";
 import { CustomAttachment } from "./attachment/custom-attachment";
 import { ChannelType } from "../channel_old/channel-type";
-import { FeedType } from "../../feed/feed-type";
+import { FeedType, KnownFeedType } from "../../feed/feed-type";
 import { RichFeedAttachment } from "./attachment/rich-feed-attachment";
 import { RequestResult } from "../../request/request-result";
 
@@ -232,7 +232,7 @@ export class FeedChat<T extends ChatFeed = ChatFeed> extends Chat {
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
         try {
-            if (this.getFeed().feedType === FeedType.RICH_CONTENT) {
+            if (this.getFeed().feedType === KnownFeedType.RICH_CONTENT) {
                 attachmentList.push(new RichFeedAttachment(attachmentJson['text'], attachmentJson['icon'], attachmentJson['action']));
             }
         } catch (e) {

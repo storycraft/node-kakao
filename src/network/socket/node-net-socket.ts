@@ -7,7 +7,7 @@
 import { Stream } from "../stream";
 import * as net from 'net';
 import * as tls from 'tls';
-import { NetSocketOptions } from "./net-socket-options";
+import { NetSocketOptions } from "./net-socket";
 
 export class NodeSocket implements Stream {
 
@@ -39,7 +39,7 @@ export class NodeSocket implements Stream {
                         reject(instance._err);
                         return;
                     }
-                    
+
                     const errHandler = (err: any) => {
                         reject(err);
                     };
@@ -48,19 +48,28 @@ export class NodeSocket implements Stream {
                         resolve({ done: true, value: null });
                     };
 
-                    // TODO: better end detecting
                     instance._socket.once('end', endHandler);
                     instance._socket.once('close', endHandler);
                     instance._socket.once('error', errHandler);
+
+                    const read = instance._socket.read();
+                    if (read) {
+                        instance._socket.off('end', endHandler);
+                        instance._socket.off('close', endHandler);
+                        instance._socket.off('error', errHandler);
+
+                        resolve({ done: false, value: read });
+                        return;
+                    }
                     
                     instance._socket.once('readable', () => {
                         const read = instance._socket.read();
 
-                        if (!read) return;
-
                         instance._socket.off('end', endHandler);
                         instance._socket.off('close', endHandler);
                         instance._socket.off('error', errHandler);
+
+                        if (!read) return;
 
                         resolve({ done: false, value: read });
                     });

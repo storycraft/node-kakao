@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket, LocoPacketHeader } from "../packet_old/loco-packet";
+import { LocoPacket, LocoPacketHeader } from "../packet/loco-packet";
 import { ChunkedArrayBufferList } from "./chunk/chunked-arraybuffer-list";
 import { Stream } from "./stream";
 
@@ -52,59 +52,62 @@ export class LocoPacketCodec {
     iterate() {
         const instance = this;
 
+        const iterator = this._stream.iterate();
+        
+        const headerBufferList = new ChunkedArrayBufferList();
+        const packetBufferList = new ChunkedArrayBufferList();
+
         return {
             [Symbol.asyncIterator](): AsyncIterator<LocoPacket> {
+                return this;
+            },
+
+            async next(): Promise<IteratorResult<LocoPacket>> {
+                for await (const data of iterator) {
+                    headerBufferList.append(data);
+
+                    if (headerBufferList.byteLength >= 22) break;
+                }
+                if (instance._stream.ended) {
+                    return { done: true, value: null };
+                }
+
+                const headerBuffer = headerBufferList.toBuffer();
+                const headerView = new DataView(headerBuffer);
+
+                const header: LocoPacketHeader = {
+                    id: headerView.getUint32(0, true),
+                    status: headerView.getUint16(4, true),
+                    method: String.fromCharCode(...new Uint8Array(headerBuffer.slice(6, 17))).replace(/\0/g, '')
+                };
+                const dataType = headerView.getUint8(17);
+                const dataSize = headerView.getUint32(18, true);
+
+                if (headerBuffer.byteLength > 22) {
+                    packetBufferList.append(headerBuffer.slice(22));
+                }
+                headerBufferList.clear();
+
+                if (packetBufferList.byteLength < dataSize) {
+                    for await (const data of iterator) {
+                        packetBufferList.append(data);
+    
+                        if (packetBufferList.byteLength >= dataSize) break;
+                    }
+                }
+                
+                const dataBuffer = packetBufferList.toBuffer();
+
+                if (dataBuffer.byteLength > dataSize) {
+                    headerBufferList.append(dataBuffer.slice(dataSize));
+                }
+                packetBufferList.clear();
+
                 return {
-                    async next() {
-                        const headerBufferList = new ChunkedArrayBufferList();
-                        const packetBufferList = new ChunkedArrayBufferList();
-        
-                        for await (const data of instance._stream.iterate()) {
-                            headerBufferList.append(data);
-        
-                            if (headerBufferList.byteLength >= 22) break;
-                        }
-                        if (instance._stream.ended) {
-                            return { done: true, value: null };
-                        }
-        
-                        const headerBuffer = headerBufferList.toBuffer();
-                        const headerView = new DataView(headerBuffer);
-        
-                        const header: LocoPacketHeader = {
-                            id: headerView.getUint32(0, true),
-                            status: headerView.getUint16(4, true),
-                            method: String.fromCharCode(...new Uint8Array(headerBuffer.slice(6, 17))).replace(/\0/g, '')
-                        };
-                        const dataType = headerView.getUint8(17);
-                        const dataSize = headerView.getUint32(18, true);
-        
-                        const headerLeftBuffer = headerBuffer.slice(22);
-                        if (headerLeftBuffer.byteLength > 0) {
-                            packetBufferList.append(headerLeftBuffer);
-                        }
-        
-                        if (packetBufferList.byteLength < dataSize) {
-                            for await (const data of instance._stream.iterate()) {
-                                packetBufferList.append(data);
-            
-                                if (packetBufferList.byteLength >= dataSize) break;
-                            }
-                        }
-                        
-                        if (instance._stream.ended) {
-                            return { done: true, value: null };
-                        }
-                        
-                        const dataBuffer = packetBufferList.toBuffer();
-                        
-                        return {
-                            done: false,
-                            value: {
-                                header: header,
-                                data: [dataType, dataBuffer]
-                            }
-                        };
+                    done: false,
+                    value: {
+                        header: header,
+                        data: [dataType, dataBuffer.slice(0, dataSize)]
                     }
                 };
             }

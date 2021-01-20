@@ -1,6 +1,6 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { FeedType } from "../feed/feed-type";
+import { FeedType, KnownFeedType } from "../feed/feed-type";
 import { ChatType } from "../talk/chat_old/chat-type";
 
 /*
@@ -16,7 +16,7 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         public ChannelId: Long = Long.ZERO,
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Text,
-        public RewriteFeedType: FeedType = FeedType.OPENLINK_REWRITE_FEED,
+        public RewriteFeedType: FeedType = KnownFeedType.OPENLINK_REWRITE_FEED,
         public ReportChannelLink: string = '', // Report channel 
         public Category: string = '', // Report Category
     ) {
@@ -43,7 +43,7 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
             obj['cat'] = this.Category;
         }
 
-        if (this.RewriteFeedType === FeedType.RICH_CONTENT) {
+        if (this.RewriteFeedType === KnownFeedType.RICH_CONTENT) {
             obj['ft'] = this.RewriteFeedType;
         }
 

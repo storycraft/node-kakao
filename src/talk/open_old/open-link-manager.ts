@@ -16,7 +16,7 @@ import { OpenChatChannel } from "../channel_old/chat-channel";
 import { PacketKickMemberRes, PacketKickMemberReq } from "../../packet_old/packet-kick-member";
 import { PacketDeleteLinkReq, PacketDeleteLinkRes } from "../../packet_old/packet-delete-link";
 import { PacketRewriteReq, PacketRewriteRes } from "../../packet_old/packet-rewrite";
-import { FeedType } from "../../feed/feed-type";
+import { FeedType, KnownFeedType } from "../../feed/feed-type";
 import { ChatType } from "../chat_old/chat-type";
 import { PacketSetMemTypeReq, PacketSetMemTypeRes } from "../../packet_old/packet-set-mem-type";
 import { PacketUpdateLinkProfileReq, PacketUpdateLinkProfileRes } from "../../packet_old/packet-update-link-profile";
@@ -176,7 +176,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
     }
 
     async hideChat(channel: OpenChatChannel, logId: Long, type: ChatType): Promise<RequestResult<boolean>> {
-        let res = await this.client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, type, FeedType.OPENLINK_REWRITE_FEED));
+        let res = await this.client.NetworkManager.requestPacketRes<PacketRewriteRes>(new PacketRewriteReq(channel.LinkId, channel.Id, logId, type, KnownFeedType.OPENLINK_REWRITE_FEED));
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }

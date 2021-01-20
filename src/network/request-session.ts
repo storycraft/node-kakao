@@ -5,8 +5,10 @@
  */
 
 import { BsonDataCodec, DefaultReq, DefaultRes } from "../packet/bson-data-codec";
+import { LocoPacket } from "../packet/loco-packet";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
 import { PacketAssembler } from "./packet-assembler";
+import { Stream } from "./stream";
 
 export interface CommandSession {
 
@@ -16,9 +18,11 @@ export interface CommandSession {
      * @param method method
      * @param data data
      */
-    request(method: string, data: DefaultReq): Promise<DefaultRes>;
+    request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T>;
 
 }
+
+export type PushPacketData = [string, DefaultRes];
 
 /**
  * Holds current loco session.
@@ -28,27 +32,45 @@ export class LocoSession implements CommandSession {
     private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
     private _dispatcher: LocoPacketDispatcher;
 
-    constructor(dispatcher: LocoPacketDispatcher) {
+    constructor(stream: Stream) {
         this._assembler = new PacketAssembler(BsonDataCodec);
-        this._dispatcher = dispatcher;
+        this._dispatcher = new LocoPacketDispatcher(stream);
     }
 
     listen() {
-        return this._dispatcher.listen();
-    }
+        const iterator = this._dispatcher.listen();
+        const assembler = this._assembler;
 
-    /**
-     * Create proxy that can be used safely without exposing dispatcher
-     */
-    createProxy(): CommandSession {
         return {
-            request: this.request.bind(this)
+            [Symbol.asyncIterator](): AsyncIterator<PushPacketData> {
+                return this;
+            },
+
+            async next(): Promise<IteratorResult<PushPacketData>> {
+                const next = await iterator.next();
+
+                if (next.done) return { done: true, value: null };
+                const pushPacket = next.value as LocoPacket;
+
+                return { done: false, value: [pushPacket.header.method, assembler.deconstruct(pushPacket)] };
+            }
         }
     }
 
-    async request(method: string, data: DefaultReq) {
+    async request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
         const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
-        return this._assembler.deconstruct(res);
+        return this._assembler.deconstruct(res) as unknown as DefaultRes & T;
+    }
+
+    sendPacket(packet: LocoPacket) {
+        return this._dispatcher.sendPacket(packet);
+    }
+
+    /**
+     * Close session
+     */
+    close() {
+        this._dispatcher.stream.close();
     }
 
 }

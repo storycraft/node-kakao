@@ -20,7 +20,7 @@ import { PacketKickMemberRes } from "../packet_old/packet-kick-member";
 import { PacketDeleteMemberRes } from "../packet_old/packet-delmem";
 import { PacketKickoutRes, LocoKickoutType } from "../packet_old/packet-kickout";
 import { InviteFeed, OpenJoinFeed, DeleteAllFeed, ChatFeed, OpenKickFeed, OpenRewriteFeed, OpenHandOverHostFeed } from "../talk/chat_old/chat-feed";
-import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { LocoPacketHandler } from "../loco_old/loco-packet-handler";
 import { NetworkManager } from "./network-manager";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet_old/loco-packet-base";
 import { Long } from "bson";

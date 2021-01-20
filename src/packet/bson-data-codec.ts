@@ -5,7 +5,7 @@
  */
 
 import * as Bson from "bson";
-import { LocoPacketDataCodec } from "../packet_old/loco-packet";
+import { LocoPacketDataCodec } from "./loco-packet";
 
 export interface DefaultReq {
 
@@ -22,7 +22,7 @@ export interface DefaultRes {
 
 export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     canDecode(dataType: number): boolean {
-        return dataType == 0;
+        return dataType == 0 || dataType == 8;
     },
 
     decode(data: ArrayBuffer): DefaultRes {

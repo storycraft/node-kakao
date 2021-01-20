@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { LocoPacketHandler } from "../loco_old/loco-packet-handler";
 import { TalkPacketHandler } from "./packet-handler";
-import { LocoCommandInterface, LocoListener, LocoInterface, LocoTLSCommandInterface, LocoSecureCommandInterface, LocoReceiver } from "../loco/loco-interface";
+import { LocoCommandInterface, LocoListener, LocoInterface, LocoTLSCommandInterface, LocoSecureCommandInterface, LocoReceiver } from "../loco_old/loco-interface";
 import { LocoRequestPacket, LocoResponsePacket, StatusCode } from "../packet_old/loco-packet-base";
 import { PacketLoginRes, PacketLoginReq } from "../packet_old/packet-login";
 import { PacketPingReq } from "../packet_old/packet-ping";
@@ -18,7 +18,7 @@ import { Long } from "bson";
 import { HostData } from "./host-data";
 import { MediaUploadInterface } from "../talk/media/media-upload-interface";
 import { MediaDownloadInterface } from "../talk/media/media-download-interface";
-import { ClientConfigProvider } from "../config/client-config-provider";
+import { ClientConfigProvider } from "../config/client-config-provider_old";
 import { LocoPacketDispatcher } from "../network/loco-packet-dispatcher";
 import { NodeSocket } from "../network/socket/node-net-socket";
 import { BsonDataCodec } from "../packet/bson-data-codec";

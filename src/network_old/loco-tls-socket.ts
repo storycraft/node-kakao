@@ -1,6 +1,6 @@
 import * as tls from "tls";
 import { LocoBasicSocket } from "./loco-socket";
-import { LocoReceiver } from "../loco/loco-interface";
+import { LocoReceiver } from "../loco_old/loco-interface";
 
 /*
  * Created on Fri Oct 18 2019

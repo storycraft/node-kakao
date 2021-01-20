@@ -3,7 +3,7 @@ import { CryptoManager } from "../crypto/crypto-manager";
 import * as net from "net";
 import { LocoEncryptedTransformer } from "./stream/loco-encrypted-transformer";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
-import { LocoReceiver } from "../loco/loco-interface";
+import { LocoReceiver } from "../loco_old/loco-interface";
 import { PacketHeader } from "../packet_old/packet-header-struct";
 
 /*

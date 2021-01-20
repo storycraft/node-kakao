@@ -5,8 +5,8 @@
  */
 
 import { Long } from "bson";
-import { ClientConfigProvider } from "../../config/client-config-provider";
-import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
+import { ClientConfigProvider } from "../../config/client-config-provider_old";
+import { LocoListener, LocoSecureCommandInterface } from "../../loco_old/loco-interface";
 import { HostData } from "../../network_old/host-data";
 import { LocoSecureSocket } from "../../network_old/loco-secure-socket";
 import { LocoResponsePacket, StatusCode } from "../../packet_old/loco-packet-base";

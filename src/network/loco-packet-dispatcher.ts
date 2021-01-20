@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket } from "../packet_old/loco-packet";
+import { LocoPacket } from "../packet/loco-packet";
 import { LocoPacketCodec } from "./loco-packet-codec";
 import { Stream } from "./stream";
 
@@ -40,6 +40,7 @@ export class LocoPacketDispatcher {
      */
     listen() {
         const instance = this;
+        const iterator = this._codec.iterate();
 
         return {
             [Symbol.asyncIterator](): AsyncIterator<LocoPacket> {
@@ -47,16 +48,24 @@ export class LocoPacketDispatcher {
             },
 
             async next(): Promise<IteratorResult<LocoPacket>> {
-                for await (const packet of instance._codec.iterate()) {
-                    if (instance._packetMap.has(packet.header.id)) {
-                        instance._packetMap.get(packet.header.id)![0](packet);
-                        instance._packetMap.delete(packet.header.id);
-                    } else {
+                while (true) {
+                    const next = await iterator.next();
+
+                    if (next.done) return { done: true, value: null };
+    
+                    const packet = next.value;
+    
+                    if (packet.data[0] === 0) {
+                        if (instance._packetMap.has(packet.header.id)) {
+                            instance._packetMap.get(packet.header.id)![0](packet);
+                            instance._packetMap.delete(packet.header.id);
+                        }
+                    } else if (packet.data[0] === 8) {
                         return { done: false, value: packet };
+                    } else {
+                        throw `Unknown data type: ${packet.data[0]}`;
                     }
                 }
-
-                return { done: true, value: null };
             }
         };
     }

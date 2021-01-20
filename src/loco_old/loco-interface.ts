@@ -11,7 +11,7 @@ import { LocoPacketList } from "../packet_old/loco-packet-list";
 import { HostData } from "../network_old/host-data";
 import { LocoSecureSocket } from "../network_old/loco-secure-socket";
 import { LocoTLSSocket } from "../network_old/loco-tls-socket";
-import { ClientConfigProvider } from "../config/client-config-provider";
+import { ClientConfigProvider } from "../config/client-config-provider_old";
 
 export interface LocoInterface {
 

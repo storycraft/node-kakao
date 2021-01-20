@@ -6,9 +6,9 @@
 
 import * as crypto from "crypto";
 import { LoginError } from "../client_old";
-import { DefaultConfiguration } from "../config/client-config";
-import { ClientConfigProvider } from "../config/client-config-provider";
-import { AccessDataProvider } from "../oauth/access-data-provider";
+import { DefaultConfiguration } from "../config/client-config-provider";
+import { ClientConfigProvider } from "../config/client-config-provider_old";
+import { AccessDataProvider } from "../oauth_old/access-data-provider";
 import { LessSettingsStruct, MoreSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
 import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
 import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";

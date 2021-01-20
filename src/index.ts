@@ -5,7 +5,6 @@
  */
 
 export * from './event/events';
-export * from './config/client-config';
 export * from './config/client-config-provider';
 
 export * from './api/web-api-client';
@@ -17,8 +16,8 @@ export * from './api/open-chat-client';
 export * from './api/open-upload-api';
 export * from './api/channel-board-client';
 
-export * from './loco/loco-interface';
-export * from './loco/loco-packet-handler';
+export * from './loco_old/loco-interface';
+export * from './loco_old/loco-packet-handler';
 
 export * from './network_old/host-data';
 
@@ -140,7 +139,7 @@ export * from './talk/struct/api/account/client-settings-struct';
 
 export * from './api/service-client';
 
-export * from './oauth/access-data-provider';
+export * from './oauth_old/access-data-provider';
 
 export * from './client-status';
 export * from './client_old';
@@ -149,4 +148,4 @@ import { Long } from 'bson';
 export { Long };
 
 export * from './util/json-util';
-export * from './testing/test-util';
+export * from './testing/test-util_old';

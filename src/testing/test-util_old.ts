@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacketHandler } from "../loco/loco-packet-handler";
+import { LocoPacketHandler } from "../loco_old/loco-packet-handler";
 import { LocoRequestPacket, LocoResponsePacket } from "../packet_old/loco-packet-base";
 import { TalkClient } from "../client_old";
 import { LocoKickoutType, PacketKickoutRes } from "../packet_old/packet-kickout";

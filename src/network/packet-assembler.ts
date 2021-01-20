@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket, LocoPacketDataCodec } from "../packet_old/loco-packet";
+import { LocoPacket, LocoPacketDataCodec } from "../packet/loco-packet";
 import { createIdGen } from "../util/id-generator";
 
 /**

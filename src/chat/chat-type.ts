@@ -7,7 +7,7 @@
 /**
  * Known chat type.
  */
-export export enum KnownChatType {
+export enum KnownChatType {
     
     FEED = 0,
     TEXT = 1,

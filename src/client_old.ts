@@ -6,8 +6,8 @@ import { OpenChatClient } from "./api/open-chat-client";
 import { OpenUploadApi } from "./api/open-upload-api";
 import { ServiceClient } from "./api/service-client";
 import { ClientStatus } from "./client-status";
-import { ClientConfig } from "./config/client-config";
-import { ClientConfigProvider, DefaultClientConfigProvider } from "./config/client-config-provider";
+import { ClientConfigOld } from "./config/client-config-provider";
+import { ClientConfigProvider, DefaultClientConfigProvider } from "./config/client-config-provider_old";
 import { ClientEvents } from "./event/events";
 import { NetworkManager } from "./network_old/network-manager";
 import { StatusCode } from "./packet_old/loco-packet-base";
@@ -99,7 +99,7 @@ export class TalkApiClient extends EventEmitter implements ApiClient {
     private channelBoard: ChannelBoardClient;
     private openChannelBoard: OpenChannelBoardClient;
     
-    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfig>) {
+    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfigOld>) {
         super();
 
         this.configProvider = new DefaultClientConfigProvider(config);
@@ -195,7 +195,7 @@ export class TalkClient extends TalkApiClient implements LocoClient {
 
     private status: ClientStatus;
 
-    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfig>) {
+    constructor(name: string, deviceUUID: string, config?: Partial<ClientConfigOld>) {
         super(name, deviceUUID, config);
 
         this.networkManager = new NetworkManager(this, this.ConfigProvider);

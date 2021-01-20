@@ -1,7 +1,7 @@
 import * as net from "net";
 import { LocoPacketResolver } from "./stream/loco-packet-resolver";
 import { PacketHeader } from "../packet_old/packet-header-struct";
-import { LocoReceiver } from "../loco/loco-interface";
+import { LocoReceiver } from "../loco_old/loco-interface";
 
 /*
  * Created on Sun Oct 20 2019

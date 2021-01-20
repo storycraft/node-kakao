@@ -7,8 +7,8 @@
 import { Long } from "bson";
 import { Socket } from "net";
 import { Transform, TransformCallback } from "stream";
-import { ClientConfigProvider } from "../../config/client-config-provider";
-import { LocoListener, LocoSecureCommandInterface } from "../../loco/loco-interface";
+import { ClientConfigProvider } from "../../config/client-config-provider_old";
+import { LocoListener, LocoSecureCommandInterface } from "../../loco_old/loco-interface";
 import { ChunkedBufferList } from "../../network_old/chunk/chunked-buffer-list";
 import { HostData } from "../../network_old/host-data";
 import { LocoSecureSocket } from "../../network_old/loco-secure-socket";

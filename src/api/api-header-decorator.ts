@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultConfiguration } from "../config/client-config";
+import { DefaultConfiguration } from "../config/client-config-provider";
 import { RequestHeader } from "./web-api-client";
-import { ClientConfigProvider, DefaultClientConfigProvider } from "../config/client-config-provider";
+import { ClientConfigProvider, DefaultClientConfigProvider } from "../config/client-config-provider_old";
 
 export interface ApiHeaderDecorator {
 
