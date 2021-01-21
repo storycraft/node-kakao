@@ -30,11 +30,11 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
 
     private _channelList: TalkChannelList;
 
-    constructor(private _sessionFactory: SessionFactory, config: ClientConfig) {
+    constructor(config: Partial<ClientConfig> = {}, private _sessionFactory: SessionFactory = new TalkSessionFactory()) {
         super();
 
         this._session = null;
-        this._clientSession = new ClientSession(this.createSessionProxy(), new ClientConfigProvider(config));
+        this._clientSession = new ClientSession(this.createSessionProxy(), new ClientConfigProvider(Object.assign(DefaultConfiguration, config)));
 
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
@@ -148,17 +148,6 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
                 this.pushReceived(pushMethod, pushData);
             }
         })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
-    }
-
-    /**
-     * Create loco TalkClient
-     * 
-     * @param config 
-     */
-    static createLocoClient(config: Partial<LocoLoginConfig & ClientConfig> = {}): TalkClient {
-        const clientConfig = Object.assign(DefaultConfiguration, config);
-
-        return new TalkClient(new TalkSessionFactory(), clientConfig);
     }
 
 }
