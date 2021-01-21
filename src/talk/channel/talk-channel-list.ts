@@ -6,22 +6,22 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelManageSession, ChannelManageSessionOp, ChannelTemplate } from "../../channel/channel-session";
+import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
 import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
 import { TalkChannel, TalkOpenChannel } from "./talk-channel";
+import { TalkChannelManageSession } from "./talk-channel-session";
 
 /**
  * Manage session channels
  */
-export class TalkChannelList implements ChannelManageSessionOp, Managed {
+export class TalkChannelList implements ChannelManageSession, Managed {
 
     private _session: CommandSession;
 
-    private _manageSession: ChannelManageSession;
+    private _manageSession: TalkChannelManageSession;
 
     private _normalChannelMap: Map<string, TalkChannel>;
     private _openChannelMap: Map<string, TalkOpenChannel>;
@@ -34,7 +34,7 @@ export class TalkChannelList implements ChannelManageSessionOp, Managed {
      */
     constructor(session: CommandSession) {
         this._session = session;
-        this._manageSession = new ChannelManageSession(session);
+        this._manageSession = new TalkChannelManageSession(session);
         
         this._normalChannelMap = new Map();
         this._openChannelMap = new Map();

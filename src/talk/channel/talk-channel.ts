@@ -7,23 +7,23 @@
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
 import { ChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
-import { ChannelSession, ChannelSessionOp } from "../../channel/channel-session";
+import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { Chat, ChatLogged } from "../../chat/chat";
 import { CommandSession } from "../../network/request-session";
-import { OpenChannelSession, OpenChannelSessionOp } from "../../channel/open-channel-session";
 import { CommandResult } from "../../request/command-result";
+import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
 
-export class TalkChannel implements Channel, ChannelSessionOp {
+export class TalkChannel implements Channel, ChannelSession {
 
-    private _channelSession: ChannelSession;
+    private _channelSession: TalkChannelSession;
 
     private _info: ChannelInfo;
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
     constructor(private _channel: Channel, session: CommandSession) {
-        this._channelSession = new ChannelSession(this, session);
+        this._channelSession = new TalkChannelSession(this, session);
 
         this._info = {} as any;
         this._userInfoMap = new Map();
@@ -83,12 +83,12 @@ export class TalkChannel implements Channel, ChannelSessionOp {
 
 }
 
-export class TalkOpenChannel implements OpenChannel, ChannelSessionOp, OpenChannelSessionOp {
+export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannelSession {
     
     private _channel: OpenChannel;
 
-    private _channelSession: ChannelSession;
-    private _openChannelSession: OpenChannelSession;
+    private _channelSession: TalkChannelSession;
+    private _openChannelSession: TalkOpenChannelSession;
 
     private _info: OpenChannelInfo;
     private _userInfoMap: Map<string, OpenChannelUserInfo>;
@@ -96,8 +96,8 @@ export class TalkOpenChannel implements OpenChannel, ChannelSessionOp, OpenChann
     constructor(channel: OpenChannel, session: CommandSession) {
         this._channel = channel;
 
-        this._channelSession = new ChannelSession(this, session);
-        this._openChannelSession = new OpenChannelSession(this, session);
+        this._channelSession = new TalkChannelSession(this, session);
+        this._openChannelSession = new TalkOpenChannelSession(this, session);
 
         this._info = {} as any;
         this._userInfoMap = new Map();

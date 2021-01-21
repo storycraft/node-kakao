@@ -11,20 +11,20 @@ import { TalkChannelList } from "./talk/channel/talk-channel-list";
 import { Managed } from "./talk/managed";
 import { OAuthCredential } from "./oauth/credential";
 import { CommandResult } from "./request/command-result";
-import { ClientConfig, ClientConfigProvider, DefaultConfiguration, LocoLoginConfig } from "./config/client-config-provider";
+import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "./config/client-config-provider";
 import { Long } from ".";
-import { ClientSession, ClientSessionOp, LoginResult } from "./client/client-session";
+import { TalkClientSession, ClientSession, LoginResult } from "./client/client-session";
 import EventTarget from "event-target-shim";
 import { TalkSessionFactory } from "./talk/network/talk-session-factory";
 
 /**
  * Simple client implementation.
  */
-export class TalkClient extends EventTarget implements CommandSession, ClientSessionOp, Managed {
+export class TalkClient extends EventTarget implements CommandSession, ClientSession, Managed {
 
     private _session: LocoSession | null;
 
-    private _clientSession: ClientSession;
+    private _clientSession: TalkClientSession;
 
     private _cilentUser: ChannelUser;
 
@@ -34,7 +34,7 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
         super();
 
         this._session = null;
-        this._clientSession = new ClientSession(this.createSessionProxy(), new ClientConfigProvider(Object.assign(DefaultConfiguration, config)));
+        this._clientSession = new TalkClientSession(this.createSessionProxy(), new ClientConfigProvider(Object.assign(DefaultConfiguration, config)));
 
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
