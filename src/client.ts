@@ -11,7 +11,7 @@ import { TalkChannelList } from "./talk/channel/talk-channel-list";
 import { Managed } from "./talk/managed";
 import { OAuthCredential } from "./oauth/credential";
 import { CommandResult } from "./request/command-result";
-import { ClientConfig, DefaultClientConfigProvider, DefaultConfiguration, LocoLoginConfig } from "./config/client-config-provider";
+import { ClientConfig, ClientConfigProvider, DefaultConfiguration, LocoLoginConfig } from "./config/client-config-provider";
 import { Long } from ".";
 import { ClientSession, ClientSessionOp, LoginResult } from "./client/client-session";
 import EventTarget from "event-target-shim";
@@ -34,7 +34,7 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
         super();
 
         this._session = null;
-        this._clientSession = new ClientSession(this.createSessionProxy(), new DefaultClientConfigProvider(config));
+        this._clientSession = new ClientSession(this.createSessionProxy(), new ClientConfigProvider(config));
 
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
