@@ -7,9 +7,9 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { OpenProfileType, OpenChannelType, OpenLinkType } from "../talk/open_old/open-link-type";
-import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
+import { ChannelInfoStruct } from "../talk/struct_old/channel-info-struct";
 import { Serializer } from "json-proxy-mapper";
-import { OpenLinkStruct } from "../talk/struct/open/open-link-struct";
+import { OpenLinkStruct } from "../talk/struct_old/open/open-link-struct";
 import { OpenLinkProfileContent } from "../talk/open_old/open-link-profile-template";
 
 /*

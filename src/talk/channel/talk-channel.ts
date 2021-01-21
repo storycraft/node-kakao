@@ -13,6 +13,7 @@ import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-in
 import { Chat, ChatLogged } from "../../chat/chat";
 import { CommandSession } from "../../network/request-session";
 import { OpenChannelSession, OpenChannelSessionOp } from "../../channel/open-channel-session";
+import { CommandResult } from "../../request/command-result";
 
 export class TalkChannel implements Channel, ChannelSessionOp {
 
@@ -58,6 +59,22 @@ export class TalkChannel implements Channel, ChannelSessionOp {
 
     markRead(chat: ChatLogged) {
         return this._channelSession.markRead(chat);
+    }
+
+    getChannelInfo() {
+        return this._channelSession.getChannelInfo();
+    }
+
+    /**
+     * Get channel info and update it.
+     */
+    async updateInfo(): Promise<CommandResult> {
+        const infoRes = await this.getChannelInfo();
+        if (!infoRes.success) return infoRes;
+
+        this._info = infoRes.result;
+
+        return { status: infoRes.status, success: true };
     }
 
     pushReceived(method: string, data: DefaultRes) {
@@ -120,6 +137,22 @@ export class TalkOpenChannel implements OpenChannel, ChannelSessionOp, OpenChann
 
     markRead(chat: ChatLogged) {
         return this._openChannelSession.markRead(chat);
+    }
+
+    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
+        return this._openChannelSession.getChannelInfo();
+    }
+
+     /**
+     * Get open channel info and update it.
+     */
+    async updateInfo(): Promise<CommandResult> {
+        const infoRes = await this.getChannelInfo();
+        if (!infoRes.success) return infoRes;
+
+        this._info = infoRes.result;
+
+        return { status: infoRes.status, success: true };
     }
 
     // Called when broadcast packets are recevied.

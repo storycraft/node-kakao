@@ -1,9 +1,9 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
-import { MemberStruct } from "../talk/struct/member-struct";
+import { MemberStruct } from "../talk/struct_old/member-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";
-import { OpenMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct } from "../talk/struct_old/open/open-link-struct";
 
 /*
  * Created on Sat Nov 02 2019

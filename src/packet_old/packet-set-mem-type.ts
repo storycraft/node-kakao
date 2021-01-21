@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { ChatlogStruct } from "../talk/struct_old/chatlog-struct";
 import { JsonUtil } from "../util/json-util";
 import { OpenMemberType } from "../talk/open_old/open-link-type";
 import { Serializer } from "json-proxy-mapper";

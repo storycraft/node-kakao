@@ -73,10 +73,6 @@ export interface ChatWritten {
 
 }
 
-export interface ReceivedChat extends Chat, ChatLogLinked, ChatWritten {
-    
-}
-
 export interface ChatOptions {
 
     /**

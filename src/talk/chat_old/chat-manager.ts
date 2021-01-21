@@ -5,7 +5,7 @@
  */
 
 import { LocoClient } from "../../client_old";
-import { ChatlogStruct } from "../struct/chatlog-struct";
+import { ChatlogStruct } from "../struct_old/chatlog-struct";
 import { Long } from "bson";
 import { StatusCode } from "../../packet_old/loco-packet-base";
 import { PacketDeleteChatRes, PacketDeleteChatReq } from "../../packet_old/packet-delete-chat";
@@ -22,7 +22,7 @@ import { ChatType } from "./chat-type";
 import { MessageTemplate } from "./template/message-template";
 import { RequestResult } from "../../request/request-result";
 import { MediaTemplates } from "./template/media-template";
-import { StructType } from "../struct/struct-base";
+import { StructType } from "../struct_old/struct-base";
 import { PacketForwardReq, PacketForwardRes } from "../../packet_old/packet-forward";
 
 export class ChatManager {

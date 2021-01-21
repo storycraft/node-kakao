@@ -6,9 +6,9 @@
 
 import { ChatUserInfo, ChatUser, OpenChatUserInfo } from "../user_old/chat-user";
 import { UserManager } from "../user_old/user-manager";
-import { MemberStruct } from "../struct/member-struct";
+import { MemberStruct } from "../struct_old/member-struct";
 import { OpenLinkProfile } from "../open_old/open-link";
-import { OpenMemberStruct } from "../struct/open/open-link-struct";
+import { OpenMemberStruct } from "../struct_old/open/open-link-struct";
 import { EventEmitter } from "events";
 import { Long } from "bson";
 import { OpenMemberType, OpenProfileType } from "../open_old/open-link-type";

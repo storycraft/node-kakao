@@ -7,7 +7,7 @@
 import { OpenLinkManager } from "../open_old/open-link-manager";
 import { OpenUserInfo, OpenKickedUserInfo } from "../user_old/chat-user";
 import { Long } from "bson";
-import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkPrivilegeMask } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkPrivilegeMask } from "../struct_old/open/open-link-struct";
 import { OpenLinkChannel, OpenLinkProfile, OpenLink } from "../open_old/open-link";
 import { RequestResult } from "../../request/request-result";
 

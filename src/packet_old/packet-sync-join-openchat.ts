@@ -1,6 +1,6 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
+import { ChannelInfoStruct } from "../talk/struct_old/channel-info-struct";
 import { JsonUtil } from "../util/json-util";
 import { Serializer } from "json-proxy-mapper";
 

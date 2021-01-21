@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { LinkReactionType } from "../talk/struct/open/open-link-struct";
+import { LinkReactionType } from "../talk/struct_old/open/open-link-struct";
 
 export class PacketReactReq extends LocoBsonRequestPacket {
 

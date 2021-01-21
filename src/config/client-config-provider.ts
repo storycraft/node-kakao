@@ -96,7 +96,11 @@ export interface WebApiConfig {
 
 }
 
-export interface ClientConfig extends LocoLoginConfig, WebApiConfig, CheckinConfig {
+export interface SessionConfig extends LocoLoginConfig, CheckinConfig {
+
+}
+
+export interface ClientConfig extends SessionConfig, WebApiConfig {
 
 }
 

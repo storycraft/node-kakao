@@ -7,14 +7,14 @@
 import { SessionApiClient, RequestHeader } from "./web-api-client";
 import { Long } from "bson";
 import { BasicHeaderDecorator } from "./api-header-decorator";
-import { OpenRecommendStruct, OpenPostRecommendStruct } from "../talk/struct/api/open/open-recommend-struct";
-import { OpenPresetStruct } from "../talk/struct/api/open/open-preset-struct";
-import { OpenPostListStruct, OpenPostReactStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostApiStruct, OpenPostReactNotiStruct } from "../talk/struct/api/open/open-post-struct";
-import { OpenStruct } from "../talk/struct/api/open/open-struct";
-import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct/api/open/open-search-struct";
-import { LinkReactionType } from "../talk/struct/open/open-link-struct";
+import { OpenRecommendStruct, OpenPostRecommendStruct } from "../talk/struct_old/api/open/open-recommend-struct";
+import { OpenPresetStruct } from "../talk/struct_old/api/open/open-preset-struct";
+import { OpenPostListStruct, OpenPostReactStruct, OpenPostDataStruct, OpenPostDescStruct, OpenPostApiStruct, OpenPostReactNotiStruct } from "../talk/struct_old/api/open/open-post-struct";
+import { OpenStruct } from "../talk/struct_old/api/open/open-struct";
+import { OpenSearchType, OpenSearchStruct, OpenPostSearchStruct } from "../talk/struct_old/api/open/open-search-struct";
+import { LinkReactionType } from "../talk/struct_old/open/open-link-struct";
 import { JsonUtil } from "../util/json-util";
-import { OpenPostTemplate } from "../talk/struct/api/open/template/open-post-template";
+import { OpenPostTemplate } from "../talk/struct_old/api/open/template/open-post-template";
 
 export class OpenChatClient extends SessionApiClient {
 

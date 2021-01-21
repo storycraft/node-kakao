@@ -14,7 +14,7 @@ export interface ChannelInfo extends Channel {
 
 }
 
-/**
+/** 
  * Open channel info
  */
 export interface OpenChannelInfo extends OpenChannel {

@@ -10,7 +10,7 @@ import { ObjectMapper, Serializer } from "json-proxy-mapper";
 import { URLSearchParams } from "url";
 import { ClientConfigProvider } from "../config/client-config-provider_old";
 import { AccessDataProvider } from "../oauth_old/access-data-provider";
-import { StructBase, StructType } from "../talk/struct/struct-base";
+import { StructBase, StructType } from "../talk/struct_old/struct-base";
 import { JsonUtil } from "../util/json-util";
 import { ApiHeaderDecorator, BasicHeaderDecorator } from "./api-header-decorator";
 

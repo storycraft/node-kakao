@@ -5,21 +5,21 @@
  */
 
 import { OpenLinkChannel } from "../open_old/open-link";
-import { OpenMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct_old/open/open-link-struct";
 import { ChatUser, ChatUserInfo, OpenChatUserInfo, DisplayUserInfo, NormalChatUserInfo } from "../user_old/chat-user";
 import { OpenMemberType } from "../open_old/open-link-type";
 import { Long } from "bson";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct, BotMetaContent } from "../struct/channel-meta-struct";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, ChannelMetaStruct, GroupMetaContent, LiveTalkCountMetaContent, ChannelMetaType, ChannelClientMetaStruct, BotMetaContent } from "../struct_old/channel-meta-struct";
 import { ChatContent } from "../chat_old/attachment/chat-attachment";
 import { MessageTemplate } from "../chat_old/template/message-template";
 import { Chat } from "../chat_old/chat";
 import { ChatType } from "../chat_old/chat-type";
 import { ChannelSettings } from "../channel_old/channel-settings";
 import { ChannelManager } from "../channel_old/channel-manager";
-import { ChannelDataStruct } from "../struct/channel-data-struct";
+import { ChannelDataStruct } from "../struct_old/channel-data-struct";
 import { EventEmitter } from "events";
 import { ChatChannel, OpenChatChannel, MemoChatChannel, NormalChatChannel } from "../channel_old/chat-channel";
-import { MemberStruct, DisplayMemberStruct } from "../struct/member-struct";
+import { MemberStruct, DisplayMemberStruct } from "../struct_old/member-struct";
 import { ManagedOpenChatUserInfo, ManagedChatUserInfo } from "./managed-chat-user";
 import { RequestResult } from "../../request/request-result";
 import { OpenProfileTemplates } from "../open_old/open-link-profile-template";

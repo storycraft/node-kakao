@@ -5,7 +5,7 @@
  */
 
 import { WebApiClient } from "./web-api-client";
-import { OpenUploadKeyStruct } from "../talk/struct/api/open/open-upload-key-struct";
+import { OpenUploadKeyStruct } from "../talk/struct_old/api/open/open-upload-key-struct";
 
 export class OpenUploadApi extends WebApiClient {
 

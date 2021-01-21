@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { OpenUserInfo } from "../user_old/chat-user";
 import { OpenLinkType } from "./open-link-type";
 import { RequestResult } from "../../request/request-result";
-import { LinkPrivilegeMask, OpenLinkReactionInfo } from "../struct/open/open-link-struct";
+import { LinkPrivilegeMask, OpenLinkReactionInfo } from "../struct_old/open/open-link-struct";
 
 export interface OpenLink<I extends OpenUserInfo = OpenUserInfo> {
 

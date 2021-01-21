@@ -32,24 +32,12 @@ export class TalkChannelList implements ChannelManageSessionOp, Managed {
      * @param channelList 
      * @param openChannelList 
      */
-    constructor(session: CommandSession, channelList: Channel[] = [], openChannelList: OpenChannel[] = []) {
+    constructor(session: CommandSession) {
         this._session = session;
         this._manageSession = new ChannelManageSession(session);
         
         this._normalChannelMap = new Map();
         this._openChannelMap = new Map();
-
-        for (const channel of channelList) {
-            const talkChannel = new TalkChannel(channel, this._session);
-
-            this._normalChannelMap.set(channel.channelId.toString(), talkChannel);
-        }
-
-        for (const channel of openChannelList) {
-            const talkChannel = new TalkOpenChannel(channel, this._session);
-
-            this._openChannelMap.set(channel.channelId.toString(), talkChannel);
-        }
     }
 
     /**
@@ -60,6 +48,19 @@ export class TalkChannelList implements ChannelManageSessionOp, Managed {
         const strId = channelId.toString();
 
         return this._normalChannelMap.has(strId) || this._openChannelMap.has(strId);
+    }
+
+    private async addChannel(channel: Channel | OpenChannel) {
+        let talkChannel: TalkChannel | TalkOpenChannel;
+        if ('linkId' in channel) {
+            talkChannel = new TalkOpenChannel(channel, this._session);
+            this._openChannelMap.set(channel.channelId.toString(), talkChannel);
+        } else {
+            talkChannel = new TalkChannel(channel, this._session);
+            this._normalChannelMap.set(channel.channelId.toString(), talkChannel);
+        }
+
+        await talkChannel.updateInfo();
     }
     
     private delete(channelId: Long) {
@@ -94,6 +95,25 @@ export class TalkChannelList implements ChannelManageSessionOp, Managed {
         for (const openChannel of this._openChannelMap.values()) {
             openChannel.pushReceived(method, data);
         }
+    }
+
+    /**
+     * Initialize TalkChannelList using channelList.
+     * @param session 
+     * @param channelList 
+     */
+    static async initialize(session: CommandSession, channelList: (Channel | OpenChannel)[] = []): Promise<TalkChannelList> {
+        const talkChannelList = new TalkChannelList(session);
+
+        for (const channel of channelList) {
+            talkChannelList.addChannel(channel);
+        }
+
+        await Promise.all(channelList.map(channel => {
+            talkChannelList.addChannel(channel);
+        }));
+
+        return talkChannelList;
     }
 
 }

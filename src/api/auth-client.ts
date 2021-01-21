@@ -9,11 +9,11 @@ import { LoginError } from "../client_old";
 import { DefaultConfiguration } from "../config/client-config-provider";
 import { ClientConfigProvider } from "../config/client-config-provider_old";
 import { AccessDataProvider } from "../oauth_old/access-data-provider";
-import { LessSettingsStruct, MoreSettingsStruct } from "../talk/struct/api/account/client-settings-struct";
-import { LoginTokenStruct } from "../talk/struct/api/account/login-token-struct";
-import { AuthApiStruct } from "../talk/struct/auth/auth-api-struct";
-import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
-import { WebApiStatusCode } from "../talk/struct/web-api-struct";
+import { LessSettingsStruct, MoreSettingsStruct } from "../talk/struct_old/api/account/client-settings-struct";
+import { LoginTokenStruct } from "../talk/struct_old/api/account/login-token-struct";
+import { AuthApiStruct } from "../talk/struct_old/auth/auth-api-struct";
+import { LoginAccessDataStruct } from "../talk/struct_old/auth/login-access-data-struct";
+import { WebApiStatusCode } from "../talk/struct_old/web-api-struct";
 import { AHeaderDecorator } from "./api-header-decorator";
 import { RequestHeader, WebApiClient } from "./web-api-client";
 

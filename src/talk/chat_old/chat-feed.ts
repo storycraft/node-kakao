@@ -7,7 +7,7 @@
 import { KnownFeedType } from "../../feed/feed-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
-import { StructBase } from "../struct/struct-base";
+import { StructBase } from "../struct_old/struct-base";
 
 export namespace FeedFragment {
     

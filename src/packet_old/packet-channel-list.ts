@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { ChannelDataStruct } from "../talk/struct/channel-data-struct";
+import { ChannelDataStruct } from "../talk/struct_old/channel-data-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChannelListReq extends LocoBsonRequestPacket {

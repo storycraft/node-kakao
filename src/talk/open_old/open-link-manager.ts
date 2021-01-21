@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct/open/open-link-struct";
+import { OpenLinkStruct, OpenKickedMemberStruct, OpenLinkReactionInfo, LinkReactionType } from "../struct_old/open/open-link-struct";
 import { PacketJoinInfoReq, PacketJoinInfoRes } from "../../packet_old/packet-join-info";
 import { Long } from "bson";
 import { PacketInfoLinkRes, PacketInfoLinkReq } from "../../packet_old/packet-info-link";

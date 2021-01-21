@@ -7,7 +7,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatType } from "../talk/chat_old/chat-type";
 import { Long } from "bson";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { ChatlogStruct } from "../talk/struct_old/chatlog-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketForwardReq extends LocoBsonRequestPacket {

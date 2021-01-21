@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LoginAccessDataStruct } from "../talk/struct/auth/login-access-data-struct";
+import { LoginAccessDataStruct } from "../talk/struct_old/auth/login-access-data-struct";
 import { RequestHeader } from "../api/web-api-client";
 
 export interface AccessDataProvider {

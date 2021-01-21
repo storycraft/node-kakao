@@ -5,14 +5,14 @@
  */
 
 import { Long } from "bson";
-import { FriendDeleteStruct } from "../talk/struct/api/friends/friend-delete-struct";
-import { FriendFindIdStruct, FriendFindUUIDStruct } from "../talk/struct/api/friends/friend-find-struct";
-import { FriendListStruct } from "../talk/struct/api/friends/friend-list-struct";
-import { FriendNicknameStruct } from "../talk/struct/api/friends/friend-nickname-struct";
-import { FriendReqPhoneNumberStruct, FriendReqStruct } from "../talk/struct/api/friends/friend-req-struct";
-import { FriendSearchStruct } from "../talk/struct/api/friends/friend-search-struct";
-import { ProfileReqStruct } from "../talk/struct/api/profile/profile-req-struct";
-import { WebApiStruct } from "../talk/struct/web-api-struct";
+import { FriendDeleteStruct } from "../talk/struct_old/api/friends/friend-delete-struct";
+import { FriendFindIdStruct, FriendFindUUIDStruct } from "../talk/struct_old/api/friends/friend-find-struct";
+import { FriendListStruct } from "../talk/struct_old/api/friends/friend-list-struct";
+import { FriendNicknameStruct } from "../talk/struct_old/api/friends/friend-nickname-struct";
+import { FriendReqPhoneNumberStruct, FriendReqStruct } from "../talk/struct_old/api/friends/friend-req-struct";
+import { FriendSearchStruct } from "../talk/struct_old/api/friends/friend-search-struct";
+import { ProfileReqStruct } from "../talk/struct_old/api/profile/profile-req-struct";
+import { WebApiStruct } from "../talk/struct_old/web-api-struct";
 import { JsonUtil } from "../util/json-util";
 import { SessionApiClient } from "./web-api-client";
 

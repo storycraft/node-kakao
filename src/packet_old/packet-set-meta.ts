@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct/channel-meta-struct";
+import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct_old/channel-meta-struct";
 import { JsonUtil } from "../util/json-util";
 
 export class PacketSetMetaReq extends LocoBsonRequestPacket {

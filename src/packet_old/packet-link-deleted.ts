@@ -5,7 +5,7 @@
  */
 
 import { LocoBsonResponsePacket } from "./loco-bson-packet";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { ChatlogStruct } from "../talk/struct_old/chatlog-struct";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper/dist/serializer";
 

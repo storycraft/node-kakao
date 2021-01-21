@@ -1,7 +1,7 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "..";
 import { JsonUtil } from "../util/json-util";
-import { ChannelBoardMetaType, ChannelBoardMetaStruct } from "../talk/struct/channel-board-meta-struct";
+import { ChannelBoardMetaType, ChannelBoardMetaStruct } from "../talk/struct_old/channel-board-meta-struct";
 import { Serializer } from "json-proxy-mapper";
 
 /*

@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from "bson";
+
 // TODO: Move to struct modules.
 // Generated using http://json2ts.com/
 
@@ -21,7 +23,7 @@ export interface Chatlog {
 }
 
 export interface ChatData {
-    c: any;
+    c: Long;
     t: string;
     a: number;
     n: number;
@@ -35,22 +37,21 @@ export interface ChatData {
     o: number;
     jn: number;
     p: boolean;
-    li?: number;
+    li?: Long;
     otk?: number;
 }
 
 export interface LoginListRes {
     chatDatas: ChatData[];
-    lastChatId: number;
-    lastTokenId: number;
+    lastChatId: Long;
+    lastTokenId: Long;
     mcmRevision: number;
     delChatIds: number[];
     kc: any[];
-    ltk: number;
+    ltk: Long;
     lbk: number;
     eof: boolean;
-    userId: number;
-    status: number;
+    userId: Long;
     revision: number;
     revisionInfo: string;
     minLogId: number;

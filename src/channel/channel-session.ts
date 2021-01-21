@@ -14,6 +14,8 @@ import { CommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { KnownDataStatusCode } from "../packet/status-code";
+import { ChannelInfo, OpenChannelInfo } from "./channel-info";
+import { JsonUtil } from "../util/json-util";
 
 export interface ChannelTemplate {
 
@@ -58,6 +60,11 @@ export interface ChannelSessionOp {
      * @param chat 
      */
     markRead(chat: ChatLogged): Promise<CommandResult>;
+
+    /**
+     * Get latest channel info
+     */
+    getChannelInfo(): Promise<CommandResult<ChannelInfo>>;
 
 }
 
@@ -173,6 +180,23 @@ export class ChannelSession implements ChannelSessionOp {
         return {
             success: status === KnownDataStatusCode.SUCCESS,
             status
+        };
+    }
+
+    async getChannelInfo(): Promise<CommandResult<ChannelInfo>> {
+        const res = (await this._session.request(
+            'CHATINFO',
+            {
+                'chatId': this._channel.channelId,
+            }
+        ));
+
+        // TODO: ChannelInfo
+
+        return {
+            success: res.status === KnownDataStatusCode.SUCCESS,
+            status: res.status,
+            result: { channelId: this._channel.channelId }
         };
     }
 

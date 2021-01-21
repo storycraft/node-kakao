@@ -6,15 +6,15 @@
 
 import { SessionApiClient, RequestForm } from "./web-api-client";
 import { Long } from "bson";
-import { ChannelPostListStruct } from "../talk/struct/api/board/channel-post-list-struct";
-import { ChannelPostReqStruct, BoardEmotionType, PostContent, ChannelPost, PostType } from "../talk/struct/api/board/channel-post-struct";
-import { ChannelPostCommentStruct } from "../talk/struct/api/board/channel-post-comment-struct";
-import { ChannelPostEmotionStruct } from "../talk/struct/api/board/channel-post-emotion-struct";
-import { ChannelBoardStruct } from "../talk/struct/api/board/channel-board-struct";
-import { BoardCommentTemplate } from "../talk/struct/api/board/template/board-comment-template";
+import { ChannelPostListStruct } from "../talk/struct_old/api/board/channel-post-list-struct";
+import { ChannelPostReqStruct, BoardEmotionType, PostContent, ChannelPost, PostType } from "../talk/struct_old/api/board/channel-post-struct";
+import { ChannelPostCommentStruct } from "../talk/struct_old/api/board/channel-post-comment-struct";
+import { ChannelPostEmotionStruct } from "../talk/struct_old/api/board/channel-post-emotion-struct";
+import { ChannelBoardStruct } from "../talk/struct_old/api/board/channel-board-struct";
+import { BoardCommentTemplate } from "../talk/struct_old/api/board/template/board-comment-template";
 import { JsonUtil } from "../util/json-util";
-import { WebApiStruct } from "../talk/struct/web-api-struct";
-import { BoardPostTemplates, BoardPostFileMap } from "../talk/struct/api/board/template/board-post-template";
+import { WebApiStruct } from "../talk/struct_old/web-api-struct";
+import { BoardPostTemplates, BoardPostFileMap } from "../talk/struct_old/api/board/template/board-post-template";
 
 export abstract class BaseBoardClient extends SessionApiClient {
 

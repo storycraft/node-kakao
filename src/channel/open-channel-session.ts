@@ -6,10 +6,10 @@
 
 import { ChatLogged } from "../chat/chat";
 import { CommandSession } from "../network/request-session";
-import { DefaultRes } from "../packet/bson-data-codec";
 import { KnownDataStatusCode } from "../packet/status-code";
 import { CommandResult } from "../request/command-result";
 import { OpenChannel } from "./channel";
+import { OpenChannelInfo } from "./channel-info";
 
 /**
  * Classes which provides openchannel session operations should implement this.
@@ -21,6 +21,11 @@ export interface OpenChannelSessionOp {
      * @param chat 
      */
     markRead(chat: ChatLogged): Promise<CommandResult>;
+
+    /**
+     * Get latest open channel info
+     */
+    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>>;
 
 }
 
@@ -51,6 +56,12 @@ export class OpenChannelSession implements OpenChannelSessionOp {
             success: status === KnownDataStatusCode.SUCCESS,
             status,
         };
+    }
+
+    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
+        // TODO: OpenChannelInfo
+
+        throw new Error("Method not implemented.");
     }
 
 };

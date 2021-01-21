@@ -1,6 +1,6 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { ChatType } from "../talk/chat_old/chat-type";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { ChatlogStruct } from "../talk/struct_old/chatlog-struct";
 import { JsonUtil } from "../util/json-util";
 import { Long } from "bson";
 import { Serializer } from "json-proxy-mapper";

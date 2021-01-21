@@ -6,7 +6,7 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { OpenKickedMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenKickedMemberStruct } from "../talk/struct_old/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketKickListSyncReq extends LocoBsonRequestPacket {

@@ -6,10 +6,10 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
-import { MemberStruct } from "../talk/struct/member-struct";
+import { MemberStruct } from "../talk/struct_old/member-struct";
 import { ChannelType } from "../talk/channel_old/channel-type";
 import { JsonUtil } from "../util/json-util";
-import { OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
+import { OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct_old/open/open-link-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {

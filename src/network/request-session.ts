@@ -4,8 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { SessionConfig } from "../config/client-config-provider";
 import { BsonDataCodec, DefaultReq, DefaultRes } from "../packet/bson-data-codec";
 import { LocoPacket } from "../packet/loco-packet";
+import { CommandResult } from "../request/command-result";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
 import { PacketAssembler } from "./packet-assembler";
 import { Stream } from "./stream";
@@ -19,6 +21,15 @@ export interface CommandSession {
      * @param data data
      */
     request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T>;
+
+}
+
+/**
+ * Create LocoSession using configuration.
+ */
+export interface SessionFactory {
+
+    createSession(config: SessionConfig): Promise<CommandResult<LocoSession>>;
 
 }
 

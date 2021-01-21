@@ -6,9 +6,9 @@
 
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long, OpenProfileType } from "..";
-import { OpenLinkStruct, OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct/open/open-link-struct";
-import { ChannelInfoStruct } from "../talk/struct/channel-info-struct";
-import { ChatlogStruct } from "../talk/struct/chatlog-struct";
+import { OpenLinkStruct, OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct_old/open/open-link-struct";
+import { ChannelInfoStruct } from "../talk/struct_old/channel-info-struct";
+import { ChatlogStruct } from "../talk/struct_old/chatlog-struct";
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketJoinLinkReq extends LocoBsonRequestPacket {
