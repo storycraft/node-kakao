@@ -105,13 +105,7 @@ export class TalkChannelList implements ChannelManageSession, Managed {
     static async initialize(session: CommandSession, channelList: (Channel | OpenChannel)[] = []): Promise<TalkChannelList> {
         const talkChannelList = new TalkChannelList(session);
 
-        for (const channel of channelList) {
-            talkChannelList.addChannel(channel);
-        }
-
-        await Promise.all(channelList.map(channel => {
-            talkChannelList.addChannel(channel);
-        }));
+        await Promise.all(channelList.map(channel => talkChannelList.addChannel(channel)));
 
         return talkChannelList;
     }

@@ -13,9 +13,10 @@ import { OAuthCredential } from "./oauth/credential";
 import { CommandResult } from "./request/command-result";
 import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "./config/client-config-provider";
 import { Long } from ".";
-import { TalkClientSession, ClientSession, LoginResult } from "./client/client-session";
+import { ClientSession, LoginResult } from "./client/client-session";
 import EventTarget from "event-target-shim";
 import { TalkSessionFactory } from "./talk/network/talk-session-factory";
+import { TalkClientSession } from "./talk/client/talk-client-session";
 
 /**
  * Simple client implementation.
@@ -62,9 +63,9 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
     }
 
     private get session() {
-        if (!this.logon) throw 'Session is not created';
+        if (this._session == null) throw 'Session is not created';
 
-        return this._session!;
+        return this._session;
     }
 
     /**
@@ -92,11 +93,19 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
     }
 
     /**
+     * Returns true if client user.
+     * 
+     * @param user Target user to compare
+     */
+    isClientUser(user: ChannelUser) {
+        return user.userId.equals(this._cilentUser.userId);
+    }
+
+    /**
      * End session
      */
     close() {
         this.session.close();
-        this._session = null;
     }
 
     pushReceived(method: string, data: DefaultRes): void {
@@ -133,7 +142,7 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
     }
 
     private listenEnd() {
-        
+        if (this._session) this._session = null;
     }
 
     private onError() {

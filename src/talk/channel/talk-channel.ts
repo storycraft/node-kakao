@@ -6,7 +6,7 @@
 
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { ChannelInfo, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -19,13 +19,13 @@ export class TalkChannel implements Channel, ChannelSession {
 
     private _channelSession: TalkChannelSession;
 
-    private _info: ChannelInfo;
+    private _info: NormalChannelInfo | null;
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
     constructor(private _channel: Channel, session: CommandSession) {
         this._channelSession = new TalkChannelSession(this, session);
 
-        this._info = {} as any;
+        this._info = null;
         this._userInfoMap = new Map();
     }
 
@@ -90,7 +90,7 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
     private _channelSession: TalkChannelSession;
     private _openChannelSession: TalkOpenChannelSession;
 
-    private _info: OpenChannelInfo;
+    private _info: OpenChannelInfo | null;
     private _userInfoMap: Map<string, OpenChannelUserInfo>;
 
     constructor(channel: OpenChannel, session: CommandSession) {
@@ -99,7 +99,7 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-        this._info = {} as any;
+        this._info = null;
         this._userInfoMap = new Map();
     }
 

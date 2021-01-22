@@ -6,16 +6,16 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelSession, ChannelTemplate, OpenChannelSession } from "../../channel/channel-session";
 import { Chat, ChatLogged } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { CommandSession } from "../../network/request-session";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { KnownDataStatusCode } from "../../packet/status-code";
+import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { CommandResult } from "../../request/command-result";
 import { createIdGen } from "../../util/id-generator";
-
 
 /**
  * Default ChannelSession implementation
@@ -101,20 +101,20 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
-    async getChannelInfo(): Promise<CommandResult<ChannelInfo>> {
-        const res = (await this._session.request(
+    async getChannelInfo(): Promise<CommandResult<NormalChannelInfo>> {
+        const res = await this._session.request(
             'CHATINFO',
             {
                 'chatId': this._channel.channelId,
             }
-        ));
+        );
 
-        // TODO: ChannelInfo
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
 
         return {
-            success: res.status === KnownDataStatusCode.SUCCESS,
+            success: true,
             status: res.status,
-            result: { channelId: this._channel.channelId }
+            result: new WrappedChannelInfo(res.result)
         };
     }
 
@@ -149,10 +149,21 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         };
     }
 
-    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
-        // TODO: OpenChannelInfo
+    async getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
+        const res = await this._session.request(
+            'CHATINFO',
+            {
+                'chatId': this._channel.channelId,
+            }
+        );
 
-        throw new Error("Method not implemented.");
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        return {
+            success: true,
+            status: res.status,
+            result: new WrappedOpenChannelInfo(res.result)
+        };
     }
 
 };

@@ -24,7 +24,6 @@ export enum ChannelMetaType {
     OPEN_CHANNEL_CHAT = 13,
     BOT = 14,
     
-
 }
 
 export enum ChannelClientMetaType {

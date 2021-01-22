@@ -13,6 +13,12 @@ export interface OpenLinkComponent {
 
 }
 
+export interface OpenTokenComponent {
+
+    readonly openToken: number;
+
+}
+
 export interface OpenLink extends OpenLinkComponent {
 
     readonly type: OpenLinkType;

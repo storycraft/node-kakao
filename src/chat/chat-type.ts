@@ -43,7 +43,7 @@ export enum KnownChatType {
     PLUSEVENT = 82,
     PLUSFRIENDVIRAL = 83,
     OPENVOTE = 97,
-    OPENPOST = 98
+    OPENPOST = 98,
 
 }
 
@@ -52,7 +52,7 @@ export type ChatType = KnownChatType | number;
 export const DELETED_MESSAGE_OFFSET = 16384;
 
 export function isDeletedChat(type: ChatType) {
-    return type >= 16384;
+    return type >= DELETED_MESSAGE_OFFSET;
 }
 
 export function getOriginalType(type: ChatType): ChatType {
