@@ -10,7 +10,6 @@ import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
 import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
-import { KnownDataStatusCode } from "../../packet/status-code";
 import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
 import { TalkChannel, TalkOpenChannel } from "./talk-channel";
@@ -101,7 +100,7 @@ export class TalkChannelList implements ChannelManageSession, Managed {
     async leaveChannel(channel: Channel, block?: boolean) {
         const res = await this._manageSession.leaveChannel(channel, block);
 
-        if (res.status === KnownDataStatusCode.SUCCESS && this.contains(channel.channelId)) {
+        if (res.success && this.contains(channel.channelId)) {
             this.delete(channel.channelId);
         }
 

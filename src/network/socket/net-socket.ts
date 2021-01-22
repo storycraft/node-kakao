@@ -28,9 +28,9 @@ declare var navigator: any;
 export function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
     if (process && process.release && process.release.name === 'node') {
         return NodeSocket.connect(option);
-    } else if (Deno && Deno.connect !== undefined) {
+    } else if (Deno && 'connect' in Deno) {
         throw 'Deno runtime is not implemented yet.';
-    } else if (navigator && navigator.userAgent) {
+    } else if (navigator && 'userAgent' in navigator) {
         throw 'Browser environments are not supported';
     } else {
         throw 'Unknown environment';
@@ -45,9 +45,9 @@ export function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
 export function createTLSSocket(option: NetSocketOptions): Promise<Stream> {
     if (process && process.release && process.release.name === 'node') {
         return NodeSocket.connectTls(option);
-    } else if (Deno && Deno.connectTls !== undefined) {
+    } else if (Deno && 'connectTls' in Deno) {
         throw 'Deno runtime is not implemented yet.';
-    } else if (navigator && navigator.userAgent) {
+    } else if (navigator && 'userAgent' in navigator) {
         throw 'Browser environments are not supported';
     } else {
         throw 'Unknown environment';

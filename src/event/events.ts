@@ -6,12 +6,11 @@
 
 import { ChatChannel, OpenChatChannel } from "../talk/channel_old/chat-channel";
 import { FeedChat, Chat } from "../talk/chat_old/chat";
-import { ChatUser, ClientChatUser, OpenUserInfo, OpenChatUserInfo } from "../talk/user_old/chat-user";
+import { ChatUser, ClientChatUser, OpenChatUserInfo } from "../talk/user_old/chat-user";
 import { Long } from "bson";
 import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed, OpenLinkDeletedFeed, OpenHandOverHostFeed, LeaveFeed } from "../talk/chat_old/chat-feed";
 import { LocoKickoutType } from "../packet_old/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct_old/channel-meta-struct";
-import { OpenLinkChannel } from "../talk/open_old/open-link";
 import { OpenMemberType, OpenProfileType } from "../talk/open_old/open-link-type";
 import { RelayEventType } from "../relay/relay-event-type";
 

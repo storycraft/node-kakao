@@ -11,11 +11,11 @@ import { ChannelManageSession, ChannelSession, ChannelTemplate, OpenChannelSessi
 import { Chat, ChatLogged } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { CommandSession } from "../../network/request-session";
-import { DefaultReq } from "../../packet/bson-data-codec";
+import { DefaultReq, DefaultRes } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { CreateRes } from "../../packet/chat/create";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
+import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { CommandResult } from "../../request/command-result";
 import { createIdGen } from "../../util/id-generator";
@@ -101,6 +101,24 @@ export class TalkChannelSession implements ChannelSession {
         return {
             success: status === KnownDataStatusCode.SUCCESS,
             status
+        };
+    }
+
+    async setMeta(type: ChannelMetaType, content: string): Promise<CommandResult<DefaultRes>> {
+        const res = await this._session.request<ChatInfoRes>(
+            'SETMETA',
+            {
+                'chatId': this._channel.channelId,
+                'type': type,
+                'content': content
+            }
+        );
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        return {
+            success: true,
+            status: res.status,
+            result: res
         };
     }
 

@@ -11,6 +11,7 @@ import { CommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, NormalChannelInfo, OpenChannelInfo } from "./channel-info";
+import { ChannelMetaType } from "../packet/struct/channel";
 
 export interface ChannelTemplate {
 
@@ -55,6 +56,14 @@ export interface ChannelSession {
      * @param chat 
      */
     markRead(chat: ChatLogged): Promise<CommandResult>;
+
+    /**
+     * Set channel meta content
+     * 
+     * @param type 
+     * @param content 
+     */
+    setMeta(type: ChannelMetaType, content: string): Promise<CommandResult<DefaultRes>>;
 
     /**
      * Get latest channel info

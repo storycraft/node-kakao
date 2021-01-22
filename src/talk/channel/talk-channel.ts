@@ -6,7 +6,7 @@
 
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelInfo, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -14,15 +14,21 @@ import { Chat, ChatLogged } from "../../chat/chat";
 import { CommandSession } from "../../network/request-session";
 import { CommandResult } from "../../request/command-result";
 import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
+import { ChannelMetaType } from "../../packet/struct/channel";
+import { TalkNormalChannelInfo, TalkOpenChannelInfo } from "./talk-channel-info";
 
 export class TalkChannel implements Channel, ChannelSession {
+
+    private _info: TalkNormalChannelInfo;
 
     private _channelSession: TalkChannelSession;
 
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
-    constructor(private _channel: Channel, session: CommandSession, private _info: NormalChannelInfo | null = null) {
+    constructor(private _channel: Channel, session: CommandSession, info: Partial<NormalChannelInfo> = {}) {
         this._channelSession = new TalkChannelSession(this, session);
+
+        this._info = TalkNormalChannelInfo.createPartial(info);
 
         this._userInfoMap = new Map();
     }
@@ -32,8 +38,6 @@ export class TalkChannel implements Channel, ChannelSession {
     }
 
     get info() {
-        if (!this._info) throw 'Channel info is invalid';
-
         return this._info;
     }
 
@@ -61,6 +65,10 @@ export class TalkChannel implements Channel, ChannelSession {
         return this._channelSession.markRead(chat);
     }
 
+    setMeta(type: ChannelMetaType, content: string) {
+        return this._channelSession.setMeta(type, content);
+    }
+
     getChannelInfo() {
         return this._channelSession.getChannelInfo();
     }
@@ -72,7 +80,7 @@ export class TalkChannel implements Channel, ChannelSession {
         const infoRes = await this.getChannelInfo();
         if (!infoRes.success) return infoRes;
 
-        this._info = infoRes.result;
+        this._info = TalkNormalChannelInfo.createPartial(infoRes.result);
 
         return { status: infoRes.status, success: true };
     }
@@ -85,6 +93,8 @@ export class TalkChannel implements Channel, ChannelSession {
 
 export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannelSession {
     
+    private _info: TalkOpenChannelInfo;
+
     private _channel: OpenChannel;
 
     private _channelSession: TalkChannelSession;
@@ -92,8 +102,10 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
 
     private _userInfoMap: Map<string, OpenChannelUserInfo>;
 
-    constructor(channel: OpenChannel, session: CommandSession, private _info: OpenChannelInfo | null = null) {
+    constructor(channel: OpenChannel, session: CommandSession, info: Partial<OpenChannelInfo> = {}) {
         this._channel = channel;
+
+        this._info = TalkOpenChannelInfo.createPartial(info);
 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
@@ -110,8 +122,6 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
     }
 
     get info() {
-        if (!this._info) throw 'Channel info is invalid';
-        
         return this._info;
     }
 
@@ -139,6 +149,10 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         return this._openChannelSession.markRead(chat);
     }
 
+    setMeta(type: ChannelMetaType, content: string) {
+        return this._channelSession.setMeta(type, content);
+    }
+
     getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
         return this._openChannelSession.getChannelInfo();
     }
@@ -150,7 +164,7 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         const infoRes = await this.getChannelInfo();
         if (!infoRes.success) return infoRes;
 
-        this._info = infoRes.result;
+        this._info = TalkOpenChannelInfo.createPartial(infoRes.result);
 
         return { status: infoRes.status, success: true };
     }
