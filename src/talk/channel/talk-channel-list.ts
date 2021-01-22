@@ -65,7 +65,7 @@ export class TalkChannelList implements ChannelManageSession, Managed {
     }
 
     private async addCreatedChannel(channel: Channel, info: NormalChannelInfo | null) {
-        const talkChannel = new TalkChannel(channel, this._session, info);
+        const talkChannel = new TalkChannel(channel, this._session, info || {});
         this._normalChannelMap.set(talkChannel.channelId.toString(), talkChannel);
 
         if (!talkChannel.info) await talkChannel.updateInfo();

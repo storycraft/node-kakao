@@ -32,3 +32,4 @@ interface CommandResultDoneVoid {
 }
 
 export type CommandResult<T = void> = CommandResultFailed | (T extends void ? CommandResultDoneVoid : CommandResultDone<T>);
+export type AsyncCommandResult<T = void> = Promise<CommandResult<T>>;

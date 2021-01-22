@@ -11,6 +11,25 @@ import { SimpleChannelUserInfo } from "../user/channel-user-info";
 import { Channel, OpenChannel } from "./channel";
 import { ChannelType } from "./channel-type";
 
+export interface ChannelMeta {
+
+    content: string;
+
+}
+
+export interface SetChannelMeta extends ChannelMeta {
+    
+    revision: number;
+
+    authorId: Long;
+
+    updatedAt: number;
+
+}
+
+export interface ChannelMetaMap extends Record<ChannelType, SetChannelMeta> {
+
+}
 
 /**
  * Common channel info
@@ -54,7 +73,7 @@ export interface ChannelInfo extends Channel {
 
     // readonly clientMeta?: ChannelClientMetaStruct;
 
-    // readonly chatMetaList: ChannelMetaStruct[];
+    readonly metaMap: ChannelMetaMap;
 
     readonly displayUserList: SimpleChannelUserInfo[];
 

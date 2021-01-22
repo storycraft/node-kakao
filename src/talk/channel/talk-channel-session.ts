@@ -6,18 +6,22 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelSession, ChannelTemplate, OpenChannelSession } from "../../channel/channel-session";
-import { Chat, ChatLogged } from "../../chat/chat";
+import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { CommandSession } from "../../network/request-session";
-import { DefaultReq, DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { CreateRes } from "../../packet/chat/create";
+import { ForwardRes } from "../../packet/chat/forward";
+import { SetMetaRes } from "../../packet/chat/set-meta";
+import { WriteRes } from "../../packet/chat/write";
 import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
-import { CommandResult } from "../../request/command-result";
+import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
+import { AsyncCommandResult } from "../../request/command-result";
 import { createIdGen } from "../../util/id-generator";
 
 /**
@@ -37,7 +41,7 @@ export class TalkChannelSession implements ChannelSession {
         this._idGenerator = createIdGen();
     }
 
-    sendChat(chat: Chat | string) {
+    async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
         if (typeof chat === 'string') {
             chat = { type: KnownChatType.TEXT, text: chat } as Chat;
         }
@@ -54,10 +58,16 @@ export class TalkChannelSession implements ChannelSession {
             data['extra'] = chat.attachment;
         }
 
-        return this._session.request('WRITE', data);
+        const res = await this._session.request<WriteRes>('WRITE', data);
+
+        if (res.status === KnownDataStatusCode.SUCCESS) {
+            return { status: res.status, success: true, result: { logId: res.logId, prevLogId: res.prevId } };
+        } else {
+            return { status: res.status, success: false };
+        }
     }
 
-    async forwardChat(chat: Chat) {
+    async forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
         const data: DefaultReq = {
             'chatId': this._channel.channelId,
             'msgId': this._idGenerator.next().value,
@@ -70,9 +80,13 @@ export class TalkChannelSession implements ChannelSession {
             data['extra'] = chat.attachment;
         }
 
-        const status = (await this._session.request('FORWARD', data)).status;
+        const res = await this._session.request<ForwardRes>('FORWARD', data);
 
-        return { success: status === KnownDataStatusCode.SUCCESS, status };
+        if (res.status === KnownDataStatusCode.SUCCESS) {
+            return { success: true, status: res.status, result: new WrappedChatlog(res.chatLog) };
+        } else {
+            return { success: false, status: res.status };
+        }
     }
 
     async deleteChat(chat: ChatLogged) {
@@ -104,13 +118,13 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
-    async setMeta(type: ChannelMetaType, content: string): Promise<CommandResult<DefaultRes>> {
-        const res = await this._session.request<ChatInfoRes>(
+    async setMeta(type: ChannelMetaType, meta: ChannelMeta | string): AsyncCommandResult<SetChannelMeta> {
+        const res = await this._session.request<SetMetaRes>(
             'SETMETA',
             {
                 'chatId': this._channel.channelId,
                 'type': type,
-                'content': content
+                'content': typeof meta === 'string' ? meta : meta.content
             }
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
@@ -118,11 +132,11 @@ export class TalkChannelSession implements ChannelSession {
         return {
             success: true,
             status: res.status,
-            result: res
+            result: { ...res.meta }
         };
     }
 
-    async getChannelInfo(): Promise<CommandResult<NormalChannelInfo>> {
+    async getChannelInfo(): AsyncCommandResult<NormalChannelInfo> {
         const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
@@ -170,7 +184,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         };
     }
 
-    async getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
+    async getChannelInfo(): AsyncCommandResult<OpenChannelInfo> {
         const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
@@ -200,7 +214,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         this._session = session;
     }
 
-    async createChannel(template: ChannelTemplate): Promise<CommandResult<[Channel, NormalChannelInfo | null]>> {
+    async createChannel(template: ChannelTemplate): AsyncCommandResult<[Channel, NormalChannelInfo | null]> {
         const data: Record<string, any> = {
             'memberIds': template.userList.map(user => user.userId)
         };
@@ -217,7 +231,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         return { status: res.status, success: true, result };
     }
 
-    async createMemoChannel(): Promise<CommandResult<[Channel, NormalChannelInfo | null]>> {
+    async createMemoChannel(): AsyncCommandResult<[Channel, NormalChannelInfo | null]> {
         const res = await this._session.request<CreateRes>('CREATE', { 'memoChat': true });
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
         
@@ -227,7 +241,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         return { status: res.status, success: true, result };
     }
 
-    async leaveChannel(channel: Channel, block: boolean = false): Promise<CommandResult<Long>> {
+    async leaveChannel(channel: Channel, block: boolean = false): AsyncCommandResult<Long> {
         const res = await this._session.request(
             'LEAVE',
             {

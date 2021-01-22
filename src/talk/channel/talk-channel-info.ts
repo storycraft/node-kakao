@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { ChannelMetaMap, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { Chatlog } from "../../chat/chat";
 import { SimpleChannelUserInfo } from "../../user/channel-user-info";
 
@@ -28,6 +28,8 @@ export class TalkNormalChannelInfo implements NormalChannelInfo {
     lastChatLog?: Chatlog;
 
     displayUserList: SimpleChannelUserInfo[];
+    
+    metaMap: ChannelMetaMap;
 
     pushAlert: boolean;
 
@@ -48,6 +50,8 @@ export class TalkNormalChannelInfo implements NormalChannelInfo {
 
         this.displayUserList = info.displayUserList;
 
+        this.metaMap = info.metaMap;
+
         this.pushAlert = info.pushAlert;
         this.joinTime = info.joinTime;
     }
@@ -67,6 +71,8 @@ export class TalkNormalChannelInfo implements NormalChannelInfo {
             lastSeenLogId: Long.ZERO,
         
             displayUserList: [],
+            
+            metaMap: {},
         
             pushAlert: false,
         
@@ -92,6 +98,8 @@ export class TalkOpenChannelInfo implements OpenChannelInfo {
 
     activeUserCount: number;
     displayUserList: SimpleChannelUserInfo[];
+
+    metaMap: ChannelMetaMap;
 
     newChatCount: number;
     newChatCountInvalid: boolean;
@@ -123,6 +131,8 @@ export class TalkOpenChannelInfo implements OpenChannelInfo {
 
         this.displayUserList = info.displayUserList;
 
+        this.metaMap = info.metaMap;
+
         this.pushAlert = info.pushAlert;
     }
 
@@ -147,6 +157,8 @@ export class TalkOpenChannelInfo implements OpenChannelInfo {
         
             displayUserList: [],
         
+            metaMap: {},
+
             pushAlert: false,
 
             o: Long.ZERO

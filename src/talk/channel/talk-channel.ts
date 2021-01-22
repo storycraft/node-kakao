@@ -6,13 +6,13 @@
 
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { ChannelMeta, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { Chat, ChatLogged } from "../../chat/chat";
 import { CommandSession } from "../../network/request-session";
-import { CommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request/command-result";
 import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
 import { ChannelMetaType } from "../../packet/struct/channel";
 import { TalkNormalChannelInfo, TalkOpenChannelInfo } from "./talk-channel-info";
@@ -65,8 +65,14 @@ export class TalkChannel implements Channel, ChannelSession {
         return this._channelSession.markRead(chat);
     }
 
-    setMeta(type: ChannelMetaType, content: string) {
-        return this._channelSession.setMeta(type, content);
+    async setMeta(type: ChannelMetaType, meta: ChannelMeta | string) {
+        const res = await this._channelSession.setMeta(type, meta);
+
+        if (res.success) {
+            this._info.metaMap[type] = res.result;
+        }
+
+        return res;
     }
 
     getChannelInfo() {
@@ -76,7 +82,7 @@ export class TalkChannel implements Channel, ChannelSession {
     /**
      * Get channel info and update it.
      */
-    async updateInfo(): Promise<CommandResult> {
+    async updateInfo(): AsyncCommandResult {
         const infoRes = await this.getChannelInfo();
         if (!infoRes.success) return infoRes;
 
@@ -133,11 +139,13 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         return this._userInfoMap.get(user.userId.toString());
     }
 
-    sendChat(chat: string | Chat) {
-        return this._channelSession.sendChat(chat);
+    async sendChat(chat: string | Chat) {
+        const res = await this._channelSession.sendChat(chat);
+
+        return res;
     }
 
-    forwardChat(chat: Chat): Promise<DefaultRes> {
+    forwardChat(chat: Chat) {
         return this._channelSession.forwardChat(chat);
     }
 
@@ -149,24 +157,31 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         return this._openChannelSession.markRead(chat);
     }
 
-    setMeta(type: ChannelMetaType, content: string) {
-        return this._channelSession.setMeta(type, content);
+    async setMeta(type: ChannelMetaType, meta: ChannelMeta) {
+        const res = await this._channelSession.setMeta(type, meta);
+
+        if (res.success) {
+            this._info.metaMap[type] = res.result;
+        }
+
+        return res;
     }
 
-    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
+    getChannelInfo() {
         return this._openChannelSession.getChannelInfo();
     }
 
      /**
      * Get open channel info and update it.
      */
-    async updateInfo(): Promise<CommandResult> {
+    async updateInfo() {
         const infoRes = await this.getChannelInfo();
-        if (!infoRes.success) return infoRes;
 
-        this._info = TalkOpenChannelInfo.createPartial(infoRes.result);
+        if (infoRes.success) {
+            this._info = TalkOpenChannelInfo.createPartial(infoRes.result);
+        }
 
-        return { status: infoRes.status, success: true };
+        return infoRes;
     }
 
     // Called when broadcast packets are recevied.

@@ -4,13 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultRes } from "../packet/bson-data-codec";
-import { Chat, ChatLogged } from "../chat/chat";
+import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../chat/chat";
 import { Channel } from "./channel";
-import { CommandResult } from "../request/command-result";
+import { AsyncCommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
-import { ChannelInfo, NormalChannelInfo, OpenChannelInfo } from "./channel-info";
+import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "./channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 
 export interface ChannelTemplate {
@@ -33,7 +32,7 @@ export interface ChannelSession {
     * 
     * @param chat 
      */
-    sendChat(chat: Chat | string): Promise<DefaultRes>;
+    sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked>;
 
     /**
      * Forward chat to channel.
@@ -41,7 +40,7 @@ export interface ChannelSession {
      * 
      * @param chat 
      */
-    forwardChat(chat: Chat): Promise<DefaultRes>;
+    forwardChat(chat: Chat): AsyncCommandResult<Chatlog>;
 
     /**
      * Delete chat from server.
@@ -49,13 +48,13 @@ export interface ChannelSession {
      * 
      * @param chat Chat to delete
      */
-    deleteChat(chat: ChatLogged): Promise<CommandResult>;
+    deleteChat(chat: ChatLogged): AsyncCommandResult;
     
     /**
      * Mark every chat as read until this chat.
      * @param chat 
      */
-    markRead(chat: ChatLogged): Promise<CommandResult>;
+    markRead(chat: ChatLogged): AsyncCommandResult;
 
     /**
      * Set channel meta content
@@ -63,12 +62,12 @@ export interface ChannelSession {
      * @param type 
      * @param content 
      */
-    setMeta(type: ChannelMetaType, content: string): Promise<CommandResult<DefaultRes>>;
+    setMeta(type: ChannelMetaType, meta: ChannelMeta | string): AsyncCommandResult<SetChannelMeta>;
 
     /**
      * Get latest channel info
      */
-    getChannelInfo(): Promise<CommandResult<ChannelInfo>>;
+    getChannelInfo(): AsyncCommandResult<ChannelInfo>;
 
 }
 
@@ -83,13 +82,13 @@ export interface ChannelManageSession {
      * 
      * @param userList Users to be included.
      */
-    createChannel(template: ChannelTemplate): Promise<CommandResult<[Channel, NormalChannelInfo | null]>>;
+    createChannel(template: ChannelTemplate): AsyncCommandResult<[Channel, NormalChannelInfo | null]>;
 
     /**
      * Create memo channel.
      * Perform CREATE command.
      */
-    createMemoChannel(): Promise<CommandResult<[Channel, NormalChannelInfo | null]>>;
+    createMemoChannel(): AsyncCommandResult<[Channel, NormalChannelInfo | null]>;
 
    /**
     * Leave channel.
@@ -99,7 +98,7 @@ export interface ChannelManageSession {
     * @param channel Channel to leave.
     * @param block If true block channel to prevent inviting.
     */
-    leaveChannel(channel: Channel, block?: boolean): Promise<CommandResult<Long>>;
+    leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;
 
 }
 
@@ -112,11 +111,11 @@ export interface OpenChannelSession {
      * Mark every chat as read until this chat.
      * @param chat 
      */
-    markRead(chat: ChatLogged): Promise<CommandResult>;
+    markRead(chat: ChatLogged): AsyncCommandResult;
 
     /**
      * Get latest open channel info
      */
-    getChannelInfo(): Promise<CommandResult<OpenChannelInfo>>;
+    getChannelInfo(): AsyncCommandResult<OpenChannelInfo>;
 
 }

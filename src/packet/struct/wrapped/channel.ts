@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { NormalChannelInfo, OpenChannelInfo } from "../../../channel/channel-info";
+import { ChannelMetaMap, NormalChannelInfo, OpenChannelInfo } from "../../../channel/channel-info";
 import { Chatlog } from "../../../chat/chat";
 import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../channel";
 import { WrappedChatlog } from "./chat";
@@ -42,6 +42,14 @@ export class WrappedChannelInfo implements NormalChannelInfo {
                 };
             }
         );
+    }
+
+    get metaMap() {
+        const map: ChannelMetaMap = {};
+
+        this._struct.chatMetas.forEach(meta => map[meta.type] = { ...meta });
+
+        return map;
     }
 
     get newChatCount() {
@@ -111,6 +119,14 @@ export class WrappedOpenChannelInfo implements OpenChannelInfo {
                 };
             }
         );
+    }
+
+    get metaMap() {
+        const map: ChannelMetaMap = {};
+
+        this._struct.chatMetas.forEach(meta => map[meta.type] = { ...meta });
+
+        return map;
     }
 
     get newChatCount() {
