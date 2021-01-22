@@ -12,7 +12,10 @@ import { Chat, ChatLogged } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { CommandSession } from "../../network/request-session";
 import { DefaultReq } from "../../packet/bson-data-codec";
+import { ChatInfoRes } from "../../packet/chat/chat-info";
+import { CreateRes } from "../../packet/chat/create";
 import { KnownDataStatusCode } from "../../packet/status-code";
+import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { CommandResult } from "../../request/command-result";
 import { createIdGen } from "../../util/id-generator";
@@ -102,7 +105,7 @@ export class TalkChannelSession implements ChannelSession {
     }
 
     async getChannelInfo(): Promise<CommandResult<NormalChannelInfo>> {
-        const res = await this._session.request(
+        const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
                 'chatId': this._channel.channelId,
@@ -114,7 +117,7 @@ export class TalkChannelSession implements ChannelSession {
         return {
             success: true,
             status: res.status,
-            result: new WrappedChannelInfo(res.result)
+            result: new WrappedChannelInfo(res.chatInfo as ChannelInfoStruct & NormalChannelInfoExtra)
         };
     }
 
@@ -150,7 +153,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
     }
 
     async getChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
-        const res = await this._session.request(
+        const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
                 'chatId': this._channel.channelId,
@@ -162,7 +165,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return {
             success: true,
             status: res.status,
-            result: new WrappedOpenChannelInfo(res.result)
+            result: new WrappedOpenChannelInfo(res.chatInfo as ChannelInfoStruct & OpenChannelInfoExtra)
         };
     }
 
@@ -179,7 +182,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         this._session = session;
     }
 
-    createChannel(template: ChannelTemplate) {
+    async createChannel(template: ChannelTemplate): Promise<CommandResult<[Channel, NormalChannelInfo | null]>> {
         const data: Record<string, any> = {
             'memberIds': template.userList.map(user => user.userId)
         };
@@ -187,11 +190,23 @@ export class TalkChannelManageSession implements ChannelManageSession {
         if (template.name) data['nickname'] = template.name;
         if (template.profileURL) data['profileImageUrl'] = template.profileURL;
 
-        return this._session.request('CREATE', data);
+        const res = await this._session.request<CreateRes>('CREATE', data);
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+
+        let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
+        if (res.chatRoom) result[1] = (new WrappedChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
+
+        return { status: res.status, success: true, result };
     }
 
-    createMemoChannel() {
-        return this._session.request('CREATE', { 'memoChat': true });
+    async createMemoChannel(): Promise<CommandResult<[Channel, NormalChannelInfo | null]>> {
+        const res = await this._session.request<CreateRes>('CREATE', { 'memoChat': true });
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+        
+        let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
+        if (res.chatRoom) result[1] = (new WrappedChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
+
+        return { status: res.status, success: true, result };
     }
 
     async leaveChannel(channel: Channel, block: boolean = false): Promise<CommandResult<Long>> {

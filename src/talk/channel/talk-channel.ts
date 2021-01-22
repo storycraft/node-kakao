@@ -19,13 +19,11 @@ export class TalkChannel implements Channel, ChannelSession {
 
     private _channelSession: TalkChannelSession;
 
-    private _info: NormalChannelInfo | null;
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
-    constructor(private _channel: Channel, session: CommandSession) {
+    constructor(private _channel: Channel, session: CommandSession, private _info: NormalChannelInfo | null = null) {
         this._channelSession = new TalkChannelSession(this, session);
 
-        this._info = null;
         this._userInfoMap = new Map();
     }
 
@@ -34,6 +32,8 @@ export class TalkChannel implements Channel, ChannelSession {
     }
 
     get info() {
+        if (!this._info) throw 'Channel info is invalid';
+
         return this._info;
     }
 
@@ -90,16 +90,14 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
     private _channelSession: TalkChannelSession;
     private _openChannelSession: TalkOpenChannelSession;
 
-    private _info: OpenChannelInfo | null;
     private _userInfoMap: Map<string, OpenChannelUserInfo>;
 
-    constructor(channel: OpenChannel, session: CommandSession) {
+    constructor(channel: OpenChannel, session: CommandSession, private _info: OpenChannelInfo | null = null) {
         this._channel = channel;
 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-        this._info = null;
         this._userInfoMap = new Map();
     }
 
@@ -112,6 +110,8 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
     }
 
     get info() {
+        if (!this._info) throw 'Channel info is invalid';
+        
         return this._info;
     }
 

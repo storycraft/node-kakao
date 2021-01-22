@@ -10,7 +10,7 @@ import { Channel } from "./channel";
 import { CommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
-import { ChannelInfo, OpenChannelInfo } from "./channel-info";
+import { ChannelInfo, NormalChannelInfo, OpenChannelInfo } from "./channel-info";
 
 export interface ChannelTemplate {
 
@@ -74,13 +74,13 @@ export interface ChannelManageSession {
      * 
      * @param userList Users to be included.
      */
-    createChannel(template: ChannelTemplate): Promise<DefaultRes>;
+    createChannel(template: ChannelTemplate): Promise<CommandResult<[Channel, NormalChannelInfo | null]>>;
 
     /**
      * Create memo channel.
      * Perform CREATE command.
      */
-    createMemoChannel(): Promise<DefaultRes>;
+    createMemoChannel(): Promise<CommandResult<[Channel, NormalChannelInfo | null]>>;
 
    /**
     * Leave channel.

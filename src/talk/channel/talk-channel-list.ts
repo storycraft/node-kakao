@@ -6,10 +6,12 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
+import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
 import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { KnownDataStatusCode } from "../../packet/status-code";
+import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
 import { TalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelManageSession } from "./talk-channel-session";
@@ -62,6 +64,15 @@ export class TalkChannelList implements ChannelManageSession, Managed {
 
         await talkChannel.updateInfo();
     }
+
+    private async addCreatedChannel(channel: Channel, info: NormalChannelInfo | null) {
+        const talkChannel = new TalkChannel(channel, this._session, info);
+        this._normalChannelMap.set(talkChannel.channelId.toString(), talkChannel);
+
+        if (!talkChannel.info) await talkChannel.updateInfo();
+
+        return talkChannel;
+    }
     
     private delete(channelId: Long) {
         const strId = channelId.toString();
@@ -69,12 +80,22 @@ export class TalkChannelList implements ChannelManageSession, Managed {
         return this._normalChannelMap.delete(strId) || this._openChannelMap.delete(strId);
     }
 
-    createChannel(template: ChannelTemplate) {
-        return this._manageSession.createChannel(template);
+    async createChannel(template: ChannelTemplate): Promise<CommandResult<[TalkChannel, NormalChannelInfo]>> {
+        const res = await this._manageSession.createChannel(template);
+        if (!res.success) return res;
+
+        const talkChannel = await this.addCreatedChannel(...res.result);
+
+        return { status: res.status, success: true, result: [talkChannel, talkChannel.info] };
     }
 
-    createMemoChannel() {
-        return this._manageSession.createMemoChannel();
+    async createMemoChannel(): Promise<CommandResult<[TalkChannel, NormalChannelInfo]>> {
+        const res = await this._manageSession.createMemoChannel();
+        if (!res.success) return res;
+
+        const talkChannel = await this.addCreatedChannel(...res.result);
+
+        return { status: res.status, success: true, result: [talkChannel, talkChannel.info] };
     }
 
     async leaveChannel(channel: Channel, block?: boolean) {
