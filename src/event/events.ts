@@ -14,20 +14,20 @@ import { RelayEventType } from "../relay/relay-event-type";
 import { KickoutType } from "../packet/chat/kickout";
 import { Chatlog, ChatLogged } from "../chat/chat";
 import { AnyTalkChannel } from "../talk/channel/talk-channel";
-import { ChannelUserInfo } from "../user/channel-user-info";
+import { AnyChannelUserInfo, ChannelUserInfo } from "../user/channel-user-info";
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
-    'chat': (chat: Chatlog, channel: AnyTalkChannel, sender: ChannelUserInfo) => void;
+    'chat': (chat: Chatlog, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void;
 
     // 피드 쳇 받을시 호출
-    'feed': (chat: Chatlog, channel: AnyTalkChannel, sender: ChannelUserInfo) => void
+    'feed': (chat: Chatlog, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void
 
     // 쳇 읽을 시 호출
-    'chat_read': (chat: ChatLogged, channel: AnyTalkChannel, reader: ChannelUserInfo) => void;
+    'chat_read': (chat: ChatLogged, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
     // 쳇 삭제 시 호출
     'chat_deleted': (feed: FeedChat<DeleteAllFeed>) => void;
@@ -37,10 +37,10 @@ declare interface ChatEvent {
 declare interface ChannelEvent {
 
     // 유저가 방에 들어올시 호출
-    'user_join': (channel: AnyTalkChannel, user: ChannelUserInfo, feed?: FeedChat<OpenJoinFeed>) => void
+    'user_join': (channel: AnyTalkChannel, user: AnyChannelUserInfo, feed?: FeedChat<OpenJoinFeed>) => void
 
     // 유저가 방에서 나갈시 호출 (킥 미포함)
-    'user_left': (channel: AnyTalkChannel, user: ChannelUserInfo, feed?: FeedChat<LeaveFeed>) => void;
+    'user_left': (channel: AnyTalkChannel, user: AnyChannelUserInfo, feed?: FeedChat<LeaveFeed>) => void;
 
     // 채널 meta 정보가 수정될때 호출
     'meta_change': (channel: AnyTalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;

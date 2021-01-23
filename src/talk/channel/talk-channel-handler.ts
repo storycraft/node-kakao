@@ -27,9 +27,15 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             const msgData = data as unknown as MsgRes;
             
             if (!this._channel.channelId.equals(msgData.chatId)) return;
+
+            const chatLog = new WrappedChatlog(msgData.chatLog);
             
-            // TODO: Context, user info
-            new EventContext<ChannelEvents>(this._channel, parentCtx).emit('chat', new WrappedChatlog(msgData.chatLog), this._channel, null as any);
+            new EventContext<ChannelEvents>(this._channel, parentCtx).emit(
+                'chat',
+                chatLog,
+                this._channel,
+                this._channel.getUserInfo(chatLog.sender)
+            );
         }
     }
 

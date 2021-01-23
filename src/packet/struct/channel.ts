@@ -62,7 +62,7 @@ export interface DisplayUserStruct {
 
     countryIso: string;
 
-    profileImageUrl?: string;
+    profileImageUrl: string;
 
 }
 

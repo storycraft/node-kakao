@@ -15,13 +15,20 @@ import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { CreateRes } from "../../packet/chat/create";
 import { ForwardRes } from "../../packet/chat/forward";
+import { GetMemRes } from "../../packet/chat/get-mem";
+import { MemberRes } from "../../packet/chat/member";
 import { SetMetaRes } from "../../packet/chat/set-meta";
 import { WriteRes } from "../../packet/chat/write";
 import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
+import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/member";
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
+import { WrappedChannelUserInfo, WrappedOpenChannelUserInfo } from "../../packet/struct/wrapped/user";
 import { AsyncCommandResult } from "../../request/command-result";
+import { ChannelUser } from "../../user/channel-user";
+import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
+import { JsonUtil } from "../../util/json-util";
 
 /**
  * Default ChannelSession implementation
@@ -39,6 +46,7 @@ export class TalkChannelSession implements ChannelSession {
 
         this._currentMsgId = 0;
     }
+    
 
     async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
         if (typeof chat === 'string') {
@@ -135,7 +143,7 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
-    async getChannelInfo(): AsyncCommandResult<NormalChannelInfo> {
+    async getLatestChannelInfo(): AsyncCommandResult<NormalChannelInfo> {
         const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
@@ -150,6 +158,37 @@ export class TalkChannelSession implements ChannelSession {
             status: res.status,
             result: new WrappedChannelInfo(res.chatInfo as ChannelInfoStruct & NormalChannelInfoExtra)
         };
+    }
+
+    async getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
+        const res = await this._session.request<MemberRes>(
+            'MEMBER',
+            {
+                'chatId': this._channel.channelId,
+                'memberIds': channelUsers.map(user => user.userId)
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        const result = (res.members as NormalMemberStruct[]).map(member => new WrappedChannelUserInfo(member));
+
+        return { success: true, status: res.status, result };
+    }
+    
+    async getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
+        const res = await this._session.request<GetMemRes>(
+            'GETMEM',
+            {
+                'chatId': this._channel.channelId,
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        const result = (res.members as NormalMemberStruct[]).map(member => new WrappedChannelUserInfo(member));
+
+        return { success: true, status: res.status, result };
     }
 
 }
@@ -183,7 +222,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         };
     }
 
-    async getChannelInfo(): AsyncCommandResult<OpenChannelInfo> {
+    async getLatestChannelInfo(): AsyncCommandResult<OpenChannelInfo> {
         const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
             {
@@ -198,6 +237,37 @@ export class TalkOpenChannelSession implements OpenChannelSession {
             status: res.status,
             result: new WrappedOpenChannelInfo(res.chatInfo as ChannelInfoStruct & OpenChannelInfoExtra)
         };
+    }
+
+    async getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
+        const res = await this._session.request<MemberRes>(
+            'MEMBER',
+            {
+                'chatId': this._channel.channelId,
+                'memberIds': channelUsers.map(user => user.userId)
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+        
+        const result = (res.members as OpenMemberStruct[]).map(member => new WrappedOpenChannelUserInfo(member));
+
+        return { status: res.status, success: true, result };
+    }
+    
+    async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
+        const res = await this._session.request<GetMemRes>(
+            'GETMEM',
+            {
+                'chatId': this._channel.channelId,
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+        
+        const result = (res.members as OpenMemberStruct[]).map(member => new WrappedOpenChannelUserInfo(member));
+
+        return { status: res.status, success: true, result };
     }
 
 };

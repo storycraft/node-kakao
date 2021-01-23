@@ -11,6 +11,7 @@ import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "./channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
+import { AnyChannelUserInfo, ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
 
 export interface ChannelTemplate {
 
@@ -67,7 +68,21 @@ export interface ChannelSession {
     /**
      * Get latest channel info
      */
-    getChannelInfo(): AsyncCommandResult<ChannelInfo>;
+    getLatestChannelInfo(): AsyncCommandResult<ChannelInfo>;
+
+    /**
+     * Get latest detailed user info.
+     * 
+     * @param channelUser
+     */
+    getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<AnyChannelUserInfo[]>;
+
+    /**
+     * Updates every user info to latest.
+     * The updated ChannelUserInfo may omit some detailed properties.
+     * @see getLatestUserInfo method for getting detailed info per user.
+     */
+    getAllLatestUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
 
 }
 
@@ -116,6 +131,22 @@ export interface OpenChannelSession {
     /**
      * Get latest open channel info
      */
-    getChannelInfo(): AsyncCommandResult<OpenChannelInfo>;
+    getLatestChannelInfo(): AsyncCommandResult<OpenChannelInfo>;
+
+    /**
+     * Get latest detailed user info.
+     * @see ChannelSession.getLatestUserInfo
+     * 
+     * @param channelUser 
+     */
+    getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]>;
+    
+    /**
+     * Get every latest user info.
+     * @see ChannelSession.getAllLatestUserInfo
+     * 
+     * @param channelUser 
+     */
+    getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]>;
 
 }

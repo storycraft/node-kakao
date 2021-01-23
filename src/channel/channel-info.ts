@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { Chatlog } from "../chat/chat";
 import { OpenTokenComponent } from "../openlink/open-link";
-import { SimpleChannelUserInfo } from "../user/channel-user-info";
+import { DisplayChannelUserInfo, AnyChannelUserInfo } from "../user/channel-user-info";
 import { Channel, OpenChannel } from "./channel";
 import { ChannelType } from "./channel-type";
 
@@ -75,7 +75,7 @@ export interface ChannelInfo extends Channel {
 
     readonly metaMap: ChannelMetaMap;
 
-    readonly displayUserList: SimpleChannelUserInfo[];
+    readonly displayUserList: DisplayChannelUserInfo[];
 
     /**
      * Push alert settings

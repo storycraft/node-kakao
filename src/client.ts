@@ -150,7 +150,11 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     private onError(err: any) {
         super.emit('error', err);
 
-        this.listen();
+        if (this.listeners('error').length > 0) {
+            this.listen();
+        } else {
+            this.close();
+        }
     }
 
     private listen() {

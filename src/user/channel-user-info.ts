@@ -4,13 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { OpenTokenComponent } from "../openlink/open-link";
 import { OpenChatUserPerm } from "../openlink/open-link-type";
 import { ChannelUser, OpenChannelUser } from "./channel-user";
+import { UserType } from "./user-type";
 
-/**
- * Simplified channel user info
- */
-export interface SimpleChannelUserInfo extends ChannelUser {
+export interface DisplayChannelUserInfo extends ChannelUser {
 
     /**
      * User nickname
@@ -20,28 +19,68 @@ export interface SimpleChannelUserInfo extends ChannelUser {
     /**
      * User profile url
      */
-    profileURL?: string;
+    profileURL: string;
+
+}
+
+/**
+ * Common channel user info
+ */
+export interface AnyChannelUserInfo extends DisplayChannelUserInfo {
+
+    /**
+     * Full user profile url
+     */
+    fullProfileURL: string;
+
+    /**
+     * Original user profile url
+     */
+    originalProfileURL: string;
+
+    /**
+     * User type
+     */
+    userType: UserType;
+
+}
+
+/**
+ * Normal channel user info
+ */
+export interface ChannelUserInfo extends AnyChannelUserInfo {
 
     /**
      * User country name
      */
     countryIso: string;
 
+    /**
+     * User status message
+     */
+    statusMessage: string;
+
+    /**
+     * Linked services
+     */
+    linkedServies: string;
+
+    /**
+     * User type(?) unknown
+     */
+    ut: number;
+
+    /**
+     * Account status
+     */
+    suspended: boolean;
+
 }
 
 /**
- * Channel user info
+ * Open channel user info
  */
-export interface ChannelUserInfo extends SimpleChannelUserInfo {
-
-
-
-}
-
-/**
- * OpenChannel user info
- */
-export interface OpenChannelUserInfo extends OpenChannelUser, ChannelUserInfo {
+export interface OpenChannelUserInfo extends OpenChannelUser, AnyChannelUserInfo, OpenTokenComponent {
 
     readonly perm: OpenChatUserPerm;
 

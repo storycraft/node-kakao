@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { ChannelMetaMap, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { Chatlog } from "../../chat/chat";
-import { SimpleChannelUserInfo } from "../../user/channel-user-info";
+import { AnyChannelUserInfo, DisplayChannelUserInfo } from "../../user/channel-user-info";
 
 /**
  * NormalChannelInfo used in TalkChannel
@@ -27,7 +27,7 @@ export class TalkNormalChannelInfo implements NormalChannelInfo {
     lastSeenLogId: Long;
     lastChatLog?: Chatlog;
 
-    displayUserList: SimpleChannelUserInfo[];
+    displayUserList: DisplayChannelUserInfo[];
     
     metaMap: ChannelMetaMap;
 
@@ -97,7 +97,7 @@ export class TalkOpenChannelInfo implements OpenChannelInfo {
     o: Long;
 
     activeUserCount: number;
-    displayUserList: SimpleChannelUserInfo[];
+    displayUserList: DisplayChannelUserInfo[];
 
     metaMap: ChannelMetaMap;
 
