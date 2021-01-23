@@ -10,18 +10,21 @@ import { DefaultReq, DefaultRes } from "./packet/bson-data-codec";
 import { TalkChannelList } from "./talk/channel/talk-channel-list";
 import { Managed } from "./talk/managed";
 import { OAuthCredential } from "./oauth/credential";
-import { CommandResult } from "./request/command-result";
+import { AsyncCommandResult } from "./request/command-result";
 import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "./config/client-config-provider";
 import { Long } from ".";
 import { ClientSession, LoginResult } from "./client/client-session";
-import EventTarget from "event-target-shim";
 import { TalkSessionFactory } from "./talk/network/talk-session-factory";
 import { TalkClientSession } from "./talk/client/talk-client-session";
+import { TypedEmitter } from 'tiny-typed-emitter';
+import { ClientEvents } from "./event/events";
+import { KickoutRes } from "./packet/chat/kickout";
+import { EventContext } from "./event/event-context";
 
 /**
  * Simple client implementation.
  */
-export class TalkClient extends EventTarget implements CommandSession, ClientSession, Managed {
+export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSession, ClientSession, Managed<ClientEvents> {
 
     private _session: LocoSession | null;
 
@@ -73,14 +76,13 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
      * 
      * @param credential 
      */
-    async login(credential: OAuthCredential): Promise<CommandResult<LoginResult>> {
+    async login(credential: OAuthCredential): AsyncCommandResult<LoginResult> {
         if (this.logon) throw 'Already logon';
 
         // Create session
         const sessionRes = await this._sessionFactory.createSession(this.configProvider.configuration);
         if (!sessionRes.success) return { status: sessionRes.status, success: false };
         this._session = sessionRes.result;
-
         this.listen();
 
         const loginRes = await this._clientSession.login(credential);
@@ -109,22 +111,22 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
     }
 
     pushReceived(method: string, data: DefaultRes): void {
-        this._channelList.pushReceived(method, data);
+        const ctx = new EventContext(this);
+
+        this._channelList.pushReceived(method, data, ctx);
 
         switch (method) {
 
             case 'KICKOUT': {
+                super.emit('disconnected', (data as unknown as KickoutRes).reason);
                 break;
             }
 
-            case 'CHGSERVER': {
+            case 'CHANGESVR': {
+                super.emit('switch_server');
                 break;
             }
 
-        }
-        
-        if (method === 'KICKOUT') {
-            // TODO
         }
     }
     
@@ -145,8 +147,8 @@ export class TalkClient extends EventTarget implements CommandSession, ClientSes
         if (this._session) this._session = null;
     }
 
-    private onError() {
-        // dispatch error event
+    private onError(err: any) {
+        super.emit('error', err);
 
         this.listen();
     }

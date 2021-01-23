@@ -13,7 +13,7 @@ import { OpenLinkChannel } from "../open_old/open-link";
 import { RequestResult } from "../../request/request-result";
 import { OpenLinkReactionInfo, LinkReactionType } from "../struct_old/open/open-link-struct";
 import { OpenProfileTemplates } from "../open_old/open-link-profile-template";
-import { ChannelEvents, OpenChannelEvents } from "../../event/events";
+import { ChannelEvents, OpenChannelEvents } from "../../event/events_old";
 import { MediaTemplates } from "../chat_old/template/media-template";
 
 /*

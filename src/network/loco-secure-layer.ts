@@ -48,6 +48,10 @@ export class LocoSecureLayer implements Stream {
     
                         if (headerBufferList.byteLength >= 20) break;
                     }
+
+                    if (instance._stream.ended) {
+                        return { done: true, value: null };
+                    }
                 }
 
                 const headerBuffer = headerBufferList.toBuffer();
@@ -65,6 +69,10 @@ export class LocoSecureLayer implements Stream {
                         packetBufferList.append(data);
     
                         if (packetBufferList.byteLength >= dataSize) break;
+                    }
+
+                    if (instance._stream.ended && packetBufferList.byteLength < dataSize) {
+                        return { done: true, value: null };
                     }
                 }
                 
@@ -104,6 +112,7 @@ export class LocoSecureLayer implements Stream {
     write(data: ArrayBuffer): void {
         if (!this._handshaked) {
             this.sendHandshake();
+            this._handshaked = true;
         }
 
         const iv = this._crypto.randomCipherIV();

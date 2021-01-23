@@ -75,6 +75,7 @@ export interface ChatWritten {
 
 export interface Chatlog extends ChatLogLinked, Chat, ChatWritten {
     
+    
 }
 
 export interface ChatOptions {

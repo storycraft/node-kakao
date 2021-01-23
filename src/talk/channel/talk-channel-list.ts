@@ -8,17 +8,19 @@ import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
 import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
+import { EventContext } from "../../event/event-context";
+import { ChannelEvents } from "../../event/events";
 import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
-import { TalkChannel, TalkOpenChannel } from "./talk-channel";
+import { AnyTalkChannel, TalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelManageSession } from "./talk-channel-session";
 
 /**
  * Manage session channels
  */
-export class TalkChannelList implements ChannelManageSession, Managed {
+export class TalkChannelList implements ChannelManageSession, Managed<ChannelEvents> {
 
     private _session: CommandSession;
 
@@ -42,6 +44,27 @@ export class TalkChannelList implements ChannelManageSession, Managed {
     }
 
     /**
+     * Get channel count
+     */
+    get size() {
+        return this._normalChannelMap.size + this._openChannelMap.size;
+    }
+
+    /**
+     * Get normal channel count
+     */
+    get sizeNormal() {
+        return this._normalChannelMap.size;
+    }
+
+    /**
+     * Get open channel count
+     */
+    get sizeOpen() {
+        return this._openChannelMap.size;
+    }
+
+    /**
      * Returns true if list instance is managing channel.
      * @param channelId 
      */
@@ -49,6 +72,49 @@ export class TalkChannelList implements ChannelManageSession, Managed {
         const strId = channelId.toString();
 
         return this._normalChannelMap.has(strId) || this._openChannelMap.has(strId);
+    }
+
+    /**
+     * Returns true if list instance is managing normal channel.
+     * @param channelId 
+     */
+    containsNormal(channelId: Long) {
+        const strId = channelId.toString();
+
+        return this._normalChannelMap.has(strId);
+    }
+
+    /**
+     * Returns true if list instance is managing open channel.
+     * @param channelId 
+     */
+    containsOpen(channelId: Long) {
+        const strId = channelId.toString();
+
+        return this._openChannelMap.has(strId);
+    }
+
+    /**
+     * Get managed channel object from channel list.
+     * @param channelId 
+     */
+    get(channelId: Long): AnyTalkChannel | undefined {
+        const strId = channelId.toString();
+
+        return this._normalChannelMap.get(strId) || this._openChannelMap.get(strId);
+    }
+
+    forEach(func: (channel: AnyTalkChannel) => void) {
+        this._normalChannelMap.forEach(func);
+        this._openChannelMap.forEach(func);
+    }
+
+    forEachNormal(func: (channel: TalkChannel) => void) {
+        this._normalChannelMap.forEach(func);
+    }
+
+    forEachOpen(func: (channel: TalkOpenChannel) => void) {
+        this._openChannelMap.forEach(func);
     }
 
     private async addChannel(channel: Channel | OpenChannel) {
@@ -107,13 +173,13 @@ export class TalkChannelList implements ChannelManageSession, Managed {
         return res;
     }
 
-    pushReceived(method: string, data: DefaultRes): void {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
         for (const channel of this._normalChannelMap.values()) {
-            channel.pushReceived(method, data);
+            channel.pushReceived(method, data, parentCtx);
         }
 
         for (const openChannel of this._openChannelMap.values()) {
-            openChannel.pushReceived(method, data);
+            openChannel.pushReceived(method, data, parentCtx);
         }
     }
 

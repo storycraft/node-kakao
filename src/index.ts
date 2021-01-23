@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from './event/events';
+export * from './event/events_old';
 export * from './config/client-config-provider';
 
 export * from './api/web-api-client';

@@ -63,13 +63,20 @@ export class LocoPacketCodec {
             },
 
             async next(): Promise<IteratorResult<LocoPacket>> {
-                for await (const data of iterator) {
-                    headerBufferList.append(data);
-
-                    if (headerBufferList.byteLength >= 22) break;
-                }
                 if (instance._stream.ended) {
                     return { done: true, value: null };
+                }
+
+                if (headerBufferList.byteLength < 22) {
+                    for await (const data of iterator) {
+                        headerBufferList.append(data);
+    
+                        if (headerBufferList.byteLength >= 22) break;
+                    }
+
+                    if (instance._stream.ended) {
+                        return { done: true, value: null };
+                    }
                 }
 
                 const headerBuffer = headerBufferList.toBuffer();
@@ -80,6 +87,7 @@ export class LocoPacketCodec {
                     status: headerView.getUint16(4, true),
                     method: String.fromCharCode(...new Uint8Array(headerBuffer.slice(6, 17))).replace(/\0/g, '')
                 };
+
                 const dataType = headerView.getUint8(17);
                 const dataSize = headerView.getUint32(18, true);
 
@@ -93,6 +101,10 @@ export class LocoPacketCodec {
                         packetBufferList.append(data);
     
                         if (packetBufferList.byteLength >= dataSize) break;
+                    }
+
+                    if (instance._stream.ended && packetBufferList.byteLength < dataSize) {
+                        return { done: true, value: null };
                     }
                 }
                 

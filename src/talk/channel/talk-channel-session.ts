@@ -22,7 +22,6 @@ import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannel
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
 import { AsyncCommandResult } from "../../request/command-result";
-import { createIdGen } from "../../util/id-generator";
 
 /**
  * Default ChannelSession implementation
@@ -32,13 +31,13 @@ export class TalkChannelSession implements ChannelSession {
     private _channel: Channel;
     private _session: CommandSession;
 
-    private _idGenerator: Generator<number>;
+    private _currentMsgId: number;
 
     constructor(channel: Channel, session: CommandSession) {
         this._channel = channel;
         this._session = session;
 
-        this._idGenerator = createIdGen();
+        this._currentMsgId = 0;
     }
 
     async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
@@ -48,7 +47,7 @@ export class TalkChannelSession implements ChannelSession {
 
         const data: DefaultReq = {
             'chatId': this._channel.channelId,
-            'msgId': this._idGenerator.next().value,
+            'msgId': ++this._currentMsgId,
             'msg': chat.text,
             'type': chat.type,
             'noSeen': true,
@@ -70,7 +69,7 @@ export class TalkChannelSession implements ChannelSession {
     async forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
         const data: DefaultReq = {
             'chatId': this._channel.channelId,
-            'msgId': this._idGenerator.next().value,
+            'msgId': ++this._currentMsgId,
             'msg': chat.text,
             'type': chat.type,
             'noSeen': true,

@@ -6,7 +6,7 @@
 
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelMeta, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
+import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
 import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -16,17 +16,35 @@ import { AsyncCommandResult } from "../../request/command-result";
 import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
 import { ChannelMetaType } from "../../packet/struct/channel";
 import { TalkNormalChannelInfo, TalkOpenChannelInfo } from "./talk-channel-info";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { ChannelEvents, OpenChannelEvents } from "../../event/events";
+import { Managed } from "../managed";
+import { EventContext } from "../../event/event-context";
+import { TalkChannelHandler, TalkOpenChannelHandler } from "./talk-channel-handler";
 
-export class TalkChannel implements Channel, ChannelSession {
+export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
+
+    readonly info: ChannelInfo;
+    getUserInfo(user: ChannelUser): ChannelUserInfo | undefined;
+
+    updateInfo(): AsyncCommandResult;
+
+}
+
+export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkChannel, Managed<ChannelEvents> {
 
     private _info: TalkNormalChannelInfo;
 
     private _channelSession: TalkChannelSession;
+    private _handler: TalkChannelHandler;
 
     private _userInfoMap: Map<string, ChannelUserInfo>;
 
     constructor(private _channel: Channel, session: CommandSession, info: Partial<NormalChannelInfo> = {}) {
+        super();
+        
         this._channelSession = new TalkChannelSession(this, session);
+        this._handler = new TalkChannelHandler(this);
 
         this._info = TalkNormalChannelInfo.createPartial(info);
 
@@ -37,7 +55,7 @@ export class TalkChannel implements Channel, ChannelSession {
         return this._channel.channelId;
     }
 
-    get info() {
+    get info(): NormalChannelInfo {
         return this._info;
     }
 
@@ -79,25 +97,23 @@ export class TalkChannel implements Channel, ChannelSession {
         return this._channelSession.getChannelInfo();
     }
 
-    /**
-     * Get channel info and update it.
-     */
     async updateInfo(): AsyncCommandResult {
         const infoRes = await this.getChannelInfo();
-        if (!infoRes.success) return infoRes;
 
-        this._info = TalkNormalChannelInfo.createPartial(infoRes.result);
+        if (infoRes.success) {
+            this._info = TalkNormalChannelInfo.createPartial(infoRes.result);
+        }
 
-        return { status: infoRes.status, success: true };
+        return infoRes;
     }
 
-    pushReceived(method: string, data: DefaultRes) {
-        
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+        this._handler.pushReceived(method, data, parentCtx);
     }
 
 }
 
-export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannelSession {
+export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, AnyTalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
     
     private _info: TalkOpenChannelInfo;
 
@@ -105,16 +121,23 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
 
     private _channelSession: TalkChannelSession;
     private _openChannelSession: TalkOpenChannelSession;
+    private _handler: TalkChannelHandler;
+    private _openHandler: TalkOpenChannelHandler;
 
     private _userInfoMap: Map<string, OpenChannelUserInfo>;
 
     constructor(channel: OpenChannel, session: CommandSession, info: Partial<OpenChannelInfo> = {}) {
+        super();
+        
         this._channel = channel;
 
         this._info = TalkOpenChannelInfo.createPartial(info);
 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
+
+        this._handler = new TalkChannelHandler(this);
+        this._openHandler = new TalkOpenChannelHandler(this);
 
         this._userInfoMap = new Map();
     }
@@ -127,7 +150,7 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         return this._channel.linkId;
     }
 
-    get info() {
+    get info(): OpenChannelInfo {
         return this._info;
     }
 
@@ -171,9 +194,6 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
         return this._openChannelSession.getChannelInfo();
     }
 
-     /**
-     * Get open channel info and update it.
-     */
     async updateInfo() {
         const infoRes = await this.getChannelInfo();
 
@@ -185,8 +205,9 @@ export class TalkOpenChannel implements OpenChannel, ChannelSession, OpenChannel
     }
 
     // Called when broadcast packets are recevied.
-    pushReceived(method: string, data: DefaultRes) {
-        
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+        this._handler.pushReceived(method, data, parentCtx);
+        this._openHandler.pushReceived(method, data, parentCtx);
     }
 
 }

@@ -5,7 +5,6 @@
  */
 
 import { LocoPacket, LocoPacketDataCodec } from "../packet/loco-packet";
-import { createIdGen } from "../util/id-generator";
 
 /**
  * Construct LocoPacket object from packet data.
@@ -13,11 +12,11 @@ import { createIdGen } from "../util/id-generator";
  */
 export class PacketAssembler<T, R> {
 
-    private _idGenerator: Generator<number>;
+    private _currentId: number;
     private _dataCodec: LocoPacketDataCodec<T, R>;
 
     constructor(dataCodec: LocoPacketDataCodec<T, R>) {
-        this._idGenerator = createIdGen();
+        this._currentId = 0;
         this._dataCodec = dataCodec;
     }
 
@@ -32,7 +31,7 @@ export class PacketAssembler<T, R> {
 
         return {
             header: {
-                id: this._idGenerator.next().value,
+                id: ++this._currentId,
                 method,
                 status: 0,
             },

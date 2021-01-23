@@ -8,7 +8,7 @@ import { ServiceClient } from "./api/service-client";
 import { ClientStatus } from "./client-status";
 import { ClientConfigOld } from "./config/client-config-provider";
 import { ClientConfigProvider, DefaultClientConfigProvider } from "./config/client-config-provider_old";
-import { ClientEvents } from "./event/events";
+import { ClientEvents } from "./event/events_old";
 import { NetworkManager } from "./network_old/network-manager";
 import { StatusCode } from "./packet_old/loco-packet-base";
 import { PacketSetStatusReq, PacketSetStatusRes } from "./packet_old/packet-set-status";

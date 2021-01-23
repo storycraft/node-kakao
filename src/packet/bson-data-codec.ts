@@ -32,7 +32,9 @@ export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     },
 
     encode(data: DefaultReq): [number, ArrayBuffer] {
-        return [0, Bson.serialize(data)];
+        const buf = Bson.serialize(data);
+
+        return [0, buf];
     }
 
 }

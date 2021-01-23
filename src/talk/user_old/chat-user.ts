@@ -7,7 +7,7 @@ import { LocoClient } from "../../client_old";
 import { OpenProfileType, OpenMemberType } from "../open_old/open-link-type";
 import { OpenLinkProfile } from "../open_old/open-link";
 import { RequestResult } from "../../request/request-result";
-import { UserEvents } from "../../event/events";
+import { UserEvents } from "../../event/events_old";
 
 /*
  * Created on Fri Nov 01 2019

@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../channel/channel";
 import { OAuthCredential } from "../oauth/credential";
-import { CommandResult } from "../request/command-result";
+import { AsyncCommandResult } from "../request/command-result";
 
 export interface LoginResult {
 
@@ -28,6 +28,6 @@ export interface ClientSession {
      * 
      * @param credential 
      */
-    login(credential: OAuthCredential): Promise<CommandResult<LoginResult>>;
+    login(credential: OAuthCredential): AsyncCommandResult<LoginResult>;
 
 }
