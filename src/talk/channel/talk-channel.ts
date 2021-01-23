@@ -36,24 +36,6 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
     getUserInfo(user: ChannelUser): AnyChannelUserInfo | undefined;
 
     /**
-     * Manually updates channel info to latest.
-     */
-    updateInfo(): AsyncCommandResult<ChannelInfo>;
-
-    /**
-     * Manually updates user info to detailed latest.
-     * Updated user info may have more properties.
-     * 
-     * @param user 
-     */
-    updateUserInfo(...users: ChannelUser[]): AsyncCommandResult<AnyChannelUserInfo[]>;
-
-    /**
-     * Update every user info.
-     */
-    updateAllUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
-
-    /**
      * Update channel info and every user info
      */
     updateAll(): AsyncCommandResult;
@@ -118,20 +100,8 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return res;
     }
 
-    getLatestChannelInfo() {
-        return this._channelSession.getLatestChannelInfo();
-    }
-
-    getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
-        return this._channelSession.getLatestUserInfo(...users);
-    }
-
-    getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
-        return this._channelSession.getAllLatestUserInfo();
-    }
-
-    async updateInfo() {
-        const infoRes = await this.getLatestChannelInfo();
+    async getLatestChannelInfo() {
+        const infoRes = await this._channelSession.getLatestChannelInfo();
 
         if (infoRes.success) {
             this._info = TalkNormalChannelInfo.createPartial(infoRes.result);
@@ -139,26 +109,21 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
         return infoRes;
     }
-    
-    async updateUserInfo(...users: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
-        const infoRes = await this.getLatestUserInfo(...users);
+
+    async getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
+        const infoRes = await this._channelSession.getLatestUserInfo(...users);
 
         if (infoRes.success) {
-            if (Array.isArray(infoRes.result)) {
-                const result = infoRes.result as ChannelUserInfo[];
+            const result = infoRes.result as ChannelUserInfo[];
 
-                result.forEach(info => this._userInfoMap.set(info.userId.toString(), info));
-            } else {
-                const result = infoRes.result as ChannelUserInfo;
-                this._userInfoMap.set(result.userId.toString(), result);
-            }
+            result.forEach(info => this._userInfoMap.set(info.userId.toString(), info));
         }
 
         return infoRes;
     }
-
-    async updateAllUserInfo() {
-        const infoRes = await this.getAllLatestUserInfo();
+    
+    async getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
+        const infoRes = await this._channelSession.getAllLatestUserInfo();
 
         if (infoRes.success) {
             this._userInfoMap.clear();
@@ -167,12 +132,12 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
         return infoRes;
     }
-    
+
     async updateAll(): AsyncCommandResult {
-        const infoRes = await this.updateInfo();
+        const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;
 
-        return this.updateAllUserInfo();
+        return this.getAllLatestUserInfo();
     }
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
@@ -258,20 +223,8 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
-    getLatestChannelInfo() {
-        return this._openChannelSession.getLatestChannelInfo();
-    }
-
-    getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
-        return this._openChannelSession.getLatestUserInfo(...users);
-    }
-    
-    getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
-        return this._openChannelSession.getAllLatestUserInfo();
-    }
-
-    async updateInfo() {
-        const infoRes = await this.getLatestChannelInfo();
+    async getLatestChannelInfo() {
+        const infoRes = await this._openChannelSession.getLatestChannelInfo();
 
         if (infoRes.success) {
             this._info = TalkOpenChannelInfo.createPartial(infoRes.result);
@@ -280,25 +233,20 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return infoRes;
     }
 
-    async updateUserInfo(...users: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
-        const infoRes = await this.getLatestUserInfo(...users);
+    async getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
+        const infoRes = await this._openChannelSession.getLatestUserInfo(...users);
 
         if (infoRes.success) {
-            if (Array.isArray(infoRes.result)) {
-                const result = infoRes.result as OpenChannelUserInfo[];
+            const result = infoRes.result as OpenChannelUserInfo[];
 
-                result.forEach(info => this._userInfoMap.set(info.userId.toString(), info));
-            } else {
-                const result = infoRes.result as OpenChannelUserInfo;
-                this._userInfoMap.set(result.userId.toString(), result);
-            }
+            result.forEach(info => this._userInfoMap.set(info.userId.toString(), info));
         }
 
         return infoRes;
     }
-
-    async updateAllUserInfo() {
-        const infoRes = await this.getAllLatestUserInfo();
+    
+    async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
+        const infoRes = await this._openChannelSession.getAllLatestUserInfo();
 
         if (infoRes.success) {
             this._userInfoMap.clear();
@@ -309,10 +257,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
     }
 
     async updateAll(): AsyncCommandResult {
-        const infoRes = await this.updateInfo();
+        const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;
 
-        return this.updateAllUserInfo();
+        return this.getAllLatestUserInfo();
     }
 
     // Called when broadcast packets are recevied.
