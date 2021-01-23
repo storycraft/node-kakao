@@ -7,6 +7,8 @@
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 import { DefaultRes } from "../../packet/bson-data-codec";
+import { MsgRes } from "../../packet/chat/msg";
+import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
 import { JsonUtil } from "../../util/json-util";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
@@ -21,7 +23,14 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     }
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
-        
+        if (method === 'MSG') {
+            const msgData = data as unknown as MsgRes;
+            
+            if (!this._channel.channelId.equals(msgData.chatId)) return;
+            
+            // TODO: Context, user info
+            new EventContext<ChannelEvents>(this._channel, parentCtx).emit('chat', new WrappedChatlog(msgData.chatLog), this._channel, null as any);
+        }
     }
 
 }

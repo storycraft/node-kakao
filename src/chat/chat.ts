@@ -19,7 +19,7 @@ export interface Chat {
     readonly type: ChatType;
     
     /**
-     * Cgat text. Can be empty string
+     * Chat text. Can be empty string
      */
     readonly text: string;
 
