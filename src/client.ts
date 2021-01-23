@@ -28,6 +28,11 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private _session: LocoSession | null;
 
+    /**
+     * Ping request interval. (Default = 900000 (15 min))
+     */
+    public pingInterval: number;
+
     private _clientSession: TalkClientSession;
 
     private _cilentUser: ChannelUser;
@@ -36,6 +41,8 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     constructor(config: Partial<ClientConfig> = {}, private _sessionFactory: SessionFactory = new TalkSessionFactory()) {
         super();
+
+        this.pingInterval = 900000;
 
         this._session = null;
         this._clientSession = new TalkClientSession(this.createSessionProxy(), new ClientConfigProvider(Object.assign(DefaultConfiguration, config)));
@@ -111,7 +118,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     }
 
     pushReceived(method: string, data: DefaultRes): void {
-        const ctx = new EventContext(this);
+        const ctx = new EventContext<ClientEvents>(this);
 
         this._channelList.pushReceived(method, data, ctx);
 
@@ -151,18 +158,30 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         super.emit('error', err);
 
         if (this.listeners('error').length > 0) {
-            this.listen();
+            this.listenSession();
         } else {
             this.close();
         }
     }
 
-    private listen() {
+    private listenSession() {
         (async () => {
             for await (const [pushMethod, pushData] of this.session.listen()) {
                 this.pushReceived(pushMethod, pushData);
             }
         })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
+    }
+
+    private listen() {
+        this.listenSession();
+
+        const pingHandler = () => {
+            if (!this.logon) return;
+
+            this.session.request('PING', {});
+            setTimeout(pingHandler, this.pingInterval);
+        };
+        pingHandler();
     }
 
 }

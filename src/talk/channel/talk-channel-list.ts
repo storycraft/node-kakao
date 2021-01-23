@@ -5,24 +5,28 @@
  */
 
 import { Long } from "bson";
+import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel, OpenChannel } from "../../channel/channel";
 import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
 import { EventContext } from "../../event/event-context";
-import { ChannelEvents } from "../../event/events";
+import { ChannelEvents, ChannelListEvents } from "../../event/events";
 import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkChannel, TalkOpenChannel } from "./talk-channel";
+import { TalkChannelListHandler } from "./talk-channel-handler";
 import { TalkChannelManageSession } from "./talk-channel-session";
 
 /**
  * Manage session channels
  */
-export class TalkChannelList implements ChannelManageSession, Managed<ChannelEvents> {
+export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements ChannelManageSession, Managed<ChannelListEvents> {
 
     private _session: CommandSession;
+
+    private _handler: TalkChannelListHandler;
 
     private _manageSession: TalkChannelManageSession;
 
@@ -36,7 +40,12 @@ export class TalkChannelList implements ChannelManageSession, Managed<ChannelEve
      * @param openChannelList 
      */
     constructor(session: CommandSession) {
+        super();
+
         this._session = session;
+
+        this._handler = new TalkChannelListHandler(this);
+        
         this._manageSession = new TalkChannelManageSession(session);
         
         this._normalChannelMap = new Map();
@@ -117,34 +126,37 @@ export class TalkChannelList implements ChannelManageSession, Managed<ChannelEve
         this._openChannelMap.forEach(func);
     }
 
-    private async addChannel(channel: Channel | OpenChannel) {
+    async addChannel(channel: Channel | OpenChannel) {
+        if (this.contains(channel.channelId)) return;
+
+        const strId = channel.channelId.toString();
+
         let talkChannel: TalkChannel | TalkOpenChannel;
         if ('linkId' in channel) {
             talkChannel = new TalkOpenChannel(channel, this._session);
-            this._openChannelMap.set(channel.channelId.toString(), talkChannel);
+            this._openChannelMap.set(strId, talkChannel);
         } else {
             talkChannel = new TalkChannel(channel, this._session);
-            this._normalChannelMap.set(channel.channelId.toString(), talkChannel);
+            this._normalChannelMap.set(strId, talkChannel);
         }
 
         await talkChannel.updateAll();
     }
 
-    private async addCreatedChannel(channel: Channel, info: NormalChannelInfo | null) {
+    async addCreatedChannel(channel: Channel, info: NormalChannelInfo | null) {
         const talkChannel = new TalkChannel(channel, this._session, info || {});
         this._normalChannelMap.set(talkChannel.channelId.toString(), talkChannel);
 
         if (!info) {
             await talkChannel.updateAll();
         } else {
-            await talkChannel.updateAllUserInfo();
+            await talkChannel.getAllLatestUserInfo();
         }
-        
 
         return talkChannel;
     }
     
-    private delete(channelId: Long) {
+    delete(channelId: Long) {
         const strId = channelId.toString();
 
         return this._normalChannelMap.delete(strId) || this._openChannelMap.delete(strId);
@@ -178,14 +190,18 @@ export class TalkChannelList implements ChannelManageSession, Managed<ChannelEve
         return res;
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvents>): void {
+        const ctx = new EventContext<ChannelListEvents>(this, parentCtx);
+
         for (const channel of this._normalChannelMap.values()) {
-            channel.pushReceived(method, data, parentCtx);
+            channel.pushReceived(method, data, ctx);
         }
 
         for (const openChannel of this._openChannelMap.values()) {
-            openChannel.pushReceived(method, data, parentCtx);
+            openChannel.pushReceived(method, data, ctx);
         }
+
+        this._handler.pushReceived(method, data, parentCtx);
     }
 
     /**

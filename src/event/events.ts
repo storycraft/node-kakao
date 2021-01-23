@@ -36,14 +36,24 @@ declare interface ChatEvent {
 
 declare interface ChannelEvent {
 
+    // 채널 meta 정보가 수정될때 호출
+    'meta_change': (channel: AnyTalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
+
+}
+
+declare interface ChannelListEvent {
+    
     // 유저가 방에 들어올시 호출
     'user_join': (channel: AnyTalkChannel, user: AnyChannelUserInfo, feed?: FeedChat<OpenJoinFeed>) => void
 
     // 유저가 방에서 나갈시 호출 (킥 미포함)
     'user_left': (channel: AnyTalkChannel, user: AnyChannelUserInfo, feed?: FeedChat<LeaveFeed>) => void;
 
-    // 채널 meta 정보가 수정될때 호출
-    'meta_change': (channel: AnyTalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
+    // 클라이언트가 채널 들어올시 호출
+    'channel_join': (channel: AnyTalkChannel, feed?: FeedChat<OpenJoinFeed>) => void;
+
+    // 클라이언트가 채널 나갈시 호출
+    'channel_left': (channel: AnyTalkChannel) => void;
 
 }
 
@@ -86,6 +96,7 @@ declare interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & ChannelEvents & OpenChannelEvents;
+export type ClientEvents = ClientEvent & ChannelListEvents;
+export type ChannelListEvents = ChannelListEvent & OpenChannelEvents;
 export type ChannelEvents = ChannelEvent & ChatEvent;
 export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;

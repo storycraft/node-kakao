@@ -66,7 +66,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return this._channel.channelId;
     }
 
-    get info(): NormalChannelInfo {
+    get info() {
         return this._info;
     }
 
@@ -183,7 +183,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._channel.linkId;
     }
 
-    get info(): OpenChannelInfo {
+    get info() {
         return this._info;
     }
 

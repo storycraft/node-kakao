@@ -38,15 +38,14 @@ export class TalkChannelSession implements ChannelSession {
     private _channel: Channel;
     private _session: CommandSession;
 
-    private _currentMsgId: number;
+    currentMsgId: number;
 
     constructor(channel: Channel, session: CommandSession) {
         this._channel = channel;
         this._session = session;
 
-        this._currentMsgId = 0;
+        this.currentMsgId = 0;
     }
-    
 
     async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
         if (typeof chat === 'string') {
@@ -55,7 +54,7 @@ export class TalkChannelSession implements ChannelSession {
 
         const data: DefaultReq = {
             'chatId': this._channel.channelId,
-            'msgId': ++this._currentMsgId,
+            'msgId': ++this.currentMsgId,
             'msg': chat.text,
             'type': chat.type,
             'noSeen': true,
@@ -77,7 +76,7 @@ export class TalkChannelSession implements ChannelSession {
     async forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
         const data: DefaultReq = {
             'chatId': this._channel.channelId,
-            'msgId': ++this._currentMsgId,
+            'msgId': ++this.currentMsgId,
             'msg': chat.text,
             'type': chat.type,
             'noSeen': true,
