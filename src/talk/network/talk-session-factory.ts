@@ -7,7 +7,7 @@
 import { SessionConfig } from "../../config/client-config-provider";
 import { newCryptoStore } from "../../crypto/crypto-store";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
-import { LocoSession, SessionFactory } from "../../network/request-session";
+import { DefaultLocoSession, LocoSession, SessionFactory } from "../../network/request-session";
 import { getBookingData, getCheckinData } from "../../network/util/loco-entrance";
 import { CommandResult } from "../../request/command-result";
 import * as NetSocket from "../../network/socket/net-socket";
@@ -47,7 +47,7 @@ export class TalkSessionFactory implements SessionFactory {
             keepAlive: true
         }), newCryptoStore(config.locoPEMPublicKey));
 
-        return { status: KnownDataStatusCode.SUCCESS, success: true, result: new LocoSession(locoStream) };
+        return { status: KnownDataStatusCode.SUCCESS, success: true, result: new DefaultLocoSession(locoStream) };
     }
 
 }

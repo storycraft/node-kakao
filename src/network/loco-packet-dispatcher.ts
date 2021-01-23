@@ -55,15 +55,11 @@ export class LocoPacketDispatcher {
     
                     const packet = next.value;
     
-                    if (packet.data[0] === 0) {
-                        if (instance._packetMap.has(packet.header.id)) {
-                            instance._packetMap.get(packet.header.id)![0](packet);
-                            instance._packetMap.delete(packet.header.id);
-                        }
-                    } else if (packet.data[0] === 8) {
-                        return { done: false, value: packet };
+                    if (instance._packetMap.has(packet.header.id)) {
+                        instance._packetMap.get(packet.header.id)![0](packet);
+                        instance._packetMap.delete(packet.header.id);
                     } else {
-                        throw `Unknown data type: ${packet.data[0]}`;
+                        return { done: false, value: packet };
                     }
                 }
             }

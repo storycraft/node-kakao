@@ -13,7 +13,6 @@ import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
-import { JsonUtil } from "../../util/json-util";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelList } from "./talk-channel-list";

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandSession, LocoSession, SessionFactory } from "./network/request-session";
+import { CommandSession, DefaultLocoSession, LocoSession, SessionFactory } from "./network/request-session";
 import { ChannelUser } from "./user/channel-user";
 import { DefaultReq, DefaultRes } from "./packet/bson-data-codec";
 import { TalkChannelList } from "./talk/channel/talk-channel-list";
@@ -88,12 +88,14 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         // Create session
         const sessionRes = await this._sessionFactory.createSession(this.configProvider.configuration);
-        if (!sessionRes.success) return { status: sessionRes.status, success: false };
+        if (!sessionRes.success) return sessionRes;
         this._session = sessionRes.result;
         this.listen();
 
         const loginRes = await this._clientSession.login(credential);
-        if (!loginRes.success) return { status: loginRes.status, success: false };
+        if (!loginRes.success) return loginRes;
+
+        this.addPingHandler();
         
         this._channelList = await TalkChannelList.initialize(this.createSessionProxy(), loginRes.result.channelList)
         this._cilentUser = { userId: loginRes.result.userId };
@@ -125,7 +127,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         switch (method) {
 
             case 'KICKOUT': {
-                super.emit('disconnected', (data as unknown as KickoutRes).reason);
+                super.emit('disconnected', (data as DefaultRes & KickoutRes).reason);
                 break;
             }
 
@@ -158,13 +160,13 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         super.emit('error', err);
 
         if (this.listeners('error').length > 0) {
-            this.listenSession();
+            this.listen();
         } else {
             this.close();
         }
     }
 
-    private listenSession() {
+    private listen() {
         (async () => {
             for await (const [pushMethod, pushData] of this.session.listen()) {
                 this.pushReceived(pushMethod, pushData);
@@ -172,9 +174,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
     }
 
-    private listen() {
-        this.listenSession();
-
+    private addPingHandler() {
         const pingHandler = () => {
             if (!this.logon) return;
 

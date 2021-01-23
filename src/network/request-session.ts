@@ -24,6 +24,16 @@ export interface CommandSession {
 
 }
 
+export interface LocoSession extends CommandSession {
+
+    listen(): AsyncIterable<PushPacketData> & AsyncIterator<PushPacketData>;
+
+    sendPacket(packet: LocoPacket): Promise<LocoPacket>;
+
+    close(): void;
+
+}
+
 /**
  * Create LocoSession using configuration.
  */
@@ -38,7 +48,7 @@ export type PushPacketData = [string, DefaultRes];
 /**
  * Holds current loco session.
  */
-export class LocoSession implements CommandSession {
+export class DefaultLocoSession implements LocoSession {
 
     private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
     private _dispatcher: LocoPacketDispatcher;
