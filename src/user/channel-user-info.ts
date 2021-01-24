@@ -9,7 +9,7 @@ import { OpenChatUserPerm } from "../openlink/open-link-type";
 import { ChannelUser, OpenChannelUser } from "./channel-user";
 import { UserType } from "./user-type";
 
-export interface DisplayChannelUserInfo extends ChannelUser {
+export interface DisplayUserInfo extends ChannelUser {
 
     /**
      * User nickname
@@ -26,7 +26,7 @@ export interface DisplayChannelUserInfo extends ChannelUser {
 /**
  * Common channel user info
  */
-export interface AnyChannelUserInfo extends DisplayChannelUserInfo {
+export interface AnyChannelUserInfo extends DisplayUserInfo {
 
     /**
      * Full user profile url

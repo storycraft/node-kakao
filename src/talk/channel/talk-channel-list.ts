@@ -9,9 +9,9 @@ import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel, OpenChannel } from "../../channel/channel";
 import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
+import { TalkSession } from "../../client";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents } from "../../event/events";
-import { CommandSession } from "../../network/request-session";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { CommandResult } from "../../request/command-result";
 import { Managed } from "../managed";
@@ -24,7 +24,7 @@ import { TalkChannelManageSession } from "./talk-channel-session";
  */
 export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements ChannelManageSession, Managed<ChannelListEvents> {
 
-    private _session: CommandSession;
+    private _session: TalkSession;
 
     private _handler: TalkChannelListHandler;
 
@@ -39,7 +39,7 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
      * @param channelList 
      * @param openChannelList 
      */
-    constructor(session: CommandSession) {
+    constructor(session: TalkSession) {
         super();
 
         this._session = session;
@@ -209,7 +209,7 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
      * @param session 
      * @param channelList 
      */
-    static async initialize(session: CommandSession, channelList: (Channel | OpenChannel)[] = []): Promise<TalkChannelList> {
+    static async initialize(session: TalkSession, channelList: (Channel | OpenChannel)[] = []): Promise<TalkChannelList> {
         const talkChannelList = new TalkChannelList(session);
 
         await Promise.all(channelList.map(channel => talkChannelList.addChannel(channel)));

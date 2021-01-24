@@ -10,9 +10,10 @@ import { ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from 
 import { ChannelManageSession, ChannelSession, ChannelTemplate, OpenChannelSession } from "../../channel/channel-session";
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
-import { CommandSession } from "../../network/request-session";
+import { TalkSession } from "../../client";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
+import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
 import { CreateRes } from "../../packet/chat/create";
 import { ForwardRes } from "../../packet/chat/forward";
 import { GetMemRes } from "../../packet/chat/get-mem";
@@ -21,14 +22,13 @@ import { SetMetaRes } from "../../packet/chat/set-meta";
 import { WriteRes } from "../../packet/chat/write";
 import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
-import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/member";
+import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
 import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
 import { WrappedChannelUserInfo, WrappedOpenChannelUserInfo } from "../../packet/struct/wrapped/user";
 import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
-import { JsonUtil } from "../../util/json-util";
 
 /**
  * Default ChannelSession implementation
@@ -36,15 +36,19 @@ import { JsonUtil } from "../../util/json-util";
 export class TalkChannelSession implements ChannelSession {
 
     private _channel: Channel;
-    private _session: CommandSession;
+    private _session: TalkSession;
 
     currentMsgId: number;
 
-    constructor(channel: Channel, session: CommandSession) {
+    constructor(channel: Channel, session: TalkSession) {
         this._channel = channel;
         this._session = session;
 
         this.currentMsgId = 0;
+    }
+
+    get session() {
+        return this._session;
     }
 
     async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
@@ -142,6 +146,20 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
+    async chatON(): AsyncCommandResult<ChatOnRoomRes> {
+        const res = await this._session.request<ChatOnRoomRes>(
+            'CHATONROOM',
+            {
+                'chatId': this._channel.channelId,
+                'token': Long.ZERO,
+                'opt': 0
+            }
+        );
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+        
+        return { success: true, status: res.status, result: res };
+    }
+
     async getLatestChannelInfo(): AsyncCommandResult<NormalChannelInfo> {
         const res = await this._session.request<ChatInfoRes>(
             'CHATINFO',
@@ -198,11 +216,15 @@ export class TalkChannelSession implements ChannelSession {
 export class TalkOpenChannelSession implements OpenChannelSession {
 
     private _channel: OpenChannel;
-    private _session: CommandSession;
+    private _session: TalkSession;
 
-    constructor(channel: OpenChannel, session: CommandSession) {
+    constructor(channel: OpenChannel, session: TalkSession) {
         this._channel = channel;
         this._session = session;
+    }
+
+    get session() {
+        return this._session;
     }
     
     async markRead(chat: ChatLogged) {
@@ -276,9 +298,9 @@ export class TalkOpenChannelSession implements OpenChannelSession {
  */
 export class TalkChannelManageSession implements ChannelManageSession {
 
-    private _session: CommandSession;
+    private _session: TalkSession;
 
-    constructor(session: CommandSession) {
+    constructor(session: TalkSession) {
         this._session = session;
     }
 

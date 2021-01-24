@@ -8,6 +8,13 @@ import { LocoPacket } from "../packet/loco-packet";
 import { LocoPacketCodec } from "./loco-packet-codec";
 import { Stream } from "./stream";
 
+export interface PacketRes {
+
+    push: boolean,
+    packet: LocoPacket
+
+}
+
 export class LocoPacketDispatcher {
 
     private _codec: LocoPacketCodec;
@@ -43,24 +50,23 @@ export class LocoPacketDispatcher {
         const iterator = this._codec.iterate();
 
         return {
-            [Symbol.asyncIterator](): AsyncIterator<LocoPacket> {
+            [Symbol.asyncIterator](): AsyncIterator<Readonly<PacketRes>> {
                 return this;
             },
 
-            async next(): Promise<IteratorResult<LocoPacket>> {
-                while (true) {
-                    const next = await iterator.next();
+            async next(): Promise<IteratorResult<Readonly<PacketRes>>> {
+                const next = await iterator.next();
 
-                    if (next.done) return { done: true, value: null };
-    
-                    const packet = next.value;
-    
-                    if (instance._packetMap.has(packet.header.id)) {
-                        instance._packetMap.get(packet.header.id)![0](packet);
-                        instance._packetMap.delete(packet.header.id);
-                    } else {
-                        return { done: false, value: packet };
-                    }
+                if (next.done) return { done: true, value: null };
+
+                const packet = next.value;
+
+                if (instance._packetMap.has(packet.header.id)) {
+                    instance._packetMap.get(packet.header.id)![0](packet);
+                    instance._packetMap.delete(packet.header.id);
+                    return { done: false, value: { push: false, packet } };
+                } else {
+                    return { done: false, value: { push: true, packet } };
                 }
             }
         };

@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from "bson";
 import { ChannelInfo, OpenChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, OpenChannelEvents } from "../../event/events";
@@ -13,16 +14,27 @@ import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
+import { ChannelUser } from "../../user/channel-user";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelList } from "./talk-channel-list";
+
+/**
+ * Update channel info from handler
+ */
+export interface InfoUpdater<T extends ChannelInfo = ChannelInfo> {
+    
+    updateInfo: (info: Partial<T>) => void;
+    updateWatermark: (readerId: Long, watermark: Long) => void;
+
+}
 
 /**
  * Capture and handle pushes coming to channel
  */
 export class TalkChannelHandler implements Managed<ChannelEvents> {
 
-    constructor(private _channel: AnyTalkChannel, private _updateInfo: (info: Partial<ChannelInfo>) => void) {
+    constructor(private _channel: AnyTalkChannel, private _updater: InfoUpdater) {
 
     }
 
@@ -52,7 +64,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     this._channel.getUserInfo(chatLog.sender)
                 );
 
-                this._updateInfo({
+                this._updater.updateInfo({
                     lastChatLogId: msgData.logId,
                     lastChatLog: chatLog
                 });
@@ -65,13 +77,17 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
 
                 if (!this._channel.channelId.equals(readData.chatId)) break;
 
+                const reader = this._channel.getUserInfo({ userId: readData.userId });
+
                 this._callEvent(
                     parentCtx,
                     'chat_read',
                     { logId: readData.watermark },
                     this._channel,
-                    this._channel.getUserInfo({ userId: readData.userId })
+                    reader
                 );
+                
+                this._updater.updateWatermark(readData.userId, readData.watermark);
 
                 break;
             }
@@ -95,7 +111,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 const metaMap = { ...this.info.metaMap };
                 metaMap[metaType] = meta;
 
-                this._updateInfo({
+                this._updater.updateInfo({
                     metaMap
                 });
 
@@ -113,7 +129,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
  */
 export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
-    constructor(private _channel: TalkOpenChannel, private _updateInfo: (info: Partial<OpenChannelInfo>) => void) {
+    constructor(private _channel: TalkOpenChannel, private _updater: InfoUpdater<OpenChannelInfo>) {
 
     }
 

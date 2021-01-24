@@ -5,7 +5,7 @@
  */
 
 import { SessionConfig } from "../config/client-config-provider";
-import { LocoSession, PushPacketData, SessionFactory } from "../network/request-session";
+import { LocoSession, PacketResData, SessionFactory } from "../network/request-session";
 import { DefaultRes, DefaultReq } from "../packet/bson-data-codec";
 import { LocoPacket } from "../packet/loco-packet";
 import { CommandResult } from "../request/command-result";
@@ -18,7 +18,7 @@ export interface SessionHook {
     /**
      * Hook incoming data
      */
-    onData: (method: string, data: DefaultReq) => void;
+    onData: (method: string, data: DefaultReq, push: boolean) => void;
 
     /**
      * Hook command requests
@@ -70,10 +70,14 @@ export class HookedLocoSession implements LocoSession {
                 return this;
             },
 
-            async next(): Promise<IteratorResult<PushPacketData>> {
+            async next(): Promise<IteratorResult<PacketResData>> {
                 const next = await iterator.next();
 
-                if (!next.done && hook.onData)  hook.onData(...next.value);
+                if (!next.done && hook.onData) {
+                    const { method, data, push } = next.value;
+
+                    hook.onData(method, data, push);
+                }
 
                 return next;
             }

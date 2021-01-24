@@ -16,7 +16,7 @@ export interface ChannelUser {
     /**
      * Unique identifier
      */
-    readonly userId: Long;
+    userId: Long;
 
 }
 

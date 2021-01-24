@@ -6,9 +6,10 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../../channel/channel";
+import { TalkSession } from "../../client";
+import { ClientStatus } from "../../client-status";
 import { ClientSession, LoginResult } from "../../client/client-session";
 import { ClientConfigProvider } from "../../config/client-config-provider";
-import { CommandSession } from "../../network/request-session";
 import { OAuthCredential } from "../../oauth/credential";
 import { LoginListRes } from "../../packet/chat/login-list";
 import { KnownDataStatusCode } from "../../packet/status-code";
@@ -20,11 +21,15 @@ export class TalkClientSession implements ClientSession {
     private _lastTokenId: Long;
     private _lastBlockTk: number;
 
-    constructor(private _session: CommandSession, private _configProvider: ClientConfigProvider) {
+    constructor(private _session: TalkSession, private _configProvider: ClientConfigProvider) {
         this._lastLoginRev = 0;
 
         this._lastTokenId = Long.ZERO;
         this._lastBlockTk = 0;
+    }
+
+    get session() {
+        return this._session;
     }
 
     get configProvider() {
@@ -80,6 +85,12 @@ export class TalkClientSession implements ClientSession {
                 userId: loginRes.userId
             }
         };
+    }
+
+    async setStatus(status: ClientStatus) {
+        const res = await this._session.request<LoginListRes>('SETST', { st: status });
+        
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
     
 }

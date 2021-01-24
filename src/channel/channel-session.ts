@@ -11,7 +11,8 @@ import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "./channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
-import { AnyChannelUserInfo, ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
+import { AnyChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
+import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 
 export interface ChannelTemplate {
 
@@ -52,10 +53,16 @@ export interface ChannelSession {
     deleteChat(chat: ChatLogged): AsyncCommandResult;
     
     /**
-     * Mark every chat as read until this chat.
+     * Mark every chat read until this chat.
      * @param chat 
      */
     markRead(chat: ChatLogged): AsyncCommandResult;
+
+    /**
+     * Send CHATONROOM and get room infos.
+     * Official client sends this and update some infos before opening chatroom window.
+     */
+    chatON(): AsyncCommandResult<Readonly<ChatOnRoomRes>>;
 
     /**
      * Set channel meta content

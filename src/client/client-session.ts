@@ -6,6 +6,7 @@
 
 import { Long } from "bson";
 import { Channel, OpenChannel } from "../channel/channel";
+import { ClientStatus } from "../client-status";
 import { OAuthCredential } from "../oauth/credential";
 import { AsyncCommandResult } from "../request/command-result";
 
@@ -29,5 +30,10 @@ export interface ClientSession {
      * @param credential 
      */
     login(credential: OAuthCredential): AsyncCommandResult<LoginResult>;
+
+    /**
+     * Set client status
+     */
+    setStatus(status: ClientStatus): AsyncCommandResult;
 
 }

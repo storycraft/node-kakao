@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandSession, DefaultLocoSession, LocoSession, SessionFactory } from "./network/request-session";
+import { CommandSession, LocoSession, SessionFactory } from "./network/request-session";
 import { ChannelUser } from "./user/channel-user";
 import { DefaultReq, DefaultRes } from "./packet/bson-data-codec";
 import { TalkChannelList } from "./talk/channel/talk-channel-list";
@@ -20,6 +20,16 @@ import { TypedEmitter } from 'tiny-typed-emitter';
 import { ClientEvents } from "./event/events";
 import { KickoutRes } from "./packet/chat/kickout";
 import { EventContext } from "./event/event-context";
+import { ClientStatus } from "./client-status";
+
+/**
+ * Talk client session with client user
+ */
+export interface TalkSession extends CommandSession {
+
+    readonly clientUser: Readonly<ChannelUser>;
+
+}
 
 /**
  * Simple client implementation.
@@ -78,11 +88,6 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         return this._session;
     }
 
-    /**
-     * Create new session and login
-     * 
-     * @param credential 
-     */
     async login(credential: OAuthCredential): AsyncCommandResult<LoginResult> {
         if (this.logon) throw 'Already logon';
 
@@ -101,6 +106,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         this._cilentUser = { userId: loginRes.result.userId };
 
         return { status: loginRes.status, success: true, result: loginRes.result };
+    }
+
+    setStatus(status: ClientStatus) {
+        return this._clientSession.setStatus(status);
     }
 
     /**
@@ -142,9 +151,12 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     /**
      * Create proxy that can be used safely without exposing client
      */
-    createSessionProxy(): CommandSession {
+    createSessionProxy(): TalkSession {
         return {
-            request: (method, data) => this.request(method, data)
+            request: (method, data) => this.request(method, data),
+            get clientUser() {
+                return this.clientUser;
+            }
         }
     }
 
@@ -168,8 +180,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private listen() {
         (async () => {
-            for await (const [pushMethod, pushData] of this.session.listen()) {
-                this.pushReceived(pushMethod, pushData);
+            for await (const { method, data, push } of this.session.listen()) {
+                if (push) {
+                    this.pushReceived(method, data);
+                }                
             }
         })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
     }

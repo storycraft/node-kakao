@@ -36,6 +36,8 @@ export interface Chat {
 
 }
 
+export type TypedChat<T extends ChatType> = Chat & { type: T };
+
 export interface ChatLogged {
 
     /**

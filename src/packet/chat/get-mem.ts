@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { NormalMemberStruct, OpenMemberStruct } from "../struct/member";
+import { NormalMemberStruct, OpenMemberStruct } from "../struct/user";
 
 export interface GetMemRes {
 

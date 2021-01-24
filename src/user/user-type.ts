@@ -6,10 +6,10 @@
 
 export enum UserType {
 
-    Undefined = -999999,
-    NotFriend = -100,
-    Deactivated = 9,
-    Friend = 100,
-    OpenProfile = 1000,
+    UNDEFINED = -999999,
+    NOT_FRIEND = -100,
+    DEACTIVATED = 9,
+    FRIEND = 100,
+    OPEN_PROFILE = 1000,
 
 }
