@@ -82,6 +82,6 @@ export interface ChannelUserInfo extends AnyChannelUserInfo {
  */
 export interface OpenChannelUserInfo extends OpenChannelUser, AnyChannelUserInfo, OpenTokenComponent {
 
-    readonly perm: OpenChatUserPerm;
+    perm: OpenChatUserPerm;
 
 }

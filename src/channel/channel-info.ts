@@ -29,6 +29,8 @@ export interface SetChannelMeta extends ChannelMeta {
 
 export interface ChannelMetaMap extends Record<ChannelType, SetChannelMeta> {
 
+    
+
 }
 
 /**
@@ -39,48 +41,74 @@ export interface ChannelInfo extends Channel {
     /**
      * Channel type
      */
-    readonly type: ChannelType;
+    type: ChannelType;
 
     /**
      * Active user count
      */
-    readonly activeUserCount: number;
+    activeUserCount: number;
 
     /**
      * Unread chat count
      */
-    readonly newChatCount: number;
+    newChatCount: number;
 
     /**
      * true if new chat count is invalid
      */
-    readonly newChatCountInvalid: boolean;
+    newChatCountInvalid: boolean;
     
     /**
      * Last chat log id
      */
-    readonly lastChatLogId: Long;
+    lastChatLogId: Long;
 
     /**
      * Last seen chat log id
      */
-    readonly lastSeenLogId: Long;
+    lastSeenLogId: Long;
 
     /**
      * Last chatlog
      */
-    readonly lastChatLog?: Chatlog;
+    lastChatLog?: Chatlog;
 
-    // readonly clientMeta?: ChannelClientMetaStruct;
+    // clientMeta?: ChannelClientMetaStruct;
 
-    readonly metaMap: ChannelMetaMap;
+    metaMap: ChannelMetaMap;
 
-    readonly displayUserList: DisplayChannelUserInfo[];
+    displayUserList: DisplayChannelUserInfo[];
 
     /**
      * Push alert settings
      */
-    readonly pushAlert: boolean;
+    pushAlert: boolean;
+
+}
+
+export namespace ChannelInfo {
+
+    export function createPartial(info: Partial<ChannelInfo>): ChannelInfo {
+        return Object.assign({
+            channelId: Long.ZERO,
+
+            type: '',
+            
+            activeUserCount: 0,
+        
+            newChatCount: 0,
+            newChatCountInvalid: true,
+        
+            lastChatLogId: Long.ZERO,
+            lastSeenLogId: Long.ZERO,
+        
+            displayUserList: [],
+            
+            metaMap: {},
+        
+            pushAlert: false
+        }, info);
+    }
 
 }
 
@@ -92,7 +120,18 @@ export interface NormalChannelInfo extends ChannelInfo {
     /**
      * Channel join time (js Date timestamp)
      */
-    readonly joinTime: number;
+    joinTime: number;
+
+}
+
+export namespace NormalChannelInfo {
+
+    export function createPartial(info: Partial<NormalChannelInfo>): NormalChannelInfo {
+        return Object.assign({
+            ...ChannelInfo.createPartial(info),
+            joinTime: 0,
+        }, info);
+    }
 
 }
 
@@ -104,11 +143,27 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
     /**
      * true if direct channel
      */
-    readonly directChannel: boolean;
+    directChannel: boolean;
 
     /**
      * Unknown
      */
-    readonly o: Long;
+    o: Long;
+
+}
+
+export namespace OpenChannelInfo {
+
+    export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {
+        return Object.assign({
+            ...ChannelInfo.createPartial(info),
+            linkId: Long.ZERO,
+            openToken: 0,
+
+            directChannel: false,
+
+            o: Long.ZERO
+        }, info);
+    }
 
 }

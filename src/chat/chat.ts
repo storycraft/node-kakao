@@ -16,23 +16,23 @@ export interface Chat {
     /**
      * Chat type
      */
-    readonly type: ChatType;
+    type: ChatType;
     
     /**
      * Chat text. Can be empty string
      */
-    readonly text: string;
+    text: string;
 
     /**
      * Optional attachment json
      */
-    readonly attachment?: string;
+    attachment?: string;
 
     /**
      * Optional suppliment json.
      * Only used in Pluschat for extra components(quick reply, custom menus, e.t.c.) and cannot be sent.
      */
-    readonly suppliment?: string;
+    suppliment?: string;
 
 }
 
@@ -41,7 +41,7 @@ export interface ChatLogged {
     /**
      * chat id on server
      */
-    readonly logId: Long;
+    logId: Long;
 
 }
 
@@ -50,7 +50,7 @@ export interface ChatLogLinked extends ChatLogged {
     /**
      * Previous logId
      */
-    readonly prevLogId: Long;
+    prevLogId: Long;
 
 }
 
@@ -59,17 +59,17 @@ export interface ChatWritten {
     /**
      * Chat sender
      */
-    readonly sender: ChannelUser;
+    sender: ChannelUser;
 
     /**
      * Message sent time (js Date timestamp)
      */
-    readonly sendAt: number;
+    sendAt: number;
 
     /**
      * Unknown
      */
-    readonly messageId: number;
+    messageId: number;
 
 }
 

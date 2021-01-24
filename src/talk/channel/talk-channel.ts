@@ -15,7 +15,6 @@ import { CommandSession } from "../../network/request-session";
 import { AsyncCommandResult } from "../../request/command-result";
 import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
 import { ChannelMetaType } from "../../packet/struct/channel";
-import { TalkNormalChannelInfo, TalkOpenChannelInfo } from "./talk-channel-info";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 import { Managed } from "../managed";
@@ -27,13 +26,13 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
     /**
      * Channel info
      */
-    readonly info: ChannelInfo;
+    readonly info: Readonly<ChannelInfo>;
     
     /**
      * Get channel user info.
      * @param user User to find
      */
-    getUserInfo(user: ChannelUser): AnyChannelUserInfo | undefined;
+    getUserInfo(user: ChannelUser): Readonly<AnyChannelUserInfo> | undefined;
 
     /**
      * Update channel info and every user info
@@ -44,7 +43,7 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
 
 export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkChannel, Managed<ChannelEvents> {
 
-    private _info: TalkNormalChannelInfo;
+    private _info: NormalChannelInfo;
 
     private _channelSession: TalkChannelSession;
     private _handler: TalkChannelHandler;
@@ -57,7 +56,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         this._channelSession = new TalkChannelSession(this, session);
         this._handler = new TalkChannelHandler(this);
 
-        this._info = TalkNormalChannelInfo.createPartial(info);
+        this._info = NormalChannelInfo.createPartial(info);
 
         this._userInfoMap = new Map();
     }
@@ -66,11 +65,11 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return this._channel.channelId;
     }
 
-    get info() {
+    get info(): Readonly<NormalChannelInfo> {
         return this._info;
     }
 
-    getUserInfo(user: ChannelUser) {
+    getUserInfo(user: ChannelUser): Readonly<ChannelUserInfo> | undefined {
         return this._userInfoMap.get(user.userId.toString());
     }
 
@@ -104,7 +103,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         const infoRes = await this._channelSession.getLatestChannelInfo();
 
         if (infoRes.success) {
-            this._info = TalkNormalChannelInfo.createPartial(infoRes.result);
+            this._info = NormalChannelInfo.createPartial(infoRes.result);
         }
 
         return infoRes;
@@ -148,7 +147,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, AnyTalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
     
-    private _info: TalkOpenChannelInfo;
+    private _info: OpenChannelInfo;
 
     private _channel: OpenChannel;
 
@@ -164,7 +163,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         
         this._channel = channel;
 
-        this._info = TalkOpenChannelInfo.createPartial(info);
+        this._info = OpenChannelInfo.createPartial(info);
 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
@@ -183,7 +182,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._channel.linkId;
     }
 
-    get info() {
+    get info(): Readonly<OpenChannelInfo> {
         return this._info;
     }
 
@@ -191,7 +190,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
      * Get channel open user info
      * @param user User to find
      */
-    getUserInfo(user: ChannelUser) {
+    getUserInfo(user: ChannelUser): Readonly<OpenChannelUserInfo> | undefined {
         return this._userInfoMap.get(user.userId.toString());
     }
 
@@ -227,7 +226,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         const infoRes = await this._openChannelSession.getLatestChannelInfo();
 
         if (infoRes.success) {
-            this._info = TalkOpenChannelInfo.createPartial(infoRes.result);
+            this._info = OpenChannelInfo.createPartial(infoRes.result);
         }
 
         return infoRes;

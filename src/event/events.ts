@@ -21,13 +21,13 @@ import { ChannelMetaType } from "../packet/struct/channel";
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
-    'chat': (chat: Chatlog, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void;
+    'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void;
 
     // 피드 쳇 받을시 호출
-    'feed': (chat: Chatlog, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void
+    'feed': (chat: Readonly<Chatlog>, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void
 
     // 쳇 읽을 시 호출
-    'chat_read': (chat: ChatLogged, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
+    'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
     // 쳇 삭제 시 호출
     'chat_deleted': (feed: FeedChat<DeleteAllFeed>) => void;

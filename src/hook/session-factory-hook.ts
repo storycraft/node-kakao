@@ -4,7 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { nextTick } from "process";
 import { SessionConfig } from "../config/client-config-provider";
 import { LocoSession, PushPacketData, SessionFactory } from "../network/request-session";
 import { DefaultRes, DefaultReq } from "../packet/bson-data-codec";
@@ -14,21 +13,12 @@ import { CommandResult } from "../request/command-result";
 /**
  * Hook incoming datas
  */
-export interface IncomingHook {
+export interface SessionHook {
 
     /**
      * Hook incoming data
      */
     onData: (method: string, data: DefaultReq) => void;
-
-    onClose(): () => void;
-
-}
-
-/**
- * Hook outgoing datas
- */
-export interface OutgoingHook {
 
     /**
      * Hook command requests
@@ -40,6 +30,8 @@ export interface OutgoingHook {
      */
     onSendPacket: (packet: LocoPacket) => void;
 
+    onClose(): () => void;
+
 }
 
 /**
@@ -47,7 +39,7 @@ export interface OutgoingHook {
  */
 export class HookedSessionFactory implements SessionFactory {
 
-    constructor(private _factory: SessionFactory, private _hook: Partial<IncomingHook & OutgoingHook> = {}) {
+    constructor(private _factory: SessionFactory, private _hook: Partial<SessionHook> = {}) {
 
     }
 
@@ -65,12 +57,12 @@ export class HookedSessionFactory implements SessionFactory {
  */
 export class HookedLocoSession implements LocoSession {
 
-    constructor(private _session: LocoSession, private _hook: Partial<IncomingHook & OutgoingHook> = {}) {
+    constructor(private _session: LocoSession, public hook: Partial<SessionHook> = {}) {
 
     }
 
     listen() {
-        const hook = this._hook;
+        const hook = this.hook;
         const iterator = this._session.listen();
 
         return {
@@ -89,19 +81,19 @@ export class HookedLocoSession implements LocoSession {
     }
 
     request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
-        if (this._hook.onRequest) this._hook.onRequest(method, data);
+        if (this.hook.onRequest) this.hook.onRequest(method, data);
 
         return this._session.request(method, data);
     }
 
     sendPacket(packet: LocoPacket): Promise<LocoPacket> {
-        if (this._hook.onSendPacket) this._hook.onSendPacket(packet);
+        if (this.hook.onSendPacket) this.hook.onSendPacket(packet);
 
         return this._session.sendPacket(packet);
     }
 
     close(): void {
-        if (this._hook.onClose) this._hook.onClose();
+        if (this.hook.onClose) this.hook.onClose();
 
         this._session.close();
     }
