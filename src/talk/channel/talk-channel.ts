@@ -24,7 +24,8 @@ import { TalkChannelHandler, TalkOpenChannelHandler } from "./talk-channel-handl
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
     /**
-     * Channel info
+     * Channel info snapshot.
+     * Info object may change when some infos updated.
      */
     readonly info: Readonly<ChannelInfo>;
     
@@ -54,7 +55,9 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         super();
         
         this._channelSession = new TalkChannelSession(this, session);
-        this._handler = new TalkChannelHandler(this);
+        this._handler = new TalkChannelHandler(this, info => {
+            this._info = { ...info, ...this._info };
+        });
 
         this._info = NormalChannelInfo.createPartial(info);
 
@@ -168,8 +171,12 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-        this._handler = new TalkChannelHandler(this);
-        this._openHandler = new TalkOpenChannelHandler(this);
+        const infoUpdater = (info: Partial<OpenChannelInfo>) => {
+            this._info = { ...info, ...this._info };
+        };
+
+        this._handler = new TalkChannelHandler(this, infoUpdater);
+        this._openHandler = new TalkOpenChannelHandler(this, infoUpdater);
 
         this._userInfoMap = new Map();
     }

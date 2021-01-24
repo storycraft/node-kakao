@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SetChannelMeta } from "../../channel/channel-info";
+import { ChannelInfo, OpenChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, OpenChannelEvents } from "../../event/events";
 import { DefaultRes } from "../../packet/bson-data-codec";
@@ -22,8 +22,12 @@ import { TalkChannelList } from "./talk-channel-list";
  */
 export class TalkChannelHandler implements Managed<ChannelEvents> {
 
-    constructor(private _channel: AnyTalkChannel) {
+    constructor(private _channel: AnyTalkChannel, private _updateInfo: (info: Partial<ChannelInfo>) => void) {
 
+    }
+
+    private get info() {
+        return this._channel.info;
     }
 
     private _callEvent<U extends keyof ChannelEvents>(parentCtx: EventContext<ChannelEvents>, event: U, ...args: Parameters<ChannelEvents[U]>) {
@@ -47,6 +51,11 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     this._channel,
                     this._channel.getUserInfo(chatLog.sender)
                 );
+
+                this._updateInfo({
+                    lastChatLogId: msgData.logId,
+                    lastChatLog: chatLog
+                });
 
                 break;
             }
@@ -82,7 +91,13 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     metaType,
                     meta
                 );
-                this._channel.info.metaMap[metaType] = meta;
+
+                const metaMap = { ...this.info.metaMap };
+                metaMap[metaType] = meta;
+
+                this._updateInfo({
+                    metaMap
+                });
 
                 break;
             }
@@ -98,7 +113,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
  */
 export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
-    constructor(private _channel: TalkOpenChannel) {
+    constructor(private _channel: TalkOpenChannel, private _updateInfo: (info: Partial<OpenChannelInfo>) => void) {
 
     }
 
