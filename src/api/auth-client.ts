@@ -8,6 +8,7 @@ import * as crypto from "crypto";
 import { LoginError } from "../client_old";
 import { DefaultConfiguration } from "../config/client-config-provider";
 import { ClientConfigProvider } from "../config/client-config-provider_old";
+import { CredentialProvider, OAuthCredential } from "../oauth/credential";
 import { AccessDataProvider } from "../oauth_old/access-data-provider";
 import { LessSettingsStruct, MoreSettingsStruct } from "../talk/struct_old/api/account/client-settings-struct";
 import { LoginTokenStruct } from "../talk/struct_old/api/account/login-token-struct";
@@ -39,7 +40,7 @@ export type LoginForm = {
 
 }
 
-export class AuthClient extends WebApiClient implements AccessDataProvider {
+export class AuthClient extends WebApiClient implements CredentialProvider, AccessDataProvider {
 
     private name: string;
 
@@ -242,6 +243,17 @@ export class AuthClient extends WebApiClient implements AccessDataProvider {
     logout() {
         this.currentLogin = null;
         this.accessData = null;
+    }
+
+    getCredential(): OAuthCredential {
+        const accessData = this.getLatestAccessData();
+
+        return {
+            accessToken: accessData.accessToken,
+            refreshToken: accessData.refreshToken,
+
+            deviceUUID: this.deviceUUID
+        };
     }
 
     getLatestAccessData(): LoginAccessDataStruct {

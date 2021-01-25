@@ -3,8 +3,6 @@
 
 Note: this implemention can stop working anytime.
 
-## Version Information
-
 ## Warning
 
 Client can act differently unlike official client. Abusing this client can cause permanent service restriction.
@@ -120,6 +118,10 @@ async function sample() {
 
 sample();
 ```
+
+## Migrating from v3
+
+todo
 
 License
 -------
