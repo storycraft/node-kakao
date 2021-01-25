@@ -93,6 +93,13 @@ export interface ChannelSession {
      * @see getLatestUserInfo method for getting detailed info per user.
      */
     getAllLatestUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
+    
+    /**
+     * Set push alert settings
+     * 
+     * @param flag true to enable
+     */
+    setPushAlert(flag: boolean): AsyncCommandResult;
 
     /**
      * Create media downloader

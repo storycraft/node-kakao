@@ -113,13 +113,13 @@ export class TalkChannelSession implements ChannelSession {
     }
 
     async deleteChat(chat: ChatLogged) {
-        const status = (await this._session.request(
+        const { status } = (await this._session.request(
             'DELETEMSG',
             {
                 'chatId': this._channel.channelId,
                 'logId': chat.logId
             }
-        )).status;
+        ));
 
         return {
             success: status === KnownDataStatusCode.SUCCESS,
@@ -128,13 +128,13 @@ export class TalkChannelSession implements ChannelSession {
     }
     
     async markRead(chat: ChatLogged) {
-        const status = (await this._session.request(
+        const { status } = (await this._session.request(
             'NOTIREAD',
             {
                 'chatId': this._channel.channelId,
                 'watermark': chat.logId
             }
-        )).status;
+        ));
         return {
             success: status === KnownDataStatusCode.SUCCESS,
             status
@@ -156,6 +156,21 @@ export class TalkChannelSession implements ChannelSession {
             success: true,
             status: res.status,
             result: { ...res.meta }
+        };
+    }
+
+    async setPushAlert(flag: boolean): AsyncCommandResult {
+        const { status } = await this._session.request(
+            'UPDATECHAT',
+            {
+                'chatId': this._channel.channelId,
+                'pushAlert': flag
+            }
+        );
+
+        return {
+            success: status === KnownDataStatusCode.SUCCESS,
+            status
         };
     }
 

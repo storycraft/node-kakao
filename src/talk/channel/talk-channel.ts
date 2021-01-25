@@ -110,9 +110,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         
         this._channelSession = new TalkChannelSession(this, session);
         this._handler = new TalkChannelHandler(this, {
-            updateInfo: info => {
-                this._info = { ...this._info, ...info };
-            },
+            updateInfo: info => this._info = { ...this._info, ...info },
 
             updateUserInfo: (user, info) => {
                 const strId = user.userId.toString();
@@ -130,9 +128,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
             addUsers: (...user) => this.getLatestUserInfo(...user),
 
-            updateWatermark: (readerId, watermark) => {
-                this._watermarkMap.set(readerId.toString(), watermark);
-            }
+            updateWatermark: (readerId, watermark) => this._watermarkMap.set(readerId.toString(), watermark)
         });
 
         this._info = NormalChannelInfo.createPartial(info);
@@ -231,6 +227,15 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return res;
     }
 
+    async setPushAlert(flag: boolean) {
+        const res = await this._channelSession.setPushAlert(flag);
+
+        if (res.success) {
+            this._info = { ...this._info, pushAlert: flag };
+        }
+
+        return res;
+    }
     
     async chatON() {
         const res = await this._channelSession.chatON();
@@ -353,9 +358,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         this._openChannelSession = new TalkOpenChannelSession(this, session);
 
         const infoUpdater: InfoUpdater<OpenChannelInfo, OpenChannelUserInfo> = {
-            updateInfo: info => {
-                this._info = { ...this._info, ...info };
-            },
+            updateInfo: info => this._info = { ...this._info, ...info },
 
             updateUserInfo: (user, info) => {
                 const strId = user.userId.toString();
@@ -373,9 +376,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
             addUsers: (...user) => this.getLatestUserInfo(...user),
 
-            updateWatermark: (readerId, watermark) => {
-                this._watermarkMap.set(readerId.toString(), watermark);
-            }
+            updateWatermark: (readerId, watermark) => this._watermarkMap.set(readerId.toString(), watermark)
         };
 
         this._handler = new TalkChannelHandler(this, infoUpdater);
@@ -471,6 +472,16 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
         if (res.success) {
             this._info.metaMap[type] = res.result;
+        }
+
+        return res;
+    }
+
+    async setPushAlert(flag: boolean) {
+        const res = await this._channelSession.setPushAlert(flag);
+
+        if (res.success) {
+            this._info = { ...this._info, pushAlert: flag };
         }
 
         return res;

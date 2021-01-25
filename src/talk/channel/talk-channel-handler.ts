@@ -43,7 +43,7 @@ export interface InfoUpdater<T extends ChannelInfo = ChannelInfo, U extends AnyC
     updateUserInfo(user: ChannelUser, info?: Partial<U>): void;
 
     /**
-     * update users joined.
+     * Update users joined
      * 
      * @param user 
      */
@@ -148,6 +148,26 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 break;
             }
 
+            case 'DELMEM': {
+                // TODO
+                break;
+            }
+
+            case 'NEWMEM': {
+                // TODO
+                break;
+            }
+
+            case 'INVOICE': {
+                // TODO
+                break;
+            }
+
+            case 'SYNCDLMSG': {
+                // TODO
+                break;
+            }
+
             default: break;
         };
     }
@@ -169,7 +189,35 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
     }
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
-        
+        switch (method) {
+
+            case 'LINKKICKED': {
+                // TODO
+                break;
+            }
+
+            case 'SYNCMEMT': {
+                // TODO
+                break;
+            }
+
+            case 'SYNCLINKPF': {
+                // TODO
+                break;
+            }
+
+            case 'SYNCREWR': {
+                // TODO
+                break;
+            }
+
+            case 'RELAYEVENT': {
+                // TODO
+                break;
+            }
+
+            default: break;
+        }
     }
 
 }
