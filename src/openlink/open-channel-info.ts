@@ -24,7 +24,7 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
      */
     o: Long;
 
-    openLink: OpenLink | null;
+    openLink?: OpenLink;
 
 }
 
