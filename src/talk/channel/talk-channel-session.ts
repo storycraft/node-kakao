@@ -9,8 +9,9 @@ import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { ChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
-import { KnownChatType } from "../../chat/chat-type";
+import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
+import { MediaComponent } from "../../media/media";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
@@ -35,7 +36,12 @@ import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
+import { MediaDownloader } from "../media/media-downloader";
 import { TalkOpenLinkSession } from "../openlink/talk-openlink-session";
+import * as NetSocket from '../../network/socket/net-socket';
+import { GetTrailerRes } from "../../packet/chat/get-trailer";
+import { LocoSecureLayer } from "../../network/loco-secure-layer";
+import { newCryptoStore } from "../../crypto/crypto-store";
 
 /**
  * Default ChannelSession implementation
@@ -213,6 +219,24 @@ export class TalkChannelSession implements ChannelSession {
         const result = (res.members as NormalMemberStruct[]).map(member => structToChannelUserInfo(member));
 
         return { success: true, status: res.status, result };
+    }
+
+    async createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
+        const res = await this._session.request<GetTrailerRes>(
+            'GETTRAILER',
+            {
+                'k': media.key,
+                't': type
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        const socket = new LocoSecureLayer(
+            await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
+            newCryptoStore(this._session.configuration.locoPEMPublicKey));
+
+        return { status: res.status, success: true, result: new MediaDownloader(socket, this._session, this._channel, media) };
     }
 
 }

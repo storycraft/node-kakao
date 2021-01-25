@@ -13,6 +13,9 @@ import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./c
 import { ChannelMetaType } from "../packet/struct/channel";
 import { AnyChannelUserInfo } from "../user/channel-user-info";
 import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
+import { MediaDownloader } from "../talk/media/media-downloader";
+import { MediaComponent } from "../media/media";
+import { ChatType } from "../chat/chat-type";
 
 export interface ChannelTemplate {
 
@@ -91,6 +94,14 @@ export interface ChannelSession {
      */
     getAllLatestUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
 
+    /**
+     * Create media downloader
+     * 
+     * @param media
+     * @param type
+     */
+    createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader>;
+
 }
 
 /**
@@ -115,10 +126,11 @@ export interface ChannelManageSession {
    /**
     * Leave channel.
     * Perform LEAVE command.
-    * Returns last channel token on success.
     * 
     * @param channel Channel to leave.
     * @param block If true block channel to prevent inviting.
+    * 
+    * @returns last channel token on success.
     */
     leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;
 

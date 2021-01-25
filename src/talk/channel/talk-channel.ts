@@ -26,6 +26,8 @@ import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { structToChannelUserInfo, structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
+import { MediaComponent } from "../../media/media";
+import { ChatType } from "../../chat/chat-type";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -284,6 +286,10 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return infoRes;
     }
 
+    createMediaDownloader(media: MediaComponent, type: ChatType) {
+        return this._channelSession.createMediaDownloader(media, type);
+    }
+
     async updateAll(): AsyncCommandResult {
         const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;
@@ -532,6 +538,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     removeKicked(user: ChannelUser) {
         return this._openChannelSession.removeKicked(user);
+    }
+
+    createMediaDownloader(media: MediaComponent, type: ChatType) {
+        return this._channelSession.createMediaDownloader(media, type);
     }
 
     async updateAll(): AsyncCommandResult {

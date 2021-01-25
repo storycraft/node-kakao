@@ -31,7 +31,9 @@ export class LocoPacketDispatcher {
     }
 
     /**
-     * Send packet and returns response
+     * Send packet.
+     * 
+     * @returns response
      */
     sendPacket(packet: LocoPacket) {
         if (this._packetMap.has(packet.header.id)) throw `Packet#${packet.header.id} can conflict`;

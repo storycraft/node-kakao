@@ -33,7 +33,7 @@ export class LocoSecureLayer implements Stream {
         const packetBufferList = new ChunkedArrayBufferList();
 
         return {
-            [Symbol.asyncIterator](): AsyncIterator<ArrayBuffer> {
+            [Symbol.asyncIterator]() {
                 return this;
             },
 
@@ -96,14 +96,14 @@ export class LocoSecureLayer implements Stream {
     }
 
     /**
-     * Returns original stream
+     * @returns original stream
      */
     get stream() {
         return this._stream;
     }
 
     /**
-     * Returns true if handshake sent.
+     * @returns true if handshake sent.
      */
     get handshaked() {
         return this._handshaked;

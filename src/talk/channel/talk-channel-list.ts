@@ -75,8 +75,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * Returns true if list instance is managing channel.
      * @param channelId 
+     * 
+     * @returns true if list instance is managing channel.
      */
     contains(channelId: Long) {
         const strId = channelId.toString();
@@ -85,8 +86,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * Returns true if list instance is managing normal channel.
      * @param channelId 
+     * 
+     * @returns true if list instance is managing normal channel.
      */
     containsNormal(channelId: Long) {
         const strId = channelId.toString();
@@ -95,8 +97,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * Returns true if list instance is managing open channel.
      * @param channelId 
+     * 
+     * @returns true if list instance is managing open channel.
      */
     containsOpen(channelId: Long) {
         const strId = channelId.toString();

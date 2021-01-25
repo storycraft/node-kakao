@@ -29,7 +29,7 @@ export class NodeSocket implements Stream {
         const instance = this;
 
         return {
-            [Symbol.asyncIterator](): AsyncIterator<ArrayBuffer> {
+            [Symbol.asyncIterator]() {
                 return this;
             },
 

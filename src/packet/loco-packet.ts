@@ -29,8 +29,9 @@ export interface LocoPacketHeader {
 export interface LocoPacketDataCodec<T, R = T> {
 
     /**
-     *  Returns true if codec can decode data with supplied type.
      * @param dataType 
+     * 
+     * @returns true if codec can decode data with supplied type.
      */
     canDecode(dataType: number): boolean;
 

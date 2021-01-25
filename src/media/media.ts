@@ -9,3 +9,10 @@ export interface MediaComponent {
     key: string;
 
 }
+
+export interface SizedMediaComponent {
+
+    width: number;
+    height: number;
+
+}

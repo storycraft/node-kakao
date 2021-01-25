@@ -18,7 +18,7 @@ export interface Stream {
     /**
      * Try to read data from stream
      */
-    iterate(): AsyncIterable<ArrayBuffer>;
+    iterate(): AsyncIterableIterator<ArrayBuffer>;
 
     /**
      * Indicate current stream is ended or not

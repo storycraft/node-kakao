@@ -30,6 +30,8 @@ export interface TalkSession extends CommandSession {
 
     readonly clientUser: Readonly<ChannelUser>;
 
+    readonly configuration: Readonly<ClientConfig>;
+
 }
 
 /**
@@ -129,9 +131,9 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     }
 
     /**
-     * Returns true if client user.
-     * 
      * @param user Target user to compare
+     * 
+     * @returns true if client user.
      */
     isClientUser(user: ChannelUser) {
         return user.userId.equals(this._cilentUser.userId);
@@ -168,10 +170,17 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
      * Create proxy that can be used safely without exposing client
      */
     createSessionProxy(): TalkSession {
+        const instance = this;
+
         return {
             request: (method, data) => this.request(method, data),
+            
             get clientUser() {
-                return this.clientUser;
+                return instance.cilentUser;
+            },
+
+            get configuration() {
+                return instance.configProvider.configuration;
             }
         }
     }

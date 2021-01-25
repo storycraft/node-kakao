@@ -28,7 +28,7 @@ export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     decode(data: ArrayBuffer): DefaultRes {
         return Bson.deserialize(Buffer.from(data), {
             promoteLongs: false
-        });
+        }) as DefaultRes;
     },
 
     encode(data: DefaultReq): [number, ArrayBuffer] {
