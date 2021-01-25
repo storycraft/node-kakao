@@ -21,11 +21,11 @@ import { EventContext } from "../../event/event-context";
 import { InfoUpdater, TalkChannelHandler, TalkOpenChannelHandler } from "./talk-channel-handler";
 import { Long } from "bson";
 import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
-import { WrappedChannelUserInfo, WrappedOpenChannelUserInfo, WrappedOpenLinkChannelUserInfo } from "../../packet/struct/wrapped/user";
 import { TalkSession } from "../../client";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
+import { structToChannelUserInfo, structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -216,7 +216,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
                 const structList = result.m as NormalMemberStruct[];
                 structList.forEach(struct => {
-                    const wrapped = new WrappedChannelUserInfo(struct);
+                    const wrapped = structToChannelUserInfo(struct);
                     
                     userInfoMap.set(wrapped.userId.toString(), wrapped);
                 });
@@ -433,7 +433,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
                 const structList = result.m as OpenMemberStruct[];
                 structList.forEach(struct => {
-                    const wrapped = new WrappedOpenChannelUserInfo(struct);
+                    const wrapped = structToOpenChannelUserInfo(struct);
                     
                     userInfoMap.set(wrapped.userId.toString(), wrapped);
                 });
@@ -444,7 +444,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
             }
 
             if (result.olu) {
-                const wrapped = new WrappedOpenLinkChannelUserInfo(result.olu);
+                const wrapped = structToOpenLinkChannelUserInfo(result.olu);
                 this._userInfoMap.set(wrapped.userId.toString(), wrapped);
             }
         }

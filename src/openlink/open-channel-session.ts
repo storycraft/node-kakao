@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenChannelInfo } from "../channel/channel-info";
 import { ChatLogged } from "../chat/chat";
 import { AsyncCommandResult } from "../request/command-result";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
+import { OpenChannelInfo } from "./open-channel-info";
 
 
 /**

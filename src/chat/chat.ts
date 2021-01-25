@@ -26,13 +26,13 @@ export interface Chat {
     /**
      * Optional attachment json
      */
-    attachment?: string;
+    attachment?: Record<string, any>;
 
     /**
-     * Optional suppliment json.
+     * Optional supplement json.
      * Only used in Pluschat for extra components(quick reply, custom menus, e.t.c.) and cannot be sent.
      */
-    suppliment?: string;
+    supplement?: Record<string, any>;
 
 }
 

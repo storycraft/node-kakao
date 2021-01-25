@@ -26,12 +26,13 @@ import { WriteRes } from "../../packet/chat/write";
 import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
-import { WrappedChannelInfo, WrappedOpenChannelInfo } from "../../packet/struct/wrapped/channel";
-import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
-import { WrappedChannelUserInfo, WrappedOpenChannelUserInfo } from "../../packet/struct/wrapped/user";
+import { structToNormalChannelInfo, structToOpenChannelInfo } from "../../packet/struct/wrap/channel";
+import { structToChatlog } from "../../packet/struct/wrap/chat";
+import { structToChannelUserInfo, structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
+import { JsonUtil } from "../../util/json-util";
 
 /**
  * Default ChannelSession implementation
@@ -68,7 +69,7 @@ export class TalkChannelSession implements ChannelSession {
         };
 
         if (chat.attachment) {
-            data['extra'] = chat.attachment;
+            data['extra'] = JsonUtil.stringifyLoseless(chat.attachment);
         }
 
         const res = await this._session.request<WriteRes>('WRITE', data);
@@ -90,13 +91,13 @@ export class TalkChannelSession implements ChannelSession {
         };
 
         if (chat.attachment) {
-            data['extra'] = chat.attachment;
+            data['extra'] = JsonUtil.stringifyLoseless(chat.attachment);
         }
 
         const res = await this._session.request<ForwardRes>('FORWARD', data);
 
         if (res.status === KnownDataStatusCode.SUCCESS) {
-            return { success: true, status: res.status, result: new WrappedChatlog(res.chatLog) };
+            return { success: true, status: res.status, result: structToChatlog(res.chatLog) };
         } else {
             return { success: false, status: res.status };
         }
@@ -176,7 +177,7 @@ export class TalkChannelSession implements ChannelSession {
         return {
             success: true,
             status: res.status,
-            result: new WrappedChannelInfo(res.chatInfo as ChannelInfoStruct & NormalChannelInfoExtra)
+            result: structToNormalChannelInfo(res.chatInfo as ChannelInfoStruct & NormalChannelInfoExtra)
         };
     }
 
@@ -191,7 +192,7 @@ export class TalkChannelSession implements ChannelSession {
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
 
-        const result = (res.members as NormalMemberStruct[]).map(member => new WrappedChannelUserInfo(member));
+        const result = (res.members as NormalMemberStruct[]).map(member => structToChannelUserInfo(member));
 
         return { success: true, status: res.status, result };
     }
@@ -206,7 +207,7 @@ export class TalkChannelSession implements ChannelSession {
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
 
-        const result = (res.members as NormalMemberStruct[]).map(member => new WrappedChannelUserInfo(member));
+        const result = (res.members as NormalMemberStruct[]).map(member => structToChannelUserInfo(member));
 
         return { success: true, status: res.status, result };
     }
@@ -259,7 +260,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return {
             success: true,
             status: res.status,
-            result: new WrappedOpenChannelInfo(res.chatInfo as ChannelInfoStruct & OpenChannelInfoExtra)
+            result: structToOpenChannelInfo(res.chatInfo as ChannelInfoStruct & OpenChannelInfoExtra)
         };
     }
 
@@ -274,7 +275,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
         
-        const result = (res.members as OpenMemberStruct[]).map(member => new WrappedOpenChannelUserInfo(member));
+        const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
     }
@@ -289,7 +290,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
         
-        const result = (res.members as OpenMemberStruct[]).map(member => new WrappedOpenChannelUserInfo(member));
+        const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
     }
@@ -319,7 +320,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
         let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
-        if (res.chatRoom) result[1] = (new WrappedChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
+        if (res.chatRoom) result[1] = (structToNormalChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
 
         return { status: res.status, success: true, result };
     }
@@ -329,7 +330,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
         
         let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
-        if (res.chatRoom) result[1] = (new WrappedChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
+        if (res.chatRoom) result[1] = (structToNormalChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
 
         return { status: res.status, success: true, result };
     }

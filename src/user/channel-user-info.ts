@@ -56,6 +56,11 @@ export interface ChannelUserInfo extends AnyChannelUserInfo {
     countryIso: string;
 
     /**
+     * Account id
+     */
+    accountId: number;
+
+    /**
      * User status message
      */
     statusMessage: string;

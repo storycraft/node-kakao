@@ -94,12 +94,12 @@ export interface OpenLinkStruct {
     /**
      * Open channel cover
      */
-    oc: { t: OpenLinkType; co: { desc: string }; };
+    oc?: { t: OpenLinkType; co: { desc: string }; };
 
     /**
      * Open profile cover
      */
-    op: { desc: string; tags?: string[]; };
+    op?: { desc: string; tags?: string[]; };
 
 }
 

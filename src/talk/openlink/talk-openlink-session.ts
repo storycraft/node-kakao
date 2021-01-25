@@ -10,7 +10,7 @@ import { OpenLinkSession } from "../../openlink/open-link-session";
 import { JoinInfoRes } from "../../packet/chat/join-info";
 import { SyncLinkRes } from "../../packet/chat/sync-link";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { WrappedOpenLink, WrappedOpenLinkInfo } from "../../packet/struct/wrapped/openlink";
+import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { AsyncCommandResult } from "../../request/command-result";
 
 /**
@@ -34,7 +34,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
         
         const list: InformedOpenLink[] = res.ols.map(struct => {
-            return { openLink: new WrappedOpenLink(struct), info: new WrappedOpenLinkInfo(struct) };
+            return { openLink: structToOpenLink(struct), info: structToOpenLinkInfo(struct) };
         });
 
         this._lastLinkToken = res.ltk;
@@ -51,7 +51,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        const list: OpenLink[] = res.ols.map(struct => new WrappedOpenLink(struct));
+        const list: OpenLink[] = res.ols.map(struct => structToOpenLink(struct));
 
         return { status: res.status, success: true, result: list };
     }
@@ -66,7 +66,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        return { status: res.status, success: true, result: { openLink: new WrappedOpenLink(res.ol), info: new WrappedOpenLinkInfo(res.ol) } };
+        return { status: res.status, success: true, result: { openLink: structToOpenLink(res.ol), info: structToOpenLinkInfo(res.ol) } };
     }
 
     async deleteLink(link: OpenLinkComponent): AsyncCommandResult {

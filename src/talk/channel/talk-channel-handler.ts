@@ -14,7 +14,7 @@ import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
-import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
+import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelList } from "./talk-channel-list";
@@ -54,7 +54,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             
                 if (!this._channel.channelId.equals(msgData.chatId)) break;
     
-                const chatLog = new WrappedChatlog(msgData.chatLog);
+                const chatLog = structToChatlog(msgData.chatLog);
                 
                 this._callEvent(
                     parentCtx,
