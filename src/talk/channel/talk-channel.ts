@@ -247,6 +247,10 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
         return res;
     }
+
+    async syncChatList(endLogId: Long, startLogId?: Long) {
+        return this._channelSession.syncChatList(endLogId, startLogId);
+    }
     
     async chatON() {
         const res = await this._channelSession.chatON();
@@ -471,6 +475,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
     async inviteUsers(users: ChannelUser[]): AsyncCommandResult {
         // Cannot invite users to open channel
         return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
+    }
+
+    async syncChatList(endLogId: Long, startLogId?: Long) {
+        return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
     async markRead(chat: ChatLogged) {

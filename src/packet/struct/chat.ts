@@ -59,7 +59,7 @@ export interface ChatlogStruct {
     /**
      * Unknown
      */
-    msgId: number;
+    msgId: number | Long;
 
     /**
      * Previous log id (0 if first chat)

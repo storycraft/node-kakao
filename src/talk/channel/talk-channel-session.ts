@@ -42,6 +42,7 @@ import * as NetSocket from '../../network/socket/net-socket';
 import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto/crypto-store";
+import { SyncMsgRes } from "../../packet/chat/sync-msg";
 
 /**
  * Default ChannelSession implementation
@@ -249,6 +250,38 @@ export class TalkChannelSession implements ChannelSession {
         const result = (res.members as NormalMemberStruct[]).map(member => structToChannelUserInfo(member));
 
         return { success: true, status: res.status, result };
+    }
+
+    async syncChatList(endLogId: Long, startLogId: Long = Long.ZERO): AsyncCommandResult<Chatlog[]> {
+        const chatList: Chatlog[] = [];
+
+        let curLogId = startLogId;
+
+        while (true) {
+            const res = await this._session.request<SyncMsgRes>(
+                'SYNCMSG',
+                {
+                    'chatId': this._channel.channelId,
+                    'cur': curLogId,
+                    // Unknown
+                    'cnt': 0,
+                    'max': endLogId
+                }
+            );
+
+            if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+            if (res.isOK || !res.chatLogs) break;
+
+            if (res.chatLogs.length > 0) {
+                const list = res.chatLogs.map(structToChatlog);
+                chatList.push(...list);
+
+                curLogId = list[list.length - 1].logId;
+            }
+        }
+
+        return { status: KnownDataStatusCode.SUCCESS, success: true, result: chatList };
     }
 
     async createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {

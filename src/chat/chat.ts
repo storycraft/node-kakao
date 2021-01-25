@@ -71,7 +71,7 @@ export interface ChatWritten {
     /**
      * Unknown
      */
-    messageId: number;
+    messageId: number | Long;
 
 }
 

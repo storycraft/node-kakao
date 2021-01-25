@@ -107,6 +107,17 @@ export interface ChannelSession {
      * @param userList 
      */
     inviteUsers(userList: ChannelUser[]): AsyncCommandResult;
+    
+    /**
+     * Get every chats between startLogId and endLogId.
+     * Official client use to fill missing chats between last saved chats and last chat.
+     * 
+     * @param endLogId
+     * @param startLogId Omit this param if you don't know start chat logId.
+     * 
+     * @returns Chatlog array excluding startLogId and endLogId chat.
+     */
+    syncChatList(endLogId: Long, startLogId?: Long): AsyncCommandResult<Chatlog[]>;
 
     /**
      * Create media downloader
