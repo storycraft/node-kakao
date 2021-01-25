@@ -115,6 +115,29 @@ export interface OpenMemberStruct {
 
 }
 
+export interface OpenLinkKickedMemberStruct {
+
+    userId: Long;
+
+    nickName: string;
+
+    /**
+     * Profile image
+     */
+    pi: string;
+
+    /**
+     * Kicked channel
+     */
+    c: Long;
+
+    /**
+     * Unknown
+     */
+    dc: boolean;
+
+}
+
 export interface OpenLinkUserStruct {
 
     /**

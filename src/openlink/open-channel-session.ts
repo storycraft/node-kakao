@@ -10,6 +10,7 @@ import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";
 import { OpenLink } from "./open-link";
+import { OpenLinkKickedUserInfo } from "./open-link-user-info";
 
 
 /**
@@ -43,6 +44,12 @@ export interface OpenChannelSession {
      * @param channelUser 
      */
     getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]>;
+
+    /**
+     * Get kick list of this channel.
+     * @see OpenLinkSession.getKickList
+     */
+    getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]>;
 
     /**
      * Get latest channel openlink

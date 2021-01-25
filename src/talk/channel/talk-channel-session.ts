@@ -15,6 +15,7 @@ import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenLink } from "../../openlink/open-link";
+import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
@@ -299,6 +300,10 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
+    }
+
+    getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]> {
+        return this._linkSession.getKickList(this._channel);
     }
 
     async getLatestOpenLink(): AsyncCommandResult<OpenLink> {

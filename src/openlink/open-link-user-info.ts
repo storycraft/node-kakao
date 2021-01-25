@@ -4,9 +4,19 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenChannelUserInfo } from "../user/channel-user-info";
+import { Long } from "bson";
+import { DisplayUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenLinkComponent, OpenPrivilegeComponent, OpenTokenComponent } from "./open-link";
 import { OpenChatUserPerm, OpenProfileType } from "./open-link-type";
+
+export interface OpenLinkKickedUserInfo extends DisplayUserInfo {
+
+    /**
+     * Kicked channel id
+     */
+    kickedChannelId: Long;
+
+}
 
 export interface OpenLinkUserInfo extends OpenLinkComponent, OpenTokenComponent, OpenPrivilegeComponent {
 

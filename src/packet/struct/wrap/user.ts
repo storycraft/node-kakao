@@ -4,10 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkChannelUserInfo } from "../../../openlink/open-link-user-info";
+import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "../../../openlink/open-link-user-info";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../../user/channel-user-info";
 import { UserType } from "../../../user/user-type";
-import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from "../user";
+import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenLinkKickedMemberStruct, OpenMemberStruct } from "../user";
 
 export function structToChannelUserInfo(struct: NormalMemberStruct): ChannelUserInfo {
     return {
@@ -53,5 +53,14 @@ export function structToOpenLinkChannelUserInfo(struct: OpenLinkChannelUserStruc
         originalProfileURL: struct.opi,
         privilege: struct.pv,
         profileType: struct.ptp
+    }
+}
+
+export function structToOpenLinkKickedUserInfo(struct: OpenLinkKickedMemberStruct): OpenLinkKickedUserInfo {
+    return {
+        nickname: struct.nickName,
+        userId: struct.userId,
+        profileURL: struct.pi,
+        kickedChannelId: struct.c
     }
 }

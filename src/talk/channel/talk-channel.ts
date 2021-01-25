@@ -526,6 +526,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
+    getKickList() {
+        return this._openChannelSession.getKickList();
+    }
+
     async updateAll(): AsyncCommandResult {
         const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;
