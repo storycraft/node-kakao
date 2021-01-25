@@ -7,7 +7,7 @@
 import { Long } from "..";
 import { ChannelInfo } from "../channel/channel-info";
 import { OpenChannel } from "./open-channel";
-import { OpenTokenComponent } from "./open-link";
+import { OpenLink, OpenTokenComponent } from "./open-link";
 
 /** 
  * Open channel info
@@ -24,6 +24,8 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
      */
     o: Long;
 
+    openLink: OpenLink | null;
+
 }
 
 export namespace OpenChannelInfo {
@@ -35,6 +37,8 @@ export namespace OpenChannelInfo {
             openToken: 0,
 
             directChannel: false,
+
+            openLink: null,
 
             o: Long.ZERO
         }, info);

@@ -9,6 +9,7 @@ import { AsyncCommandResult } from "../request/command-result";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";
+import { OpenLink } from "./open-link";
 
 
 /**
@@ -42,5 +43,10 @@ export interface OpenChannelSession {
      * @param channelUser 
      */
     getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]>;
+
+    /**
+     * Get latest channel openlink
+     */
+    getLatestOpenLink(): AsyncCommandResult<OpenLink>;
 
 }

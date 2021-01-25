@@ -13,7 +13,7 @@ import { ChannelUserInfo, OpenChannelUserInfo, AnyChannelUserInfo } from "../../
 import { Chat, ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request/command-result";
 import { TalkChannelSession, TalkOpenChannelSession } from "./talk-channel-session";
-import { ChannelMetaType } from "../../packet/struct/channel";
+import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { ChannelEvents, OpenChannelEvents } from "../../event/events";
 import { Managed } from "../managed";
@@ -26,6 +26,8 @@ import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { structToChannelUserInfo, structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
+import { OpenLink } from "../../openlink/open-link";
+import { DeepReadonly } from "../../util/types";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -33,19 +35,29 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
      * Channel info snapshot.
      * Info object may change when some infos updated.
      */
-    readonly info: Readonly<ChannelInfo>;
+    readonly info: DeepReadonly<ChannelInfo>;
 
     /**
      * Get client user
      */
-    readonly clientUser: Readonly<ChannelUser>;
+    readonly clientUser: DeepReadonly<ChannelUser>;
+
+    /**
+     * Get channel name
+     */
+    getName(): string;
+
+    /**
+     * Get displayed channel name
+     */
+    getDisplayName(): string;
     
     /**
      * Get channel user info
      * 
      * @param user User to find
      */
-    getUserInfo(user: ChannelUser): Readonly<AnyChannelUserInfo> | undefined;
+    getUserInfo(user: ChannelUser): DeepReadonly<AnyChannelUserInfo> | undefined;
     
     /**
      * Get user info iterator
@@ -71,7 +83,7 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
      * 
      * @param chat 
      */
-    getReaders(chat: ChatLogged): Readonly<AnyChannelUserInfo>[];
+    getReaders(chat: ChatLogged): DeepReadonly<AnyChannelUserInfo>[];
 
     /**
      * Update channel info and every user info
@@ -118,7 +130,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return this._channel.channelId;
     }
 
-    get info(): Readonly<NormalChannelInfo> {
+    get info(): DeepReadonly<NormalChannelInfo> {
         return this._info;
     }
 
@@ -126,7 +138,16 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return this._userInfoMap.size;
     }
 
-    getUserInfo(user: ChannelUser): Readonly<ChannelUserInfo> | undefined {
+    getName() {
+        const nameMeta = this._info.metaMap[KnownChannelMetaType.TITLE];
+        return nameMeta && nameMeta.content || '';
+    }
+
+    getDisplayName() {
+        return this.getName() || this._info.displayUserList.map(user => user.nickname).join(', ');
+    }
+
+    getUserInfo(user: ChannelUser): DeepReadonly<ChannelUserInfo> | undefined {
         return this._userInfoMap.get(user.userId.toString());
     }
 
@@ -143,8 +164,8 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return count;
     }
 
-    getReaders(chat: ChatLogged): Readonly<ChannelUserInfo>[] {
-        let list: Readonly<ChannelUserInfo>[] = [];
+    getReaders(chat: ChatLogged): DeepReadonly<ChannelUserInfo>[] {
+        let list: ChannelUserInfo[] = [];
 
         for (const [ strId, userInfo ] of this._userInfoMap) {
             const watermark = this._watermarkMap.get(strId);
@@ -240,7 +261,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return infoRes;
     }
 
-    async getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
+    async getLatestUserInfo(...users: ChannelUser[]) {
         const infoRes = await this._channelSession.getLatestUserInfo(...users);
 
         if (infoRes.success) {
@@ -252,7 +273,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return infoRes;
     }
     
-    async getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
+    async getAllLatestUserInfo() {
         const infoRes = await this._channelSession.getAllLatestUserInfo();
 
         if (infoRes.success) {
@@ -286,6 +307,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     private _channelSession: TalkChannelSession;
     private _openChannelSession: TalkOpenChannelSession;
+
     private _handler: TalkChannelHandler;
     private _openHandler: TalkOpenChannelHandler;
 
@@ -331,7 +353,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._channel.linkId;
     }
 
-    get info(): Readonly<OpenChannelInfo> {
+    get info(): DeepReadonly<OpenChannelInfo> {
         return this._info;
     }
 
@@ -339,7 +361,16 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._userInfoMap.size;
     }
 
-    getUserInfo(user: ChannelUser): Readonly<OpenChannelUserInfo> | undefined {
+    getName() {
+        const nameMeta = this._info.metaMap[KnownChannelMetaType.TITLE];
+        return nameMeta && nameMeta.content || '';
+    }
+
+    getDisplayName() {
+        return this.getName() || this._info.openLink?.linkName || '';
+    }
+
+    getUserInfo(user: ChannelUser): DeepReadonly<OpenChannelUserInfo> | undefined {
         return this._userInfoMap.get(user.userId.toString());
     }
 
@@ -356,7 +387,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return count;
     }
 
-    getReaders(chat: ChatLogged): Readonly<OpenChannelUserInfo>[] {
+    getReaders(chat: ChatLogged): DeepReadonly<OpenChannelUserInfo>[] {
         let list: Readonly<OpenChannelUserInfo>[] = [];
 
         for (const [ strId, userInfo ] of this._userInfoMap) {
@@ -456,7 +487,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         const infoRes = await this._openChannelSession.getLatestChannelInfo();
 
         if (infoRes.success) {
-            this._info = OpenChannelInfo.createPartial(infoRes.result);
+            this._info = { ...this._info, ...infoRes.result };
         }
 
         return infoRes;
@@ -487,9 +518,22 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return infoRes;
     }
 
+    async getLatestOpenLink() {
+        const res = await this._openChannelSession.getLatestOpenLink();
+
+        if (res.success) {
+            this._info = { ...this._info, openLink: res.result };
+        }
+
+        return res;
+    }
+
     async updateAll(): AsyncCommandResult {
         const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;
+
+        const linkRes = await this.getLatestOpenLink();
+        if (!linkRes.success) return linkRes;
 
         return this.chatON();
     }

@@ -14,6 +14,7 @@ import { TalkSession } from "../../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
+import { OpenLink } from "../../openlink/open-link";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
@@ -33,6 +34,7 @@ import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
+import { TalkOpenLinkSession } from "../openlink/talk-openlink-session";
 
 /**
  * Default ChannelSession implementation
@@ -222,9 +224,13 @@ export class TalkOpenChannelSession implements OpenChannelSession {
     private _channel: OpenChannel;
     private _session: TalkSession;
 
+    private _linkSession: TalkOpenLinkSession;
+
     constructor(channel: OpenChannel, session: TalkSession) {
         this._channel = channel;
         this._session = session;
+
+        this._linkSession = new TalkOpenLinkSession(session);
     }
 
     get session() {
@@ -293,6 +299,16 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
+    }
+
+    async getLatestOpenLink(): AsyncCommandResult<OpenLink> {
+        const res = await this._linkSession.getOpenLink(this._channel);
+
+        if (res.success) {
+            return { success: true, status: res.status, result: res.result[0] };
+        } else {
+            return res;
+        }
     }
 
 };
