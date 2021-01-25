@@ -102,6 +102,13 @@ export interface ChannelSession {
     setPushAlert(flag: boolean): AsyncCommandResult;
 
     /**
+     * Invite users to channel.
+     * 
+     * @param userList 
+     */
+    inviteUsers(userList: ChannelUser[]): AsyncCommandResult;
+
+    /**
      * Create media downloader
      * 
      * @param media

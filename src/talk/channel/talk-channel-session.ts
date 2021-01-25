@@ -174,6 +174,21 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
+    async inviteUsers(users: ChannelUser[]): AsyncCommandResult {
+        const { status } = await this._session.request(
+            'ADDMEM',
+            {
+                'chatId': this._channel.channelId,
+                'memberIds': users.map(user => user.userId)
+            }
+        );
+
+        return {
+            success: status === KnownDataStatusCode.SUCCESS,
+            status
+        };
+    }
+
     async chatON(): AsyncCommandResult<ChatOnRoomRes> {
         const res = await this._session.request<ChatOnRoomRes>(
             'CHATONROOM',

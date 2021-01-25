@@ -28,6 +28,7 @@ import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { structToChannelUserInfo, structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { MediaComponent } from "../../media/media";
 import { ChatType } from "../../chat/chat-type";
+import { KnownDataStatusCode } from "../../packet/status-code";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -232,6 +233,16 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
         if (res.success) {
             this._info = { ...this._info, pushAlert: flag };
+        }
+
+        return res;
+    }
+
+    async inviteUsers(users: ChannelUser[]) {
+        const res = await this._channelSession.inviteUsers(users);
+
+        if (res.success) {
+            await this.getLatestUserInfo(...users);
         }
 
         return res;
@@ -455,6 +466,11 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     deleteChat(chat: ChatLogged) {
         return this._channelSession.deleteChat(chat);
+    }
+
+    async inviteUsers(users: ChannelUser[]): AsyncCommandResult {
+        // Cannot invite users to open channel
+        return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
     }
 
     async markRead(chat: ChatLogged) {
