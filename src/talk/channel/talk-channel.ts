@@ -114,6 +114,22 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
                 this._info = { ...this._info, ...info };
             },
 
+            updateUserInfo: (user, info) => {
+                const strId = user.userId.toString();
+
+                if (!info) {
+                    this._userInfoMap.delete(strId);
+                } else {
+                    const lastInfo = this._userInfoMap.get(strId);
+
+                    if (lastInfo) {
+                        this._userInfoMap.set(strId, {...lastInfo, ...info });
+                    }
+                }
+            },
+
+            addUsers: (...user) => this.getLatestUserInfo(...user),
+
             updateWatermark: (readerId, watermark) => {
                 this._watermarkMap.set(readerId.toString(), watermark);
             }
@@ -157,8 +173,13 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
     getReadCount(chat: ChatLogged): number {
         let count = 0;
-        for (const watermark of this._watermarkMap.values()) {
-            if (watermark.greaterThanOrEqual(chat.logId)) count++;
+        
+        if (this.userCount >= 100) return 0;
+        
+        for (const [ strId ] of this._userInfoMap) {
+            const watermark = this._watermarkMap.get(strId);
+
+            if (!watermark || watermark && watermark.greaterThanOrEqual(chat.logId)) count++;
         }
 
         return count;
@@ -166,6 +187,8 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
     getReaders(chat: ChatLogged): Readonly<ChannelUserInfo>[] {
         let list: ChannelUserInfo[] = [];
+
+        if (this.userCount >= 100) return [];
 
         for (const [ strId, userInfo ] of this._userInfoMap) {
             const watermark = this._watermarkMap.get(strId);
@@ -329,10 +352,26 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         this._channelSession = new TalkChannelSession(this, session);
         this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-        const infoUpdater: InfoUpdater<OpenChannelInfo> = {
+        const infoUpdater: InfoUpdater<OpenChannelInfo, OpenChannelUserInfo> = {
             updateInfo: info => {
                 this._info = { ...this._info, ...info };
             },
+
+            updateUserInfo: (user, info) => {
+                const strId = user.userId.toString();
+
+                if (!info) {
+                    this._userInfoMap.delete(strId);
+                } else {
+                    const lastInfo = this._userInfoMap.get(strId);
+
+                    if (lastInfo) {
+                        this._userInfoMap.set(strId, {...lastInfo, ...info });
+                    }
+                }
+            },
+
+            addUsers: (...user) => this.getLatestUserInfo(...user),
 
             updateWatermark: (readerId, watermark) => {
                 this._watermarkMap.set(readerId.toString(), watermark);

@@ -15,6 +15,9 @@ import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
+import { AsyncCommandResult } from "../../request/command-result";
+import { ChannelUser } from "../../user/channel-user";
+import { AnyChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelList } from "./talk-channel-list";
@@ -22,10 +25,37 @@ import { TalkChannelList } from "./talk-channel-list";
 /**
  * Update channel info from handler
  */
-export interface InfoUpdater<T extends ChannelInfo = ChannelInfo> {
+export interface InfoUpdater<T extends ChannelInfo = ChannelInfo, U extends AnyChannelUserInfo = AnyChannelUserInfo> {
     
-    updateInfo: (info: Partial<T>) => void;
-    updateWatermark: (readerId: Long, watermark: Long) => void;
+    /**
+     * Update channel info
+     * 
+     * @param info 
+     */
+    updateInfo(info: Partial<T>): void;
+
+    /**
+     * Update user info
+     * 
+     * @param user 
+     * @param info If not supplied the user get deleted
+     */
+    updateUserInfo(user: ChannelUser, info?: Partial<U>): void;
+
+    /**
+     * update users joined.
+     * 
+     * @param user 
+     */
+    addUsers(...user: ChannelUser[]): AsyncCommandResult<U[]>;
+
+    /**
+     * Update watermark
+     * 
+     * @param readerId 
+     * @param watermark 
+     */
+    updateWatermark(readerId: Long, watermark: Long): void;
 
 }
 
@@ -34,7 +64,7 @@ export interface InfoUpdater<T extends ChannelInfo = ChannelInfo> {
  */
 export class TalkChannelHandler implements Managed<ChannelEvents> {
 
-    constructor(private _channel: AnyTalkChannel, private _updater: InfoUpdater) {
+    constructor(private _channel: AnyTalkChannel, private _updater: InfoUpdater<ChannelInfo, AnyChannelUserInfo>) {
 
     }
 
@@ -129,7 +159,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
  */
 export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
-    constructor(private _channel: TalkOpenChannel, private _updater: InfoUpdater<OpenChannelInfo>) {
+    constructor(private _channel: TalkOpenChannel, private _updater: InfoUpdater<OpenChannelInfo, OpenChannelUserInfo>) {
 
     }
 
