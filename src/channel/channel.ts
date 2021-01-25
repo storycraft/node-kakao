@@ -5,7 +5,6 @@
  */
 
 import { Long } from "bson";
-import { OpenLinkComponent } from "../openlink/open-link";
 
 /**
  * Normal channel
@@ -17,13 +16,4 @@ export interface Channel {
      */
     readonly channelId: Long;
 
-}
-
-/**
- * Open chat channel
- */
-export interface OpenChannel extends Channel, OpenLinkComponent {
-
-    
-    
 }

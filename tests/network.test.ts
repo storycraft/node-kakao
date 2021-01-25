@@ -4,32 +4,14 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import * as NetSocket from '../src/network/socket/net-socket';
-import { LocoSecureLayer } from '../src/network/loco-secure-layer';
-import * as LocoEntry from '../src/network/util/loco-entrance';
-import { newCryptoStore } from '../src/crypto/crypto-store';
 import { DefaultConfiguration } from '../src/config/client-config-provider';
+import { TalkSessionFactory } from '../src/talk/network/talk-session-factory';
 
 describe('Network', () => {
-    it('Booking & Checkin', async () => {
-        const bookingStream = await NetSocket.createTLSSocket({
-            host: DefaultConfiguration.locoBookingURL,
-            port: DefaultConfiguration.locoBookingPort,
-            keepAlive: false
-        });
-    
-        const bookingRes = await LocoEntry.getBookingData(bookingStream, DefaultConfiguration);
-    
-        if (!bookingRes.success) throw `Booking failed status: ${bookingRes.status}`;
+    it('Create loco session', async () => {
+        const factory = new TalkSessionFactory();
 
-        const checkinStream = new LocoSecureLayer(await NetSocket.createTCPSocket({
-            host: bookingRes.result.ticket.lsl[0],
-            port: bookingRes.result.wifi.ports[0],
-            keepAlive: false
-        }), newCryptoStore(DefaultConfiguration.locoPEMPublicKey));
-        
-        const checkinRes = await LocoEntry.getCheckinData(checkinStream, DefaultConfiguration);
-        
-        if (!checkinRes.success) throw `Checkin failed status: ${checkinRes.status}`;
+        const res = await factory.createSession(DefaultConfiguration);
+        if (!res.success) throw `Session creation failed with status: ${res.status}`;
     });
 });

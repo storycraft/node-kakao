@@ -4,9 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelMetaMap, NormalChannelInfo, OpenChannelInfo } from "../../../channel/channel-info";
-import { Chatlog } from "../../../chat/chat";
+import { ChannelMetaMap, NormalChannelInfo } from "../../../channel/channel-info";
+import { OpenChannelInfo } from "../../../openlink/open-channel-info";
 import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../channel";
 import { WrappedChatlog } from "./chat";
 

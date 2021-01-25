@@ -83,6 +83,10 @@ declare interface OpenChannelEvent {
 
 }
 
+declare interface OpenLinkEvent {
+
+}
+
 declare interface ClientEvent {
 
     // 서버 변경시 호출
@@ -96,7 +100,8 @@ declare interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & ChannelListEvents;
+export type ClientEvents = ClientEvent & ChannelListEvents & OpenLinkEvents;
+export type OpenLinkEvents = OpenLinkEvent;
 export type ChannelListEvents = ChannelListEvent & OpenChannelEvents;
 export type ChannelEvents = ChannelEvent & ChatEvent;
 export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;

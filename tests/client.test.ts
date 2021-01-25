@@ -4,8 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { TalkClient } from '../src/client';
-
 describe('Client', () => {
     
     

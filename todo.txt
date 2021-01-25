@@ -1,7 +1,0 @@
-Network: 복잡성을 늘리는 불필요 관리기능 제거. 
-         패킷 객체를 writeJson와 readJson으로 다시 읽는/쓰는 것 제거 (ts interface 활용)
-
-Channel: ChannelManager 중심 관리 체계 제거.
-         ChatChannel의 애매한 상속 구조 제거
-
-Chat: Chat 클래스 하나로 통일후 type에 따라 wrapper등을 씌울수 있도록 유연하게 재작성

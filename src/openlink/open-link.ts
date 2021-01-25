@@ -45,26 +45,73 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
      */
     type: OpenLinkType;
 
+    /**
+     * Link name
+     */
     linkName: string;
 
+    /**
+     * Open token (Last update time)
+     */
     openToken: number;
-    
-    linkType: OpenLinkType;
 
+    /**
+     * OpenLink url
+     */
     linkURL: string;
 
+    /**
+     * Cover image url
+     */
     linkCoverURL: string;
 
+    /**
+     * Owner info
+     */
     linkOwner: OpenLinkUserInfo;
 
+    /**
+     * Link description
+     */
     description: string;
-    tagList: string[];
+    
+    /**
+     * Profile tag list
+     */
+    profileTagList: string[];
 
     searchable: boolean;
 
     createdAt: number;
 
     activated: boolean;
+
+}
+
+/**
+ * Extra openlink info
+ */
+export interface OpenLinkInfo {
+
+    /**
+     * Open profile dm limit
+     */
+    directLimit: number;
+
+    /**
+     * Open channel user limit
+     */
+    channelLimit: number;
+
+}
+
+/**
+ * OpenLink with more information
+ */
+export interface InformedOpenLink {
+
+    openLink: OpenLink;
+    info: OpenLinkInfo;
 
 }
 

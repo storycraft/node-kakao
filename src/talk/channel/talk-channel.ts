@@ -5,9 +5,9 @@
  */
 
 import { DefaultRes } from "../../packet/bson-data-codec";
-import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo } from "../../channel/channel-info";
-import { ChannelSession, OpenChannelSession } from "../../channel/channel-session";
+import { Channel } from "../../channel/channel";
+import { ChannelInfo, ChannelMeta, NormalChannelInfo } from "../../channel/channel-info";
+import { ChannelSession } from "../../channel/channel-session";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo, AnyChannelUserInfo } from "../../user/channel-user-info";
 import { Chat, ChatLogged } from "../../chat/chat";
@@ -23,6 +23,9 @@ import { Long } from "bson";
 import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
 import { WrappedChannelUserInfo, WrappedOpenChannelUserInfo, WrappedOpenLinkChannelUserInfo } from "../../packet/struct/wrapped/user";
 import { TalkSession } from "../../client";
+import { OpenChannelSession } from "../../openlink/open-channel-session";
+import { OpenChannel } from "../../openlink/open-channel";
+import { OpenChannelInfo } from "../../openlink/open-channel-info";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -45,9 +48,9 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
     getUserInfo(user: ChannelUser): Readonly<AnyChannelUserInfo> | undefined;
     
     /**
-     * Get every user info
+     * Get user info iterator
      */
-    getAllUserInfo(): Readonly<AnyChannelUserInfo>[];
+    getAllUserInfo(): IterableIterator<AnyChannelUserInfo>;
 
     /**
      * Get total user count
@@ -127,8 +130,8 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return this._userInfoMap.get(user.userId.toString());
     }
 
-    getAllUserInfo(): Readonly<ChannelUserInfo>[] {
-        return Array.from(this._userInfoMap.values());
+    getAllUserInfo() {
+        return this._userInfoMap.values();
     }
 
     getReadCount(chat: ChatLogged): number {
@@ -340,8 +343,8 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._userInfoMap.get(user.userId.toString());
     }
 
-    getAllUserInfo(): Readonly<OpenChannelUserInfo>[] {
-        return Array.from(this._userInfoMap.values());
+    getAllUserInfo() {
+        return this._userInfoMap.values();
     }
 
     getReadCount(chat: ChatLogged): number {

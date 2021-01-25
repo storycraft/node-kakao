@@ -5,12 +5,15 @@
  */
 
 import { Long } from "bson";
-import { Channel, OpenChannel } from "../../channel/channel";
-import { ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "../../channel/channel-info";
-import { ChannelManageSession, ChannelSession, ChannelTemplate, OpenChannelSession } from "../../channel/channel-session";
+import { Channel } from "../../channel/channel";
+import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from "../../channel/channel-info";
+import { ChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
+import { OpenChannel } from "../../openlink/open-channel";
+import { OpenChannelInfo } from "../../openlink/open-channel-info";
+import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";

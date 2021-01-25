@@ -9,9 +9,9 @@ import { Channel } from "./channel";
 import { AsyncCommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
-import { ChannelInfo, ChannelMeta, NormalChannelInfo, OpenChannelInfo, SetChannelMeta } from "./channel-info";
+import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
-import { AnyChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
+import { AnyChannelUserInfo } from "../user/channel-user-info";
 import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 
 export interface ChannelTemplate {
@@ -121,39 +121,5 @@ export interface ChannelManageSession {
     * @param block If true block channel to prevent inviting.
     */
     leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;
-
-}
-
-/**
- * Classes which provides openchannel session operations should implement this.
- */
-export interface OpenChannelSession {
-
-    /**
-     * Mark every chat as read until this chat.
-     * @param chat 
-     */
-    markRead(chat: ChatLogged): AsyncCommandResult;
-
-    /**
-     * Get latest open channel info
-     */
-    getLatestChannelInfo(): AsyncCommandResult<OpenChannelInfo>;
-
-    /**
-     * Get latest detailed user info.
-     * @see ChannelSession.getLatestUserInfo
-     * 
-     * @param channelUser 
-     */
-    getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]>;
-    
-    /**
-     * Get every latest user info.
-     * @see ChannelSession.getAllLatestUserInfo
-     * 
-     * @param channelUser 
-     */
-    getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]>;
 
 }

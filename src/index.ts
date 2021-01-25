@@ -53,9 +53,9 @@ export * from './talk/chat_old/option/chat-option';
 export * from './feed/feed-type';
 export * from './voip/voip-type';
 
-export * from './talk/media/media-download-interface';
-export * from './talk/media/media-upload-interface';
-export * from './talk/media/media-manager';
+export * from './talk/media_old/media-download-interface';
+export * from './talk/media_old/media-upload-interface';
+export * from './talk/media_old/media-manager';
 
 export * from './talk/chat_old/attachment/chat-attachment';
 export * from './talk/chat_old/attachment/sharp-attachment';

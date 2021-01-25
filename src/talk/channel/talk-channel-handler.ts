@@ -5,16 +5,16 @@
  */
 
 import { Long } from "bson";
-import { ChannelInfo, OpenChannelInfo, SetChannelMeta } from "../../channel/channel-info";
+import { ChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, OpenChannelEvents } from "../../event/events";
+import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
 import { WrappedChatlog } from "../../packet/struct/wrapped/chat";
-import { ChannelUser } from "../../user/channel-user";
 import { Managed } from "../managed";
 import { AnyTalkChannel, TalkOpenChannel } from "./talk-channel";
 import { TalkChannelList } from "./talk-channel-list";

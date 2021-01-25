@@ -100,6 +100,4 @@ export interface ChatOnRoomRes {
      */
     msr?: Long;
 
-
-
 }

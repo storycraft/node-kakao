@@ -161,6 +161,8 @@ export interface OpenLinkUserStruct {
 
 }
 
-export interface OpenLinkChannelUserStruct extends ChannelUser, OpenLinkUserStruct {
+export interface OpenLinkChannelUserStruct extends OpenLinkUserStruct {
+
+    userId: Long;
 
 }

@@ -21,6 +21,7 @@ import { ClientEvents } from "./event/events";
 import { KickoutRes } from "./packet/chat/kickout";
 import { EventContext } from "./event/event-context";
 import { ClientStatus } from "./client-status";
+import { OpenLinkService } from "./talk/openlink/open-link-service";
 
 /**
  * Talk client session with client user
@@ -49,6 +50,8 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private _channelList: TalkChannelList;
 
+    private _openLink: OpenLinkService;
+
     constructor(config: Partial<ClientConfig> = {}, private _sessionFactory: SessionFactory = new TalkSessionFactory()) {
         super();
 
@@ -60,6 +63,8 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
         this._cilentUser = { userId: Long.ZERO };
+
+        this._openLink = new OpenLinkService(this.createSessionProxy());
     }
 
     get configProvider() {
@@ -78,6 +83,15 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         return this._cilentUser;
     }
 
+    get openLink() {
+        if (!this.logon) throw 'Cannot access without logging in';
+
+        return this._openLink;
+    }
+
+    /**
+     * true if session created
+     */
     get logon() {
         return this._session != null;
     }
@@ -102,8 +116,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         this.addPingHandler();
         
-        this._channelList = await TalkChannelList.initialize(this.createSessionProxy(), loginRes.result.channelList)
         this._cilentUser = { userId: loginRes.result.userId };
+        
+        this._channelList = await TalkChannelList.initialize(this.createSessionProxy(), loginRes.result.channelList);
+        await this._openLink.updateAll();
 
         return { status: loginRes.status, success: true, result: loginRes.result };
     }

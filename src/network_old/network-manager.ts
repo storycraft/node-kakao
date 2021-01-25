@@ -16,8 +16,8 @@ import { PacketGetConfReq, PacketGetConfRes } from "../packet_old/booking/packet
 import { PacketBuyCallServerRes, PacketBuyCallServerReq } from "../packet_old/checkin/packet-buy-call-server";
 import { Long } from "bson";
 import { HostData } from "./host-data";
-import { MediaUploadInterface } from "../talk/media/media-upload-interface";
-import { MediaDownloadInterface } from "../talk/media/media-download-interface";
+import { MediaUploadInterface } from "../talk/media_old/media-upload-interface";
+import { MediaDownloadInterface } from "../talk/media_old/media-download-interface";
 import { ClientConfigProvider } from "../config/client-config-provider_old";
 import { LocoPacketDispatcher } from "../network/loco-packet-dispatcher";
 import { NodeSocket } from "../network/socket/node-net-socket";

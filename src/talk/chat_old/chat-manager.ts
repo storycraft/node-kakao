@@ -12,7 +12,7 @@ import { PacketDeleteChatRes, PacketDeleteChatReq } from "../../packet_old/packe
 import { Chat, TypeMap } from "./chat";
 import { PacketSyncMessageReq, PacketSyncMessageRes } from "../../packet_old/packet-sync-message";
 import { PacketMultiChatlogReq, PacketMultiChatlogRes } from "../../packet_old/packet-multi-chatlog";
-import { MediaManager } from "../media/media-manager";
+import { MediaManager } from "../media_old/media-manager";
 import { ChatChannel } from "../channel_old/chat-channel";
 import { ChatBuilder } from "./chat-builder";
 import { JsonUtil } from "../../util/json-util";

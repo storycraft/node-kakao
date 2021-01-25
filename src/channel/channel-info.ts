@@ -6,9 +6,8 @@
 
 import { Long } from "bson";
 import { Chatlog } from "../chat/chat";
-import { OpenTokenComponent } from "../openlink/open-link";
-import { DisplayUserInfo, AnyChannelUserInfo } from "../user/channel-user-info";
-import { Channel, OpenChannel } from "./channel";
+import { DisplayUserInfo } from "../user/channel-user-info";
+import { Channel } from "./channel";
 import { ChannelType } from "./channel-type";
 
 export interface ChannelMeta {
@@ -130,39 +129,6 @@ export namespace NormalChannelInfo {
         return Object.assign({
             ...ChannelInfo.createPartial(info),
             joinTime: 0,
-        }, info);
-    }
-
-}
-
-/** 
- * Open channel info
- */
-export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComponent {
-
-    /**
-     * true if direct channel
-     */
-    directChannel: boolean;
-
-    /**
-     * Unknown
-     */
-    o: Long;
-
-}
-
-export namespace OpenChannelInfo {
-
-    export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {
-        return Object.assign({
-            ...ChannelInfo.createPartial(info),
-            linkId: Long.ZERO,
-            openToken: 0,
-
-            directChannel: false,
-
-            o: Long.ZERO
         }, info);
     }
 
