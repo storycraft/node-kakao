@@ -47,9 +47,18 @@ export interface OpenChannelSession {
 
     /**
      * Get kick list of this channel.
+     * 
      * @see OpenLinkSession.getKickList
      */
     getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]>;
+
+    /**
+     * Remove user from kick list.
+     * @see OpenLinkSession.removeKicked
+     * 
+     * @param user 
+     */
+    removeKicked(user: ChannelUser): AsyncCommandResult;
 
     /**
      * Get latest channel openlink

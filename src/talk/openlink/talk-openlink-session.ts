@@ -7,7 +7,7 @@
 import { TalkSession } from "../../client";
 import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink/open-link";
 import { OpenLinkSession } from "../../openlink/open-link-session";
-import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
+import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { JoinInfoRes } from "../../packet/chat/join-info";
 import { KLSyncRes } from "../../packet/chat/kl-sync";
 import { SyncLinkRes } from "../../packet/chat/sync-link";
@@ -82,6 +82,19 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
         return { status: res.status, success: true, result: res.kickMembers.map(structToOpenLinkKickedUserInfo) };
+    }
+
+    async removeKicked(link: OpenLinkComponent, user: OpenLinkKickedUser): AsyncCommandResult {
+        const res = await this._session.request(
+            'KLDELITEM',
+            {
+                'li': link.linkId,
+                'c': user.kickedChannelId,
+                'kid': user.userId
+            }
+        );
+        
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
     async deleteLink(link: OpenLinkComponent): AsyncCommandResult {

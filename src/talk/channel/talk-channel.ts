@@ -530,6 +530,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._openChannelSession.getKickList();
     }
 
+    removeKicked(user: ChannelUser) {
+        return this._openChannelSession.removeKicked(user);
+    }
+
     async updateAll(): AsyncCommandResult {
         const infoRes = await this.getLatestChannelInfo();
         if (!infoRes.success) return infoRes;

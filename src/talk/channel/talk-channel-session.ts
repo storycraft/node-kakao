@@ -306,6 +306,10 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return this._linkSession.getKickList(this._channel);
     }
 
+    removeKicked(user: ChannelUser): AsyncCommandResult {
+        return this._linkSession.removeKicked(this._channel, { ...user, kickedChannelId: this._channel.channelId })
+    }
+
     async getLatestOpenLink(): AsyncCommandResult<OpenLink> {
         const res = await this._linkSession.getOpenLink(this._channel);
 

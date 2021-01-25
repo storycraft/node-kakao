@@ -6,7 +6,7 @@
 
 import { AsyncCommandResult } from "../request/command-result";
 import { InformedOpenLink, OpenLinkComponent, OpenLink } from "./open-link";
-import { OpenLinkKickedUserInfo } from "./open-link-user-info";
+import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "./open-link-user-info";
 
 export interface OpenLinkSession {
 
@@ -39,7 +39,16 @@ export interface OpenLinkSession {
     getKickList(link: OpenLinkComponent): AsyncCommandResult<OpenLinkKickedUserInfo[]>;
 
     /**
+     * Remove user from kick list.
+     * Require manage permission otherwise the request fail.
+     * 
+     * @param link
+     */
+    removeKicked(link: OpenLinkComponent, kickedUser: OpenLinkKickedUser): AsyncCommandResult;
+
+    /**
      * Delete openlink.
+     * Can only delete owned link.
      * 
      * @param component openlink to delete
      */

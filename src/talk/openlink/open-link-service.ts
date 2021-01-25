@@ -7,6 +7,7 @@
 import { TalkSession } from "../../client";
 import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink/open-link";
 import { OpenLinkSession } from "../../openlink/open-link-session";
+import { OpenLinkKickedUserInfo, OpenLinkKickedUser } from "../../openlink/open-link-user-info";
 import { AsyncCommandResult } from "../../request/command-result";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 
@@ -52,6 +53,14 @@ export class OpenLinkService implements OpenLinkSession {
 
     getJoinInfo(linkURL: string, referer?: string) {
         return this._session.getJoinInfo(linkURL, referer);
+    }
+
+    getKickList(link: OpenLinkComponent) {
+        return this._session.getKickList(link);
+    }
+
+    removeKicked(link: OpenLinkComponent, kickedUser: OpenLinkKickedUser) {
+        return this._session.removeKicked(link, kickedUser);
     }
 
     async deleteLink(link: OpenLinkComponent) {
