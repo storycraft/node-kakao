@@ -8,10 +8,10 @@
  * Read / write stream
  */
 export interface Stream {
-    
+
     /**
      * Write data
-     * @param data 
+     * @param data
      */
     write(data: ArrayBuffer): void;
 

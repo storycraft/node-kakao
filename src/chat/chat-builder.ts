@@ -20,7 +20,7 @@ export class ChatBuilder {
 
     /**
      * Set chat text
-     * @param text 
+     * @param text
      */
     text(text: string): this {
         this._text = text;
@@ -30,7 +30,7 @@ export class ChatBuilder {
 
     /**
      * Set json attachment
-     * @param attachment 
+     * @param attachment
      */
     attachment(attachment: Record<string, any>): this {
         this._attachment = attachment;

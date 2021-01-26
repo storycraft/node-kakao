@@ -20,7 +20,7 @@ export namespace OpenRecommend {
         pageReferrer: string;
 
     }
-    
+
     export interface LinkItem extends StructBase {
 
         linkName: string;
@@ -41,7 +41,7 @@ export namespace OpenRecommend {
 
         pageReferrer: string;
     }
-    
+
     export interface TagList extends StructBase {
 
         title: string;
@@ -56,7 +56,7 @@ export namespace OpenRecommend {
             tagName: 'tn',
             backgroundColor: 'bgColor',
             pageReferrer: 'apr'
-    
+
         }
 
         export const MAPPER = new ObjectMapper(Mappings);
@@ -71,9 +71,9 @@ export namespace OpenRecommend {
     }
 
 
-    
+
     export namespace LinkItem {
-        
+
         export const Mappings = {
 
             linkName: 'ln',
@@ -91,7 +91,7 @@ export namespace OpenRecommend {
             reactCount: 'rc',
 
             pageReferrer: 'apr'
-    
+
         }
 
         export const MAPPER = new ObjectMapper(Mappings);
@@ -104,17 +104,17 @@ export namespace OpenRecommend {
 
             title: 'title',
             items: 'items'
-    
+
         }
 
         export const ConvertMap = {
 
             items: new Converter.Array(TagItem.Mappings)
-    
+
         }
-    
+
         export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
-        
+
     }
 
     export namespace LinkList {
@@ -123,17 +123,17 @@ export namespace OpenRecommend {
 
             title: 'title',
             items: 'items'
-    
+
         }
 
         export const ConvertMap = {
 
             items: new Converter.Array(LinkItem.Mappings)
-    
+
         }
-    
+
         export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
-        
+
     }
 
 }

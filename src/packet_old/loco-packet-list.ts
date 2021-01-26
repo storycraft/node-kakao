@@ -133,7 +133,7 @@ export namespace LocoPacketList {
         requestPacketMap.set('GETMOMETA', PacketGetChannelBoardMetaReq);
 
         requestPacketMap.set('SYNCLINK', PacketSyncLinkReq);
-        
+
         requestPacketMap.set('REWRITE', PacketRewriteReq);
 
         requestPacketMap.set('CREATE', PacketCreateChannelReq);

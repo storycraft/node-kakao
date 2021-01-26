@@ -11,11 +11,11 @@ export enum WebApiStatusCode {
     SUCCESS = 0,
     INVALID_SESSION = -950,
     OPERATION_DENIED = -500
-    
+
 }
 
 export interface WebApiStruct extends StructBase {
-    
+
     status: WebApiStatusCode | number;
 
 }

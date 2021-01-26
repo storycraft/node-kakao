@@ -38,7 +38,7 @@ export class LocoPacketCodec {
         for (let i = 0; i < nameLen; i++) {
             const code = packet.header.method.charCodeAt(i);
 
-            if (code > 0xff) throw 'Invalid ASCII code at method string';
+            if (code > 0xff) throw new Error('Invalid ASCII code at method string');
             nameView.setUint8(i, code);
         }
 
@@ -53,7 +53,7 @@ export class LocoPacketCodec {
         const instance = this;
 
         const iterator = this._stream.iterate();
-        
+
         const headerBufferList = new ChunkedArrayBufferList();
         const packetBufferList = new ChunkedArrayBufferList();
 
@@ -70,7 +70,7 @@ export class LocoPacketCodec {
                 if (headerBufferList.byteLength < 22) {
                     for await (const data of iterator) {
                         headerBufferList.append(data);
-    
+
                         if (headerBufferList.byteLength >= 22) break;
                     }
 
@@ -99,7 +99,7 @@ export class LocoPacketCodec {
                 if (packetBufferList.byteLength < dataSize) {
                     for await (const data of iterator) {
                         packetBufferList.append(data);
-    
+
                         if (packetBufferList.byteLength >= dataSize) break;
                     }
 
@@ -107,7 +107,7 @@ export class LocoPacketCodec {
                         return { done: true, value: null };
                     }
                 }
-                
+
                 const dataBuffer = packetBufferList.toBuffer();
 
                 if (dataBuffer.byteLength > dataSize) {
@@ -125,5 +125,5 @@ export class LocoPacketCodec {
             }
         };
     }
-    
+
 }

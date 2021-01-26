@@ -36,7 +36,7 @@ export class PacketSetStatusRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
     }
 
 }

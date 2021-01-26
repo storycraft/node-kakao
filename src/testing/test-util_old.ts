@@ -21,15 +21,15 @@ export namespace TestUtil {
         constructor() {
             this.reason = LocoKickoutType.UNKNOWN;
         }
-    
+
         onDisconnected(): void {
             console.log(`!! Disconnected !! code: ${this.reason}(${LocoKickoutType[this.reason]})`);
         }
-    
+
         onRequest(packetId: number, packet: LocoRequestPacket): void {
             console.log(`${packetId} | ${packet.PacketName} <- ${Util.inspect(packet, false, 4, true)}`);
         }
-        
+
         onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
             if (packet instanceof PacketKickoutRes) {
                 this.reason = (packet as PacketKickoutRes).Reason;
@@ -37,7 +37,7 @@ export namespace TestUtil {
 
             console.log(`${packetId} | ${packet.PacketName} -> ${Util.inspect(packet, false, 4, true)}`);
         }
-    
+
     }
 
     export class FilteredHandler extends VerboseHandler {
@@ -47,7 +47,7 @@ export namespace TestUtil {
         ) {
             super();
         }
-        
+
         onRequest(packetId: number, packet: LocoRequestPacket) {
             if (packet.PacketName.match(this.filter) || packet.PacketName === 'KICKOUT') {
                 super.onRequest(packetId, packet);
@@ -68,7 +68,7 @@ export namespace TestUtil {
             private oldHandler: LocoPacketHandler,
             private hook: LocoPacketHandler
             ) {
-    
+
         }
 
         onDisconnected(): void {
@@ -76,16 +76,16 @@ export namespace TestUtil {
 
             this.oldHandler.onDisconnected();
         }
-    
+
         onRequest(packetId: number, packet: LocoRequestPacket): void {
             this.hook.onRequest(packetId, packet);
-    
+
             this.oldHandler.onRequest(packetId, packet);
         }
-        
+
         onResponse(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
             this.hook.onResponse(packetId, packet, reqPacket);
-            
+
             this.oldHandler.onResponse(packetId, packet, reqPacket);
         }
 

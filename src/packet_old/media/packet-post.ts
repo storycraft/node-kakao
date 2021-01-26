@@ -11,7 +11,7 @@ import { LocoBsonResponsePacket } from "../loco-bson-packet";
 import { MediaRequestBasePacket } from "./media-request-base-packet";
 
 export class PacketPostReq extends MediaRequestBasePacket {
-    
+
     constructor(
         public Key: string = '',
         public Size: Long = Long.ZERO,

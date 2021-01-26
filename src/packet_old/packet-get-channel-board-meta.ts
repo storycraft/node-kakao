@@ -11,7 +11,7 @@ import { Serializer } from "json-proxy-mapper";
  */
 
 export class PacketGetChannelBoardMetaReq extends LocoBsonRequestPacket {
-    
+
     constructor(
         public ChannelId: Long = Long.ZERO,
         public MetaTypeList: ChannelBoardMetaType[] = []

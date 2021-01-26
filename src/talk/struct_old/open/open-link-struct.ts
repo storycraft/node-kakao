@@ -17,11 +17,11 @@ export interface CommonOpenMemberStruct {
 
     linkId?: Long;
     openToken: number;
-    
+
 }
 
 export interface OpenKickedMemberStruct extends BaseMemberStruct {
-    
+
     kickedChannelId: Long;
     dc: boolean;
 
@@ -40,7 +40,7 @@ export namespace OpenKickedMemberStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings);
-    
+
 }
 
 export interface OpenMemberStruct extends BaseChatMemberStruct, CommonOpenMemberStruct {
@@ -65,7 +65,7 @@ export namespace OpenMemberStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings);
-    
+
 }
 
 export interface OpenLinkMemberStruct extends OpenMemberStruct {
@@ -95,7 +95,7 @@ export namespace OpenLinkMemberStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings);
-    
+
 }
 
 export enum OpenLinkTagType {
@@ -140,7 +140,7 @@ export namespace OpenLinkTagList {
     }
 
     export const ConvertMap = {
-        
+
         tags: new Converter.Array(OpenLinkTag.Mappings)
 
     }
@@ -203,7 +203,7 @@ export namespace OpenLinkStruct {
         privilege: 'pv',
         owner: 'olu',
         description: 'desc',
-        
+
         canSearchLink: 'sc',
 
         tagList: 'omt'
@@ -218,7 +218,7 @@ export namespace OpenLinkStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
-    
+
 }
 
 export enum LinkReactionType {

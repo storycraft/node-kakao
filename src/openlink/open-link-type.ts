@@ -35,5 +35,5 @@ export enum OpenChannelType {
     UNKNOWN = 0,
     DIRECT = 1,
     GROUP = 2
-    
+
 }

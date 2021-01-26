@@ -12,7 +12,7 @@ import { UserInfo } from "../../user_old/chat-user";
  */
 
 export interface ChatAttachment {
-    
+
     readAttachment(rawJson: any): void;
 
     toJsonAttachment(): any;
@@ -50,13 +50,13 @@ export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
         public ImageURL: string = '',
         public Size: Long = Long.ZERO,
         public MediaType: string = '',
-        
+
         public ThumbnailURL: string = '',
 
         public ThumbnailWidth: number = -1,
         public ThumbnailHeight: number = -1,
         ) {
-            
+
     }
 
     get RequiredMessageType() {
@@ -77,10 +77,10 @@ export class PhotoAttachment implements ChatAttachment, MediaHasThumbnail {
         this.ThumbnailURL = rawJson['thumbnailUrl'];
 
         this.MediaType = rawJson['mt'];
-        
+
         this.ThumbnailWidth = rawJson['thumbnailWidth'];
         this.ThumbnailHeight = rawJson['thumbnailHeight'];
-        
+
         this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
 
@@ -132,13 +132,13 @@ export class MultiPhotoAttachment implements ChatAttachment {
         public HeightList: number[] = [],
         public MediaTypeList: string[] = [],
         public ImageURLList: string[] = [],
-        
+
         public ThumbnailURLList: string[] = [],
 
         public ThumbnailWidthList: number[] = [],
         public ThumbnailHeightList: number[] = [],
         ) {
-            
+
     }
 
     get RequiredMessageType() {
@@ -155,10 +155,10 @@ export class MultiPhotoAttachment implements ChatAttachment {
         if (rawJson['thumbnailUrls']) this.ThumbnailURLList = rawJson['thumbnailUrls'];
 
         if (rawJson['mtl']) this.MediaTypeList = rawJson['mtl'];
-        
+
         if (rawJson['thumbnailWidths']) this.ThumbnailWidthList = rawJson['thumbnailWidths'];
         if (rawJson['thumbnailHeights']) this.ThumbnailHeightList = rawJson['thumbnailHeights'];
-        
+
         if (rawJson['sl']) this.SizeList = rawJson['sl'];
     }
 
@@ -186,12 +186,12 @@ export class VideoAttachment implements ChatAttachment, MediaHasThumbnail {
         public Width: number = 0,
         public Height: number = 0,
         public Duration: number = 0,
-         
+
         public VideoURL: string = '',
-    
+
         public Size: Long = Long.ZERO,
         ) {
-            
+
     }
 
     get RequiredMessageType() {
@@ -208,9 +208,9 @@ export class VideoAttachment implements ChatAttachment, MediaHasThumbnail {
         this.Width = rawJson['w'];
         this.Height = rawJson['h'];
         this.Duration = rawJson['d'];
-        
+
         this.VideoURL = rawJson['url'];
-        
+
         this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
 
@@ -247,7 +247,7 @@ export class FileAttachment implements ChatAttachment, MediaAttachment {
         public Size: Long = Long.ZERO,
         public Expire: Long = Long.ZERO
     ) {
-        
+
     }
 
     get RequiredMessageType() {
@@ -259,11 +259,11 @@ export class FileAttachment implements ChatAttachment, MediaAttachment {
 
         this.FileURL = rawJson['url'];
         this.Name = rawJson['name'];
-        
+
         this.Size = JsonUtil.readLong(rawJson['size'] || rawJson['s']);
         this.Expire = JsonUtil.readLong(rawJson['expire']);
     }
-    
+
     toJsonAttachment() {
         let obj: any = {
             'url': this.FileURL,
@@ -297,7 +297,7 @@ export class AudioAttachment implements ChatAttachment, MediaAttachment {
         public AudioURL: string = '',
         public Size: Long = Long.ZERO
     ) {
-        
+
     }
 
     get RequiredMessageType() {
@@ -308,10 +308,10 @@ export class AudioAttachment implements ChatAttachment, MediaAttachment {
         this.KeyPath = rawJson['tk'];
 
         this.AudioURL = rawJson['url'];
-        
+
         this.Size = JsonUtil.readLong(rawJson['s'] || rawJson['size']);
     }
-    
+
     toJsonAttachment() {
         let obj: any = {
             'url': this.AudioURL,
@@ -345,7 +345,7 @@ export class EmoticonAttachment implements ChatAttachment {
         public Height: number = -1,
         public Description: string = '',
     ) {
-        
+
     }
 
     get RequiredMessageType(): ChatType {
@@ -414,7 +414,7 @@ export class LongTextAttachment implements ChatAttachment, MediaAttachment {
         public Size: Long = Long.ZERO,
         public TextOmitted: boolean = false
     ) {
-        
+
     }
 
     get RequiredMessageType() {
@@ -493,13 +493,13 @@ export class MapAttachment implements ChatAttachment {
 }
 
 export class MentionContentList implements AttachmentContent {
-    
+
     constructor(
         public UserId: Long = Long.ZERO,
         public Length: number = 0,
         public IndexList: number[] = []
     ) {
-        
+
     }
 
     readRawContent(rawData: any): void {
@@ -527,11 +527,11 @@ export interface ChatContent {
 }
 
 export class ChatMention implements ChatContent {
-    
+
     constructor(
         public Info: UserInfo
     ) {
-        
+
     }
 
     get ContentType() {

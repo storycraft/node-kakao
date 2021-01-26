@@ -27,7 +27,7 @@ export class PacketJoinInfoReq extends LocoBsonRequestPacket {
             'ref': this.LinkRef
         };
     }
-    
+
 }
 
 export class PacketJoinInfoRes extends LocoBsonResponsePacket {

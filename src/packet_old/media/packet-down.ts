@@ -15,7 +15,7 @@ export class PacketDownReq extends MediaRequestBasePacket {
         public Offset: number = 0,
         public ChannelId: Long = Long.ZERO,
         public Rt: boolean = true,
-        
+
         userId: Long = Long.ZERO,
         os: string = '',
         version: string = '',

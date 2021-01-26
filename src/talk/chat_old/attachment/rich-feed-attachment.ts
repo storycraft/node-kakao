@@ -17,7 +17,7 @@ export class RichFeedAttachment implements ChatAttachment {
         public ImageAction?: RichActionContent,
         public Description?: RichDescContent,
     ) {
-        
+
     }
     readAttachment(rawJson: any): void {
         this.Text = rawJson['text'] || '';
@@ -25,7 +25,7 @@ export class RichFeedAttachment implements ChatAttachment {
         if (rawJson['icon']) this.Icon = rawJson['icon'];
 
         if (rawJson['image']) this.Image = rawJson['image'];
-        
+
         if (rawJson['description']) {
             this.Description = new RichDescContent();
             this.Description.readRawContent(rawJson['description']);
@@ -51,7 +51,7 @@ export class RichFeedAttachment implements ChatAttachment {
         if (this.Icon) obj['icon'] = this.Icon;
 
         if (this.Image) obj['image'] = this.Image;
-        
+
         if (this.Description) obj['description'] = this.Description.toRawContent();
 
         if (this.Action) obj['action'] = this.Action.toRawContent();
@@ -64,7 +64,7 @@ export class RichFeedAttachment implements ChatAttachment {
     get RequiredMessageType() {
         return ChatType.Feed;
     }
-    
+
 
 }
 
@@ -139,5 +139,5 @@ export class RichActionContent implements AttachmentContent {
 
         return obj;
     }
-    
+
 }

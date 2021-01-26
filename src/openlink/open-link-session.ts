@@ -14,18 +14,18 @@ export interface OpenLinkSession {
      * Get latest client link list
      */
     getLatestLinkList(): AsyncCommandResult<Readonly<InformedOpenLink>[]>;
-    
+
     /**
      * Get openlink from link id.
-     * 
-     * @param components 
+     *
+     * @param components
      */
     getOpenLink(...components: OpenLinkComponent[]): AsyncCommandResult<Readonly<OpenLink>[]>;
-    
+
     /**
      * Get openlink from link url.
-     * 
-     * @param linkURL 
+     *
+     * @param linkURL
      * @param referer Unknown
      */
     getJoinInfo(linkURL: string, referer?: string): AsyncCommandResult<Readonly<InformedOpenLink>>;
@@ -33,7 +33,7 @@ export interface OpenLinkSession {
     /**
      * Get kicklist of this openlink.
      * Require manage permission otherwise the request fail.
-     * 
+     *
      * @param link
      */
     getKickList(link: OpenLinkComponent): AsyncCommandResult<OpenLinkKickedUserInfo[]>;
@@ -41,7 +41,7 @@ export interface OpenLinkSession {
     /**
      * Remove user from kick list.
      * Require manage permission otherwise the request fail.
-     * 
+     *
      * @param link
      */
     removeKicked(link: OpenLinkComponent, kickedUser: OpenLinkKickedUser): AsyncCommandResult;
@@ -49,7 +49,7 @@ export interface OpenLinkSession {
     /**
      * Delete openlink.
      * Can only delete owned link.
-     * 
+     *
      * @param component openlink to delete
      */
     deleteLink(link: OpenLinkComponent): AsyncCommandResult;

@@ -47,7 +47,7 @@ export namespace OpenPresetStruct {
 
 
     export const ConvertMap = {
-        
+
         preset: new Converter.Object(OpenPresetItemStruct.Mappings)
 
     }

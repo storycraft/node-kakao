@@ -43,7 +43,7 @@ export class ManagedChatUser extends EventEmitter implements ChatUser {
 export class ManagedChatUserInfo implements ChatUserInfo {
 
     constructor(private manager: UserManager, private user: ChatUser, private memberStruct: MemberStruct) {
-        
+
     }
 
     get Client() {
@@ -97,7 +97,7 @@ export class ManagedChatUserInfo implements ChatUserInfo {
 export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
 
     constructor(private manager: UserManager, private user: ChatUser, private memberStruct: OpenMemberStruct) {
-        
+
     }
 
     get Client() {
@@ -123,7 +123,7 @@ export class ManagedOpenChatUserInfo implements OpenChatUserInfo {
     get ProfileOpenToken() {
         return this.memberStruct.openToken || -1;
     }
-    
+
     get MemberType() {
         return this.memberStruct.memberType || OpenMemberType.NONE;
     }

@@ -18,7 +18,7 @@ export class LocoPacketResolver extends Writable {
 
     constructor(private socket: LocoSocket) {
         super();
-        
+
         this.chunkList = new ChunkedBufferList();
         this.currentHeader = null;
     }

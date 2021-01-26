@@ -35,7 +35,7 @@ export interface OpenPostTagStruct extends StructBase {
 }
 
 export namespace OpenPostTagStruct {
-    
+
     export const Mappings = {
 
         type: 't',
@@ -55,7 +55,7 @@ export interface OpenPostDescStruct extends StructBase {
 }
 
 export namespace OpenPostDescStruct {
-    
+
     export const Mappings = {
 
         text: 'text',
@@ -92,7 +92,7 @@ export interface OpenPostReactionStruct extends StructBase {
 }
 
 export namespace OpenPostReactionStruct {
-    
+
     export const Mappings = {
 
         reactionId: 'reactId',
@@ -145,7 +145,7 @@ export interface OpenPostStruct extends StructBase {
     scrapData?: OpenPostScrapData;
     postURL: string;
     latestUpdateToken: number;
-    
+
 }
 
 export namespace OpenPostStruct {
@@ -165,7 +165,7 @@ export namespace OpenPostStruct {
         reactionUserList: 'reactUsers',
 
         scrapData: 'scrapData',
-        
+
         latestUpdateToken: 'latestUpdateToken'
     }
 
@@ -178,7 +178,7 @@ export namespace OpenPostStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
-    
+
 }
 
 export interface OpenPostListStruct extends OpenStruct {
@@ -222,7 +222,7 @@ export namespace OpenPostReactStruct {
     }
 
     export const ConvertMap = {
-        
+
         postId: JsonUtil.LongConverter
 
     }

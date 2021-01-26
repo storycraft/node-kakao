@@ -7,7 +7,7 @@
 import { Long } from "bson";
 
 export interface CheckinRes {
-    
+
     /**
      * Loco host
      */

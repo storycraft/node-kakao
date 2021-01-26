@@ -16,7 +16,7 @@ export class PacketMiniReq extends MediaRequestBasePacket {
         public ChannelId: Long = Long.ZERO,
         public Width: number = 0,
         public Height: number = 0,
-        
+
         userId: Long = Long.ZERO,
         os: string = '',
         version: string = '',

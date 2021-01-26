@@ -96,7 +96,7 @@ export class PacketGetMetaListRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
         this.MetaSetList = [];
         if (rawData['mss']) {
             for (let rawMetaSet of rawData['mss']) {

@@ -5,7 +5,7 @@
  */
 
 export interface PacketHeader {
-    
+
     packetId: number;
     statusCode: number;
     packetName: string;
@@ -15,7 +15,7 @@ export interface PacketHeader {
 }
 
 export interface EncryptedPacketHeader {
-    
+
     encryptedSize: number;
 
 }

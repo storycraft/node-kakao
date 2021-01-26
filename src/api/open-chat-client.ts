@@ -76,7 +76,7 @@ export class OpenChatClient extends SessionApiClient {
             description: template.text
 
         };
-        
+
         if (template.postDataList) postForm['postDatas'] = JsonUtil.stringifyLoseless(template.postDataList);
         if (template.scrapData) postForm['scrapData'] = JsonUtil.stringifyLoseless(template.scrapData);
         if (template.shareChannelList) postForm['chatIds'] = JsonUtil.stringifyLoseless(template.shareChannelList);

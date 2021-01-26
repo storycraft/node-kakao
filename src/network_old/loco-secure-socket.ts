@@ -15,7 +15,7 @@ import { PacketHeader } from "../packet_old/packet-header-struct";
 export class LocoSecureSocket extends LocoBasicSocket {
 
     private crypto: CryptoManager;
-    
+
     private handshaked: boolean;
 
     constructor(pubKey: string, receiver: LocoReceiver, host: string, port: number, keepAlive: boolean) {
@@ -92,15 +92,15 @@ export class LocoSecureSocket extends LocoBasicSocket {
     }
 
     protected onConnect() {
-        
+
     }
 
     protected onConnected() {
-        
+
     }
-    
+
     protected onEnd(buffer: Buffer): void {
-        
+
     }
 
     protected onError(err: Error) {

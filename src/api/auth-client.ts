@@ -84,7 +84,7 @@ export class AuthClient extends WebApiClient implements CredentialProvider, Acce
         super.fillHeader(header);
 
         this.aHeader.fillHeader(header);
-        
+
         if (this.accessData) this.fillSessionHeader(header);
     }
 
@@ -229,7 +229,7 @@ export class AuthClient extends WebApiClient implements CredentialProvider, Acce
         hash.update(source);
         return hash.digest('hex');
     }
-	
+
 	generateAutoLoginToken(): string {
         let accessData = this.getLatestAccessData();
         let config = this.ConfigProvider.Configuration;

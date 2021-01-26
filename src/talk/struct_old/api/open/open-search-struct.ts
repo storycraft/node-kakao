@@ -35,14 +35,14 @@ export interface OpenSearchStruct extends OpenStruct {
 }
 
 export namespace OpenSearchStruct {
-    
+
     export interface LinkItem extends StructBase {
 
         linkName: string;
         linkType: OpenLinkType,
         linkURL: string;
         linkImageURL: string;
-        
+
         locked: boolean;
 
         memberCount?: number;
@@ -59,7 +59,7 @@ export namespace OpenSearchStruct {
     }
 
     export namespace LinkItem {
-        
+
         export const Mappings = {
 
             linkName: 'ln',
@@ -79,7 +79,7 @@ export namespace OpenSearchStruct {
             lastChatAt: 'writtenAt',
 
             reactCount: 'rc',
-    
+
         }
 
         export const MAPPER = new ObjectMapper(Mappings);
@@ -94,41 +94,41 @@ export namespace OpenSearchStruct {
 
         nickname: string;
         profileImageURL: string;
-    
+
         description?: OpenPostDescStruct;
         postDataList?: OpenPostDataStruct[];
-    
+
         date: number;
         reactionInfoList: OpenPostReactionInfoStruct[];
-        
+
     }
-    
+
     export namespace PostItem {
-    
+
         export const Mappings = {
-    
+
             id: 'postId',
             linkId: 'linkId',
 
             nickname: 'nickname',
             profileImageURL: 'profileImagePath',
-    
+
             description: 'postDescription',
             postDataList: 'postDatas',
-    
+
             reactionList: 'reacts'
 
         }
 
         export const ConvertMap = {
-            
+
             linkId: JsonUtil.LongConverter,
             description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap)
-        
+
         }
-    
+
         export const MAPPER = new ObjectMapper(Mappings);
-        
+
     }
 
 
@@ -172,7 +172,7 @@ export namespace OpenPostSearchStruct {
 
         page: 'page',
         count: 'count',
-        
+
         totalCount: 'totalCount',
 
         postList: 'postItems',

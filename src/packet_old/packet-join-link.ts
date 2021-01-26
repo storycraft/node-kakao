@@ -17,7 +17,7 @@ export class PacketJoinLinkReq extends LocoBsonRequestPacket {
         public LinkId: Long = Long.ZERO,
         public Referer: string = '',
         public JoinToken: string = '',
-        
+
         public ProfileType: OpenProfileType = OpenProfileType.MAIN,
 
         public Nickname: string = '',           // KAKAO_ANON
@@ -65,7 +65,7 @@ export class PacketJoinLinkRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'JOINLINK';
     }

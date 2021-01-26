@@ -17,7 +17,7 @@ export interface ChannelMeta {
 }
 
 export interface SetChannelMeta extends ChannelMeta {
-    
+
     revision: number;
 
     authorId: Long;
@@ -28,7 +28,7 @@ export interface SetChannelMeta extends ChannelMeta {
 
 export interface ChannelMetaMap extends Record<ChannelType, SetChannelMeta> {
 
-    
+
 
 }
 
@@ -56,7 +56,7 @@ export interface ChannelInfo extends Channel {
      * true if new chat count is invalid
      */
     newChatCountInvalid: boolean;
-    
+
     /**
      * Last chat log id
      */
@@ -92,19 +92,19 @@ export namespace ChannelInfo {
             channelId: Long.ZERO,
 
             type: '',
-            
+
             activeUserCount: 0,
-        
+
             newChatCount: 0,
             newChatCountInvalid: true,
-        
+
             lastChatLogId: Long.ZERO,
             lastSeenLogId: Long.ZERO,
-        
+
             displayUserList: [],
-            
+
             metaMap: {},
-        
+
             pushAlert: false
         }, info);
     }

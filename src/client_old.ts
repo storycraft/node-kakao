@@ -98,7 +98,7 @@ export class TalkApiClient extends EventEmitter implements ApiClient {
 
     private channelBoard: ChannelBoardClient;
     private openChannelBoard: OpenChannelBoardClient;
-    
+
     constructor(name: string, deviceUUID: string, config?: Partial<ClientConfigOld>) {
         super();
 
@@ -299,7 +299,7 @@ export class TalkClient extends TalkApiClient implements LocoClient {
 
     logout() {
         super.logout();
-        
+
         this.networkManager.disconnect();
     }
 
@@ -354,7 +354,7 @@ export class TalkClientChatUser extends EventEmitter implements ClientChatUser {
 export class TalkClientUserInfo implements ClientUserInfo {
 
     constructor(private user: TalkClientChatUser, private settings: MoreSettingsStruct) {
-        
+
     }
 
     get Client() {

@@ -40,13 +40,13 @@ export interface UserInfo {
     readonly OriginalProfileImageURL: string;
 
     isOpenUser(): boolean;
-    
+
 }
 
 export interface ChatUserInfo extends UserInfo {
 
     readonly User: ChatUser;
-    
+
 }
 
 export interface DisplayUserInfo extends ChatUserInfo {

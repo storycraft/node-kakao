@@ -39,5 +39,5 @@ export enum ChannelBoardMetaType {
     FLOATING_NOTICE = 1,
     SIDE_NOTICE = 2,
     BADGE = 3
-    
+
 }

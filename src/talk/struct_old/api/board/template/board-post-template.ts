@@ -18,7 +18,7 @@ export interface BoardPostTemplate<T = PostType> {
     scrap?: ChannelPost.Scrap;
 
     notice: boolean;
-    
+
 }
 
 export type BoardPostFileMap = { [name: string]: string };

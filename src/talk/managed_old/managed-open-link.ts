@@ -60,7 +60,7 @@ export class ManagedOpenUserInfo implements OpenUserInfo {
 
     async getOpenLink() {
         if (!this.linkId) return null;
-        
+
         return this.manager.get(this.linkId) as Promise<OpenLinkProfile>;
     }
 
@@ -81,21 +81,21 @@ export class ManagedOpenUserInfo implements OpenUserInfo {
 export class ManagedOpenKickedUserInfo implements OpenKickedUserInfo {
 
     constructor(private manager: OpenLinkManager, private kickedMemberStruct: OpenKickedMemberStruct) {
-        
+
     }
 
     get Client() {
         return this.manager.Client;
     }
-    
+
     get Id() {
         return this.kickedMemberStruct.userId;
     }
-    
+
     get Nickname() {
         return this.kickedMemberStruct.nickname;
     }
-    
+
     get KickedChannelId() {
         return this.kickedMemberStruct.kickedChannelId;
     }
@@ -121,7 +121,7 @@ export class ManagedOpenKickedUserInfo implements OpenKickedUserInfo {
 export class ManagedOpenLink implements OpenLink<ManagedOpenUserInfo>, OpenLinkChannel, OpenLinkProfile {
 
     private userInfo: ManagedOpenUserInfo;
-    
+
     constructor(private manager: OpenLinkManager, private linkId: Long, private openToken: number, private linkStruct: OpenLinkStruct) {
         this.userInfo = new ManagedOpenUserInfo(manager, linkStruct.owner.linkId || null, linkStruct.owner.openToken, linkStruct.owner);
     }
@@ -157,7 +157,7 @@ export class ManagedOpenLink implements OpenLink<ManagedOpenUserInfo>, OpenLinkC
     get Searchable() {
         return this.linkStruct.canSearchLink;
     }
-    
+
     get TagList() {
         return []; // TODO
     }

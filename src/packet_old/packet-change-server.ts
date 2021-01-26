@@ -19,7 +19,7 @@ export class PacketChangeServerRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
     }
 
 }

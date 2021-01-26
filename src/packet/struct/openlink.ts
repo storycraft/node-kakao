@@ -61,14 +61,14 @@ export interface OpenLinkStruct {
     desc: string;
 
     pc: string;
-    
+
     pa: boolean;
 
     /**
      * Activated
      */
     ac: boolean;
-    
+
     /**
      * Searchable
      */
@@ -83,14 +83,14 @@ export interface OpenLinkStruct {
      * Unknown
      */
     ex: boolean;
-    
+
     omt: {};
 
     /**
      * Link creation time
      */
     ca: number;
-    
+
     /**
      * Open channel cover
      */
@@ -112,7 +112,7 @@ export interface OpenLinkInfoStruct {
      * Max user limit (open channel)
      */
     ml?: number;
-    
+
     /**
      * Max direct limit (open profile)
      */
@@ -121,5 +121,5 @@ export interface OpenLinkInfoStruct {
 }
 
 export interface InformedOpenLinkStruct extends OpenLinkStruct, OpenLinkInfoStruct {
-    
+
 }

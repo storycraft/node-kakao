@@ -29,7 +29,7 @@ export interface ChannelInfoStruct extends ChannelDataStruct {
 export namespace ChannelInfoStruct {
 
     export const Mappings = {
-        
+
         channelId: 'chatId',
         type: 'type',
         activeMemberCount: 'activeMembersCount',

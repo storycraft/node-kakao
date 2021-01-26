@@ -24,5 +24,5 @@ export enum AuthStatusCode {
 export interface AuthApiStruct extends WebApiStruct {
 
     status: WebApiStatusCode | AuthStatusCode;
-    
+
 }

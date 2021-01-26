@@ -72,21 +72,21 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     get configProvider() {
         return this._clientSession.configProvider;
     }
-    
+
     get channelList() {
-        if (!this.logon) throw 'Cannot access without logging in';
+        if (!this.logon) throw new Error('Cannot access without logging in');
 
         return this._channelList!;
     }
-    
+
     get cilentUser() {
-        if (!this.logon) throw 'Cannot access without logging in';
+        if (!this.logon) throw new Error('Cannot access without logging in');
 
         return this._cilentUser;
     }
 
     get openLink() {
-        if (!this.logon) throw 'Cannot access without logging in';
+        if (!this.logon) throw new Error('Cannot access without logging in');
 
         return this._openLink;
     }
@@ -99,13 +99,13 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     }
 
     private get session() {
-        if (this._session == null) throw 'Session is not created';
+        if (this._session == null) throw new Error('Session is not created');
 
         return this._session;
     }
 
     async login(credential: OAuthCredential): AsyncCommandResult<LoginResult> {
-        if (this.logon) throw 'Already logon';
+        if (this.logon) throw new Error('Already logon');
 
         // Create session
         const sessionRes = await this._sessionFactory.createSession(this.configProvider.configuration);
@@ -117,9 +117,9 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         if (!loginRes.success) return loginRes;
 
         this.addPingHandler();
-        
+
         this._cilentUser = { userId: loginRes.result.userId };
-        
+
         await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
         await this._openLink.updateAll();
 
@@ -132,7 +132,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     /**
      * @param user Target user to compare
-     * 
+     *
      * @returns true if client user.
      */
     isClientUser(user: ChannelUser) {
@@ -165,7 +165,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         }
     }
-    
+
     /**
      * Create proxy that can be used safely without exposing client
      */
@@ -174,7 +174,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         return {
             request: (method, data) => this.request(method, data),
-            
+
             get clientUser() {
                 return instance.cilentUser;
             },
@@ -208,7 +208,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
             for await (const { method, data, push } of this.session.listen()) {
                 if (push) {
                     this.pushReceived(method, data);
-                }                
+                }
             }
         })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
     }

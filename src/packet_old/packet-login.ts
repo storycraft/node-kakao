@@ -33,7 +33,7 @@ export class PacketLoginReq extends LocoBsonRequestPacket {
         super();
 
     }
-    
+
     get PacketName() {
         return 'LOGINLIST';
     }
@@ -80,7 +80,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         super(status);
 
     }
-    
+
     get PacketName() {
         return 'LOGINLIST';
     }
@@ -90,7 +90,7 @@ export class PacketLoginRes extends LocoBsonResponsePacket {
         this.Revision = body['revision'];
         this.RevisionDetail = body['revisionInfo'];
         this.OpenChatToken = body['ltk'];
-        
+
         this.ChatDataList = [];
         if (body['chatDatas']) {
             let chatDataList: any[] = body['chatDatas'];

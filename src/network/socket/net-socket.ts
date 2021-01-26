@@ -29,11 +29,11 @@ export function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
     if (process && process.release && process.release.name === 'node') {
         return NodeSocket.connect(option);
     } else if (Deno && 'connect' in Deno) {
-        throw 'Deno runtime is not implemented yet.';
+        throw new Error('Deno runtime is not implemented yet.');
     } else if (navigator && 'userAgent' in navigator) {
-        throw 'Browser environments are not supported';
+        throw new Error('Browser environments are not supported');
     } else {
-        throw 'Unknown environment';
+        throw new Error('Unknown environment');
     }
 
 }
@@ -46,10 +46,10 @@ export function createTLSSocket(option: NetSocketOptions): Promise<Stream> {
     if (process && process.release && process.release.name === 'node') {
         return NodeSocket.connectTls(option);
     } else if (Deno && 'connectTls' in Deno) {
-        throw 'Deno runtime is not implemented yet.';
+        throw new Error('Deno runtime is not implemented yet.');
     } else if (navigator && 'userAgent' in navigator) {
-        throw 'Browser environments are not supported';
+        throw new Error('Browser environments are not supported');
     } else {
-        throw 'Unknown environment';
+        throw new Error('Unknown environment');
     }
 }

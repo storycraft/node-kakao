@@ -47,13 +47,13 @@ export namespace LoginAccessDataStruct {
         displayAccountId: 'displayAccountId',
         mainDevice: 'mainDeviceAgentName',
         mainDeviceAppVersion: 'mainDeviceAppVersion'
-    
+
     }
-    
+
     let convertMap: ConvertMap = {
-    
+
         userId: JsonUtil.LongConverter
-    
+
     }
 
     export const MAPPER = new ObjectMapper(mappings, convertMap);

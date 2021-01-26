@@ -90,7 +90,7 @@ export interface GetConfRes {
 
     /**
      * Video resolution, bitrate, audio frequency, file transfer(?) config.
-     * 
+     *
      */
     trailer: {
         tokenExpireTime: number,

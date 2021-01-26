@@ -74,7 +74,7 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
      * Link description
      */
     description: string;
-    
+
     /**
      * Profile tag list
      */

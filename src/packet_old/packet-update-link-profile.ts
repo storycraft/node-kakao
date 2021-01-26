@@ -27,7 +27,7 @@ export class PacketUpdateLinkProfileReq extends LocoBsonRequestPacket {
     get PacketName() {
         return 'UPLINKPROF';
     }
-    
+
     toBodyJson() {
         let obj: any = {
             'li': this.LinkId,
@@ -38,7 +38,7 @@ export class PacketUpdateLinkProfileReq extends LocoBsonRequestPacket {
 
             if (this.Nickname !== '') obj['nn'] = this.Nickname;
             if (this.ProfilePath !== '') obj['pp'] = this.ProfilePath;
-            
+
         } else if (this.ProfileType === OpenProfileType.OPEN_PROFILE) {
             obj['pli'] = this.ProfileLinkId;
         }

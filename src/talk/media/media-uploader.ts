@@ -17,9 +17,9 @@ interface DataWriter {
     /**
      * Write data chunk.
      * This can be called with one big single buffer or chunked until it finished.
-     * 
-     * @param data 
-     * 
+     *
+     * @param data
+     *
      * @returns true when write finished.
      */
     write(data: ArrayBuffer): boolean;
@@ -30,7 +30,7 @@ export class MediaUploader {
 
     private _done: boolean;
     private _written: number;
-    
+
     constructor(private _media: MediaComponent & MediaTypeComponent, private _talkSession: TalkSession, private _channel: Channel, private _stream: Stream) {
         this._done = false;
         this._written = 0;
@@ -54,12 +54,12 @@ export class MediaUploader {
 
     /**
      * Create data writer with given size and start uploading.
-     * 
+     *
      * @param data
      * @param onComplete callback called when upload complete
      */
     async upload(size: number, onComplete?: (status: DataStatusCode) => void): AsyncCommandResult<DataWriter> {
-        if (this._done) throw 'Cannot upload more using finished uploader';
+        if (this._done) throw new Error('Cannot upload more using finished uploader');
 
         const session = new DefaultLocoSession(this._stream);
         const clientConfig = this._talkSession.configuration;
@@ -85,12 +85,12 @@ export class MediaUploader {
             'mm': clientConfig.mccmnc
         });
         if (postRes.status !== KnownDataStatusCode.SUCCESS) return { status: postRes.status, success: false };
-        
+
         const startOffset = postRes['o'];
 
         const writer: DataWriter = {
             write: (data) => {
-                if (this._done) throw 'Cannot write more when upload finished';
+                if (this._done) throw new Error('Cannot write more when upload finished');
 
                 this._written += data.byteLength;
 

@@ -53,7 +53,7 @@ export class PacketCreateChannelRes extends LocoBsonResponsePacket {
     get PacketName() {
         return 'CREATE';
     }
-    
+
     readBodyJson(rawBody: any) {
         this.ChannelId = JsonUtil.readLong(rawBody['chatId']);
 

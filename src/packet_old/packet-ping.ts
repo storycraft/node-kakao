@@ -27,7 +27,7 @@ export class PacketPingRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson() {
-        
+
     }
 
 }

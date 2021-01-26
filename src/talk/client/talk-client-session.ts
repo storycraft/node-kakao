@@ -90,8 +90,8 @@ export class TalkClientSession implements ClientSession {
 
     async setStatus(status: ClientStatus) {
         const res = await this._session.request<LoginListRes>('SETST', { st: status });
-        
+
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
-    
+
 }

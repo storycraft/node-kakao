@@ -18,11 +18,11 @@ export class PacketMessageReadRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'DECUNREAD';
     }
-    
+
     readBodyJson(body: any) {
         this.ChannelId = JsonUtil.readLong(body['chatId']);
         this.ReaderId = JsonUtil.readLong(body['userId']);

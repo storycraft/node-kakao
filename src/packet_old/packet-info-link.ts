@@ -53,7 +53,7 @@ export class PacketInfoLinkRes extends LocoBsonResponsePacket {
                 this.LinkList.push(Serializer.deserialize<OpenLinkStruct>(raw, OpenLinkStruct.MAPPER));
             }
         }
-        
+
     }
 
 }

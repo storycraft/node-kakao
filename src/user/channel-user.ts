@@ -22,6 +22,6 @@ export interface ChannelUser {
 
 export interface OpenChannelUser extends ChannelUser, Partial<OpenLinkComponent> {
 
-    
+
 
 }

@@ -45,12 +45,12 @@ export namespace ChannelPost {
 
         id: string;
         content: string;
-    
+
         permission: PostPermission;
-    
+
         owner_id: Long;
         created_at: string;
-    
+
     }
 
     export interface Emotion {
@@ -62,14 +62,14 @@ export namespace ChannelPost {
 
     }
 
-    
+
 
     export enum PollItemType {
 
         TEXT = 'text',
 
     }
-    
+
     export interface PollItem {
 
         id: string;
@@ -95,7 +95,7 @@ export namespace ChannelPost {
 
         item_type: PollItemType;
         item_addable: boolean;
-        
+
         multiSelect: boolean;
 
         user_count: number;
@@ -142,7 +142,7 @@ export namespace ChannelPost {
     export interface Media {
 
         id: string;
-        
+
         media_type: string;
 
         small_url?: string;
@@ -164,7 +164,7 @@ export namespace ChannelPost {
     }
 
     export interface Scrap {
-        
+
         url: string;
         canonicalUrl: string;
 
@@ -187,13 +187,13 @@ export namespace ChannelPost {
 
         type: ContentType.MENTION,
         id: Long;
-    
+
     }
 
     export interface EveryoneMention {
 
         type: ContentType.EVERYONE_MENTION
-    
+
     }
 
 }
@@ -236,7 +236,7 @@ export interface ChannelPostStruct extends SimpleChannelPostStruct {
 
     comments: ChannelPost.Comment[];
     has_more_comments: boolean;
-    
+
     emotions: ChannelPost.Emotion[];
     my_emotion?: ChannelPost.Emotion;
 

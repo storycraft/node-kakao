@@ -23,11 +23,11 @@ export class PacketMessageWriteReq extends LocoBsonRequestPacket {
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'WRITE';
     }
-    
+
     toBodyJson() {
         let obj: any = {
             'chatId': this.ChannelId,
@@ -59,11 +59,11 @@ export class PacketMessageWriteRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'WRITE';
     }
-    
+
     readBodyJson(body: any) {
         this.MessageId = body['msgId'];
         this.ChannelId = JsonUtil.readLong(body['chatId']);
@@ -89,11 +89,11 @@ export class PacketMessageRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'MSG';
     }
-    
+
     readBodyJson(body: any) {
         this.ChannelId = JsonUtil.readLong(body['chatId']);
         this.SenderNickname = body['authorNickname'];

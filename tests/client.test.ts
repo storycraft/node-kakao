@@ -5,7 +5,7 @@
  */
 
 describe('Client', () => {
-    
-    
+
+
 
 });

@@ -84,19 +84,19 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         return res.LinkList[0] || null;
     }
-    
+
     protected async requestLinkFromURL(openLinkURL: string): Promise<OpenLinkStruct | null> {
         let res = await this.Interface.requestPacketRes<PacketJoinInfoRes>(new PacketJoinInfoReq(openLinkURL, 'EW'));
 
         return res.OpenLink || null;
     }
-    
+
     protected getWithLinkStruct(linkId: Long, linkStruct: OpenLinkStruct): OpenLink {
         if (this.has(linkId)) {
             let link = this.getFromMap(linkId)! as ManagedOpenLink;
 
             link.updateStruct(linkStruct);
-            
+
             return link;
         }
 
@@ -110,7 +110,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
         let linkStruct = await this.requestLinkFromId(link.LinkId);
 
         if (linkStruct) (link as ManagedOpenLink).updateStruct(linkStruct);
-        
+
         return link;
     }
 
@@ -140,7 +140,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
     async initOpenSession() {
         this.clear();
-        
+
         this.clientLinkIdList = [];
 
         let list = await this.requestClientProfile();
@@ -157,7 +157,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
-    
+
     async deleteLink(linkId: Long): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketDeleteLinkRes>(new PacketDeleteLinkReq(linkId));
 
@@ -168,7 +168,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
-    
+
     async handOverHost(channel: OpenChatChannel, newHostUserId: Long): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketSetMemTypeRes>(new PacketSetMemTypeReq(channel.LinkId, channel.Id, [ newHostUserId, channel.Client.ClientUser.Id ], [ OpenMemberType.OWNER, OpenMemberType.NONE ]));
 
@@ -206,7 +206,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
 
             template.allowAnonProfile,
             template.canSearchLink,
-            
+
             Long.fromNumber(Date.now() / 1000),
             true,
             template.maxChannelLimit,
@@ -215,7 +215,7 @@ export class OpenLinkManager extends AsyncIdInstanceStore<OpenLink | null> {
             template.clientProfile.anonProfilePath,
             template.clientProfile.profileLinkId,
             template.maxUserLimit);
-        
+
         let res = await this.client.NetworkManager.requestPacketRes<PacketCreateOpenLinkRes>(packet);
 
         return { status: res.StatusCode, result: res.OpenLink && this.getWithLinkStruct(res.OpenLink.linkId, res.OpenLink) as OpenLinkProfile || null };

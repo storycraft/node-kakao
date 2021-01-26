@@ -15,7 +15,7 @@ import { TalkOpenLinkSession } from "./talk-openlink-session";
  * Provide openlink services
  */
 export class OpenLinkService implements OpenLinkSession {
-    
+
     private _session: TalkOpenLinkSession;
 
     private _clientMap: Map<string, InformedOpenLink>;

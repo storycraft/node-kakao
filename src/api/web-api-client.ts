@@ -57,7 +57,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
 
         let reqData: AxiosRequestConfig = {
             headers: reqHeader,
-            
+
             method: method,
 
             // https://github.com/axios/axios/issues/811
@@ -143,7 +143,7 @@ export abstract class WebApiClient implements ApiHeaderDecorator {
             if (value && (value as FileRequestData).value && (value as FileRequestData).options) {
                 let file = value as FileRequestData;
                 let options: FormData.AppendOptions = { filename: file.options.filename };
-                
+
                 if (file.options.contentType) options.contentType = file.options.contentType;
 
                 formData.append(key, file.value, options);

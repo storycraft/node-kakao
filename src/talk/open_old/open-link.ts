@@ -17,7 +17,7 @@ export interface OpenLink<I extends OpenUserInfo = OpenUserInfo> {
     readonly LinkName: string;
 
     readonly OpenToken: number;
-    
+
     readonly LinkType: OpenLinkType;
 
     readonly LinkURL: string;

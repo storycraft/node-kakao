@@ -33,12 +33,12 @@ export class MediaDownloadInterface extends LocoSecureCommandInterface {
 
         this.downloading = false;
         this.size = -1;
-        
+
         this.ticketObj = new PromiseTicket();
 
         this.receiver = new MediaDataReceiver(this);
     }
-    
+
     get Downloading() {
         return this.downloading;
     }
@@ -112,7 +112,7 @@ export class MediaDataReceiver extends Transform {
 
     constructor(private downloader: MediaDownloadInterface) {
         super();
-        
+
         this.chunkList = new ChunkedBufferList();
     }
 

@@ -35,7 +35,7 @@ export class PacketDeleteLinkRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(body: any): void {
-        
+
     }
 
 }

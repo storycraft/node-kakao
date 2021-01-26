@@ -61,7 +61,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
     private socket: LocoSocket;
 
     private packetMap: Map<number, LocoRequestPacket>;
-    
+
     constructor(hostData: HostData, private listener: LocoListener | null = null, private configProvider: ClientConfigProvider) {
         this.packetCount = 0;
         this.packetMap = new Map();
@@ -109,7 +109,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         if (!this.Connected) {
             return false;
         }
-        
+
         let packetId = this.getNextPacketId();
 
         this.packetMap.set(packetId, packet);
@@ -117,7 +117,7 @@ export abstract class LocoCommandInterface implements LocoInterface, LocoReceive
         if (!LocoPacketList.hasReqPacket(packet.PacketName)) {
             throw new Error(`Tried to send invalid packet ${packet.PacketName}`);
         }
-        
+
         let header: PacketHeader = {
             packetId: packetId,
             statusCode: 0,

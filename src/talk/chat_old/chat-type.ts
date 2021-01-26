@@ -5,7 +5,7 @@
  */
 
 export enum ChatType {
-    
+
     Unknown = -1,
     Feed = 0,
     Text = 1,

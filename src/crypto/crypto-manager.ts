@@ -38,7 +38,7 @@ export class CryptoManager {
 
     toAESDecrypted(buffer: Buffer, iv: Buffer): Buffer {
         let cipher = crypto.createDecipheriv('aes-128-cfb', this.key, iv);
-        
+
         return Buffer.concat([ cipher.update(buffer), cipher.final() ]);
     }
 

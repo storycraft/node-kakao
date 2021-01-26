@@ -32,14 +32,14 @@ export class PacketCreateOpenLinkReq extends LocoBsonRequestPacket {
         public CreatedTime: Long = Long.ZERO,
         public Activated: boolean = true,
         public ChannelLimit: number = 0,
-        
+
         public ProfileType: OpenProfileType = OpenProfileType.MAIN,
 
         public Nickname: string = '',           // KAKAO_ANON
         public ProfilePath: string = '',
         public ProfileLinkId: Long = Long.ZERO,  // OPEN_PROFILE
         public UserLimit: number = 0
-        
+
     ) {
         super();
     }
@@ -101,7 +101,7 @@ export class PacketCreateOpenLinkRes extends LocoBsonResponsePacket {
 
     readBodyJson(rawData: any) {
         if (rawData['ol']) this.OpenLink = Serializer.deserialize<OpenLinkStruct>(rawData['ol'], OpenLinkStruct.MAPPER);
-        
+
         if (rawData['chatRoom']) this.ChatInfo = Serializer.deserialize<ChannelInfoStruct>(rawData['chatRoom'], ChannelInfoStruct.MAPPER);
     }
 

@@ -49,7 +49,7 @@ export class PacketMemberRes extends LocoBsonResponsePacket {
 
     readBodyJson(json: any) {
         this.MemberList = [];
-        
+
         this.ChannelId = JsonUtil.readLong(json['chatId']);
 
         if (json['members']) {

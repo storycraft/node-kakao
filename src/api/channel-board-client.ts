@@ -61,7 +61,7 @@ export abstract class BaseBoardClient extends SessionApiClient {
         else if (template.object_type === PostType.SCHEDULE) form['schedule_content'] = JsonUtil.stringifyLoseless(template.schedule_content);
 
         if (template.emoticon) form['sticon'] = JsonUtil.stringifyLoseless(template.emoticon.toJsonAttachment());
-        
+
         if (template.scrap) form['scrap'] = JsonUtil.stringifyLoseless(template.scrap);
 
         form['notice'] = template.notice;

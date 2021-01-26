@@ -52,5 +52,5 @@ export namespace ChatlogStruct {
     }
 
     export const MAPPER = new ObjectMapper(Mappings);
-    
+
 }

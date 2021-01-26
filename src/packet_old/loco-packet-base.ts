@@ -35,7 +35,7 @@ interface LocoPacketBase {
 export interface LocoRequestPacket extends LocoPacketBase {
 
     writeBody(): Buffer;
-    
+
     onResponse<T extends LocoResponsePacket>(packet: T): void;
 
     submitResponseTicket<T extends LocoResponsePacket>(): Promise<T>;
@@ -44,5 +44,5 @@ export interface LocoRequestPacket extends LocoPacketBase {
 export interface LocoResponsePacket extends LocoPacketBase {
 
     readBody(buffer: Buffer): void;
-    
+
 }

@@ -17,11 +17,11 @@ export class PacketSyncLinkReq extends LocoBsonRequestPacket {
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'SYNCLINK';
     }
-    
+
     toBodyJson() {
         let obj: any = {
             'ltk': this.OpenChatToken
@@ -42,11 +42,11 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'SYNCLINK';
     }
-    
+
     readBodyJson(body: any) {
         this.LinkList = [];
 
@@ -55,7 +55,7 @@ export class PacketSyncLinkRes extends LocoBsonResponsePacket {
                 this.LinkList.push(Serializer.deserialize<OpenLinkStruct>(rawStruct, OpenLinkStruct.MAPPER));
             }
         }
-        
+
         if (body['dlis']) this.IdList = body['dlis'];
         this.OpenChatToken = body['ltk'];
     }

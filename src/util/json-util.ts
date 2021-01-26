@@ -21,7 +21,7 @@ export namespace JsonUtil {
     export function parseLoseless(obj: string) {
         return LosslessJSON.parse(obj, bsonLongRiviver);
     }
-    
+
     export function stringifyLoseless(obj: any) {
         return LosslessJSON.stringify(obj, bsonLongReplacer);
     }
@@ -34,7 +34,7 @@ export namespace JsonUtil {
                 return Long.fromString(value.toString());
             }
         }
-        
+
         return value;
     }
 

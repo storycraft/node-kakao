@@ -25,7 +25,7 @@ export interface DownloadInfo {
 export class MediaDownloader {
 
     private _done: boolean;
-    
+
     constructor(private _stream: Stream, private _talkSession: TalkSession, private _channel: Channel, private _media: MediaComponent) {
         this._done = false;
     }
@@ -44,11 +44,11 @@ export class MediaDownloader {
 
     /**
      * Download media.
-     * 
+     *
      * @param offset data start offset to download (default = 0)
      */
     async download(offset: number = 0): AsyncCommandResult<DownloadInfo> {
-        if (this._done) throw 'Cannot download using finished downloader';
+        if (this._done) throw new Error('Cannot download using finished downloader');
 
         const session = new DefaultLocoSession(this._stream);
         const clientConfig = this._talkSession.configuration;
@@ -87,11 +87,11 @@ export class MediaDownloader {
     /**
      * Download thumbnail.
      * Only works on photo, video.
-     * 
+     *
      * @param offset data start offset to download (default = 0)
      */
     async downloadThumb(offset: number = 0): AsyncCommandResult<DownloadInfo> {
-        if (this._done) throw 'Cannot download using finished downloader';
+        if (this._done) throw new Error('Cannot download using finished downloader');
 
         const session = new DefaultLocoSession(this._stream);
         const clientConfig = this._talkSession.configuration;

@@ -9,7 +9,7 @@ import { ChannelInfo } from "../channel/channel-info";
 import { OpenChannel } from "./open-channel";
 import { OpenLink, OpenTokenComponent } from "./open-link";
 
-/** 
+/**
  * Open channel info
  */
 export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComponent {

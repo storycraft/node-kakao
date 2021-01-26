@@ -12,11 +12,11 @@ export interface Managed<T extends ListenerSignature<T>> {
 
     /**
      * Called when broadcast packets are recevied
-     * 
-     * @param method 
-     * @param data 
+     *
+     * @param method
+     * @param data
      * @param parentCtx
      */
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<T>): void;
-    
+
 }

@@ -128,7 +128,7 @@ export class TalkChannelSession implements ChannelSession {
             status
         };
     }
-    
+
     async markRead(chat: ChatLogged) {
         const { status } = (await this._session.request(
             'NOTIREAD',
@@ -201,7 +201,7 @@ export class TalkChannelSession implements ChannelSession {
             }
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-        
+
         return { success: true, status: res.status, result: res };
     }
 
@@ -237,7 +237,7 @@ export class TalkChannelSession implements ChannelSession {
 
         return { success: true, status: res.status, result };
     }
-    
+
     async getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
         const res = await this._session.request<GetMemRes>(
             'GETMEM',
@@ -264,7 +264,7 @@ export class TalkChannelSession implements ChannelSession {
 
             next: async () => {
                 if (done) return { done: true, value: null };
-                
+
                 const res = await this._session.request<SyncMsgRes>(
                     'SYNCMSG',
                     {
@@ -282,7 +282,7 @@ export class TalkChannelSession implements ChannelSession {
                 } else if (res.isOK) {
                     done = true;
                 }
-                
+
                 if (!res.chatLogs || res.chatLogs.length < 0 || curLogId.greaterThanOrEqual(endLogId)) {
                     return { done: true, value: null };
                 }
@@ -335,7 +335,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
     get session() {
         return this._session;
     }
-    
+
     async markRead(chat: ChatLogged) {
         const status = (await this._session.request(
             'NOTIREAD',
@@ -379,12 +379,12 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         );
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-        
+
         const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
     }
-    
+
     async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
         const res = await this._session.request<GetMemRes>(
             'GETMEM',
@@ -394,7 +394,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         );
 
         if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-        
+
         const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
 
         return { status: res.status, success: true, result };
@@ -492,7 +492,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
     async createMemoChannel(): AsyncCommandResult<[Channel, NormalChannelInfo | null]> {
         const res = await this._session.request<CreateRes>('CREATE', { 'memoChat': true });
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
-        
+
         let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
         if (res.chatRoom) result[1] = (structToNormalChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
 

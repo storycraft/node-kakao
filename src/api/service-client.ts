@@ -29,9 +29,9 @@ export class ServiceClient extends SessionApiClient {
     get Agent() {
         return this.ConfigProvider.Configuration.agent;
     }
-	
+
 	// account
-	
+
 	async canChangeUUID(uuid: string): Promise<WebApiStruct> {
 		return this.request("POST", ServiceClient.getAccountApiPath(this.Agent, 'can_change_uuid.json'), { uuid: uuid });
 	}
@@ -111,15 +111,15 @@ export class ServiceClient extends SessionApiClient {
     }
 
     // scrap
-    
+
     async getPreviewURL(url: string): Promise<WebApiStruct> {
         return this.request('POST', ServiceClient.getScrapApiPath(this.Agent, 'preview.json'), { url: url });
     }
-	
+
     static getAccountApiPath(agent: string, api: string) {
         return `${agent}/account/${api}`;
     }
-	
+
     static getFriendsApiPath(agent: string, api: string) {
         return `${agent}/friends/${api}`;
     }

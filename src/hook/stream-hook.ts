@@ -10,13 +10,13 @@ export interface StreamHook {
 
     /**
      * Hook data write
-     * @param data 
+     * @param data
      */
     onWrite(data: ArrayBuffer): void;
 
     /**
      * Hook data read
-     * @param buf 
+     * @param buf
      */
     onRead(buf: ArrayBuffer): void;
 
@@ -43,7 +43,7 @@ export class HookedStream implements Stream {
     iterate() {
         const instance = this;
         const iterator = this._stream.iterate();
-        
+
         return {
             [Symbol.asyncIterator]() {
                 return this;
@@ -59,7 +59,7 @@ export class HookedStream implements Stream {
             }
         }
     }
-    
+
     close(): void {
         if (this.hook.onClose) this.hook.onClose();
         this._stream.close();

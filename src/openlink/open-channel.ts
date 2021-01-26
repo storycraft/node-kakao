@@ -12,6 +12,6 @@ import { OpenLinkComponent } from "./open-link";
  */
 export interface OpenChannel extends Channel, OpenLinkComponent {
 
-    
-    
+
+
 }

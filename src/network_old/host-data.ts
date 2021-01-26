@@ -5,7 +5,7 @@
  */
 
 export interface HostData {
-    
+
     host: string;
     port: number;
     keepAlive: boolean;

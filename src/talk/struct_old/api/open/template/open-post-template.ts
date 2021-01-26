@@ -8,7 +8,7 @@ import { OpenPostDataStruct, OpenPostScrapData } from "../open-post-struct";
 import { Long } from "bson";
 
 export interface OpenPostTemplate {
-    
+
     text?: string;
     postDataList?: OpenPostDataStruct[];
     scrapData?: OpenPostScrapData;

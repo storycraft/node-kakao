@@ -35,7 +35,7 @@ export class PacketGetClientMetaRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'GETMCMETA';
     }

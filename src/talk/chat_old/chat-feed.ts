@@ -10,29 +10,29 @@ import { Long } from "bson";
 import { StructBase } from "../struct_old/struct-base";
 
 export namespace FeedFragment {
-    
+
     export interface Member extends StructBase {
-        
+
         readonly member: FeedMemberStruct;
-    
+
     }
-    
+
     export interface MemberList extends StructBase {
-        
+
         readonly members: FeedMemberStruct[];
-    
+
     }
-    
+
     export interface Inviter extends StructBase {
-        
+
         readonly inviter: FeedMemberStruct;
-    
+
     }
-    
+
     export interface Message extends StructBase {
-        
+
         readonly logId: Long;
-    
+
     }
 
     export interface OpenHandOver extends StructBase {

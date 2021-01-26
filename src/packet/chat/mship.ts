@@ -7,7 +7,7 @@
 export interface MShipRes {
 
     /**
-     * Media key list 
+     * Media key list
      */
     kl: string[];
 

@@ -16,11 +16,11 @@ export class PacketMessageNotiReadReq extends LocoBsonRequestPacket {
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'NOTIREAD';
     }
-    
+
     toBodyJson() {
         let obj: any = {
             'chatId': this.ChannelId,
@@ -28,10 +28,10 @@ export class PacketMessageNotiReadReq extends LocoBsonRequestPacket {
         };
 
         if (this.LinkId) obj['li'] = this.LinkId;
-        
+
         return obj;
     }
-    
+
 }
 
 export class PacketMessageNotiReadRes extends LocoBsonResponsePacket {
@@ -41,13 +41,13 @@ export class PacketMessageNotiReadRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'NOTIREAD';
     }
-    
+
     readBodyJson(rawJson: any) {
 
     }
-    
+
 }

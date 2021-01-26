@@ -15,7 +15,7 @@ export enum CustomType {
     COMMERCE = 'Commerce',
     CAROUSEL = 'Carousel',
 
-    
+
 
 }
 
@@ -87,7 +87,7 @@ export class URLFragment extends CustomFragment {
     constructor(
         public LinkWin: string = '',
         public LinkMacOS: string = LinkWin,
-        
+
         public LinkAndroid: string = LinkWin,
         public LinkIos: string = LinkAndroid
 
@@ -164,7 +164,7 @@ export class ButtonFragment extends CustomFragment {
     ) {
         super();
     }
-    
+
     readRawContent(rawData: any): void {
         if (rawData['BU']) {
             if (rawData['BU']['T']) this.Text = rawData['BU']['T'];
@@ -215,7 +215,7 @@ export class SocialFragment extends CustomFragment {
 
     toRawContent() {
         let obj: any = {};
-        
+
         if (this.Like) obj['LK'] = this.Like;
         if (this.Comment) obj['CM'] = this.Comment;
         if (this.Share) obj['SH'] = this.Share;
@@ -258,7 +258,7 @@ export class ProfileFragment extends CustomFragment {
             this.Thumbnail.readRawContent(rawData['TH']);
         }
     }
-    
+
     toRawContent() {
         let obj: any = {
             'TD': this.TextDesc.toRawContent()
@@ -300,7 +300,7 @@ export class ListHeaderFragment extends CustomFragment {
             this.Background.readRawContent(rawData['BG']);
         }
     }
-    
+
     toRawContent() {
         let obj: any = {
             'TD': this.TextDesc.toRawContent()
@@ -749,7 +749,7 @@ export class CarouselCover extends CustomContent {
 
         return obj;
     }
-    
+
 }
 
 export class CustomCarouselContent extends CustomContent {

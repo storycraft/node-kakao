@@ -34,30 +34,30 @@ export interface ChannelSession {
     /**
     * Send chat to channel.
     * Perform WRITE command.
-    * 
-    * @param chat 
+    *
+    * @param chat
      */
     sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked>;
 
     /**
      * Forward chat to channel.
      * Perform FORWARD command.
-     * 
-     * @param chat 
+     *
+     * @param chat
      */
     forwardChat(chat: Chat): AsyncCommandResult<Chatlog>;
 
     /**
      * Delete chat from server.
      * It only works to client user chat.
-     * 
+     *
      * @param chat Chat to delete
      */
     deleteChat(chat: ChatLogged): AsyncCommandResult;
-    
+
     /**
      * Mark every chat read until this chat.
-     * @param chat 
+     * @param chat
      */
     markRead(chat: ChatLogged): AsyncCommandResult;
 
@@ -69,9 +69,9 @@ export interface ChannelSession {
 
     /**
      * Set channel meta content
-     * 
-     * @param type 
-     * @param content 
+     *
+     * @param type
+     * @param content
      */
     setMeta(type: ChannelMetaType, meta: ChannelMeta | string): AsyncCommandResult<SetChannelMeta>;
 
@@ -82,7 +82,7 @@ export interface ChannelSession {
 
     /**
      * Get latest detailed user info.
-     * 
+     *
      * @param channelUser
      */
     getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<AnyChannelUserInfo[]>;
@@ -93,35 +93,35 @@ export interface ChannelSession {
      * @see getLatestUserInfo method for getting detailed info per user.
      */
     getAllLatestUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
-    
+
     /**
      * Set push alert settings
-     * 
+     *
      * @param flag true to enable
      */
     setPushAlert(flag: boolean): AsyncCommandResult;
 
     /**
      * Invite users to channel.
-     * 
-     * @param userList 
+     *
+     * @param userList
      */
     inviteUsers(userList: ChannelUser[]): AsyncCommandResult;
-    
+
     /**
      * Get every chats between startLogId and endLogId.
      * Official client use to fill missing chats between last saved chats and last chat.
-     * 
+     *
      * @param endLogId
      * @param startLogId Omit this param if you don't know start chat logId.
-     * 
+     *
      * @returns Chatlog iterator which iterate chat chunks, excluding startLogId and endLogId chat.
      */
     syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>>;
 
     /**
      * Create media downloader
-     * 
+     *
      * @param media
      * @param type
      */
@@ -130,14 +130,14 @@ export interface ChannelSession {
 }
 
 /**
- * Classes which can manage channels should implement this. 
+ * Classes which can manage channels should implement this.
  */
 export interface ChannelManageSession {
 
     /**
      * Create channel.
      * Perform CREATE command.
-     * 
+     *
      * @param userList Users to be included.
      */
     createChannel(template: ChannelTemplate): AsyncCommandResult<[Channel, NormalChannelInfo | null]>;
@@ -151,10 +151,10 @@ export interface ChannelManageSession {
    /**
     * Leave channel.
     * Perform LEAVE command.
-    * 
+    *
     * @param channel Channel to leave.
     * @param block If true block channel to prevent inviting.
-    * 
+    *
     * @returns last channel token on success.
     */
     leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;

@@ -78,7 +78,7 @@ export interface ChatChannel<I extends ChatUserInfo = ChatUserInfo> extends Chan
     sendText(...textFormat: (string | ChatContent)[]): Promise<Chat | null>;
 
     sendMedia(template: MediaTemplates): Promise<Chat | null>;
-    
+
     sendTemplate(template: MessageTemplate): Promise<Chat | null>;
 
     leave(block?: boolean): Promise<RequestResult<boolean>>;

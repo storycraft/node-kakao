@@ -20,7 +20,7 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
         public UseSub: boolean = true) { // true because we are attempting to login with sub device
             super();
     }
-    
+
     get PacketName() {
         return 'CHECKIN';
     }
@@ -41,7 +41,7 @@ export class PacketCheckInReq extends LocoBsonRequestPacket {
         return obj;
     }
 
-    
+
 }
 
 export class PacketCheckInRes extends LocoBsonResponsePacket {
@@ -53,7 +53,7 @@ export class PacketCheckInRes extends LocoBsonResponsePacket {
         public CacheExpire: number = -1) {
             super(status);
     }
-    
+
     get PacketName() {
         return 'CHECKIN';
     }
@@ -64,5 +64,5 @@ export class PacketCheckInRes extends LocoBsonResponsePacket {
         this.CacheExpire = body['cacheExpire'];
     }
 
-    
+
 }

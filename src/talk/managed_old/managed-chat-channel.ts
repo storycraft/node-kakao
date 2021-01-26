@@ -229,7 +229,7 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
     async sendMedia(template: MediaTemplates): Promise<Chat | null> {
         return this.ChatManager.sendMedia(this, template);
     }
-    
+
     async sendTemplate(template: MessageTemplate): Promise<Chat | null> {
         return this.ChatManager.sendTemplate(this, template);
     }
@@ -299,7 +299,7 @@ export class ManagedChatChannel extends EventEmitter implements ChatChannel {
         if (meta.type === ChannelMetaType.PROFILE) {
             try {
                 let content = JSON.parse(meta.content) as ProfileMetaContent;
-                
+
                 this.roomImageURL = content.imageUrl;
                 this.roomFullImageURL = content.fullImageUrl;
             } catch (e) {
@@ -512,7 +512,7 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
 
     getManagedUserInfoId(id: Long): ManagedOpenChatUserInfo | null {
         if (this.clientUserInfo && this.clientUserInfo.Id.equals(id)) return this.clientUserInfo as ManagedOpenChatUserInfo;
-        
+
         return this.getUserInfoIdMap(id) as ManagedOpenChatUserInfo || null;
     }
 

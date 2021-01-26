@@ -81,7 +81,7 @@ export class ReplyContentTemplate extends AttachmentTemplate {
     ) {
         super(reply, ...textFormat);
     }
-    
+
     getReplyContent() {
         return {
             'attach_type': this.content.RequiredMessageType,

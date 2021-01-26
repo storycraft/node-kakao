@@ -30,7 +30,7 @@ export class PacketGetTrailerReq extends LocoBsonRequestPacket {
 }
 
 export class PacketGetTrailerRes extends LocoBsonResponsePacket {
-    
+
     constructor(
         status: number,
         public Host: string = '',

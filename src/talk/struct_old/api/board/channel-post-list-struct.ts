@@ -10,7 +10,7 @@ import { SimpleChannelPostStruct } from "./channel-post-struct";
 export interface ChannelPostListStruct extends WebApiStruct {
 
     posts: SimpleChannelPostStruct[];
-    
+
     has_more: boolean;
 
 }

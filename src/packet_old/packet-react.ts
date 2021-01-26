@@ -43,7 +43,7 @@ export class PacketReactRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
     }
 
 }

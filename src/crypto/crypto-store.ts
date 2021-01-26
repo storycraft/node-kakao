@@ -15,7 +15,7 @@ export interface CryptoStore {
     toAESDecrypted(buffer: ArrayBuffer, iv: ArrayBuffer): ArrayBuffer;
 
     toRSAEncrypted(buffer: ArrayBuffer): ArrayBuffer;
-    
+
     randomCipherIV(): ArrayBuffer;
 
     getRSAEncryptedKey(): ArrayBuffer;

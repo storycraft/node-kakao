@@ -34,34 +34,34 @@ import { TalkChannelList } from "./talk-channel-list";
  * Update channel info from handler
  */
 export interface InfoUpdater<T extends ChannelInfo = ChannelInfo, U extends AnyChannelUserInfo = AnyChannelUserInfo> {
-    
+
     /**
      * Update channel info
-     * 
-     * @param info 
+     *
+     * @param info
      */
     updateInfo(info: Partial<T>): void;
 
     /**
      * Update user info
-     * 
-     * @param user 
+     *
+     * @param user
      * @param info If not supplied the user get deleted
      */
     updateUserInfo(user: ChannelUser, info?: Partial<U>): void;
 
     /**
      * Update users joined
-     * 
-     * @param user 
+     *
+     * @param user
      */
     addUsers(...user: ChannelUser[]): AsyncCommandResult<U[]>;
 
     /**
      * Update watermark
-     * 
-     * @param readerId 
-     * @param watermark 
+     *
+     * @param readerId
+     * @param watermark
      */
     updateWatermark(readerId: Long, watermark: Long): void;
 
@@ -89,11 +89,11 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
         switch (method) {
             case 'MSG': {
                 const msgData = data as DefaultRes & MsgRes;
-            
+
                 if (!this._channel.channelId.equals(msgData.chatId)) break;
-    
+
                 const chatLog = structToChatlog(msgData.chatLog);
-                
+
                 this._callEvent(
                     parentCtx,
                     'chat',
@@ -115,7 +115,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 if (!this._channel.channelId.equals(readData.chatId)) break;
 
                 const reader = this._channel.getUserInfo({ userId: readData.userId });
-                
+
                 this._updater.updateWatermark(readData.userId, readData.watermark);
 
                 this._callEvent(
@@ -172,7 +172,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             case 'NEWMEM': {
                 const struct = data['chatLog'] as ChatlogStruct;
                 if (!this._channel.channelId.eq(struct.chatId)) break;
-                
+
                 const chatLog = structToChatlog(struct);
 
                 this._updater.addUsers(chatLog.sender).then();
@@ -191,7 +191,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             case 'SYNCDLMSG': {
                 const struct = data['chatLog'] as ChatlogStruct;
                 if (!this._channel.channelId.eq(struct.chatId)) break;
-                
+
                 const chatLog = structToChatlog(struct);
                 if (chatLog.type !== KnownChatType.FEED) break;
                 const feed = feedFromChat(chatLog);
@@ -333,7 +333,7 @@ export class TalkChannelListHandler implements Managed<ChannelListEvents> {
 
             case 'SYNCJOIN': {
                 const joinData = data as DefaultRes & SyncJoinRes;
-                
+
                 if (this._list.get(joinData.c)) return;
 
                 this._list.addChannel({ channelId: joinData.c }).then(() => {

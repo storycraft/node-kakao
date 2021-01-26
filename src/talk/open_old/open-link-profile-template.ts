@@ -10,15 +10,15 @@ import { Long } from "bson";
 export namespace OpenProfileTemplate {
 
     export interface Anon {
-        
+
         anonNickname: string;
         anonProfilePath: string;
     }
 
     export interface Link {
-        
+
         profileLinkId: Long;
-        
+
     }
 
 }

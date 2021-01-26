@@ -10,7 +10,7 @@ import { Long } from "bson";
  */
 
 export class PacketInvoiceRes extends LocoBsonResponsePacket {
-    
+
     constructor(
         status: number,
         public ChannelId: Long = Long.ZERO,

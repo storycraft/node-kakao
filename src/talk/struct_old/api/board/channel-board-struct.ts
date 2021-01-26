@@ -8,7 +8,7 @@ import { WebApiStruct, WebApiStatusCode } from "../../web-api-struct";
 import { PostPermission } from "./channel-post-struct";
 
 export enum ChannelBoardStatusCode {
-    
+
     NO_PERM = -4031
 
 }

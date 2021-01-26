@@ -182,7 +182,7 @@ export abstract class LocoBasicSocket implements LocoSocket {
 
         headerBuffer.copy(buffer, offset, 0);
         bodyBuffer.copy(buffer, offset + 22, 0);
-        
+
         return buffer;
     }
 
@@ -191,7 +191,7 @@ export abstract class LocoBasicSocket implements LocoSocket {
 
         buffer.writeUInt32LE(header.packetId, 0);
         buffer.writeUInt16LE(header.statusCode, 4);
-        
+
         let written = buffer.write(header.packetName, 6, 'utf8');
         buffer.fill(0, 6 + written, 17);
 

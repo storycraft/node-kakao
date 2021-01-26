@@ -28,7 +28,7 @@ export class TalkSessionFactory implements SessionFactory {
             port: config.locoBookingPort,
             keepAlive: false
         });
-    
+
         const bookingRes = await getBookingData(bookingStream, config);
         if (!bookingRes.success) return { status: bookingRes.status, success: false };
 
@@ -37,7 +37,7 @@ export class TalkSessionFactory implements SessionFactory {
             port: bookingRes.result.wifi.ports[0],
             keepAlive: false
         }), newCryptoStore(config.locoPEMPublicKey));
-        
+
         const checkinRes = await getCheckinData(checkinStream, config);
         if (!checkinRes.success) return { status: checkinRes.status, success: false };
 

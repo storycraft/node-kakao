@@ -8,12 +8,12 @@ import { Long } from "bson";
 import { NormalMemberStruct, OpenMemberStruct } from "../struct/user";
 
 export interface MemberRes {
-    
+
     /**
      * Channel id
      */
     chatId: Long;
-    
+
     /**
      * Member list
      */

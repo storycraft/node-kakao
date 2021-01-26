@@ -29,7 +29,7 @@ export class PacketSyncProfileRes extends LocoBsonResponsePacket {
         this.ChannelId = JsonUtil.readLong(rawData['c']);
 
         this.LinkId = JsonUtil.readLong(rawData['li']);
-        
+
         if (rawData['olu']) {
             this.OpenMember = Serializer.deserialize<OpenLinkMemberStruct>(rawData['olu'], OpenLinkMemberStruct.MAPPER);
         }

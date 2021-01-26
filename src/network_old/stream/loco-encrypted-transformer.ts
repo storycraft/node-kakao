@@ -20,7 +20,7 @@ export class LocoEncryptedTransformer extends Transform {
 
     constructor(private socket: LocoSecureSocket) {
         super();
-        
+
         this.currentEncryptedHeader = null;
 
         this.chunkList = new ChunkedBufferList();
@@ -43,7 +43,7 @@ export class LocoEncryptedTransformer extends Transform {
 
     _transform(chunk: Buffer, encoding?: string, callback?: TransformCallback) {
         this.chunkList.append(chunk);
-        
+
         let buf: Buffer | null = null;
         if (!this.currentEncryptedHeader && this.chunkList.TotalByteLength > LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE) {
             buf = this.chunkList.toBuffer();
@@ -58,7 +58,7 @@ export class LocoEncryptedTransformer extends Transform {
 
                 let iv = buf.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE, LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE);
                 let encryptedBodyBuffer = buf.slice(LocoEncryptedTransformer.ENCRYPTED_HEADER_SIZE + LocoEncryptedTransformer.IV_SIZE, encryptedPacketSize);
-                
+
                 let decrypted = this.Crypto.toDecryptedPacketBuffer(encryptedBodyBuffer, iv);
 
                 let newBuf = Buffer.allocUnsafe(buf.byteLength - encryptedPacketSize);

@@ -28,7 +28,7 @@ import { PacketForwardReq, PacketForwardRes } from "../../packet_old/packet-forw
 export class ChatManager {
 
     private mediaManager: MediaManager;
-    
+
     private messageId: number;
 
     constructor(private client: LocoClient) {
@@ -107,9 +107,9 @@ export class ChatManager {
 
     async sendRaw(channel: ChatChannel, type: ChatType, text: string, extra: { [ key: string ]: StructType }): Promise<Chat | null> {
         let extraText = JsonUtil.stringifyLoseless(extra);
-        
+
         let res = await this.client.NetworkManager.requestPacketRes<PacketMessageWriteRes>(new PacketMessageWriteReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, type, true, extraText));
-        
+
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
         return this.chatFromWriteRes(res, text, extraText);
@@ -117,9 +117,9 @@ export class ChatManager {
 
     async forwardRaw(channel: ChatChannel, type: ChatType, text: string, extra: { [ key: string ]: StructType }): Promise<Chat | null> {
         let extraText = JsonUtil.stringifyLoseless(extra);
-        
+
         let res = await this.client.NetworkManager.requestPacketRes<PacketForwardRes>(new PacketForwardReq(this.client.ChatManager.getNextMessageId(), channel.Id, text, type, true, extraText));
-        
+
         if (res.StatusCode !== StatusCode.SUCCESS) return null;
 
         return this.chatFromChatlog(res.Chatlog!);
@@ -128,7 +128,7 @@ export class ChatManager {
     async sendMedia(channel: ChatChannel, template: MediaTemplates): Promise<Chat | null> {
         return this.mediaManager.sendMedia(channel, template);
     }
-    
+
     async sendTemplate(channel: ChatChannel, template: MessageTemplate): Promise<Chat | null> {
         let sentType = template.getType();
         let text = template.getText();
@@ -158,5 +158,5 @@ export class ChatManager {
 
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
-    
+
 }

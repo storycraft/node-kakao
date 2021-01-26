@@ -27,7 +27,7 @@ export class PacketLeaveReq extends LocoBsonRequestPacket {
             'block': this.Block
         };
     }
-    
+
 }
 
 export class PacketLeaveRes extends LocoBsonResponsePacket {
@@ -46,7 +46,7 @@ export class PacketLeaveRes extends LocoBsonResponsePacket {
     readBodyJson(rawData: any) {
         this.LastTokenId = JsonUtil.readLong(rawData['lastTokenId']);
     }
-    
+
 }
 
 export class PacketLeftRes extends LocoBsonResponsePacket {
@@ -67,5 +67,5 @@ export class PacketLeftRes extends LocoBsonResponsePacket {
         this.ChannelId = JsonUtil.readLong(body['chatId']);
         this.LastTokenId = JsonUtil.readLong(body['lastTokenId']);
     }
-    
+
 }

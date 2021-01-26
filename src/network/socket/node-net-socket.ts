@@ -61,7 +61,7 @@ export class NodeSocket implements Stream {
                         resolve({ done: false, value: read });
                         return;
                     }
-                    
+
                     instance._socket.once('readable', () => {
                         const read = instance._socket.read();
 
@@ -83,13 +83,13 @@ export class NodeSocket implements Stream {
     }
 
     write(data: ArrayBuffer): void {
-        if (this._ended) throw 'Tried to send data from closed socket';
+        if (this._ended) throw new Error('Tried to send data from closed socket');
 
         this._socket.write(new Uint8Array(data));
     }
 
     close(): void {
-        if (this._ended) throw 'Tried to close socket already closed';
+        if (this._ended) throw new Error('Tried to close socket already closed');
 
         this._ended = true;
         this._socket.end();
@@ -115,7 +115,7 @@ export class NodeSocket implements Stream {
                 resolve(new NodeSocket(socket));
             });
             socket.setKeepAlive(option.keepAlive);
-            
+
             socket.on('error', onErr);
         });
     }
@@ -131,7 +131,7 @@ export class NodeSocket implements Stream {
                 resolve(new NodeSocket(socket));
             });
             socket.setKeepAlive(option.keepAlive);
-            
+
             socket.on('error', onErr);
         });
     }

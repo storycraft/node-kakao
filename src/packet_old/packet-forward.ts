@@ -22,11 +22,11 @@ export class PacketForwardReq extends LocoBsonRequestPacket {
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'FORWARD';
     }
-    
+
     toBodyJson() {
         return {
             'chatId': this.ChannelId,
@@ -49,11 +49,11 @@ export class PacketForwardRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'FORWARD';
     }
-    
+
     readBodyJson(rawBody: any) {
         if (rawBody['chatLog']) {
             this.Chatlog = Serializer.deserialize<ChatlogStruct>(rawBody['chatLog'], ChatlogStruct.MAPPER);

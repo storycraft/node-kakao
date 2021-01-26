@@ -21,7 +21,7 @@ export interface OpenChannelSession {
 
     /**
      * Mark every chat as read until this chat.
-     * @param chat 
+     * @param chat
      */
     markRead(chat: ChatLogged): AsyncCommandResult;
 
@@ -33,22 +33,22 @@ export interface OpenChannelSession {
     /**
      * Get latest detailed user info.
      * @see ChannelSession.getLatestUserInfo
-     * 
-     * @param channelUser 
+     *
+     * @param channelUser
      */
     getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]>;
-    
+
     /**
      * Get every latest user info.
      * @see ChannelSession.getAllLatestUserInfo
-     * 
-     * @param channelUser 
+     *
+     * @param channelUser
      */
     getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]>;
 
     /**
      * Get kick list of this channel.
-     * 
+     *
      * @see OpenLinkSession.getKickList
      */
     getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]>;
@@ -56,15 +56,15 @@ export interface OpenChannelSession {
     /**
      * Remove user from kick list.
      * @see OpenLinkSession.removeKicked
-     * 
-     * @param user 
+     *
+     * @param user
      */
     removeKicked(user: ChannelUser): AsyncCommandResult;
 
     /**
      * Kick user. Require manage permission.
-     * 
-     * @param user 
+     *
+     * @param user
      */
     kickUser(user: ChannelUser): AsyncCommandResult;
 
@@ -75,17 +75,17 @@ export interface OpenChannelSession {
 
     /**
      * Set user permission.
-     * 
-     * @param user 
-     * @param perm 
+     *
+     * @param user
+     * @param perm
      */
     setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult;
 
     /**
      * Handover host to user.
      * Only owner can use this.
-     * 
-     * @param user 
+     *
+     * @param user
      */
     handoverHost(user: ChannelUser): AsyncCommandResult;
 

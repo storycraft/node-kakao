@@ -16,7 +16,7 @@ export class PacketSyncRewriteRes extends LocoBsonResponsePacket {
     ) {
         super(status);
     }
-    
+
     get PacketName() {
         return 'SYNCREWR';
     }

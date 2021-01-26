@@ -42,14 +42,14 @@ export interface ClientConfigOld {
 
     locoBookingURL: string;
     locoBookingPort: number;
-    
+
     locoPEMPublicKey: string;
 
     version: string;
     appVersion: string;
 
     osVersion: string;
-    
+
     deviceType: number;
     netType: number;
     mccmnc: string;
@@ -91,7 +91,7 @@ export interface WebApiConfig {
     version: string;
 
     osVersion: string;
-    
+
     deviceType: number;
 
 }
@@ -105,7 +105,7 @@ export interface ClientConfig extends SessionConfig, WebApiConfig {
 }
 
 export interface OAuthLoginConfig {
-    
+
     xvcSeedList: [ string, string ];
     loginTokenSeedList: [ string, string ];
 

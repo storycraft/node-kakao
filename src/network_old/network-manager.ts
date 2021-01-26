@@ -36,7 +36,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
     private cachedBookingData: BookingData | null;
     private cachedCheckinData: CheckinData | null;
     private lastCheckinReq: number;
-    
+
     private mainInterface: LocoMainInterface | null;
 
     private handler: LocoPacketHandler;
@@ -107,7 +107,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         return new MediaDownloadInterface(hostInfo, listener, configProvider);
     }
 
-    
+
     async requestCheckinData(userId: Long): Promise<CheckinData> {
         let config = this.configProvider.Configuration;
 
@@ -248,7 +248,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
         if (this.Logon) {
             throw new Error('Already logon to loco');
         }
-        
+
         let checkinData = await this.getCheckinData(userId);
 
         this.mainInterface = this.createMainInterface(checkinData.LocoHost);
@@ -258,14 +258,14 @@ export class NetworkManager implements LocoListener, LocoInterface {
         }
 
         let res = await this.mainInterface.login(deviceUUID, accessToken);
-        
+
         return res;
     }
 
     packetSent(packetId: number, packet: LocoRequestPacket): void {
         this.Handler.onRequest(packetId, packet);
     }
-    
+
     packetReceived(packetId: number, packet: LocoResponsePacket, reqPacket?: LocoRequestPacket): void {
         this.Handler.onResponse(packetId, packet, reqPacket);
     }
@@ -277,7 +277,7 @@ export class NetworkManager implements LocoListener, LocoInterface {
     disconnected(): void {
         this.Handler.onDisconnected();
     }
-    
+
 }
 
 export class BookingData {

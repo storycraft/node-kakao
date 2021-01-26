@@ -27,7 +27,7 @@ export class MediaManager {
     constructor(private client: LocoClient) {
 
     }
-    
+
     get Client() {
         return this.client;
     }
@@ -57,7 +57,7 @@ export class MediaManager {
                     template.mediaList.map(item => item.ext || ''),
                 )
             );
-            
+
             let reqList: Promise<PacketCompleteRes>[] = [];
             let length = template.mediaList.length;
 
@@ -104,7 +104,7 @@ export class MediaManager {
             );
 
             let uploadInterface = this.NetworkManager.createUploadInterface({ host: shipRes.VHost, port: shipRes.Port, keepAlive: true });
-    
+
             res = await uploadInterface.upload(this.ClientUser.Id, shipRes.Key, channel.Id, template.type, template.name, template.data, 'width' in template ? template.width : 0, 'height' in template ? template.height : 0);
 
             if (res.StatusCode === StatusCode.SUCCESS && res.Chatlog) return this.ChatManager.chatFromChatlog(res.Chatlog);
@@ -123,7 +123,7 @@ export class MediaManager {
 
     async requestMedia(channel: ChatChannel, mediaAttachment: MediaAttachment): Promise<Buffer | null> {
         let downloader = await this.createDownloaderFor(mediaAttachment);
-    
+
         return downloader.download(this.ClientUser.Id, mediaAttachment.KeyPath, channel.Id);
     }
 

@@ -16,8 +16,8 @@ import { Stream } from "../stream";
 /**
  * Do booking process and return result.
  * Official server require tls.
- * 
- * @param stream 
+ *
+ * @param stream
  */
 export async function getBookingData(stream: Stream, config: BookingConfig): Promise<CommandResult<GetConfRes>> {
     const bookingSession = new DefaultLocoSession(stream);
@@ -34,15 +34,15 @@ export async function getBookingData(stream: Stream, config: BookingConfig): Pro
 
     const res = await bookingSession.request<GetConfRes>('GETCONF', req);
     bookingSession.close();
-    
+
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res };
 }
 
 /**
  * Do checkin process and return result.
  * Official server require secure layer.
- * 
- * @param stream 
+ *
+ * @param stream
  */
 export async function getCheckinData(stream: Stream, config: CheckinConfig, userId?: Long): Promise<CommandResult<CheckinRes>> {
     const checkinSession = new DefaultLocoSession(stream);

@@ -53,7 +53,7 @@ export class PacketKickMemberRes extends LocoBsonResponsePacket {
     readBodyJson(body: any): void {
         this.ChannelId = JsonUtil.readLong(body['chatId']);
         this.MemberId = JsonUtil.readLong(body['kid']);
-        
+
         if (body['chatLog']) this.Chatlog = Serializer.deserialize<ChatlogStruct>(body['chatLog'], ChatlogStruct.MAPPER);
     }
 }

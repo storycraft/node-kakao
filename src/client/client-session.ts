@@ -14,7 +14,7 @@ import { AsyncCommandResult } from "../request/command-result";
 export interface LoginResult {
 
     channelList: (Channel | OpenChannel)[];
-    
+
     /**
      * Client user id
      */
@@ -27,8 +27,8 @@ export interface ClientSession {
     /**
      * Login using credential.
      * Perform LOGINLIST
-     * 
-     * @param credential 
+     *
+     * @param credential
      */
     login(credential: OAuthCredential): AsyncCommandResult<LoginResult>;
 

@@ -46,7 +46,7 @@ export class HookedSessionFactory implements SessionFactory {
     async createSession(config: SessionConfig): Promise<CommandResult<LocoSession>> {
         const sessionRes = await this._factory.createSession(config);
         if (!sessionRes.success) return sessionRes;
-    
+
         return { status: sessionRes.status, success: true, result: new HookedLocoSession(sessionRes.result, this._hook) };
     }
 

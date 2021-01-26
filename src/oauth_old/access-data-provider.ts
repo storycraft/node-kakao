@@ -8,7 +8,7 @@ import { LoginAccessDataStruct } from "../talk/struct_old/auth/login-access-data
 import { RequestHeader } from "../api/web-api-client";
 
 export interface AccessDataProvider {
-    
+
     getLatestAccessData(): LoginAccessDataStruct;
 
     fillSessionHeader(header: RequestHeader): void;

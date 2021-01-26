@@ -9,7 +9,7 @@ import { ChannelType } from "../../channel/channel-type";
 import { ChatlogStruct } from "./chat";
 
 export enum KnownChannelMetaType {
-    
+
     UNDEFINED = 0,
     NOTICE = 1,
     GROUP = 2,
@@ -23,7 +23,7 @@ export enum KnownChannelMetaType {
     LIVE_TALK_COUNT = 12,
     OPEN_CHANNEL_CHAT = 13,
     BOT = 14,
-    
+
 }
 
 export type ChannelMetaType = KnownChannelMetaType | number;
@@ -37,7 +37,7 @@ export interface ChannelMetaStruct {
     authorId: Long;
 
     content: string;
-    
+
     updatedAt: number;
 
 }
@@ -67,7 +67,7 @@ export interface DisplayUserStruct {
 }
 
 export interface ChannelInfoStruct extends Partial<NormalChannelInfoExtra>, Partial<OpenChannelInfoExtra> {
-    
+
     /**
      * Channel id
      */

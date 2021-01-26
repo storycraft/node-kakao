@@ -44,7 +44,7 @@ export class PacketKickListDelItemRes extends LocoBsonResponsePacket {
     }
 
     readBodyJson(rawData: any) {
-        
+
     }
 
 }

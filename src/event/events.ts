@@ -41,7 +41,7 @@ declare interface ChannelEvent {
 }
 
 declare interface ChannelListEvent {
-    
+
     // 유저가 방에 들어올시 호출
     'user_join': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, user: AnyChannelUserInfo, feed: ChatFeeds) => void
 

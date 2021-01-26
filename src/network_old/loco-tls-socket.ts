@@ -23,11 +23,11 @@ export class LocoTLSSocket extends LocoBasicSocket {
     }
 
     protected onConnect(): void {
-        
+
     }
-    
+
     protected onConnected(): void {
-        
+
     }
 
     protected onEnd(buffer: Buffer) {

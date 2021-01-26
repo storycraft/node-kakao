@@ -43,7 +43,7 @@ export interface NormalMemberStruct {
      * Profile status message
      */
     statusMessage: string;
-    
+
     /**
      * Linked kakao services. (ex: story)
      */
@@ -111,7 +111,7 @@ export interface OpenMemberStruct {
     /**
      * Open chat user permission
      */
-    mt: OpenChannelUserPerm;    
+    mt: OpenChannelUserPerm;
 
 }
 

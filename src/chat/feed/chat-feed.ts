@@ -11,27 +11,27 @@ import { ChatLogged, TypedChat } from "../chat";
 import { KnownChatType } from "../chat-type";
 
 export namespace FeedFragment {
-    
+
     export interface Member {
-        
+
         readonly member: FeedMember;
-    
+
     }
-    
+
     export interface MemberList {
-        
+
         readonly members: FeedMember[];
-    
+
     }
-    
+
     export interface Inviter {
-        
+
         readonly inviter: FeedMember;
-    
+
     }
-    
+
     export interface Message extends ChatLogged {
-        
+
     }
 
     export interface OpenHandOver {
@@ -83,15 +83,15 @@ export type ChatFeeds = KnownChatFeeds | Record<string, any> & ChatFeed;
 
 /**
  * Read chat text and deserialize
- * 
- * @param chat 
+ *
+ * @param chat
  */
 export function feedFromChat(chat: TypedChat<KnownChatType.FEED>): ChatFeeds {
     let feed: ChatFeeds = { feedType: -999999 };
     try {
         feed = { ...feed, ...JsonUtil.parseLoseless(chat.text) };
     } catch (e) {
-        
+
     }
 
     return feed;
@@ -99,8 +99,8 @@ export function feedFromChat(chat: TypedChat<KnownChatType.FEED>): ChatFeeds {
 
 /**
  * Serialize feed to chat text
- * 
- * @param feed 
+ *
+ * @param feed
  */
 export function feedToText(feed: ChatFeeds): string {
     return JsonUtil.stringifyLoseless(feed);

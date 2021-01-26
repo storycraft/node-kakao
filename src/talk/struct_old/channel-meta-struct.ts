@@ -9,7 +9,7 @@ import { Long } from "bson";
 import { BotAddCommandStruct, BotDelCommandStruct } from "./bot/bot-command-struct";
 
 export enum ChannelMetaType {
-    
+
     UNDEFINED = 0,
     NOTICE = 1,
     GROUP = 2,
@@ -23,11 +23,11 @@ export enum ChannelMetaType {
     LIVE_TALK_COUNT = 12,
     OPEN_CHANNEL_CHAT = 13,
     BOT = 14,
-    
+
 }
 
 export enum ChannelClientMetaType {
-    
+
     UNDEFINED = 'undefined',
     NAME = 'name',
     IMAGE_PATH = 'image_path',

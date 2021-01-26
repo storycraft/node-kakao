@@ -59,7 +59,7 @@ export class PacketSyncMessageRes extends LocoBsonResponsePacket {
                 this.ChatList.push(Serializer.deserialize<ChatlogStruct>(rawChatlog, ChatlogStruct.MAPPER));
             }
         }
-        
+
         if (rawJson['li']) this.LinkId = rawJson['li'];
         this.LastTokenId = rawJson['lastTokenId'];
     }

@@ -44,7 +44,7 @@ import { PacketMemberReq, PacketMemberRes } from "../../packet_old/packet-member
 export class ChannelManager extends IdStore<ChatChannel> {
 
     static readonly INFO_UPDATE_INTERVAL: number = 300000;
-    
+
     constructor(private client: LocoClient) {
         super();
     }
@@ -84,13 +84,13 @@ export class ChannelManager extends IdStore<ChatChannel> {
             }
 
             case ChannelType.SELFCHAT: channel = new ManagedMemoChatChannel(this, id, channelData); break;
-            
+
             case ChannelType.GROUP:
             case ChannelType.DIRECT: channel = new ManagedNormalChatChannel(this, id, channelData); break;
 
             case ChannelType.PLUSCHAT:
             default: channel = new ManagedChatChannel(this, id, channelData); break;
-            
+
         }
 
         let memberList = await this.requestMemberList(channel.Id);
@@ -102,7 +102,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         await this.sendChatOn(channel);
 
         this.set(id, channel);
-        
+
         return channel;
     }
 
@@ -118,13 +118,13 @@ export class ChannelManager extends IdStore<ChatChannel> {
         let channel = await this.addWithChannelData(id, channelInfo);
 
         this.initChannelInfo(channel, channelInfo);
-        
+
         return channel;
     }
 
     protected initChannelInfo(channel: ManagedChatChannel, channelInfo: ChannelInfoStruct) {
         channel.updateData(channelInfo);
-        
+
         if (channelInfo.metadata) channel.updateClientMeta(channelInfo.metadata);
         if (channelInfo.channelMetaList) channel.updateMetaList(channelInfo.channelMetaList);
         if (channelInfo.lastChatLog) channel.updateLastChat(this.client.ChatManager.chatFromChatlog(channelInfo.lastChatLog)!);
@@ -157,7 +157,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         if (!res.ChatInfo) return { status: res.StatusCode };
 
         let channel = await this.addWithChannelInfo(res.ChannelId, res.ChatInfo);
-        
+
         return { status: res.StatusCode, result: channel as ManagedMemoChatChannel };
     }
 
@@ -169,7 +169,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         if (!res.ChatInfo) return { status: res.StatusCode };
 
         let channel = await this.addWithChannelInfo(res.ChannelId, res.ChatInfo);
-        
+
         return { status: res.StatusCode, result: channel };
     }
 
@@ -187,7 +187,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         // fix linkid and openToken
         res.ChatInfo.linkId = res.OpenLink.linkId;
         res.ChatInfo.openToken = res.OpenLink.openToken;
-        
+
         return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
@@ -212,7 +212,7 @@ export class ChannelManager extends IdStore<ChatChannel> {
         // fix linkid and openToken
         res.ChatInfo.linkId = res.LinkInfo.linkId;
         res.ChatInfo.openToken = res.LinkInfo.openToken;
-        
+
         return { status: res.StatusCode, result: await this.addWithChannelInfo(res.ChatInfo.channelId, res.ChatInfo) as ManagedOpenChatChannel };
     }
 
@@ -241,9 +241,9 @@ export class ChannelManager extends IdStore<ChatChannel> {
             let simplfiedList = await this.requestMemberList(channelId);
 
             if (!simplfiedList) return null;
-            
+
             memberIdList = simplfiedList.map(member => member.userId);
-            
+
         }
         let res = await this.client.NetworkManager.requestPacketRes<PacketMemberRes>(new PacketMemberReq(channelId, memberIdList));
 
@@ -260,14 +260,14 @@ export class ChannelManager extends IdStore<ChatChannel> {
         if (channel.isOpenChat()) openToken = (channel as OpenChatChannel).OpenToken;
 
         let res = await this.client.NetworkManager.requestPacketRes<PacketChatOnRoomRes>(new PacketChatOnRoomReq(channel.Id, token, openToken));
-    
+
         if (res.MemberList) {
             this.updateUserInfoList(channel as ManagedChatChannel, res.MemberList, res.ClientOpenProfile);
         }
-        
+
         return { status: res.StatusCode, result: res.StatusCode === StatusCode.SUCCESS };
     }
-    
+
     async leave(channel: ChatChannel, block: boolean = false): Promise<RequestResult<boolean>> {
         let res = await this.client.NetworkManager.requestPacketRes<PacketLeaveRes>(new PacketLeaveReq(channel.Id, block));
 
@@ -388,10 +388,10 @@ export class ChannelManager extends IdStore<ChatChannel> {
         let info = await this.requestChannelInfo(channel.Id);
 
         if (info) this.initChannelInfo(channel, info);
-        
+
         return channel;
     }
-    
+
     async initializeLoginData(chatDataList: ChannelDataStruct[]) {
         this.clear();
 

@@ -17,7 +17,7 @@ export interface CommandSession {
 
     /**
      * Request command response
-     * 
+     *
      * @param method method
      * @param data data
      */

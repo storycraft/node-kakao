@@ -8,7 +8,7 @@
  * Known chat type.
  */
 export enum KnownChatType {
-    
+
     FEED = 0,
     TEXT = 1,
     PHOTO = 2,

@@ -29,21 +29,21 @@ export interface LocoPacketHeader {
 export interface LocoPacketDataCodec<T, R = T> {
 
     /**
-     * @param dataType 
-     * 
+     * @param dataType
+     *
      * @returns true if codec can decode data with supplied type.
      */
     canDecode(dataType: number): boolean;
 
     /**
      * Decode packet data buffer to data
-     * @param data 
+     * @param data
      */
     decode(data: ArrayBuffer): R;
 
     /**
      * Encode data to packet data
-     * @param data 
+     * @param data
      */
     encode(data: T): [number, ArrayBuffer];
 

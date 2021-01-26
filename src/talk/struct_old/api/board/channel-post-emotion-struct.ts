@@ -11,5 +11,5 @@ export interface ChannelPostEmotionStruct extends WebApiStruct {
 
     comments: ChannelPost.Emotion[];
     has_more: boolean;
-    
+
 }

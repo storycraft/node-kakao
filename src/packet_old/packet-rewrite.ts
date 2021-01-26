@@ -17,16 +17,16 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Text,
         public RewriteFeedType: FeedType = KnownFeedType.OPENLINK_REWRITE_FEED,
-        public ReportChannelLink: string = '', // Report channel 
+        public ReportChannelLink: string = '', // Report channel
         public Category: string = '', // Report Category
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'REWRITE';
     }
-    
+
     toBodyJson() {
         let obj: any = {
             'li': this.LinkId,
@@ -53,12 +53,12 @@ export class PacketRewriteReq extends LocoBsonRequestPacket {
 }
 
 export class PacketRewriteRes extends LocoBsonResponsePacket {
-    
+
     get PacketName() {
         return 'REWRITE';
     }
 
     readBodyJson(body: any): void {
-        
+
     }
 }

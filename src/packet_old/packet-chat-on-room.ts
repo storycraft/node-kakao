@@ -13,7 +13,7 @@ import { OpenMemberStruct, OpenLinkMemberStruct } from "../talk/struct_old/open/
 import { Serializer } from "json-proxy-mapper";
 
 export class PacketChatOnRoomReq extends LocoBsonRequestPacket {
-    
+
     constructor(
         public ChannelId: Long = Long.ZERO,
         public Token: Long = Long.ZERO,
@@ -64,7 +64,7 @@ export class PacketChatOnRoomRes extends LocoBsonResponsePacket {
 
         this.Type = rawData['t'];
         if (rawData['w']) this.WatermarkList = rawData['w'];
-        
+
         if (rawData['a']) this.WatermarkUserIdList = rawData['a'];
 
         this.MemberList = [];

@@ -25,7 +25,7 @@ export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
     get BodyType() {
         return 0;
     }
-    
+
     abstract toBodyJson(): any;
 
     writeBody() {
@@ -45,7 +45,7 @@ export abstract class LocoBsonRequestPacket implements LocoRequestPacket {
 export abstract class LocoBsonResponsePacket implements LocoResponsePacket {
 
     constructor(private headerStatus: number, private status: number = 0) {
-        
+
     }
 
     get StatusCode(): StatusCode {
@@ -79,7 +79,7 @@ export abstract class LocoBsonResponsePacket implements LocoResponsePacket {
 export class DefaultBsonRequestPacket extends LocoBsonRequestPacket {
 
     private packetName: string;
-    
+
     private content: any;
 
     constructor(packetName: string, content: any = {}) {
@@ -102,7 +102,7 @@ export class DefaultBsonRequestPacket extends LocoBsonRequestPacket {
 export class DefaultBsonResponsePacket extends LocoBsonResponsePacket {
 
     private packetName: string;
-    
+
     private content: any;
 
     constructor(headerStatus: number, packetName: string) {

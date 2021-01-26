@@ -32,7 +32,7 @@ export class LocoPacketDispatcher {
 
     /**
      * Send packet.
-     * 
+     *
      * @returns response
      */
     sendPacket(packet: LocoPacket) {

@@ -78,7 +78,7 @@ export abstract class Chat {
     get Text() {
         return this.text;
     }
-    
+
     get SendTime() {
         return this.sendTime;
     }
@@ -117,7 +117,7 @@ export abstract class Chat {
         let mentionList = this.getUserMentionList(userId);
 
         if (!mentionList) return 0;
-        
+
         return this.getUserMentionList(userId)!.IndexList.length;
     }
 
@@ -126,7 +126,7 @@ export abstract class Chat {
     isFeed(): boolean {
         return this.Type === ChatType.Feed;
     }
-    
+
     private feed?: ChatFeed;
 
     getFeed() {
@@ -149,7 +149,7 @@ export abstract class Chat {
         try {
             json = JsonUtil.parseLoseless(rawAttachment);
         } catch(e) {
-            
+
         }
 
         this.rawAttachment = json;
@@ -201,23 +201,23 @@ export abstract class Chat {
 
         return openChannel.hideChat(this);
     }
-    
+
 }
 
 export class UnknownChat extends Chat {
-    
+
     get Type() {
         return ChatType.Unknown;
     }
 
     protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]): void {
-        
+
     }
 
 }
 
 export class FeedChat<T extends ChatFeed = ChatFeed> extends Chat {
-    
+
     get Type() {
         return ChatType.Feed;
     }
@@ -243,7 +243,7 @@ export class FeedChat<T extends ChatFeed = ChatFeed> extends Chat {
 }
 
 export class TextChat extends Chat {
-    
+
     get Type() {
         return ChatType.Text;
     }
@@ -325,7 +325,7 @@ export abstract class EmoticonChat extends Chat {
 }
 
 export class StaticEmoticonChat extends EmoticonChat {
-    
+
     get Type() {
         return ChatType.Sticker;
     }
@@ -340,7 +340,7 @@ export class StaticEmoticonChat extends EmoticonChat {
 }
 
 export class AnimatedEmoticonChat extends EmoticonChat {
-    
+
     get Type() {
         return ChatType.StickerAni;
     }
@@ -355,7 +355,7 @@ export class AnimatedEmoticonChat extends EmoticonChat {
 }
 
 export class GifEmoticonChat extends EmoticonChat {
-    
+
     get Type() {
         return ChatType.StickerAni;
     }
@@ -370,7 +370,7 @@ export class GifEmoticonChat extends EmoticonChat {
 }
 
 export class VideoChat extends Chat {
-    
+
     get Type() {
         return ChatType.Video;
     }
@@ -389,7 +389,7 @@ export class VideoChat extends Chat {
 }
 
 export class SharpSearchChat extends Chat {
-    
+
     get Type() {
         return ChatType.Search;
     }
@@ -431,7 +431,7 @@ export class MapChat extends Chat {
 export class ReplyChat extends Chat {
 
     private contentOnly: boolean = false;
-    
+
     get Type() {
         return ChatType.Reply;
     }
@@ -462,7 +462,7 @@ export class ReplyChat extends Chat {
 }
 
 export class CustomChat extends Chat {
-    
+
     get Type() {
         return ChatType.Custom;
     }
@@ -510,5 +510,5 @@ export namespace TypeMap {
     typeMap.set(ChatType.Reply, ReplyChat);
     typeMap.set(ChatType.Custom, CustomChat);
 
-    
+
 }

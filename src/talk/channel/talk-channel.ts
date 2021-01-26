@@ -53,14 +53,14 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
      * Get displayed channel name
      */
     getDisplayName(): string;
-    
+
     /**
      * Get channel user info
-     * 
+     *
      * @param user User to find
      */
     getUserInfo(user: ChannelUser): Readonly<AnyChannelUserInfo> | undefined;
-    
+
     /**
      * Get user info iterator
      */
@@ -74,7 +74,7 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
     /**
      * Get read count of the chat.
      * This may not work correctly on channel with many users. (99+)
-     * 
+     *
      * @param chat
      */
     getReadCount(chat: ChatLogged): number;
@@ -82,8 +82,8 @@ export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<Ch
     /**
      * Get readers in this channel.
      * This may not work correctly on channel with many users. (99+)
-     * 
-     * @param chat 
+     *
+     * @param chat
      */
     getReaders(chat: ChatLogged): Readonly<AnyChannelUserInfo>[];
 
@@ -106,10 +106,10 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
     constructor(private _channel: Channel, session: TalkSession, info: Partial<NormalChannelInfo> = {}) {
         super();
-        
+
         this._userInfoMap = new Map();
         this._watermarkMap = new Map();
-        
+
         this._channelSession = new TalkChannelSession(this, session);
         this._handler = new TalkChannelHandler(this, {
             updateInfo: info => this._info = { ...this._info, ...info },
@@ -171,9 +171,9 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
     getReadCount(chat: ChatLogged): number {
         let count = 0;
-        
+
         if (this.userCount >= 100) return 0;
-        
+
         for (const [ strId ] of this._userInfoMap) {
             const watermark = this._watermarkMap.get(strId);
 
@@ -252,13 +252,13 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
     syncChatList(endLogId: Long, startLogId?: Long) {
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
-    
+
     async chatON() {
         const res = await this._channelSession.chatON();
 
         if (res.success) {
             const { result } = res;
-            
+
             if (this._info.type !== result.t || this._info.lastChatLogId !== result.l) {
                 const newInfo = { ...this._info, type: result.t, lastChatLogId: result.l };
                 this._info = newInfo;
@@ -270,7 +270,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
                 for (let i = 0; i < userLen; i++) {
                     const userId = result.a[i];
                     const watermark = result.w[i];
-    
+
                     watermarkMap.set(userId.toString(), watermark);
                 }
                 this._watermarkMap = watermarkMap;
@@ -282,7 +282,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
                 const structList = result.m as NormalMemberStruct[];
                 structList.forEach(struct => {
                     const wrapped = structToChannelUserInfo(struct);
-                    
+
                     userInfoMap.set(wrapped.userId.toString(), wrapped);
                 });
 
@@ -316,7 +316,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 
         return infoRes;
     }
-    
+
     async getAllLatestUserInfo() {
         const infoRes = await this._channelSession.getAllLatestUserInfo();
 
@@ -348,7 +348,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
 }
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, AnyTalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
-    
+
     private _info: OpenChannelInfo;
 
     private _channel: OpenChannel;
@@ -364,7 +364,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     constructor(channel: OpenChannel, session: TalkSession, info: Partial<OpenChannelInfo> = {}) {
         super();
-        
+
         this._channel = channel;
 
         this._info = OpenChannelInfo.createPartial(info);
@@ -517,7 +517,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
         if (res.success) {
             const { result } = res;
-            
+
             if (this._info.type !== result.t || this._info.lastChatLogId !== result.l || this._info.openToken !== result.otk) {
                 const newInfo = { ...this._info, type: result.t, lastChatLogId: result.l };
                 if (result.otk) {
@@ -532,7 +532,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
                 for (let i = 0; i < userLen; i++) {
                     const userId = result.a[i];
                     const watermark = result.w[i];
-    
+
                     watermarkMap.set(userId.toString(), watermark);
                 }
                 this._watermarkMap = watermarkMap;
@@ -544,7 +544,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
                 const structList = result.m as OpenMemberStruct[];
                 structList.forEach(struct => {
                     const wrapped = structToOpenChannelUserInfo(struct);
-                    
+
                     userInfoMap.set(wrapped.userId.toString(), wrapped);
                 });
 
@@ -583,7 +583,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
         return infoRes;
     }
-    
+
     async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
         const infoRes = await this._openChannelSession.getAllLatestUserInfo();
 
@@ -636,7 +636,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
             if (openlinkRes.success) {
                 this._info = { ...this._info, openLink: openlinkRes.result };
             }
-            
+
             await this.getLatestUserInfo(user, this._channelSession.session.clientUser);
         }
 

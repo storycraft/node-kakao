@@ -36,9 +36,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
 
     /**
      * Construct managed channel list and initialize using channelList if present.
-     * @param session 
-     * @param channelList 
-     * @param openChannelList 
+     * @param session
+     * @param channelList
+     * @param openChannelList
      */
     constructor(session: TalkSession) {
         super();
@@ -46,9 +46,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
         this._session = session;
 
         this._handler = new TalkChannelListHandler(this);
-        
+
         this._manageSession = new TalkChannelManageSession(session);
-        
+
         this._normalChannelMap = new Map();
         this._openChannelMap = new Map();
     }
@@ -75,8 +75,8 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * @param channelId 
-     * 
+     * @param channelId
+     *
      * @returns true if list instance is managing channel.
      */
     contains(channelId: Long) {
@@ -86,8 +86,8 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * @param channelId 
-     * 
+     * @param channelId
+     *
      * @returns true if list instance is managing normal channel.
      */
     containsNormal(channelId: Long) {
@@ -97,8 +97,8 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
     }
 
     /**
-     * @param channelId 
-     * 
+     * @param channelId
+     *
      * @returns true if list instance is managing open channel.
      */
     containsOpen(channelId: Long) {
@@ -109,7 +109,7 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
 
     /**
      * Get managed channel object from channel list.
-     * @param channelId 
+     * @param channelId
      */
     get(channelId: Long): AnyTalkChannel | undefined {
         const strId = channelId.toString();
@@ -159,7 +159,7 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
 
         return talkChannel;
     }
-    
+
     delete(channelId: Long) {
         const strId = channelId.toString();
 
@@ -210,8 +210,8 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
 
     /**
      * Initialize TalkChannelList using channelList.
-     * @param session 
-     * @param channelList 
+     * @param session
+     * @param channelList
      */
     static async initialize(talkChannelList: TalkChannelList, channelList: (Channel | OpenChannel)[] = []) {
         talkChannelList._normalChannelMap.clear();

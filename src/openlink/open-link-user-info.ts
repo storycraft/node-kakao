@@ -21,7 +21,7 @@ export interface OpenLinkKickedUser extends ChannelUser {
 
 export interface OpenLinkKickedUserInfo extends OpenLinkKickedUser, DisplayUserInfo {
 
-    
+
 
 }
 

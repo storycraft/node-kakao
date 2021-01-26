@@ -8,13 +8,13 @@ import { StructBase } from "../struct-base";
 import { Long } from "bson";
 
 export interface BotCommandStruct extends StructBase {
-    
+
     id: string;
 
 }
 
 export interface BotAddCommandStruct extends BotCommandStruct {
-    
+
     name: string;
 
     updatedAt: number;

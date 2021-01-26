@@ -45,7 +45,7 @@ export class MediaUploadInterface extends LocoSecureCommandInterface {
             } else {
                 this.ticketObj.resolve(res as PacketCompleteRes);
             }
-            
+
             this.disconnect();
         }
 

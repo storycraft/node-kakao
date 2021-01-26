@@ -16,17 +16,17 @@ export enum SharpContentType {
 }
 
 export abstract class SharpBaseContent implements AttachmentContent {
-    
+
     abstract readRawContent(rawData: any): void;
-    
+
     abstract toRawContent(): any;
 
 }
 
 export abstract class SharpContent extends SharpBaseContent {
-    
+
     abstract readRawContent(rawData: any): void;
-    
+
     abstract toRawContent(): any;
 
 }
@@ -136,7 +136,7 @@ export class SharpAttachment implements ChatAttachment {
         public MainImage?: SharpImageFragment,
         public Footer?: SharpButtonListContent
     ) {
-        
+
     }
 
     get RequiredMessageType() {
@@ -165,7 +165,7 @@ export class SharpAttachment implements ChatAttachment {
 
                 switch(this.ContentType) {
                     case SharpContentType.VIDEO_CLIP: content = new SharpVideoContent(); break;
-                    
+
                     case SharpContentType.MEDIA: content = new SharpMediaContent(); break;
 
                     case SharpContentType.LIST:
@@ -227,7 +227,7 @@ export class SharpAttachment implements ChatAttachment {
 export class SharpButtonListContent extends SharpContent {
     constructor(
         public ButtonList?: SharpButtonFragment[],
-        
+
     ) {
         super();
     }
@@ -244,7 +244,7 @@ export class SharpButtonListContent extends SharpContent {
                 this.ButtonList.push(btn);
             }
         }
-        
+
     }
 
     toRawContent(): any {
@@ -289,7 +289,7 @@ export class SharpImageContent extends SharpContent {
             this.Image = new SharpImageFragment();
             this.Image.readRawContent(rawData);
         }
-        
+
     }
 
     toRawContent(): any {
@@ -358,7 +358,7 @@ export enum WeatherIcon {
 }
 
 export class SharpWeatherFragment extends SharpFragment {
-    
+
     constructor(
         public Icon: WeatherIcon = WeatherIcon.CLEAR,
         public Text: SharpTextFragment = new SharpTextFragment(),
@@ -439,7 +439,7 @@ export class SharpWeatherContent extends SharpContent {
                 this.SubWeather.push(fragment);
             }
         }
-        
+
     }
 
     toRawContent(): any {
@@ -498,7 +498,7 @@ export class SharpSimpleContent extends SharpFragment {
         this.InfoText = rawData['D'];
 
         this.RedirectURL = rawData['L'];
-        
+
     }
 
     toRawContent(): any {
@@ -542,7 +542,7 @@ export class SharpMediaContent extends SharpContent {
 
             for (let rawText of rawData['DL']) {
                 if (!rawText) continue;
-                
+
                 let text = new SharpTextFragment();
                 text.readRawContent(rawText);
                 this.ExtraInfoList.push(text);
@@ -557,7 +557,7 @@ export class SharpMediaContent extends SharpContent {
             this.Image = new SharpImageFragment();
             this.Image.readRawContent(rawData);
         }
-        
+
     }
 
     toRawContent(): any {
@@ -619,12 +619,12 @@ export class SharpMovieContent extends SharpContent {
 
             for (let rawImage of rawData['IL']) {
                 if (!rawImage) continue;
-                
+
                 let img = new SharpImageFragment();
                 img.readRawContent(rawImage);
                 this.ImageList.push(img);
             }
-            
+
         }
 
         if (rawData['DL']) {
@@ -632,13 +632,13 @@ export class SharpMovieContent extends SharpContent {
 
             for (let rawText of rawData['DL']) {
                 if (!rawText) continue;
-                
+
                 let text = new SharpTextFragment();
                 text.readRawContent(rawText);
                 this.ExtraInfoList.push(text);
             }
         }
-        
+
         this.StarRate = rawData['ST'];
     }
 
@@ -709,7 +709,7 @@ export class SharpRankContent extends SharpContent {
         if (rawData['RA']) {
             this.Rank = rawData['RA'];
         }
-        
+
         this.StarRate = rawData['ST'];
     }
 

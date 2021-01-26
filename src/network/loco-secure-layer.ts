@@ -28,7 +28,7 @@ export class LocoSecureLayer implements Stream {
     iterate() {
         const instance = this;
         const iterator = instance._stream.iterate();
-        
+
         const headerBufferList = new ChunkedArrayBufferList();
         const packetBufferList = new ChunkedArrayBufferList();
 
@@ -41,11 +41,11 @@ export class LocoSecureLayer implements Stream {
                 if (instance._stream.ended) {
                     return { done: true, value: null };
                 }
-                
+
                 if (headerBufferList.byteLength < 20) {
                     for await (const data of iterator) {
                         headerBufferList.append(data);
-    
+
                         if (headerBufferList.byteLength >= 20) break;
                     }
 
@@ -67,7 +67,7 @@ export class LocoSecureLayer implements Stream {
                 if (packetBufferList.byteLength < dataSize) {
                     for await (const data of iterator) {
                         packetBufferList.append(data);
-    
+
                         if (packetBufferList.byteLength >= dataSize) break;
                     }
 
@@ -75,7 +75,7 @@ export class LocoSecureLayer implements Stream {
                         return { done: true, value: null };
                     }
                 }
-                
+
                 const dataBuffer = packetBufferList.toBuffer();
                 if (dataBuffer.byteLength > dataSize) {
                     headerBufferList.append(dataBuffer.slice(dataSize));
@@ -86,7 +86,7 @@ export class LocoSecureLayer implements Stream {
             }
         };
     }
-    
+
     get ended() {
         return this._stream.ended;
     }
@@ -119,16 +119,16 @@ export class LocoSecureLayer implements Stream {
         const encrypted = this._crypto.toAESEncrypted(data, iv);
 
         const packet = new ArrayBuffer(encrypted.byteLength + 20);
-        
+
         new DataView(packet).setUint32(0, encrypted.byteLength + 16, true);
-        
+
         const packetArr = new Uint8Array(packet);
         packetArr.set(new Uint8Array(iv), 4);
         packetArr.set(new Uint8Array(encrypted), 20);
-        
+
         this._stream.write(packet);
     }
-    
+
     protected sendHandshake() {
         const encryptedKey = this._crypto.getRSAEncryptedKey();
         const handshakePacket = new ArrayBuffer(12 + encryptedKey.byteLength);

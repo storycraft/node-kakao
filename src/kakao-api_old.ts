@@ -96,7 +96,7 @@ export class KakaoAPI {
     }
 
 
-    
+
     // This will return path. Use getUploadedFile to get Full URL
     static async uploadProfile(img: Buffer, name: string, userId: number = -1): Promise<string> {
         let formData = new FormData();
@@ -160,7 +160,7 @@ export class KakaoAPI {
 
         let headers = {};
         AHeaderDecorator.INSTANCE.fillHeader(headers);
-        
+
         let req = Axios.request({
             url: KakaoAPI.getUploadURL(type),
             method: 'POST',
@@ -239,12 +239,12 @@ export class KakaoAPI {
 export namespace KakaoAPI {
 
     export enum AttachmentType {
-        
+
         IMAGE = 'image/jpeg',
         AUDIO = 'audio/mp4',
         VIDEO = 'video/mp4',
         FILE = 'image/jpeg'//'application/*' //THIS DOESNT WORK WTF WHY
 
     }
-    
+
 }

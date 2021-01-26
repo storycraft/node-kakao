@@ -19,7 +19,7 @@ export class PacketChannelListReq extends LocoBsonRequestPacket {
     ) {
         super();
     }
-    
+
     get PacketName() {
         return 'LCHATLIST';
     }

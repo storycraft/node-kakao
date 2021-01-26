@@ -18,7 +18,7 @@ export interface Chat {
      * Chat type
      */
     type: ChatType;
-    
+
     /**
      * Chat text. Can be empty string
      */
@@ -77,8 +77,8 @@ export interface ChatWritten {
 }
 
 export interface Chatlog extends ChatLogLinked, Chat, ChatWritten {
-    
-    
+
+
 }
 
 export type TypedChatlog<T extends ChatType> = Chatlog & TypedChat<T>;

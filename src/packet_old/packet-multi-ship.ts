@@ -16,7 +16,7 @@ export class PacketMultiShipReq extends LocoBsonRequestPacket {
 
         public SizeList: Long[] = [],
         public ChecksumList: string[] = [],
-        
+
         public ExtList: string[] = []
     ) {
         super();

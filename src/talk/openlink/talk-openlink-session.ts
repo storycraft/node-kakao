@@ -35,7 +35,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
             }
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
-        
+
         const list: InformedOpenLink[] = res.ols.map(struct => {
             return { openLink: structToOpenLink(struct), info: structToOpenLinkInfo(struct) };
         });
@@ -44,7 +44,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
 
         return { status: res.status, success: true, result: list };
     }
-    
+
     async getOpenLink(...components: OpenLinkComponent[]): AsyncCommandResult<Readonly<OpenLink>[]> {
         const res = await this._session.request<SyncLinkRes>(
             'INFOLINK',
@@ -58,7 +58,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
 
         return { status: res.status, success: true, result: list };
     }
-    
+
     async getJoinInfo(linkURL: string, referer: string = 'EW'): AsyncCommandResult<Readonly<InformedOpenLink>> {
         const res = await this._session.request<JoinInfoRes>(
             'JOININFO',
@@ -93,7 +93,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
                 'kid': user.userId
             }
         );
-        
+
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
