@@ -17,8 +17,10 @@ import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
+import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
 import { ChatlogStruct } from "../../packet/struct/chat";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
+import { structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { AnyChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -158,6 +160,9 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 const chatLog = structToChatlog(struct);
 
                 this._updater.updateUserInfo(chatLog.sender);
+
+                if (chatLog.type !== KnownChatType.FEED) break;
+                const feed = feedFromChat(chatLog);
                 // TODO
                 break;
             }
@@ -169,6 +174,9 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 const chatLog = structToChatlog(struct);
 
                 this._updater.addUsers(chatLog.sender).then();
+
+                if (chatLog.type !== KnownChatType.FEED) break;
+                const feed = feedFromChat(chatLog);
                 // TODO
                 break;
             }
@@ -231,7 +239,22 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
             }
 
             case 'SYNCLINKPF': {
-                // TODO
+                const pfData = data as DefaultRes & SyncLinkPfRes;
+                if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) return;
+
+                const updated = structToOpenLinkChannelUserInfo(pfData.olu);
+                const last = this._channel.getUserInfo(updated);
+                if (!last) break;
+
+                this._updater.updateUserInfo(updated, updated);
+
+                this._callEvent(
+                    parentCtx,
+                    'profile_changed',
+                    this._channel,
+                    last,
+                    updated
+                );
                 break;
             }
 
