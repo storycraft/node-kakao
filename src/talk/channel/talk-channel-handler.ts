@@ -17,6 +17,7 @@ import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
+import { SyncJoinRes } from "../../packet/chat/sync-join";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
 import { SyncMemTRes } from "../../packet/chat/sync-mem-t";
 import { ChatlogStruct } from "../../packet/struct/chat";
@@ -229,11 +230,6 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
         switch (method) {
 
-            case 'LINKKICKED': {
-                // TODO
-                break;
-            }
-
             case 'SYNCMEMT': {
                 const memTData = data as DefaultRes & SyncMemTRes;
                 if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
@@ -332,6 +328,35 @@ export class TalkChannelListHandler implements Managed<ChannelListEvents> {
                     'channel_left',
                     channel
                 );
+                break;
+            }
+
+            case 'SYNCJOIN': {
+                const joinData = data as DefaultRes & SyncJoinRes;
+                
+                if (this._list.get(joinData.c)) return;
+
+                this._list.addChannel({ channelId: joinData.c }).then(() => {
+                    const channel = this._list.get(joinData.c);
+                    if (!channel) return;
+
+                    const chatLog = structToChatlog(joinData.chatLog);
+                    if (chatLog.type !== KnownChatType.FEED) return;
+                    const feed = feedFromChat(chatLog);
+
+                    this._callEvent(
+                        parentCtx,
+                        'channel_join',
+                        channel,
+                        chatLog,
+                        feed
+                    );
+                });
+                break;
+            }
+
+            case 'LINKKICKED': {
+                // TODO
                 break;
             }
 

@@ -49,7 +49,7 @@ declare interface ChannelListEvent {
     'user_left': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, user: AnyChannelUserInfo, feed: ChatFeeds) => void;
 
     // 클라이언트가 채널 들어올시 호출
-    'channel_join': (channel: AnyTalkChannel, feed?: FeedChat<OpenJoinFeed>) => void;
+    'channel_join': (channel: AnyTalkChannel, feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, feed: ChatFeeds) => void;
 
     // 클라이언트가 채널 나갈시 호출
     'channel_left': (channel: AnyTalkChannel) => void;
