@@ -615,7 +615,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._openChannelSession.removeKicked(user);
     }
 
-    async setUserPerm(user: OpenChannelUser, perm: OpenChannelUserPerm) {
+    async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm) {
         const res = await this._openChannelSession.setUserPerm(user, perm);
 
         if (res.success) {
@@ -628,7 +628,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
-    async handoverHost(user: OpenChannelUser) {
+    async handoverHost(user: ChannelUser) {
         const res = await this._openChannelSession.handoverHost(user);
 
         if (res.success) {
@@ -638,6 +638,18 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
             }
             
             await this.getLatestUserInfo(user, this._channelSession.session.clientUser);
+        }
+
+        return res;
+    }
+
+    async kickUser(user: ChannelUser) {
+        const res = await this._openChannelSession.kickUser(user);
+
+        if (res.success) {
+            const strId = user.userId.toString();
+            this._userInfoMap.delete(strId);
+            this._watermarkMap.delete(strId);
         }
 
         return res;

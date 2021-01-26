@@ -418,7 +418,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         }
     }
 
-    async setUserPerm(user: OpenChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult {
+    async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult {
         const res = await this._session.request(
             'SETMEMTYPE',
             {
@@ -432,7 +432,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    async handoverHost(user: OpenChannelUser): AsyncCommandResult {
+    async handoverHost(user: ChannelUser): AsyncCommandResult {
         const res = await this._session.request(
             'SETMEMTYPE',
             {
@@ -440,6 +440,19 @@ export class TalkOpenChannelSession implements OpenChannelSession {
                 'li': this._channel.linkId,
                 'mids': [ user.userId, this._session.clientUser.userId ],
                 'mts': [ OpenChannelUserPerm.OWNER, OpenChannelUserPerm.NONE ]
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async kickUser(user: ChannelUser): AsyncCommandResult {
+        const res = await this._session.request(
+            'KICKMEM',
+            {
+                'c': this._channel.channelId,
+                'li': this._channel.linkId,
+                'mid': user.userId
             }
         );
 
