@@ -35,9 +35,19 @@ export class MediaDownloader {
     }
 
     /**
-     * Download media.
+     * Close downloader without downloading
      */
-    async download(): AsyncCommandResult<DownloadInfo> {
+    close() {
+        this._stream.close();
+        this._done = true;
+    }
+
+    /**
+     * Download media.
+     * 
+     * @param offset data start offset to download (default = 0)
+     */
+    async download(offset: number = 0): AsyncCommandResult<DownloadInfo> {
         if (this._done) throw 'Cannot download using finished downloader';
 
         const session = new DefaultLocoSession(this._stream);
@@ -46,7 +56,7 @@ export class MediaDownloader {
         session.request('DOWN', {
             'k': this._media.key,
             'c': this._channel.channelId,
-            'o': 0,
+            'o': offset,
             'rt': true,
 
             'u': this._talkSession.clientUser.userId,
@@ -77,8 +87,10 @@ export class MediaDownloader {
     /**
      * Download thumbnail.
      * Only works on photo, video.
+     * 
+     * @param offset data start offset to download (default = 0)
      */
-    async downloadThumb(): AsyncCommandResult<DownloadInfo> {
+    async downloadThumb(offset: number = 0): AsyncCommandResult<DownloadInfo> {
         if (this._done) throw 'Cannot download using finished downloader';
 
         const session = new DefaultLocoSession(this._stream);
@@ -87,7 +99,7 @@ export class MediaDownloader {
         session.request('MINI', {
             'k': this._media.key,
             'c': this._channel.channelId,
-            'o': 0,
+            'o': offset,
 
             // These should be actual dimension of media.
             // Seems like server doesn't care about it.
