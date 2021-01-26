@@ -94,8 +94,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     parentCtx,
                     'chat',
                     chatLog,
-                    this._channel,
-                    this._channel.getUserInfo(chatLog.sender)
+                    this._channel
                 );
 
                 this._updater.updateInfo({

@@ -22,13 +22,13 @@ import { ChatFeeds } from "../chat/feed/chat-feed";
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
-    'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void;
+    'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel) => void;
 
     // 쳇 읽을 시 호출
     'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
     // 쳇 삭제되었을시 호출
-    'chat_deleted': (chatlog: Readonly<Chatlog>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
+    'chat_deleted': (feedChatlog: Readonly<Chatlog>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
 
 }
 
