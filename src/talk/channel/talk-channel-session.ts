@@ -32,7 +32,7 @@ import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
 import { structToNormalChannelInfo, structToOpenChannelInfo } from "../../packet/struct/wrap/channel";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToChannelUserInfo, structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult, CommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
@@ -252,36 +252,46 @@ export class TalkChannelSession implements ChannelSession {
         return { success: true, status: res.status, result };
     }
 
-    async syncChatList(endLogId: Long, startLogId: Long = Long.ZERO): AsyncCommandResult<Chatlog[]> {
-        const chatList: Chatlog[] = [];
-
+    syncChatList(endLogId: Long, startLogId: Long = Long.ZERO): AsyncIterableIterator<CommandResult<Chatlog[]>> {
         let curLogId = startLogId;
+        let done = false;
 
-        while (true) {
-            const res = await this._session.request<SyncMsgRes>(
-                'SYNCMSG',
-                {
-                    'chatId': this._channel.channelId,
-                    'cur': curLogId,
-                    // Unknown
-                    'cnt': 0,
-                    'max': endLogId
+        return {
+            [Symbol.asyncIterator]() {
+                return this;
+            },
+
+            next: async () => {
+                if (done) return { done: true, value: null };
+                
+                const res = await this._session.request<SyncMsgRes>(
+                    'SYNCMSG',
+                    {
+                        'chatId': this._channel.channelId,
+                        'cur': curLogId,
+                        // Unknown
+                        'cnt': 0,
+                        'max': endLogId
+                    }
+                );
+
+                if (res.status !== KnownDataStatusCode.SUCCESS) {
+                    done = true;
+                    return { done: false, value: { status: res.status, success: false } };
+                } else if (res.isOK) {
+                    done = true;
                 }
-            );
+                
+                if (!res.chatLogs || res.chatLogs.length < 0 || curLogId.greaterThanOrEqual(endLogId)) {
+                    return { done: true, value: null };
+                }
 
-            if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+                const result = res.chatLogs.map(structToChatlog);
+                curLogId = result[result.length - 1].logId;
 
-            if (res.isOK || !res.chatLogs) break;
-
-            if (res.chatLogs.length > 0) {
-                const list = res.chatLogs.map(structToChatlog);
-                chatList.push(...list);
-
-                curLogId = list[list.length - 1].logId;
+                return { done: false, value: { status: KnownDataStatusCode.SUCCESS, success: true, result } };
             }
-        }
-
-        return { status: KnownDataStatusCode.SUCCESS, success: true, result: chatList };
+        };
     }
 
     async createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {

@@ -24,6 +24,7 @@ export enum KnownFeedType {
     OPENLINK_REWRITE_FEED = 13,
     DELETE_TO_ALL = 14,
     OPENLINK_HAND_OVER_HOST = 15,
+    TEAM_CHANNEL_EVENT = 18
 
 }
 

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DataStatusCode, KnownDataStatusCode } from "../packet/status-code";
+import { DataStatusCode } from "../packet/status-code";
 
 /**
  * Wrapped request response.

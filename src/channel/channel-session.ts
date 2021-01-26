@@ -6,7 +6,7 @@
 
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../chat/chat";
 import { Channel } from "./channel";
-import { AsyncCommandResult } from "../request/command-result";
+import { AsyncCommandResult, CommandResult } from "../request/command-result";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";
@@ -115,9 +115,9 @@ export interface ChannelSession {
      * @param endLogId
      * @param startLogId Omit this param if you don't know start chat logId.
      * 
-     * @returns Chatlog array excluding startLogId and endLogId chat.
+     * @returns Chatlog iterator which iterate chat chunks, excluding startLogId and endLogId chat.
      */
-    syncChatList(endLogId: Long, startLogId?: Long): AsyncCommandResult<Chatlog[]>;
+    syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>>;
 
     /**
      * Create media downloader

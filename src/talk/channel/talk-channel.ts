@@ -248,7 +248,7 @@ export class TalkChannel extends TypedEmitter<ChannelEvents> implements AnyTalkC
         return res;
     }
 
-    async syncChatList(endLogId: Long, startLogId?: Long) {
+    syncChatList(endLogId: Long, startLogId?: Long) {
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
     
@@ -477,7 +477,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
     }
 
-    async syncChatList(endLogId: Long, startLogId?: Long) {
+    syncChatList(endLogId: Long, startLogId?: Long) {
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
