@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { LinkPrivilegeMask } from "../../openlink/open-link";
-import { OpenChatUserPerm, OpenProfileType } from "../../openlink/open-link-type";
+import { OpenChannelUserPerm, OpenProfileType } from "../../openlink/open-link-type";
 import { ChannelUser } from "../../user/channel-user";
 import { UserType } from "../../user/user-type";
 
@@ -111,7 +111,7 @@ export interface OpenMemberStruct {
     /**
      * Open chat user permission
      */
-    mt: OpenChatUserPerm;    
+    mt: OpenChannelUserPerm;    
 
 }
 
@@ -148,7 +148,7 @@ export interface OpenLinkUserStruct {
     /**
      * Open chat user permission
      */
-    lmt: OpenChatUserPerm
+    lmt: OpenChannelUserPerm
 
     /**
      * Nickname

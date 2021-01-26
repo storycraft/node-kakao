@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { ChannelUser } from "../user/channel-user";
 import { DisplayUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenLinkComponent, OpenPrivilegeComponent, OpenTokenComponent } from "./open-link";
-import { OpenChatUserPerm, OpenProfileType } from "./open-link-type";
+import { OpenChannelUserPerm, OpenProfileType } from "./open-link-type";
 
 export interface OpenLinkKickedUser extends ChannelUser {
 
@@ -55,7 +55,7 @@ export interface OpenLinkUserInfo extends OpenLinkComponent, OpenTokenComponent,
     /**
      * Link chat user perm
      */
-    perm: OpenChatUserPerm;
+    perm: OpenChannelUserPerm;
 
 }
 

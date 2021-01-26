@@ -8,7 +8,7 @@ import { DefaultRes } from "../../packet/bson-data-codec";
 import { Channel } from "../../channel/channel";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelSession } from "../../channel/channel-session";
-import { ChannelUser } from "../../user/channel-user";
+import { ChannelUser, OpenChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo, AnyChannelUserInfo } from "../../user/channel-user-info";
 import { Chat, ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request/command-result";
@@ -29,6 +29,7 @@ import { structToChannelUserInfo, structToOpenChannelUserInfo, structToOpenLinkC
 import { MediaComponent } from "../../media/media";
 import { ChatType } from "../../chat/chat-type";
 import { KnownDataStatusCode } from "../../packet/status-code";
+import { OpenChannelUserPerm } from "../../openlink/open-link-type";
 
 export interface AnyTalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
@@ -612,6 +613,34 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     removeKicked(user: ChannelUser) {
         return this._openChannelSession.removeKicked(user);
+    }
+
+    async setUserPerm(user: OpenChannelUser, perm: OpenChannelUserPerm) {
+        const res = await this._openChannelSession.setUserPerm(user, perm);
+
+        if (res.success) {
+            const userInfo = this.getUserInfo(user);
+            if (userInfo) {
+                this._userInfoMap.set(userInfo.userId.toString(), { ...userInfo, perm: perm });
+            }
+        }
+
+        return res;
+    }
+
+    async handoverHost(user: OpenChannelUser) {
+        const res = await this._openChannelSession.handoverHost(user);
+
+        if (res.success) {
+            const openlinkRes = await this.getLatestOpenLink();
+            if (openlinkRes.success) {
+                this._info = { ...this._info, openLink: openlinkRes.result };
+            }
+            
+            await this.getLatestUserInfo(user, this._channelSession.session.clientUser);
+        }
+
+        return res;
     }
 
     createMediaDownloader(media: MediaComponent, type: ChatType) {

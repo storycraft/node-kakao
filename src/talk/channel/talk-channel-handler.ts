@@ -18,6 +18,7 @@ import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
+import { SyncMemTRes } from "../../packet/chat/sync-mem-t";
 import { ChatlogStruct } from "../../packet/struct/chat";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
@@ -234,7 +235,24 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
             }
 
             case 'SYNCMEMT': {
-                // TODO
+                const memTData = data as DefaultRes & SyncMemTRes;
+                if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
+
+                const len = memTData.mids.length;
+                for (let i = 0; i < len; i++) {
+                    const user = { userId: memTData.mids[i] };
+                    const perm = memTData.mts[i];
+
+                    if (!perm) continue;
+
+                    const lastInfo = this._channel.getUserInfo(user);
+                    this._updater.updateUserInfo(user, { perm });
+                    const info = this._channel.getUserInfo(user);
+                    if (lastInfo && info) {
+                        this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
+                    }
+                }
+
                 break;
             }
 

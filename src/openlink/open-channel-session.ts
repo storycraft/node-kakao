@@ -6,10 +6,11 @@
 
 import { ChatLogged } from "../chat/chat";
 import { AsyncCommandResult } from "../request/command-result";
-import { ChannelUser } from "../user/channel-user";
+import { ChannelUser, OpenChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";
 import { OpenLink } from "./open-link";
+import { OpenChannelUserPerm } from "./open-link-type";
 import { OpenLinkKickedUserInfo } from "./open-link-user-info";
 
 
@@ -64,5 +65,21 @@ export interface OpenChannelSession {
      * Get latest channel openlink
      */
     getLatestOpenLink(): AsyncCommandResult<OpenLink>;
+
+    /**
+     * Set user permission.
+     * 
+     * @param user 
+     * @param perm 
+     */
+    setUserPerm(user: OpenChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult;
+
+    /**
+     * Handover host to user.
+     * Only owner can use this.
+     * 
+     * @param user 
+     */
+    handoverHost(user: OpenChannelUser): AsyncCommandResult;
 
 }

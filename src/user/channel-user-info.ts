@@ -5,7 +5,7 @@
  */
 
 import { OpenTokenComponent } from "../openlink/open-link";
-import { OpenChatUserPerm } from "../openlink/open-link-type";
+import { OpenChannelUserPerm } from "../openlink/open-link-type";
 import { ChannelUser, OpenChannelUser } from "./channel-user";
 import { UserType } from "./user-type";
 
@@ -87,6 +87,6 @@ export interface ChannelUserInfo extends AnyChannelUserInfo {
  */
 export interface OpenChannelUserInfo extends OpenChannelUser, AnyChannelUserInfo, OpenTokenComponent {
 
-    perm: OpenChatUserPerm;
+    perm: OpenChannelUserPerm;
 
 }

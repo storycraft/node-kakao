@@ -1,8 +1,8 @@
 {
     "out": "docs",
     "excludeExternals": true,
-    "excludeProtected": false,
-    "excludePrivate": false,
+    "excludeProtected": true,
+    "excludePrivate": true,
     "name": "NodeKakao",
     "includeVersion": true
 }

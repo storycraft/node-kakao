@@ -33,7 +33,7 @@ import { structToNormalChannelInfo, structToOpenChannelInfo } from "../../packet
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToChannelUserInfo, structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult, CommandResult } from "../../request/command-result";
-import { ChannelUser } from "../../user/channel-user";
+import { ChannelUser, OpenChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
 import { MediaDownloader } from "../media/media-downloader";
@@ -43,6 +43,7 @@ import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto/crypto-store";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
+import { OpenChannelUserPerm } from "../../openlink/open-link-type";
 
 /**
  * Default ChannelSession implementation
@@ -415,6 +416,34 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         } else {
             return res;
         }
+    }
+
+    async setUserPerm(user: OpenChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult {
+        const res = await this._session.request(
+            'SETMEMTYPE',
+            {
+                'c': this._channel.channelId,
+                'li': this._channel.linkId,
+                'mids': [ user.userId ],
+                'mts': [ perm ]
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async handoverHost(user: OpenChannelUser): AsyncCommandResult {
+        const res = await this._session.request(
+            'SETMEMTYPE',
+            {
+                'c': this._channel.channelId,
+                'li': this._channel.linkId,
+                'mids': [ user.userId, this._session.clientUser.userId ],
+                'mts': [ OpenChannelUserPerm.OWNER, OpenChannelUserPerm.NONE ]
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
 };

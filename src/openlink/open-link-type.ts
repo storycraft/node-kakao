@@ -11,7 +11,7 @@ export enum OpenLinkType {
 
 }
 
-export enum OpenChatUserPerm {
+export enum OpenChannelUserPerm {
 
     OWNER = 1,
     NONE = 2,

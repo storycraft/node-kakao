@@ -64,17 +64,14 @@ declare interface OpenChannelEvent {
     // 유저가 오픈프로필 변경시 호출
     'profile_changed': (channel: OpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
 
-    // 오픈채팅 유저 타입 변경시 호출
-    'member_type_changed': (channel: OpenChannel, user: ChatUser, lastType: OpenMemberType) => void;
+    // 오픈채팅 권한 변경시 호출
+    'perm_changed': (channel: OpenChannel, lastInfo: OpenChannelUserInfo, user: OpenChannelUserInfo) => void;
 
     // 메세지가 가려졌을시 호출
     'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenRewriteFeed) => void;
 
     // 채널의 오픈링크가 삭제되었을시 호출
     'link_deleted': (channel: OpenChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void;
-
-    // 채널의 오픈링크 소유자가 바뀌었을시 호출
-    'link_hand_over_host': (channel: OpenChannel, newHost: ChatUser, prevHost: ChatUser) => void;
 
     // 외치기 등 이벤트성 기능 사용시
     'chat_event': (channel: OpenChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void;

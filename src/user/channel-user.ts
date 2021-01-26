@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { OpenLinkComponent } from "../openlink/open-link";
-import { OpenChatUserPerm } from "../openlink/open-link-type";
+import { OpenChannelUserPerm } from "../openlink/open-link-type";
 
 /**
  * Channel user
