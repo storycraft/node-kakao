@@ -120,7 +120,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         
         this._cilentUser = { userId: loginRes.result.userId };
         
-        this._channelList = await TalkChannelList.initialize(this.createSessionProxy(), loginRes.result.channelList);
+        await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
         await this._openLink.updateAll();
 
         return { status: loginRes.status, success: true, result: loginRes.result };

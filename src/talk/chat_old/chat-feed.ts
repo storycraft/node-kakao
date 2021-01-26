@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { KnownFeedType } from "../../feed/feed-type";
+import { KnownFeedType } from "../../chat/feed/feed-type";
 import { JsonUtil } from "../../util/json-util";
 import { Long } from "bson";
 import { StructBase } from "../struct_old/struct-base";

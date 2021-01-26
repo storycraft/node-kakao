@@ -17,20 +17,18 @@ import { AnyTalkChannel } from "../talk/channel/talk-channel";
 import { AnyChannelUserInfo, ChannelUserInfo } from "../user/channel-user-info";
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
+import { ChatFeeds } from "../chat/feed/chat-feed";
 
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
     'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void;
 
-    // 피드 쳇 받을시 호출
-    'feed': (chat: Readonly<Chatlog>, channel: AnyTalkChannel, sender?: AnyChannelUserInfo) => void
-
     // 쳇 읽을 시 호출
     'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
-    // 쳇 삭제 시 호출
-    'chat_deleted': (feed: FeedChat<DeleteAllFeed>) => void;
+    // 쳇 삭제되었을시 호출
+    'chat_deleted': (chatlog: Readonly<Chatlog>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
 
 }
 

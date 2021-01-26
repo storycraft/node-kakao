@@ -6,6 +6,9 @@
 
 import { Long } from "bson";
 import { ChannelInfo, SetChannelMeta } from "../../channel/channel-info";
+import { KnownChatType } from "../../chat/chat-type";
+import { DeleteAllFeed, feedFromChat } from "../../chat/feed/chat-feed";
+import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, OpenChannelEvents } from "../../event/events";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
@@ -14,6 +17,7 @@ import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";
 import { MsgRes } from "../../packet/chat/msg";
+import { ChatlogStruct } from "../../packet/struct/chat";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
@@ -149,11 +153,23 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             }
 
             case 'DELMEM': {
+                const struct = data['chatLog'] as ChatlogStruct;
+                if (!this._channel.channelId.eq(struct.chatId)) break;
+
+                const chatLog = structToChatlog(struct);
+
+                this._updater.updateUserInfo(chatLog.sender);
                 // TODO
                 break;
             }
 
             case 'NEWMEM': {
+                const struct = data['chatLog'] as ChatlogStruct;
+                if (!this._channel.channelId.eq(struct.chatId)) break;
+                
+                const chatLog = structToChatlog(struct);
+
+                this._updater.addUsers(chatLog.sender).then();
                 // TODO
                 break;
             }
@@ -164,7 +180,21 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
             }
 
             case 'SYNCDLMSG': {
-                // TODO
+                const struct = data['chatLog'] as ChatlogStruct;
+                if (!this._channel.channelId.eq(struct.chatId)) break;
+                
+                const chatLog = structToChatlog(struct);
+                if (chatLog.type !== KnownChatType.FEED) break;
+                const feed = feedFromChat(chatLog);
+                if (feed.feedType !== KnownFeedType.DELETE_TO_ALL) break;
+
+                this._callEvent(
+                    parentCtx,
+                    'chat_deleted',
+                    chatLog,
+                    this._channel,
+                    feed as DeleteAllFeed
+                );
                 break;
             }
 

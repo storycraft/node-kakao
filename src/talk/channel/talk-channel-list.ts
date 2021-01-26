@@ -213,9 +213,9 @@ export class TalkChannelList extends TypedEmitter<ChannelListEvents> implements 
      * @param session 
      * @param channelList 
      */
-    static async initialize(session: TalkSession, channelList: (Channel | OpenChannel)[] = []): Promise<TalkChannelList> {
-        const talkChannelList = new TalkChannelList(session);
-
+    static async initialize(talkChannelList: TalkChannelList, channelList: (Channel | OpenChannel)[] = []) {
+        talkChannelList._normalChannelMap.clear();
+        talkChannelList._openChannelMap.clear();
         await Promise.all(channelList.map(channel => talkChannelList.addChannel(channel)));
 
         return talkChannelList;

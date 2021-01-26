@@ -7,6 +7,7 @@
 import { Long } from "bson";
 import { ChannelUser } from "../user/channel-user";
 import { ChatType } from "./chat-type";
+import { KnownChatFeeds } from "./feed/chat-feed";
 
 /**
  * Chat interface
@@ -36,7 +37,7 @@ export interface Chat {
 
 }
 
-export type TypedChat<T extends ChatType> = Chat & { type: T };
+export interface TypedChat<T extends ChatType> extends Chat { type: T };
 
 export interface ChatLogged {
 

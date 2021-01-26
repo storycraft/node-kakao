@@ -50,7 +50,7 @@ export * from './talk/chat_old/chat-feed';
 
 export * from './talk/chat_old/option/chat-option';
 
-export * from './feed/feed-type';
+export * from './chat/feed/feed-type';
 export * from './voip/voip-type';
 
 export * from './talk/media_old/media-download-interface';

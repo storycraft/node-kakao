@@ -4,7 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { JsonUtil } from "../util/json-util";
 import { Chat } from "./chat";
 import { ChatType, KnownChatType } from "./chat-type";
 
