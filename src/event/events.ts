@@ -12,12 +12,13 @@ import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed,
 import { OpenMemberType, OpenProfileType } from "../talk/open_old/open-link-type";
 import { RelayEventType } from "../relay/relay-event-type";
 import { KickoutType } from "../packet/chat/kickout";
-import { Chatlog, ChatLogged } from "../chat/chat";
+import { Chatlog, ChatLogged, TypedChatlog } from "../chat/chat";
 import { AnyTalkChannel } from "../talk/channel/talk-channel";
 import { AnyChannelUserInfo, ChannelUserInfo } from "../user/channel-user-info";
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 import { ChatFeeds } from "../chat/feed/chat-feed";
+import { KnownChatType } from "../chat/chat-type";
 
 declare interface ChatEvent {
 
@@ -28,7 +29,7 @@ declare interface ChatEvent {
     'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
     // 쳇 삭제되었을시 호출
-    'chat_deleted': (feedChatlog: Readonly<Chatlog>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
+    'chat_deleted': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
 
 }
 

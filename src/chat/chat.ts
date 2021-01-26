@@ -37,7 +37,7 @@ export interface Chat {
 
 }
 
-export interface TypedChat<T extends ChatType> extends Chat { type: T };
+export type TypedChat<T extends ChatType> = Chat & { type: T };
 
 export interface ChatLogged {
 
@@ -80,6 +80,8 @@ export interface Chatlog extends ChatLogLinked, Chat, ChatWritten {
     
     
 }
+
+export type TypedChatlog<T extends ChatType> = Chatlog & TypedChat<T>;
 
 export interface ChatOptions {
 
