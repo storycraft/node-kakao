@@ -111,6 +111,8 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 if (!this._channel.channelId.equals(readData.chatId)) break;
 
                 const reader = this._channel.getUserInfo({ userId: readData.userId });
+                
+                this._updater.updateWatermark(readData.userId, readData.watermark);
 
                 this._callEvent(
                     parentCtx,
@@ -119,8 +121,6 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     this._channel,
                     reader
                 );
-                
-                this._updater.updateWatermark(readData.userId, readData.watermark);
 
                 break;
             }

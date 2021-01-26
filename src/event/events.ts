@@ -14,10 +14,9 @@ import { RelayEventType } from "../relay/relay-event-type";
 import { KickoutType } from "../packet/chat/kickout";
 import { Chatlog, ChatLogged, TypedChatlog } from "../chat/chat";
 import { AnyTalkChannel } from "../talk/channel/talk-channel";
-import { AnyChannelUserInfo, ChannelUserInfo } from "../user/channel-user-info";
+import { AnyChannelUserInfo } from "../user/channel-user-info";
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
-import { ChatFeeds } from "../chat/feed/chat-feed";
 import { KnownChatType } from "../chat/chat-type";
 
 declare interface ChatEvent {
@@ -25,7 +24,7 @@ declare interface ChatEvent {
     // 챗을 받을시 호출
     'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel) => void;
 
-    // 쳇 읽을 시 호출
+    // 유저가 챗 읽었을시 호출
     'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
 
     // 쳇 삭제되었을시 호출
