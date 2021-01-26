@@ -12,6 +12,6 @@ describe('Network', () => {
         const factory = new TalkSessionFactory();
 
         const res = await factory.createSession(DefaultConfiguration);
-        if (!res.success) throw `Session creation failed with status: ${res.status}`;
+        if (!res.success) throw new Error(`Session creation failed with status: ${res.status}`);
     });
 });

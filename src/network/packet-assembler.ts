@@ -46,7 +46,7 @@ export class PacketAssembler<T, R> {
      * @param packet
      */
     deconstruct(packet: LocoPacket): R {
-        if (!this._dataCodec.canDecode(packet.data[0])) throw `Cannot decode dataType ${packet.data[0]}`;
+        if (!this._dataCodec.canDecode(packet.data[0])) throw new Error(`Cannot decode dataType ${packet.data[0]}`);
 
         return this._dataCodec.decode(packet.data[1]);
     }
