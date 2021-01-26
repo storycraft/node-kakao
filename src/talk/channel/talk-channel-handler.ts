@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { ChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { KnownChatType } from "../../chat/chat-type";
-import { DeleteAllFeed, feedFromChat } from "../../chat/feed/chat-feed";
+import { DeleteAllFeed, feedFromChat, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, OpenChannelEvents } from "../../event/events";
@@ -259,7 +259,21 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
             }
 
             case 'SYNCREWR': {
-                // TODO
+                const struct = data['chatLog'] as ChatlogStruct;
+                if (!this._channel.channelId.eq(struct.chatId)) break;
+
+                const chatLog = structToChatlog(struct);
+                if (chatLog.type !== KnownChatType.FEED) break;
+                const feed = feedFromChat(chatLog);
+                if (feed.feedType !== KnownFeedType.OPENLINK_REWRITE_FEED) break;
+
+                this._callEvent(
+                    parentCtx,
+                    'message_hidden',
+                    chatLog,
+                    this._channel,
+                    feed as OpenRewriteFeed
+                )
                 break;
             }
 

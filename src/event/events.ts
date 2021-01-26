@@ -68,7 +68,7 @@ declare interface OpenChannelEvent {
     'member_type_changed': (channel: OpenChannel, user: ChatUser, lastType: OpenMemberType) => void;
 
     // 메세지가 가려졌을시 호출
-    'message_hidden': (channel: OpenChannel, logId: Long, feed?: FeedChat<OpenRewriteFeed>) => void;
+    'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenRewriteFeed) => void;
 
     // 채널의 오픈링크가 삭제되었을시 호출
     'link_deleted': (channel: OpenChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void;
