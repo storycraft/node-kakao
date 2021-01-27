@@ -180,12 +180,22 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 if (!this._channel.channelId.eq(struct.chatId)) break;
 
                 const chatLog = structToChatlog(struct);
+                const user = this._channel.getUserInfo(chatLog.sender);
+                if (!user) return;
 
                 this._updater.updateUserInfo(chatLog.sender);
 
                 if (chatLog.type !== KnownChatType.FEED) break;
                 const feed = feedFromChat(chatLog);
-                // TODO
+                
+                this._callEvent(
+                    parentCtx,
+                    'user_left',
+                    chatLog,
+                    this._channel,
+                    user,
+                    feed
+                );
                 break;
             }
 
@@ -194,12 +204,22 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 if (!this._channel.channelId.eq(struct.chatId)) break;
 
                 const chatLog = structToChatlog(struct);
-
-                this._updater.addUsers(chatLog.sender).then();
-
                 if (chatLog.type !== KnownChatType.FEED) break;
-                const feed = feedFromChat(chatLog);
-                // TODO
+
+                this._updater.addUsers(chatLog.sender).then(usersRes => {
+                    if (!usersRes.success) return;
+
+                    const feed = feedFromChat(chatLog);
+    
+                    this._callEvent(
+                        parentCtx,
+                        'user_join',
+                        chatLog,
+                        this._channel,
+                        usersRes.result[0],
+                        feed
+                    );
+                });
                 break;
             }
 

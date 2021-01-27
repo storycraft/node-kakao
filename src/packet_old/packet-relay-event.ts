@@ -14,7 +14,7 @@ export class PacketRelayEventReq extends LocoBsonRequestPacket {
     constructor(
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public EventType: KnownRelayEventType = KnownRelayEventType.UNDEFINED,
+        public EventType: KnownRelayEventType = -999999,
         public EventCount: number = 0,
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Unknown,
@@ -45,7 +45,7 @@ export class PacketRelayEventRes extends LocoBsonResponsePacket {
         status: number,
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public EventType: KnownRelayEventType = KnownRelayEventType.UNDEFINED,
+        public EventType: KnownRelayEventType = -999999,
         public EventCount: number = 0,
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Unknown,
