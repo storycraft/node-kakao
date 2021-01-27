@@ -2,7 +2,7 @@ import { ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { TalkSession } from "../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
-import { OpenChannelSession } from "../../openlink/open-channel-session";
+import { OpenChannelManageSession, OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenLink } from "../../openlink";
 import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
@@ -19,6 +19,9 @@ import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 import { OpenChannelUserPerm } from "../../openlink/open-link-type";
 import { RelayEventType } from "../../relay";
+import { Long } from "bson";
+import { Channel } from "../../channel";
+import { TalkChannelManageSession } from "../channel";
 
 /**
  * Default OpenChannelSession implementation.
@@ -186,6 +189,32 @@ export class TalkOpenChannelSession implements OpenChannelSession {
                 'c': this._channel.channelId,
                 'li': this._channel.linkId,
                 'mid': user.userId
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+}
+
+export class TalkOpenChannelManageSession implements OpenChannelManageSession {
+
+    private _normalSession: TalkChannelManageSession;
+
+    constructor(private _session: TalkSession) {
+        this._normalSession = new TalkChannelManageSession(_session);
+    }
+
+    leaveChannel(channel: Channel) {
+        return this._normalSession.leaveChannel(channel);
+    }
+
+    async leaveKicked(channel: OpenChannel): AsyncCommandResult {
+        const res = await this._session.request(
+            'KICKLEAVE',
+            {
+                'c': channel.channelId,
+                'li': channel.linkId
             }
         );
 

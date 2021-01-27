@@ -163,9 +163,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
                 const kickData = data as DefaultRes & LinkKickedRes;
                 
                 const kickedChannel = this._list.get(kickData.c);
-
                 if (!kickedChannel) return;
-                this._updater.removeChannel(kickedChannel);
 
                 const chatLog = structToChatlog(kickData.chatLog);
                 if (chatLog.type !== KnownChatType.FEED) return;

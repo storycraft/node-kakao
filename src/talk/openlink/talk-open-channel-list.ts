@@ -19,11 +19,15 @@ import { OpenChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelListHandler } from "./talk-open-channel-handler";
+import { OpenChannelManageSession } from "../../openlink";
+import { TalkOpenChannelManageSession } from "./talk-open-channel-session";
 
-export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> implements Managed<OpenChannelListEvents>, ChannelList<TalkOpenChannel> {
+export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> implements Managed<OpenChannelListEvents>, OpenChannelManageSession, ChannelList<TalkOpenChannel> {
 
     private _handler: TalkChannelListHandler;
     private _openHandler: TalkOpenChannelListHandler;
+
+    private _manageSession: TalkOpenChannelManageSession;
 
     private _map: Map<string, TalkOpenChannel>;
     
@@ -34,6 +38,8 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
             addChannel: (channel) => this.addChannel(channel),
             removeChannel: (channel) => this.delete(channel.channelId)
         };
+
+        this._manageSession = new TalkOpenChannelManageSession(_session);
 
         this._handler = new TalkChannelListHandler(this, infoUpdater);
         this._openHandler = new TalkOpenChannelListHandler(this, infoUpdater);
@@ -65,6 +71,10 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
     }
 
     private async addChannel(channel: Channel): AsyncCommandResult<TalkOpenChannel> {
+        return this.addOpenChannel({ ...channel, linkId: Long.ZERO });
+    }
+
+    private async addOpenChannel(channel: OpenChannel): AsyncCommandResult<TalkOpenChannel> {
         const last = this.get(channel.channelId);
         if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
 
@@ -95,15 +105,23 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
         this._openHandler.pushReceived(method, data, parentCtx);
     }
 
+    leaveKicked(channel: OpenChannel) {
+        return this._manageSession.leaveKicked(channel);
+    }
+
+    leaveChannel(channel: Channel) {
+        return this._manageSession.leaveChannel(channel);
+    }
+
     /**
      * Initialize TalkChannelList using channelList.
      * @param session
      * @param channelList
      */
-    static async initialize(talkChannelList: TalkOpenChannelList, channelList: (Channel | OpenChannel)[] = []) {
+    static async initialize(talkChannelList: TalkOpenChannelList, channelList: OpenChannel[] = []) {
         talkChannelList._map.clear();
         
-        await Promise.all(channelList.map(channel => talkChannelList.addChannel(channel)));
+        await Promise.all(channelList.map(channel => talkChannelList.addOpenChannel(channel)));
 
         return talkChannelList;
     }

@@ -14,6 +14,7 @@ import { OpenChannelInfo } from "./open-channel-info";
 import { OpenLink } from ".";
 import { OpenChannelUserPerm } from "./open-link-type";
 import { OpenLinkKickedUserInfo } from "./open-link-user-info";
+import { Channel } from "../channel";
 
 
 /**
@@ -118,6 +119,11 @@ export interface OpenChannelSession {
  */
 export interface OpenChannelManageSession extends ChannelManageSession {
 
-
+    /**
+     * Leave kicked open channel
+     *
+     * @param channel 
+     */
+    leaveKicked(channel: Channel): AsyncCommandResult;
 
 }
