@@ -12,7 +12,6 @@ import { Chat, ChatLogged } from "../../chat/chat";
 import { ChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
 import { EventContext } from "../../event/event-context";
-import { OpenChannelEvents } from "../../event/events";
 import { MediaComponent } from "../../media/media";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
@@ -29,6 +28,7 @@ import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkChannel } from "../channel/talk-channel";
 import { TalkChannelHandler, ChannelInfoUpdater } from "../channel/talk-channel-handler";
 import { TalkChannelSession, TalkOpenChannelSession } from "../channel/talk-channel-session";
+import { OpenChannelEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
 

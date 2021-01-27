@@ -12,7 +12,7 @@ import { KnownChatType } from "../../chat/chat-type";
 import { DeleteAllFeed, feedFromChat, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
-import { ChannelEvents, ChannelListEvents, NormalChannelListEvents, OpenChannelEvents } from "../../event/events";
+import { ChannelEvents, ChannelListEvents, NormalChannelListEvents, OpenChannelEvents } from "../event/events";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { ChgMetaRes } from "../../packet/chat/chg-meta";

@@ -9,10 +9,10 @@ import { KnownChatType } from "../../chat/chat-type";
 import { feedFromChat, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
-import { OpenChannelEvents, OpenChannelListEvents } from "../../event/events";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { LinkKickedRes } from "../../packet/chat/link-kicked";
+import { SyncEventRes } from "../../packet/chat/sync-event";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
 import { SyncMemTRes } from "../../packet/chat/sync-mem-t";
 import { ChannelInfoStruct } from "../../packet/struct/channel";
@@ -21,6 +21,7 @@ import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { ChannelInfoUpdater, ChannelListUpdater } from "../channel/talk-channel-handler";
+import { OpenChannelEvents, OpenChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelList } from "./talk-open-channel-list";
@@ -43,7 +44,7 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
         switch (method) {
             case 'SYNCMEMT': {
                 const memTData = data as DefaultRes & SyncMemTRes;
-                if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
+                if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) break;
 
                 const len = memTData.mids.length;
                 for (let i = 0; i < len; i++) {
@@ -65,7 +66,7 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
             case 'SYNCLINKPF': {
                 const pfData = data as DefaultRes & SyncLinkPfRes;
-                if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) return;
+                if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) break;
 
                 const updated = structToOpenLinkChannelUserInfo(pfData.olu);
                 const last = this._channel.getUserInfo(updated);
@@ -102,8 +103,22 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
                 break;
             }
 
-            case 'RELAYEVENT': {
-                // TODO
+            case 'SYNCEVENT': {
+                const syncEventData = data as DefaultRes & SyncEventRes;
+                if (!this._channel.channelId.eq(syncEventData.c) && !this._channel.linkId.eq(syncEventData.li)) break;
+
+                const user = this._channel.getUserInfo({ userId: syncEventData.authorId });
+                if (!user) break;
+
+                this._callEvent(
+                    parentCtx,
+                    'chat_event',
+                    this._channel,
+                    user,
+                    syncEventData.et,
+                    syncEventData.ec,
+                    { logId: syncEventData.logId, type: syncEventData.t }
+                )
                 break;
             }
 

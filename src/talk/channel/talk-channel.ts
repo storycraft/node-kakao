@@ -15,7 +15,6 @@ import { AsyncCommandResult } from "../../request/command-result";
 import { TalkChannelSession } from "./talk-channel-session";
 import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
 import { TypedEmitter } from "tiny-typed-emitter";
-import { ChannelEvents } from "../../event/events";
 import { Managed } from "../managed";
 import { EventContext } from "../../event/event-context";
 import { TalkChannelHandler } from "./talk-channel-handler";
@@ -25,6 +24,7 @@ import { TalkSession } from "../../client";
 import { structToChannelUserInfo } from "../../packet/struct/wrap/user";
 import { MediaComponent } from "../../media/media";
 import { ChatType } from "../../chat/chat-type";
+import { ChannelEvents } from "../event/events";
 
 export interface TalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 

@@ -6,7 +6,7 @@
 
 import { Long } from "..";
 import { TypedEmitter } from "../event/event-context";
-import { ChannelListEvents } from "../event/events";
+import { ChannelListEvents } from "../talk/event/events";
 import { Channel } from "./channel";
 
 /**

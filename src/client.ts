@@ -16,12 +16,12 @@ import { ClientSession, LoginResult } from "./client/client-session";
 import { TalkSessionFactory } from "./talk/network/talk-session-factory";
 import { TalkClientSession } from "./talk/client/talk-client-session";
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { ClientEvents } from "./event/events";
 import { KickoutRes } from "./packet/chat/kickout";
 import { EventContext } from "./event/event-context";
 import { ClientStatus } from "./client-status";
 import { OpenLinkService } from "./talk/openlink/open-link-service";
 import { TalkChannelList } from "./talk/channel/talk-channel-list";
+import { ClientEvents } from "./talk/event/events";
 
 /**
  * Talk client session with client user

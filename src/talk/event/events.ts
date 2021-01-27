@@ -4,21 +4,18 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { FeedChat } from "../talk/chat_old/chat";
-import { ChatUser } from "../talk/user_old/chat-user";
-import { Long } from "bson";
-import { KnownRelayEventType } from "../relay/relay-event-type";
-import { KickoutType } from "../packet/chat/kickout";
-import { Chatlog, ChatLogged, TypedChatlog } from "../chat/chat";
-import { TalkChannel } from "../talk/channel/talk-channel";
-import { ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
-import { SetChannelMeta } from "../channel/channel-info";
-import { ChannelMetaType } from "../packet/struct/channel";
-import { KnownChatType } from "../chat/chat-type";
-import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../chat/feed/chat-feed";
-import { OpenLinkChannelUserInfo } from "../openlink/open-link-user-info";
-import { OpenChannel } from "../openlink/open-channel";
-import { InformedOpenLink } from "../openlink/open-link";
+import { SetChannelMeta } from "../../channel/channel-info";
+import { Chatlog, ChatLogged, TypedChatlog } from "../../chat/chat";
+import { ChatType, KnownChatType } from "../../chat/chat-type";
+import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
+import { InformedOpenLink } from "../../openlink/open-link";
+import { OpenLinkChannelUserInfo } from "../../openlink/open-link-user-info";
+import { KickoutType } from "../../packet/chat/kickout";
+import { ChannelMetaType } from "../../packet/struct/channel";
+import { RelayEventType } from "../../relay/relay-event-type";
+import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
+import { TalkChannel } from "../channel/talk-channel";
+import { TalkOpenChannel } from "../openlink/talk-open-channel";
 
 declare interface ChatEvent {
 
@@ -59,23 +56,23 @@ declare interface ChannelListEvent {
 declare interface OpenChannelEvent {
 
     // 유저가 오픈프로필 변경시 호출
-    'profile_changed': (channel: OpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
+    'profile_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
 
     // 오픈채팅 권한 변경시 호출
-    'perm_changed': (channel: OpenChannel, lastInfo: OpenChannelUserInfo, user: OpenChannelUserInfo) => void;
+    'perm_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenChannelUserInfo) => void;
 
     // 메세지가 가려졌을시 호출
-    'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenRewriteFeed) => void;
+    'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenRewriteFeed) => void;
 
-    // 외치기 등 이벤트성 기능 사용시
-    'chat_event': (channel: OpenChannel, user: ChatUser, type: KnownRelayEventType, count: number, logId: Long) => void;
+    // 채팅방 이벤트 (ex: 외치기 기능 하트 변화 시)
+    'chat_event': (channel: TalkOpenChannel, author: OpenChannelUserInfo, type: RelayEventType, count: number, chat: ChatLogged & { type: ChatType }) => void;
 
 }
 
 declare interface OpenChannelListEvent {
 
     // 채널에서 킥 되었을시 호출
-    'channel_kicked': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenKickFeed) => void;
+    'channel_kicked': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenKickFeed) => void;
 
 }
 

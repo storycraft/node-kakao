@@ -7,16 +7,14 @@
 import { Long } from "bson";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
-import { NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelList } from "../../channel/channel-list";
 import { NormalChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
 import { TalkSession } from "../../client";
 import { EventContext } from "../../event/event-context";
-import { NormalChannelListEvents } from "../../event/events";
-import { OpenChannel } from "../../openlink/open-channel";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { AsyncCommandResult, CommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request/command-result";
+import { NormalChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkNormalChannel } from "./talk-channel";
 import { TalkChannelListHandler } from "./talk-channel-handler";
