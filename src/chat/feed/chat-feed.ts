@@ -6,7 +6,7 @@
 
 import { FeedType, KnownFeedType } from "../../chat/feed/feed-type";
 import { ChannelUser } from "../../user/channel-user";
-import { JsonUtil } from "../..";
+import { JsonUtil } from "../../util/json-util";
 import { ChatLogged, TypedChat } from "../chat";
 import { KnownChatType } from "../chat-type";
 

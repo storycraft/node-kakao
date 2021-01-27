@@ -11,7 +11,6 @@ import { Managed } from "./talk/managed";
 import { OAuthCredential } from "./oauth/credential";
 import { AsyncCommandResult } from "./request/command-result";
 import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "./config/client-config-provider";
-import { Long } from ".";
 import { ClientSession, LoginResult } from "./client/client-session";
 import { TalkSessionFactory } from "./talk/network/talk-session-factory";
 import { TalkClientSession } from "./talk/client/talk-client-session";
@@ -22,6 +21,7 @@ import { ClientStatus } from "./client-status";
 import { OpenLinkService } from "./talk/openlink/open-link-service";
 import { TalkChannelList } from "./talk/channel/talk-channel-list";
 import { ClientEvents } from "./talk/event/events";
+import { Long } from "bson";
 
 /**
  * Talk client session with client user

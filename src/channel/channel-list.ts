@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "..";
+import { Long } from "bson";
 import { TypedEmitter } from "../event/event-context";
 import { ChannelListEvents } from "../talk/event/events";
 import { Channel } from "./channel";

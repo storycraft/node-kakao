@@ -36,35 +36,6 @@ export const DefaultConfiguration: LocoLoginConfig & OAuthLoginConfig & ClientCo
 
 }
 
-export interface ClientConfigOld {
-
-    agent: string;
-
-    locoBookingURL: string;
-    locoBookingPort: number;
-
-    locoPEMPublicKey: string;
-
-    version: string;
-    appVersion: string;
-
-    osVersion: string;
-
-    deviceType: number;
-    netType: number;
-    mccmnc: string;
-
-    countryIso: string;
-    language: string;
-
-    subDevice: boolean;
-    deviceModel: string;
-
-    xvcSeedList: [ string, string ];
-    loginTokenSeedList: [ string, string ];
-
-}
-
 export interface BookingConfig {
 
     agent: string;
