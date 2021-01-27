@@ -218,6 +218,20 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return { status: res.status, success: true, result: null };
     }
 
+    async hideChat(chat: ChatLoggedType): AsyncCommandResult {
+        const res = await this._session.request(
+            'REWRITE',
+            {
+                'li': this._channel.linkId,
+                'c': this._channel.channelId,
+                'logId': chat.logId,
+                't': chat.type
+            }
+        );
+    
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
 }
 
 export class TalkOpenChannelManageSession implements OpenChannelManageSession {

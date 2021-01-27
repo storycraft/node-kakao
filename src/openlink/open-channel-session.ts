@@ -120,6 +120,13 @@ export interface OpenChannelSession {
      * @returns If changed to link profile, it returns OpenLinkChannelUserInfo as result.
      */
     changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null>;
+    
+    /**
+     * Hide chat
+     *
+     * @param chat 
+     */
+    hideChat(chat: ChatLoggedType): AsyncCommandResult;
 
 }
 

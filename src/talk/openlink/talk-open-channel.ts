@@ -361,6 +361,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
+    hideChat(chat: ChatLoggedType) {
+        return this._openChannelSession.hideChat(chat);
+    }
+
     createMediaDownloader(media: MediaComponent, type: ChatType) {
         return this._channelSession.createMediaDownloader(media, type);
     }
