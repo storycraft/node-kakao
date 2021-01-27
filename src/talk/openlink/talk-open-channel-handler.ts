@@ -111,7 +111,7 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
                     chatLog,
                     this._channel,
                     feed as OpenRewriteFeed
-                )
+                );
                 break;
             }
 
@@ -130,7 +130,26 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
                     syncEventData.et,
                     syncEventData.ec,
                     { logId: syncEventData.logId, type: syncEventData.t }
-                )
+                );
+                break;
+            }
+
+            case 'LNKDELETED': {
+                if (!this._channel.linkId.eq(data['li'])) break;
+                const struct = data['chatLog'] as ChatlogStruct;
+
+                const chatLog = structToChatlog(struct);
+                if (chatLog.type !== KnownChatType.FEED) break;
+                const feed = feedFromChat(chatLog);
+                if (feed.feedType !== KnownFeedType.OPENLINK_DELETE_LINK) break;
+
+                this._callEvent(
+                    parentCtx,
+                    'link_deleted',
+                    chatLog,
+                    this._channel,
+                    feed
+                );
                 break;
             }
 
