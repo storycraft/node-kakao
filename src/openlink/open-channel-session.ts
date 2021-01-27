@@ -116,8 +116,10 @@ export interface OpenChannelSession {
      * Change profile on this open channel.
      *
      * @param profile 
+     * 
+     * @returns If changed to link profile, it returns OpenLinkChannelUserInfo as result.
      */
-    changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo>>;
+    changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null>;
 
 }
 

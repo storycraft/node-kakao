@@ -201,7 +201,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo>> {
+    async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null> {
         const res = await this._session.request(
             'UPLINKPROF',
             {
@@ -210,9 +210,12 @@ export class TalkOpenChannelSession implements OpenChannelSession {
             }
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
-        const linkInfo = structToOpenLinkChannelUserInfo(res['olu']);
 
-        return { status: res.status, success: true, result: linkInfo };
+        if (res['olu']) {
+            return { status: res.status, success: true, result: structToOpenLinkChannelUserInfo(res['olu']) };
+        }
+
+        return { status: res.status, success: true, result: null };
     }
 
 }

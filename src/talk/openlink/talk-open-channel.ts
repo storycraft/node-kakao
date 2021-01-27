@@ -353,7 +353,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     async changeProfile(profile: OpenLinkProfiles) {
         const res = await this._openChannelSession.changeProfile(profile);
-        if (res.success) {
+        if (res.success && res.result) {
             const strId = this._channelSession.session.clientUser.userId.toString();
             this._userInfoMap.set(strId, res.result);
         }
