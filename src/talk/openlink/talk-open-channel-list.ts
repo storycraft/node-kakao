@@ -75,6 +75,12 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
     }
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
+        const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
+
+        for (const channel of this._map.values()) {
+            channel.pushReceived(method, data, ctx);
+        }
+        
         this._handler.pushReceived(method, data, parentCtx);
         this._openHandler.pushReceived(method, data, parentCtx);
     }
