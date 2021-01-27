@@ -5,7 +5,7 @@
  */
 
 import { SessionConfig } from "../../config/client-config-provider";
-import { newCryptoStore } from "../../crypto/crypto-store";
+import { newCryptoStore } from "../../crypto";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { DefaultLocoSession, LocoSession, SessionFactory } from "../../network/request-session";
 import { getBookingData, getCheckinData } from "../../network/util/loco-entrance";

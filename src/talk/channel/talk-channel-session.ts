@@ -35,7 +35,7 @@ import { MediaDownloader } from "../media/media-downloader";
 import * as NetSocket from '../../network/socket';
 import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
-import { newCryptoStore } from "../../crypto/crypto-store";
+import { newCryptoStore } from "../../crypto";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
 
 /**
