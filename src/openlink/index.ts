@@ -7,6 +7,7 @@
 export * from "./open-channel-info";
 export * from "./open-channel-session";
 export * from "./open-channel";
+export * from "./open-link-profile";
 export * from "./open-link-session";
 export * from "./open-link-type";
 export * from "./open-link-user-info";

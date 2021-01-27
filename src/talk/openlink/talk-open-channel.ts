@@ -33,6 +33,7 @@ import { TalkOpenChannelSession } from "./talk-open-channel-session";
 import { OpenChannelEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
+import { OpenLinkProfiles, OpenLinkChannelUserInfo } from "../../openlink";
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 
@@ -348,6 +349,16 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     getReaction() {
         return this._openChannelSession.getReaction();
+    }
+
+    async changeProfile(profile: OpenLinkProfiles) {
+        const res = await this._openChannelSession.changeProfile(profile);
+        if (res.success) {
+            const strId = this._channelSession.session.clientUser.userId.toString();
+            this._userInfoMap.set(strId, res.result);
+        }
+
+        return res;
     }
 
     createMediaDownloader(media: MediaComponent, type: ChatType) {

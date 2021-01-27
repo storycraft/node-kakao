@@ -1,10 +1,16 @@
+/*
+ * Created on Wed Jan 27 2021
+ *
+ * Copyright (c) storycraft. Licensed under the MIT Licence.
+ */
+
 import { ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { TalkSession } from "../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelManageSession, OpenChannelSession } from "../../openlink/open-channel-session";
-import { OpenLink } from "../../openlink";
-import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
+import { OpenLink, OpenLinkProfiles } from "../../openlink";
+import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { GetMemRes } from "../../packet/chat/get-mem";
 import { MemberRes } from "../../packet/chat/member";
@@ -12,7 +18,7 @@ import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelInfoStruct, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { OpenMemberStruct } from "../../packet/struct/user";
 import { structToOpenChannelInfo } from "../../packet/struct/wrap/channel";
-import { structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
+import { structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult } from "../../request";
 import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -193,6 +199,20 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         );
 
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo>> {
+        const res = await this._session.request(
+            'UPLINKPROF',
+            {
+                'li': this._channel.linkId,
+                ...OpenLinkProfiles.templateToSerialized(profile)
+            }
+        );
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+        const linkInfo = structToOpenLinkChannelUserInfo(res['olu']);
+
+        return { status: res.status, success: true, result: linkInfo };
     }
 
 }

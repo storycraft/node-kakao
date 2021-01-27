@@ -11,9 +11,9 @@ import { AsyncCommandResult } from "../request";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";
-import { OpenLink } from ".";
+import { OpenLink, OpenLinkProfiles } from ".";
 import { OpenChannelUserPerm } from "./open-link-type";
-import { OpenLinkKickedUserInfo } from "./open-link-user-info";
+import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "./open-link-user-info";
 import { Channel } from "../channel";
 
 
@@ -111,6 +111,13 @@ export interface OpenChannelSession {
      * @param user
      */
     handoverHost(user: ChannelUser): AsyncCommandResult;
+
+    /**
+     * Change profile on this open channel.
+     *
+     * @param profile 
+     */
+    changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo>>;
 
 }
 
