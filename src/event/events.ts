@@ -15,9 +15,10 @@ import { ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info"
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 import { KnownChatType } from "../chat/chat-type";
-import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenLinkDeletedFeed, OpenRewriteFeed } from "../chat/feed/chat-feed";
+import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../chat/feed/chat-feed";
 import { OpenLinkChannelUserInfo } from "../openlink/open-link-user-info";
 import { OpenChannel } from "../openlink/open-channel";
+import { InformedOpenLink } from "../openlink/open-link";
 
 declare interface ChatEvent {
 
@@ -47,8 +48,8 @@ declare interface ChannelEvent {
 
 declare interface ChannelListEvent {
 
-    // 클라이언트가 채널 들어올시 호출
-    'channel_join': (channel: TalkChannel, feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, feed: ChatFeeds) => void;
+    // 클라이언트가 채널 들어갔을시 호출
+    'channel_join': (channel: TalkChannel) => void;
 
     // 클라이언트가 채널 나갈시 호출
     'channel_left': (channel: TalkChannel) => void;
@@ -69,12 +70,8 @@ declare interface OpenChannelEvent {
     // 메세지가 가려졌을시 호출
     'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenRewriteFeed) => void;
 
-    // 채널의 오픈링크가 삭제되었을시 호출
-    'link_deleted': (channel: OpenChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void;
-
     // 외치기 등 이벤트성 기능 사용시
     'chat_event': (channel: OpenChannel, user: ChatUser, type: KnownRelayEventType, count: number, logId: Long) => void;
-
 
 }
 
@@ -87,6 +84,11 @@ declare interface OpenChannelListEvent {
 
 declare interface OpenLinkEvent {
 
+    // 클라이언트 오픈링크가 생성 되었을시 호출
+    'link_created': (link: InformedOpenLink) => void;
+
+    // 클라이언트 오픈링크가 삭제 되었을시 호출
+    'link_deleted': (link: InformedOpenLink) => void;
 }
 
 declare interface ClientEvent {

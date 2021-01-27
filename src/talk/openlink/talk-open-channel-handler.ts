@@ -15,6 +15,7 @@ import { DefaultRes } from "../../packet/bson-data-codec";
 import { LinkKickedRes } from "../../packet/chat/link-kicked";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
 import { SyncMemTRes } from "../../packet/chat/sync-mem-t";
+import { ChannelInfoStruct } from "../../packet/struct/channel";
 import { ChatlogStruct } from "../../packet/struct/chat";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
@@ -125,6 +126,23 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
         switch (method) {
+
+            case 'SYNCLINKCR': {
+                const chatRoom: ChannelInfoStruct = data['chatRoom'];
+                if (!chatRoom) break;
+                
+                this._updater.addChannel({ channelId: chatRoom.chatId }).then(channelRes => {
+                    if (!channelRes.success) return;
+
+                    this._callEvent(
+                        parentCtx,
+                        'channel_join',
+                        channelRes.result
+                    );
+                });
+
+                break;
+            }
 
             case 'LINKKICKED': {
                 const kickData = data as DefaultRes & LinkKickedRes;

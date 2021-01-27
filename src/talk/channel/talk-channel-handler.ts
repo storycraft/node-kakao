@@ -285,23 +285,13 @@ export class TalkChannelListHandler implements Managed<ChannelListEvents> {
             case 'SYNCJOIN': {
                 const joinData = data as DefaultRes & SyncJoinRes;
 
-                if (this._list.get(joinData.c)) return;
-
                 this._updater.addChannel({ channelId: joinData.c }).then((res) => {
                     if (!res.success) return;
-
-                    const channel = res.result;
-
-                    const chatLog = structToChatlog(joinData.chatLog);
-                    if (chatLog.type !== KnownChatType.FEED) return;
-                    const feed = feedFromChat(chatLog);
 
                     this._callEvent(
                         parentCtx,
                         'channel_join',
-                        channel,
-                        chatLog,
-                        feed
+                        res.result
                     );
                 });
                 break;
