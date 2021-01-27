@@ -96,7 +96,7 @@ export interface OpenChannelSession {
  * Classes which can manage open channels should implement this.
  */
 export interface OpenChannelManageSession extends ChannelManageSession {
-    
 
+    
 
 }

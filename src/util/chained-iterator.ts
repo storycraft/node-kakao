@@ -24,6 +24,7 @@ export class ChainedIterator<T> implements IterableIterator<T> {
 
         if (next.done) {
             this._list.pop();
+            return this.next();
         }
 
         return next;
