@@ -55,7 +55,7 @@ export class TalkChannelList extends TypedEmitter<TalkChannelListEvents> impleme
     get openList() {
         return this._openList;
     }
-    
+
     get(channelId: Long) {
         return this._normalList.get(channelId) || this._openList.get(channelId);
     }

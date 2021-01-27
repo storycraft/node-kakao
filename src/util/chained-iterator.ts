@@ -18,7 +18,7 @@ export class ChainedIterator<T> implements IterableIterator<T> {
 
     next(): IteratorResult<T> {
         if (this._list.length < 1) return { done: true, value: null };
-        
+
         const last = this._list[this._list.length - 1];
         const next = last.next();
 

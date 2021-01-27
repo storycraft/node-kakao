@@ -230,7 +230,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
                 't': chat.type
             }
         );
-    
+
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 

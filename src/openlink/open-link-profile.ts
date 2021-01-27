@@ -43,7 +43,7 @@ export namespace OpenLinkProfiles {
 
     /**
      * Serialize template to packet key / value structure.
-     * @param template 
+     * @param template
      */
     export function templateToSerialized(template: OpenLinkProfiles): Record<string, any> {
         if ('linkId' in template) {

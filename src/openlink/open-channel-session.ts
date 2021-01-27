@@ -70,7 +70,7 @@ export interface OpenChannelSession {
      * React(Like) to link.
      * @see OpenLinkSession.react
      *
-     * @param flag 
+     * @param flag
      */
     react(flag: boolean): AsyncCommandResult;
 
@@ -94,7 +94,7 @@ export interface OpenChannelSession {
 
     /**
      * Create chat event (ex: shout heart reaction)
-     * @param chat 
+     * @param chat
      */
     createEvent(chat: ChatLoggedType, type: RelayEventType, count: number): AsyncCommandResult;
 
@@ -117,16 +117,16 @@ export interface OpenChannelSession {
     /**
      * Change profile on this open channel.
      *
-     * @param profile 
-     * 
+     * @param profile
+     *
      * @returns If changed to link profile, it returns OpenLinkChannelUserInfo as result.
      */
     changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null>;
-    
+
     /**
      * Hide chat
      *
-     * @param chat 
+     * @param chat
      */
     hideChat(chat: ChatLoggedType): AsyncCommandResult;
 
@@ -140,16 +140,16 @@ export interface OpenChannelManageSession extends ChannelManageSession {
     /**
      * Leave kicked open channel
      *
-     * @param channel 
+     * @param channel
      */
     leaveKicked(channel: Channel): AsyncCommandResult;
 
     /**
      * Join open channel with given profile and passcode
      *
-     * @param link 
-     * @param profile 
-     * @param passcode 
+     * @param link
+     * @param profile
+     * @param passcode
      */
     joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<OpenChannel>;
 

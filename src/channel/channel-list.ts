@@ -16,8 +16,8 @@ export interface ChannelList<T extends Channel> extends TypedEmitter<ChannelList
 
     /**
      * Try to get channel instance with channel id
-     * 
-     * @param channelId 
+     *
+     * @param channelId
      */
     get(channelId: Long): T | undefined;
 

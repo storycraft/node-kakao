@@ -176,7 +176,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
             case 'SYNCLINKCR': {
                 const chatRoom: ChannelInfoStruct = data['chatRoom'];
                 if (!chatRoom) break;
-                
+
                 this._updater.addChannel({ channelId: chatRoom.chatId }).then(channelRes => {
                     if (!channelRes.success) return;
 
@@ -192,7 +192,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
 
             case 'LINKKICKED': {
                 const kickData = data as DefaultRes & LinkKickedRes;
-                
+
                 const kickedChannel = this._list.get(kickData.c);
                 if (!kickedChannel) return;
 

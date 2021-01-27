@@ -153,7 +153,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         const ctx = new EventContext<ClientEvents>(this);
 
         this._openLink.pushReceived(method, data, ctx);
-        
+
         this._channelList.pushReceived(method, data, ctx);
 
         switch (method) {

@@ -74,14 +74,14 @@ export interface ChannelListUpdater<T extends Channel> {
     /**
      * Add channel to manage
      *
-     * @param channel 
+     * @param channel
      */
     addChannel(channel: Channel): AsyncCommandResult<T>;
 
     /**
      * Remove channel from managing
      *
-     * @param channel 
+     * @param channel
      */
     removeChannel(channel: Channel): boolean;
 
@@ -206,7 +206,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
 
                 if (chatLog.type !== KnownChatType.FEED) break;
                 const feed = feedFromChat(chatLog);
-                
+
                 this._callEvent(
                     parentCtx,
                     'user_left',
@@ -229,7 +229,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                     if (!usersRes.success) return;
 
                     const feed = feedFromChat(chatLog);
-    
+
                     this._callEvent(
                         parentCtx,
                         'user_join',
@@ -290,7 +290,7 @@ export class TalkChannelListHandler implements Managed<ChannelListEvents> {
 
                 const channel = this._list.get(leftData.chatId);
                 if (!channel) return;
-                
+
                 this._updater.removeChannel(channel);
 
                 this._callEvent(

@@ -30,7 +30,7 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
     private _manageSession: TalkOpenChannelManageSession;
 
     private _map: Map<string, TalkOpenChannel>;
-    
+
     constructor(private _session: TalkSession) {
         super();
 
@@ -54,7 +54,7 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
     /**
      * Find open channel using linkId
      *
-     * @param linkId 
+     * @param linkId
      */
     getByLinkId(linkId: Long) {
         for (const channel of this.all()) {
@@ -79,10 +79,10 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
         if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
 
         const talkChannel = new TalkOpenChannel(channel, this._session);
-        
+
         const res = await talkChannel.updateAll();
         if (!res.success) return res;
-        
+
         this._map.set(channel.channelId.toString(), talkChannel);
 
         return { success: true, status: res.status, result: talkChannel };
@@ -100,7 +100,7 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
         for (const channel of this._map.values()) {
             channel.pushReceived(method, data, ctx);
         }
-        
+
         this._handler.pushReceived(method, data, parentCtx);
         this._openHandler.pushReceived(method, data, parentCtx);
     }
@@ -128,7 +128,7 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
      */
     static async initialize(talkChannelList: TalkOpenChannelList, channelList: OpenChannel[] = []) {
         talkChannelList._map.clear();
-        
+
         await Promise.all(channelList.map(channel => talkChannelList.addOpenChannel(channel)));
 
         return talkChannelList;

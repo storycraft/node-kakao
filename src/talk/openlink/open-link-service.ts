@@ -29,7 +29,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
 
     constructor(session: TalkSession) {
         super();
-        
+
         this._session = new TalkOpenLinkSession(session);
 
         this._clientMap = new Map();
@@ -92,7 +92,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
     react(link: OpenLinkComponent, flag: boolean) {
         return this._session.react(link, flag);
     }
-    
+
     getReaction(link: OpenLinkComponent) {
         return this._session.getReaction(link);
     }
@@ -118,7 +118,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
                 const informed: InformedOpenLink = { openLink: structToOpenLink(linkStruct), info: structToOpenLinkInfo(linkStruct) };
 
                 this._clientMap.set(informed.openLink.linkId.toString(), informed);
-                
+
                 this._callEvent(parentCtx, 'link_created', informed);
                 break;
             }
@@ -128,7 +128,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
                 const clientLink = this.get(linkId);
 
                 if (!clientLink) return;
-                
+
                 this._clientMap.delete(linkId.toString());
                 this._callEvent(parentCtx, 'link_deleted', clientLink);
 

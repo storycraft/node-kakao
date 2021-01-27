@@ -69,10 +69,10 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
         const strId = channel.channelId.toString();
 
         const talkChannel = new TalkNormalChannel(channel, this._session);
-        
+
         const res = await talkChannel.updateAll();
         if (!res.success) return res;
-        
+
         this._map.set(strId, talkChannel);
 
         return { success: true, status: res.status, result: talkChannel };
@@ -87,7 +87,7 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
     async createChannel(template: ChannelTemplate): AsyncCommandResult<TalkNormalChannel> {
         const res = await this._manageSession.createChannel(template);
         if (!res.success) return res;
-        
+
         return this.addChannel(res.result);
     }
 
