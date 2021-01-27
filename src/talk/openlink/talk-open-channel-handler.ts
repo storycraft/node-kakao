@@ -168,6 +168,20 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
                 break;
             }
 
+            case 'SYNCLINKDL': {
+                const linkId: Long = data['li'];
+
+                const channel = this._list.getByLinkId(linkId);
+                if (!channel) return;
+
+                this._updater.removeChannel(channel);
+                this._callEvent(
+                    parentCtx,
+                    'channel_left',
+                    channel
+                );
+            }
+
             default: break;
         }
     }

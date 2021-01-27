@@ -46,6 +46,17 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
         return this._map.get(channelId.toString());
     }
 
+    /**
+     * Find open channel using linkId
+     *
+     * @param linkId 
+     */
+    getByLinkId(linkId: Long) {
+        for (const channel of this.all()) {
+            if (channel.linkId.eq(linkId)) return channel;
+        }
+    }
+
     all() {
         return this._map.values();
     }
