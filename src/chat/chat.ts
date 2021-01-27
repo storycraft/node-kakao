@@ -48,6 +48,12 @@ export interface ChatLogged {
 
 }
 
+export interface ChatLoggedType extends ChatLogged {
+
+    type: ChatType;
+
+}
+
 export interface ChatLogLinked extends ChatLogged {
 
     /**

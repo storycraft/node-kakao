@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
-import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
+import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatLogLinked } from "../../chat/chat";
 import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
 import { MediaComponent } from "../../media/media";
@@ -44,6 +44,7 @@ import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto/crypto-store";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
 import { OpenChannelUserPerm } from "../../openlink/open-link-type";
+import { RelayEventType } from "../../relay/relay-event-type";
 
 /**
  * Default ChannelSession implementation
@@ -426,6 +427,22 @@ export class TalkOpenChannelSession implements OpenChannelSession {
                 'li': this._channel.linkId,
                 'mids': [ user.userId ],
                 'mts': [ perm ]
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async createEvent(chat: ChatLoggedType, type: RelayEventType, count: number) {
+        const res = await this._session.request(
+            'RELAYEVENT',
+            {
+                'c': this._channel.channelId,
+                'li': this._channel.linkId,
+                'et': type,
+                'ec': count,
+                'logId': chat.logId,
+                't': chat.type
             }
         );
 

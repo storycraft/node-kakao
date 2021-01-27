@@ -5,7 +5,8 @@
  */
 
 import { ChannelManageSession } from "../channel/channel-session";
-import { ChatLogged } from "../chat/chat";
+import { ChatLogged, ChatLoggedType } from "../chat/chat";
+import { RelayEventType } from "../relay/relay-event-type";
 import { AsyncCommandResult } from "../request/command-result";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
@@ -75,6 +76,12 @@ export interface OpenChannelSession {
     getLatestOpenLink(): AsyncCommandResult<OpenLink>;
 
     /**
+     * Create chat event (ex: shout heart reaction)
+     * @param chat 
+     */
+    createEvent(chat: ChatLoggedType, type: RelayEventType, count: number): AsyncCommandResult;
+
+    /**
      * Set user permission.
      *
      * @param user
@@ -97,6 +104,6 @@ export interface OpenChannelSession {
  */
 export interface OpenChannelManageSession extends ChannelManageSession {
 
-    
+
 
 }

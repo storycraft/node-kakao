@@ -5,8 +5,8 @@
  */
 
 import { SetChannelMeta } from "../../channel/channel-info";
-import { Chatlog, ChatLogged, TypedChatlog } from "../../chat/chat";
-import { ChatType, KnownChatType } from "../../chat/chat-type";
+import { Chatlog, ChatLogged, ChatLoggedType, TypedChatlog } from "../../chat/chat";
+import { KnownChatType } from "../../chat/chat-type";
 import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { InformedOpenLink } from "../../openlink/open-link";
 import { OpenLinkChannelUserInfo } from "../../openlink/open-link-user-info";
@@ -65,7 +65,7 @@ declare interface OpenChannelEvent {
     'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenRewriteFeed) => void;
 
     // 채팅방 이벤트 (ex: 외치기 기능 하트 변화 시)
-    'chat_event': (channel: TalkOpenChannel, author: OpenChannelUserInfo, type: RelayEventType, count: number, chat: ChatLogged & { type: ChatType }) => void;
+    'chat_event': (channel: TalkOpenChannel, author: OpenChannelUserInfo, type: RelayEventType, count: number, chat: ChatLoggedType) => void;
 
 }
 

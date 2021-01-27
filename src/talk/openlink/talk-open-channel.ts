@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta } from "../../channel/channel-info";
-import { Chat, ChatLogged } from "../../chat/chat";
+import { Chat, ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { ChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
 import { EventContext } from "../../event/event-context";
@@ -22,6 +22,7 @@ import { KnownDataStatusCode } from "../../packet/status-code";
 import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
 import { OpenMemberStruct } from "../../packet/struct/user";
 import { structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
+import { RelayEventType } from "../../relay/relay-event-type";
 import { AsyncCommandResult } from "../../request/command-result";
 import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
@@ -286,6 +287,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         }
 
         return res;
+    }
+
+    createEvent(chat: ChatLoggedType, type: RelayEventType, count: number) {
+        return this._openChannelSession.createEvent(chat, type, count);
     }
 
     getKickList() {
