@@ -4,24 +4,27 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandSession, LocoSession, SessionFactory } from "./network/request-session";
-import { ChannelUser } from "./user/channel-user";
-import { DefaultReq, DefaultRes } from "./packet/bson-data-codec";
-import { Managed } from "./talk/managed";
-import { OAuthCredential } from "./oauth/credential";
-import { AsyncCommandResult } from "./request/command-result";
-import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "./config/client-config-provider";
-import { ClientSession, LoginResult } from "./client/client-session";
-import { TalkSessionFactory } from "./talk/network/talk-session-factory";
-import { TalkClientSession } from "./talk/client/talk-client-session";
+import { CommandSession, LocoSession, SessionFactory } from "../../network/request-session";
+import { ChannelUser } from "../../user/channel-user";
+import { DefaultReq, DefaultRes } from "../../packet/bson-data-codec";
+import { Managed } from "../managed";
+import { OAuthCredential } from "../../oauth/credential";
+import { AsyncCommandResult } from "../../request";
+import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "../../config/client-config-provider";
+import { ClientSession, LoginResult } from "../../client/client-session";
+import { TalkSessionFactory } from "../network/talk-session-factory";
+import { TalkClientSession } from "../client/talk-client-session";
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { KickoutRes } from "./packet/chat/kickout";
-import { EventContext } from "./event/event-context";
-import { ClientStatus } from "./client-status";
-import { OpenLinkService } from "./talk/openlink/open-link-service";
-import { TalkChannelList } from "./talk/channel/talk-channel-list";
-import { ClientEvents } from "./talk/event/events";
+import { KickoutRes } from "../../packet/chat/kickout";
+import { EventContext } from "../../event/event-context";
+import { ClientStatus } from "../../client-status";
+import { OpenLinkService } from "../openlink/open-link-service";
+import { TalkChannelList } from "../channel/talk-channel-list";
+import { ClientEvents } from "../event/events";
 import { Long } from "bson";
+
+export * from "./talk-client-session";
+
 
 /**
  * Talk client session with client user

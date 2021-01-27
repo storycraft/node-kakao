@@ -5,12 +5,12 @@
  */
 
 import { Channel } from "../../channel/channel";
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { MediaComponent } from "../../media/media";
 import { DefaultLocoSession } from "../../network/request-session";
 import { Stream } from "../../network/stream";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request";
 
 /**
  * DownloadInfo contains size and async stream iterator for download.

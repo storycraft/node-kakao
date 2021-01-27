@@ -10,7 +10,7 @@ import { Channel } from "../../channel/channel";
 import { ChannelMeta } from "../../channel/channel-info";
 import { Chat, ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { ChatType } from "../../chat/chat-type";
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
 import { MediaComponent } from "../../media/media";
 import { OpenChannel } from "../../openlink/open-channel";
@@ -23,7 +23,7 @@ import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/chann
 import { OpenMemberStruct } from "../../packet/struct/user";
 import { structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { RelayEventType } from "../../relay/relay-event-type";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request";
 import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkChannel } from "../channel/talk-channel";

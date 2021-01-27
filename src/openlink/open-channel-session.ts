@@ -7,7 +7,7 @@
 import { ChannelManageSession } from "../channel/channel-session";
 import { ChatLogged, ChatLoggedType } from "../chat/chat";
 import { RelayEventType } from "../relay/relay-event-type";
-import { AsyncCommandResult } from "../request/command-result";
+import { AsyncCommandResult } from "../request";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";

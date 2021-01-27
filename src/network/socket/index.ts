@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from "./node-net-socket";
+
 import { Stream } from "../stream";
 import { NodeSocket } from "./node-net-socket";
 

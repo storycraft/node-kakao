@@ -5,7 +5,7 @@
  */
 
 import { CryptoStore } from "../crypto/crypto-store";
-import { ChunkedArrayBufferList } from "./chunk/chunked-arraybuffer-list";
+import { ChunkedArrayBufferList } from "./chunk";
 import { Stream } from "./stream";
 
 /**

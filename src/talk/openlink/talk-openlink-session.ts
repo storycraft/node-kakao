@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink/open-link";
 import { OpenLinkSession } from "../../openlink/open-link-session";
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
@@ -14,7 +14,7 @@ import { SyncLinkRes } from "../../packet/chat/sync-link";
 import { KnownDataStatusCode } from "../../packet/status-code";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { structToOpenLinkKickedUserInfo } from "../../packet/struct/wrap/user";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request";
 
 /**
  * Provides openlink operations

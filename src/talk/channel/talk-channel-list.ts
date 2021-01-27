@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
 import { ChannelList } from "../../channel/channel-list";
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
 import { OpenChannel } from "../../openlink/open-channel";
 import { DefaultRes } from "../../packet/bson-data-codec";

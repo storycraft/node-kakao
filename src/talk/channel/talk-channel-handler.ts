@@ -22,7 +22,7 @@ import { MsgRes } from "../../packet/chat/msg";
 import { SyncJoinRes } from "../../packet/chat/sync-join";
 import { ChatlogStruct } from "../../packet/struct/chat";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo } from "../../user/channel-user-info";
 import { Managed } from "../managed";

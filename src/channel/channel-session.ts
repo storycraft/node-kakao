@@ -6,7 +6,7 @@
 
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../chat/chat";
 import { Channel } from "./channel";
-import { AsyncCommandResult, CommandResult } from "../request/command-result";
+import { AsyncCommandResult, CommandResult } from "../request";
 import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";

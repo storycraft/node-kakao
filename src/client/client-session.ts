@@ -9,7 +9,7 @@ import { Channel } from "../channel/channel";
 import { ClientStatus } from "../client-status";
 import { OAuthCredential } from "../oauth/credential";
 import { OpenChannel } from "../openlink/open-channel";
-import { AsyncCommandResult } from "../request/command-result";
+import { AsyncCommandResult } from "../request";
 
 export interface LoginResult {
 

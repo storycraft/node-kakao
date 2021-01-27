@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { Channel } from "../../channel/channel";
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { ClientStatus } from "../../client-status";
 import { ClientSession, LoginResult } from "../../client/client-session";
 import { ClientConfigProvider } from "../../config/client-config-provider";
@@ -14,7 +14,7 @@ import { OAuthCredential } from "../../oauth/credential";
 import { OpenChannel } from "../../openlink/open-channel";
 import { LoginListRes } from "../../packet/chat/login-list";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { CommandResult } from "../../request/command-result";
+import { CommandResult } from "../../request";
 
 export class TalkClientSession implements ClientSession {
 

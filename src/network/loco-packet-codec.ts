@@ -5,7 +5,7 @@
  */
 
 import { LocoPacket, LocoPacketHeader } from "../packet/loco-packet";
-import { ChunkedArrayBufferList } from "./chunk/chunked-arraybuffer-list";
+import { ChunkedArrayBufferList } from "./chunk";
 import { Stream } from "./stream";
 
 /**

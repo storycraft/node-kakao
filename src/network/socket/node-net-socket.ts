@@ -7,7 +7,7 @@
 import { Stream } from "../stream";
 import * as net from 'net';
 import * as tls from 'tls';
-import { NetSocketOptions } from "./net-socket";
+import { NetSocketOptions } from ".";
 
 export class NodeSocket implements Stream {
 

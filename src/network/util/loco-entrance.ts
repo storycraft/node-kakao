@@ -9,7 +9,7 @@ import { BookingConfig, CheckinConfig } from "../../config/client-config-provide
 import { GetConfRes } from "../../packet/booking/get-conf";
 import { CheckinRes } from "../../packet/checkin/checkin";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { CommandResult } from "../../request/command-result";
+import { CommandResult } from "../../request";
 import { DefaultLocoSession } from "../request-session";
 import { Stream } from "../stream";
 

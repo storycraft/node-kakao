@@ -7,7 +7,7 @@
 import { SessionConfig } from "../config/client-config-provider";
 import { BsonDataCodec, DefaultReq, DefaultRes } from "../packet/bson-data-codec";
 import { LocoPacket } from "../packet/loco-packet";
-import { CommandResult } from "../request/command-result";
+import { CommandResult } from "../request";
 import { ChannelUser } from "../user/channel-user";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
 import { PacketAssembler } from "./packet-assembler";

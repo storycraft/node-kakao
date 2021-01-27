@@ -1,5 +1,5 @@
 import { ChatLogged, ChatLoggedType } from "../../chat/chat";
-import { TalkSession } from "../../client";
+import { TalkSession } from "../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
@@ -13,7 +13,7 @@ import { ChannelInfoStruct, OpenChannelInfoExtra } from "../../packet/struct/cha
 import { OpenMemberStruct } from "../../packet/struct/user";
 import { structToOpenChannelInfo } from "../../packet/struct/wrap/channel";
 import { structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
-import { AsyncCommandResult } from "../../request/command-result";
+import { AsyncCommandResult } from "../../request";
 import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkOpenLinkSession } from "./talk-openlink-session";

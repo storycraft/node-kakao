@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AsyncCommandResult } from "../request/command-result";
+import { AsyncCommandResult } from "../request";
 import { InformedOpenLink, OpenLinkComponent, OpenLink } from "./open-link";
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "./open-link-user-info";
 

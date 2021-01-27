@@ -8,7 +8,7 @@ import { SessionConfig } from "../config/client-config-provider";
 import { LocoSession, PacketResData, SessionFactory } from "../network/request-session";
 import { DefaultRes, DefaultReq } from "../packet/bson-data-codec";
 import { LocoPacket } from "../packet/loco-packet";
-import { CommandResult } from "../request/command-result";
+import { CommandResult } from "../request";
 
 /**
  * Hook incoming datas

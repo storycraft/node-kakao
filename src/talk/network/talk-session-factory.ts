@@ -9,8 +9,8 @@ import { newCryptoStore } from "../../crypto/crypto-store";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { DefaultLocoSession, LocoSession, SessionFactory } from "../../network/request-session";
 import { getBookingData, getCheckinData } from "../../network/util/loco-entrance";
-import { CommandResult } from "../../request/command-result";
-import * as NetSocket from "../../network/socket/net-socket";
+import { CommandResult } from "../../request";
+import * as NetSocket from "../../network/socket";
 import { KnownDataStatusCode } from "../../packet/status-code";
 
 /**
