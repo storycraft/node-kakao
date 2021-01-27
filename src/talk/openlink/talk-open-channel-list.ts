@@ -19,7 +19,7 @@ import { OpenChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelListHandler } from "./talk-open-channel-handler";
-import { OpenChannelManageSession } from "../../openlink";
+import { OpenChannelManageSession, OpenLinkComponent, OpenLinkProfiles } from "../../openlink";
 import { TalkOpenChannelManageSession } from "./talk-open-channel-session";
 
 export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> implements Managed<OpenChannelListEvents>, OpenChannelManageSession, ChannelList<TalkOpenChannel> {
@@ -111,6 +111,14 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
 
     leaveChannel(channel: Channel) {
         return this._manageSession.leaveChannel(channel);
+    }
+
+    async joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<TalkOpenChannel> {
+        const res = await this._manageSession.joinChannel(link, profile, passcode);
+
+        if (!res.success) return res;
+
+        return this.addOpenChannel(res.result);
     }
 
     /**

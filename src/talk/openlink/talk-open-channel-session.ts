@@ -9,7 +9,7 @@ import { TalkSession } from "../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelManageSession, OpenChannelSession } from "../../openlink/open-channel-session";
-import { OpenLink, OpenLinkProfiles } from "../../openlink";
+import { OpenLink, OpenLinkComponent, OpenLinkProfiles } from "../../openlink";
 import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { GetMemRes } from "../../packet/chat/get-mem";
@@ -28,6 +28,8 @@ import { RelayEventType } from "../../relay";
 import { Long } from "bson";
 import { Channel } from "../../channel";
 import { TalkChannelManageSession } from "../channel";
+import { stringify } from "querystring";
+import { JoinLinkRes } from "../../packet/chat/join-link";
 
 /**
  * Default OpenChannelSession implementation.
@@ -256,6 +258,40 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
         );
 
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<OpenChannel> {
+        let token: string | undefined;
+        if (passcode) {
+            const tokenRes = await this._session.request(
+                'CHECKJOIN',
+                {
+                    'li': link.linkId,
+                    'pc': passcode
+                }
+            );
+
+            if (tokenRes.status !== KnownDataStatusCode.SUCCESS) return { status: tokenRes.status, success: false };
+
+            token = tokenRes['tk'];
+        }
+
+        const reqData: Record<string, any> = {
+            'li': link.linkId,
+            'ref': 'EW:',
+            ...OpenLinkProfiles.templateToSerialized(profile)
+        };
+
+        if (token) reqData['tk'] = token;
+
+        const res = await this._session.request<JoinLinkRes>(
+            'JOINLINK',
+            reqData
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+
+        return { status: res.status, success: true, result: { channelId: res.chatRoom.chatId, linkId: res.ol.li } };
     }
 
 }

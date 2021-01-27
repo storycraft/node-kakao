@@ -15,6 +15,8 @@ import { OpenLink, OpenLinkProfiles } from ".";
 import { OpenChannelUserPerm } from "./open-link-type";
 import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "./open-link-user-info";
 import { Channel } from "../channel";
+import { OpenLinkComponent } from "..";
+import { OpenChannel } from "./open-channel";
 
 
 /**
@@ -141,5 +143,14 @@ export interface OpenChannelManageSession extends ChannelManageSession {
      * @param channel 
      */
     leaveKicked(channel: Channel): AsyncCommandResult;
+
+    /**
+     * Join open channel with given profile and passcode
+     *
+     * @param link 
+     * @param profile 
+     * @param passcode 
+     */
+    joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<OpenChannel>;
 
 }
