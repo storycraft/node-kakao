@@ -108,4 +108,28 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
+    async react(link: OpenLinkComponent, flag: boolean) {
+        const res = await this._session.request<JoinInfoRes>(
+            'REACT',
+            {
+                'li': link.linkId,
+                'rt': flag ? 1 : 0
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    async getReaction(link: OpenLinkComponent): AsyncCommandResult<[number, boolean]> {
+        const res = await this._session.request(
+            'REACTCNT',
+            {
+                'li': link.linkId
+            }
+        );
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+
+        return { status: res.status, success: true, result: [res['rc'], res['rt']] };
+    }
+
 }

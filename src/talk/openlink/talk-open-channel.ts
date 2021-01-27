@@ -28,7 +28,8 @@ import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkChannel } from "../channel/talk-channel";
 import { TalkChannelHandler, ChannelInfoUpdater } from "../channel/talk-channel-handler";
-import { TalkChannelSession, TalkOpenChannelSession } from "../channel/talk-channel-session";
+import { TalkChannelSession } from "../channel/talk-channel-session";
+import { TalkOpenChannelSession } from "./talk-open-channel-session";
 import { OpenChannelEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
@@ -339,6 +340,14 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         }
 
         return res;
+    }
+
+    react(flag: boolean) {
+        return this._openChannelSession.react(flag);
+    }
+
+    getReaction() {
+        return this._openChannelSession.getReaction();
     }
 
     createMediaDownloader(media: MediaComponent, type: ChatType) {

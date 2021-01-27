@@ -8,15 +8,10 @@ import { Long } from "bson";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
-import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatLogLinked } from "../../chat/chat";
+import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
 import { MediaComponent } from "../../media/media";
-import { OpenChannel } from "../../openlink/open-channel";
-import { OpenChannelInfo } from "../../openlink/open-channel-info";
-import { OpenChannelSession } from "../../openlink/open-channel-session";
-import { OpenLink } from "../../openlink/open-link";
-import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
@@ -27,24 +22,21 @@ import { MemberRes } from "../../packet/chat/member";
 import { SetMetaRes } from "../../packet/chat/set-meta";
 import { WriteRes } from "../../packet/chat/write";
 import { KnownDataStatusCode } from "../../packet/status-code";
-import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra, OpenChannelInfoExtra } from "../../packet/struct/channel";
-import { NormalMemberStruct, OpenMemberStruct } from "../../packet/struct/user";
-import { structToNormalChannelInfo, structToOpenChannelInfo } from "../../packet/struct/wrap/channel";
+import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra } from "../../packet/struct/channel";
+import { NormalMemberStruct } from "../../packet/struct/user";
+import { structToNormalChannelInfo } from "../../packet/struct/wrap/channel";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
-import { structToChannelUserInfo, structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
+import { structToChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult, CommandResult } from "../../request/command-result";
 import { ChannelUser, OpenChannelUser } from "../../user/channel-user";
-import { NormalChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
+import { NormalChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
 import { MediaDownloader } from "../media/media-downloader";
-import { TalkOpenLinkSession } from "../openlink/talk-openlink-session";
 import * as NetSocket from '../../network/socket/net-socket';
 import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto/crypto-store";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
-import { OpenChannelUserPerm } from "../../openlink/open-link-type";
-import { RelayEventType } from "../../relay/relay-event-type";
 
 /**
  * Default ChannelSession implementation
@@ -315,168 +307,6 @@ export class TalkChannelSession implements ChannelSession {
     }
 
 }
-
-/**
- * Default OpenChannelSession implementation.
- */
-export class TalkOpenChannelSession implements OpenChannelSession {
-
-    private _channel: OpenChannel;
-    private _session: TalkSession;
-
-    private _linkSession: TalkOpenLinkSession;
-
-    constructor(channel: OpenChannel, session: TalkSession) {
-        this._channel = channel;
-        this._session = session;
-
-        this._linkSession = new TalkOpenLinkSession(session);
-    }
-
-    get session() {
-        return this._session;
-    }
-
-    async markRead(chat: ChatLogged) {
-        const status = (await this._session.request(
-            'NOTIREAD',
-            {
-                'chatId': this._channel.channelId,
-                'li': this._channel.linkId,
-                'watermark': chat.logId
-            }
-        )).status;
-
-        return {
-            success: status === KnownDataStatusCode.SUCCESS,
-            status,
-        };
-    }
-
-    async getLatestChannelInfo(): AsyncCommandResult<OpenChannelInfo> {
-        const res = await this._session.request<ChatInfoRes>(
-            'CHATINFO',
-            {
-                'chatId': this._channel.channelId,
-            }
-        );
-
-        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-
-        return {
-            success: true,
-            status: res.status,
-            result: structToOpenChannelInfo(res.chatInfo as ChannelInfoStruct & OpenChannelInfoExtra)
-        };
-    }
-
-    async getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
-        const res = await this._session.request<MemberRes>(
-            'MEMBER',
-            {
-                'chatId': this._channel.channelId,
-                'memberIds': channelUsers.map(user => user.userId)
-            }
-        );
-
-        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-
-        const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
-
-        return { status: res.status, success: true, result };
-    }
-
-    async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
-        const res = await this._session.request<GetMemRes>(
-            'GETMEM',
-            {
-                'chatId': this._channel.channelId,
-            }
-        );
-
-        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-
-        const result = (res.members as OpenMemberStruct[]).map(member => structToOpenChannelUserInfo(member));
-
-        return { status: res.status, success: true, result };
-    }
-
-    getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]> {
-        return this._linkSession.getKickList(this._channel);
-    }
-
-    removeKicked(user: ChannelUser): AsyncCommandResult {
-        return this._linkSession.removeKicked(this._channel, { ...user, kickedChannelId: this._channel.channelId })
-    }
-
-    async getLatestOpenLink(): AsyncCommandResult<OpenLink> {
-        const res = await this._linkSession.getOpenLink(this._channel);
-
-        if (res.success) {
-            return { success: true, status: res.status, result: res.result[0] };
-        } else {
-            return res;
-        }
-    }
-
-    async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult {
-        const res = await this._session.request(
-            'SETMEMTYPE',
-            {
-                'c': this._channel.channelId,
-                'li': this._channel.linkId,
-                'mids': [ user.userId ],
-                'mts': [ perm ]
-            }
-        );
-
-        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
-    }
-
-    async createEvent(chat: ChatLoggedType, type: RelayEventType, count: number) {
-        const res = await this._session.request(
-            'RELAYEVENT',
-            {
-                'c': this._channel.channelId,
-                'li': this._channel.linkId,
-                'et': type,
-                'ec': count,
-                'logId': chat.logId,
-                't': chat.type
-            }
-        );
-
-        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
-    }
-
-    async handoverHost(user: ChannelUser): AsyncCommandResult {
-        const res = await this._session.request(
-            'SETMEMTYPE',
-            {
-                'c': this._channel.channelId,
-                'li': this._channel.linkId,
-                'mids': [ user.userId, this._session.clientUser.userId ],
-                'mts': [ OpenChannelUserPerm.OWNER, OpenChannelUserPerm.NONE ]
-            }
-        );
-
-        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
-    }
-
-    async kickUser(user: ChannelUser): AsyncCommandResult {
-        const res = await this._session.request(
-            'KICKMEM',
-            {
-                'c': this._channel.channelId,
-                'li': this._channel.linkId,
-                'mid': user.userId
-            }
-        );
-
-        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
-    }
-
-};
 
 /**
  * Default ChannelManageSession implementation.

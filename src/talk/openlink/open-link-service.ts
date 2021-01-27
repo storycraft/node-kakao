@@ -89,6 +89,14 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
         return res;
     }
 
+    react(link: OpenLinkComponent, flag: boolean) {
+        return this._session.react(link, flag);
+    }
+    
+    getReaction(link: OpenLinkComponent) {
+        return this._session.getReaction(link);
+    }
+
     /**
      * Update every properties
      */

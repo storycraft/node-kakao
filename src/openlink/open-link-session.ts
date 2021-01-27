@@ -46,6 +46,23 @@ export interface OpenLinkSession {
      */
     removeKicked(link: OpenLinkComponent, kickedUser: OpenLinkKickedUser): AsyncCommandResult;
 
+    
+    /**
+     * React(Like) to link.
+     * 
+     * @param link 
+     * @param flag 
+     */
+    react(link: OpenLinkComponent, flag: boolean): AsyncCommandResult;
+
+    /**
+     * Get reaction info
+     * @param link 
+     * 
+     * @returns [ count, clientReacted ]
+     */
+    getReaction(link: OpenLinkComponent): AsyncCommandResult<[number, boolean]>;
+
     /**
      * Delete openlink.
      * Can only delete owned link.

@@ -64,6 +64,20 @@ export interface OpenChannelSession {
     removeKicked(user: ChannelUser): AsyncCommandResult;
 
     /**
+     * React(Like) to link.
+     * @see OpenLinkSession.react
+     *
+     * @param flag 
+     */
+    react(flag: boolean): AsyncCommandResult;
+
+    /**
+     * Get reaction info
+     * @see OpenLinkSession.getReaction
+     */
+    getReaction(): AsyncCommandResult<[number, boolean]>;
+
+    /**
      * Kick user. Require manage permission.
      *
      * @param user
