@@ -23,7 +23,7 @@ export interface OpenLinkSession {
     getOpenLink(...components: OpenLinkComponent[]): AsyncCommandResult<Readonly<OpenLink>[]>;
 
     /**
-     * Get openlink from link url.
+     * Get openlink from link url. This returns more information than getOpenLink method.
      *
      * @param linkURL
      * @param referer Unknown

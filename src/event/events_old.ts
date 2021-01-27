@@ -12,7 +12,7 @@ import { DeleteAllFeed, OpenJoinFeed, InviteFeed, OpenKickFeed, OpenRewriteFeed,
 import { LocoKickoutType } from "../packet_old/packet-kickout";
 import { ChannelMetaType, ChannelMetaStruct } from "../talk/struct_old/channel-meta-struct";
 import { OpenMemberType, OpenProfileType } from "../talk/open_old/open-link-type";
-import { RelayEventType } from "../relay/relay-event-type";
+import { KnownRelayEventType } from "../relay/relay-event-type";
 
 declare interface Event {
 
@@ -92,7 +92,7 @@ declare interface OpenChannelEvent extends Event {
     on(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, newHost: ChatUser, prevHost: ChatUser) => void): this;
 
     // 외치기 등 이벤트성 기능 사용시
-    on(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
+    on(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: KnownRelayEventType, count: number, logId: Long) => void): this;
 
     once(event: 'user_join', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<OpenJoinFeed>) => void): this;
     once(event: 'user_left', listener: (channel: OpenChatChannel, user: ChatUser, feed?: FeedChat<LeaveFeed>) => void): this;
@@ -100,7 +100,7 @@ declare interface OpenChannelEvent extends Event {
     once(event: 'message_hidden', listener: (channel: OpenChatChannel, logId: Long, feed?: FeedChat<OpenRewriteFeed>) => void): this;
     once(event: 'link_deleted', listener: (channel: OpenChatChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void): this;
     once(event: 'link_hand_over_host', listener: (channel: OpenChatChannel, feed: FeedChat<OpenHandOverHostFeed>) => void): this;
-    once(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void): this;
+    once(event: 'chat_event', listener: (channel: OpenChatChannel, user: ChatUser, type: KnownRelayEventType, count: number, logId: Long) => void): this;
 
 }
 

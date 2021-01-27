@@ -250,8 +250,8 @@ export class TalkChannelListHandler implements Managed<ChannelListEvents> {
                 const leftData = data as DefaultRes & LeftRes;
 
                 const channel = this._list.get(leftData.chatId);
-
                 if (!channel) return;
+                
                 this._updater.removeChannel(channel);
 
                 this._callEvent(

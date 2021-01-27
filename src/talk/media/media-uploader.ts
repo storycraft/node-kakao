@@ -26,6 +26,20 @@ interface DataWriter {
 
 }
 
+/**
+ * Contains data writer and start offset
+ */
+interface UploadRequest {
+
+    /**
+     * Start offset
+     */
+    offset: number;
+
+    writer: DataWriter;
+
+}
+
 export class MediaUploader {
 
     private _done: boolean;
@@ -58,7 +72,7 @@ export class MediaUploader {
      * @param data
      * @param onComplete callback called when upload complete
      */
-    async upload(size: number, onComplete?: (status: DataStatusCode) => void): AsyncCommandResult<DataWriter> {
+    async upload(size: number, onComplete?: (status: DataStatusCode) => void): AsyncCommandResult<Readonly<UploadRequest>> {
         if (this._done) throw new Error('Cannot upload more using finished uploader');
 
         const session = new DefaultLocoSession(this._stream);
@@ -86,8 +100,7 @@ export class MediaUploader {
         });
         if (postRes.status !== KnownDataStatusCode.SUCCESS) return { status: postRes.status, success: false };
 
-        const startOffset = postRes['o'];
-
+        const offset = postRes['o'];
         const writer: DataWriter = {
             write: (data) => {
                 if (this._done) throw new Error('Cannot write more when upload finished');
@@ -109,7 +122,7 @@ export class MediaUploader {
             }
         };
 
-        return { status: postRes.status, success: true, result: writer };
+        return { status: postRes.status, success: true, result: { offset, writer } };
     }
 
 }

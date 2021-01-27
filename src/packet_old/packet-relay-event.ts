@@ -7,14 +7,14 @@
 import { LocoBsonRequestPacket, LocoBsonResponsePacket } from "./loco-bson-packet";
 import { Long } from "bson";
 import { ChatType } from "../talk/chat_old/chat-type";
-import { RelayEventType } from "../relay/relay-event-type";
+import { KnownRelayEventType } from "../relay/relay-event-type";
 
 export class PacketRelayEventReq extends LocoBsonRequestPacket {
 
     constructor(
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public EventType: RelayEventType = RelayEventType.UNDEFINED,
+        public EventType: KnownRelayEventType = KnownRelayEventType.UNDEFINED,
         public EventCount: number = 0,
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Unknown,
@@ -45,7 +45,7 @@ export class PacketRelayEventRes extends LocoBsonResponsePacket {
         status: number,
         public LinkId: Long = Long.ZERO,
         public ChannelId: Long = Long.ZERO,
-        public EventType: RelayEventType = RelayEventType.UNDEFINED,
+        public EventType: KnownRelayEventType = KnownRelayEventType.UNDEFINED,
         public EventCount: number = 0,
         public LogId: Long = Long.ZERO,
         public Type: ChatType = ChatType.Unknown,

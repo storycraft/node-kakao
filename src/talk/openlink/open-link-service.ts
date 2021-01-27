@@ -5,9 +5,9 @@
  */
 
 import { TalkSession } from "../../client";
-import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink/open-link";
+import { InformedOpenLink, OpenLinkComponent } from "../../openlink/open-link";
 import { OpenLinkSession } from "../../openlink/open-link-session";
-import { OpenLinkKickedUserInfo, OpenLinkKickedUser } from "../../openlink/open-link-user-info";
+import { OpenLinkKickedUser } from "../../openlink/open-link-user-info";
 import { AsyncCommandResult } from "../../request/command-result";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 

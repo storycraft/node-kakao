@@ -4,13 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from "bson";
 import { KnownChatType } from "../../chat/chat-type";
-import { feedFromChat, OpenRewriteFeed } from "../../chat/feed/chat-feed";
+import { feedFromChat, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
-import { ChannelEvents, OpenChannelEvents } from "../../event/events";
+import { OpenChannelEvents, OpenChannelListEvents } from "../../event/events";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { DefaultRes } from "../../packet/bson-data-codec";
+import { LinkKickedRes } from "../../packet/chat/link-kicked";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";
 import { SyncMemTRes } from "../../packet/chat/sync-mem-t";
 import { ChatlogStruct } from "../../packet/struct/chat";
@@ -36,9 +38,8 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
         parentCtx.emit(event, ...args);
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
         switch (method) {
-
             case 'SYNCMEMT': {
                 const memTData = data as DefaultRes & SyncMemTRes;
                 if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
@@ -111,14 +112,46 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
 }
 
-export class TalkOpenChannelListHandler implements Managed<OpenChannelEvents> {
+export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents> {
 
     constructor(private _list: TalkOpenChannelList, private _updater: ChannelListUpdater<TalkOpenChannel>) {
 
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
-        
+    private _callEvent<U extends keyof OpenChannelListEvents>(parentCtx: EventContext<OpenChannelListEvents>, event: U, ...args: Parameters<OpenChannelListEvents[U]>) {
+        this._list.emit(event, ...args);
+        parentCtx.emit(event, ...args);
+    }
+
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
+        switch (method) {
+
+            case 'LINKKICKED': {
+                const kickData = data as DefaultRes & LinkKickedRes;
+                
+                const kickedChannel = this._list.get(kickData.c);
+
+                if (!kickedChannel) return;
+                this._updater.removeChannel(kickedChannel);
+
+                const chatLog = structToChatlog(kickData.chatLog);
+                if (chatLog.type !== KnownChatType.FEED) return;
+                const feed = feedFromChat(chatLog);
+                if (feed.feedType !== KnownFeedType.OPENLINK_KICKED) return;
+
+                this._callEvent(
+                    parentCtx,
+                    'channel_kicked',
+                    chatLog,
+                    kickedChannel,
+                    feed as OpenKickFeed
+                );
+
+                break;
+            }
+
+            default: break;
+        }
     }
 
 }

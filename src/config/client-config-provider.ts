@@ -120,7 +120,7 @@ export interface LocoLoginConfig {
 
 }
 
-export class ClientConfigProvider implements ClientConfigProvider {
+export class ClientConfigProvider {
 
     configuration: ClientConfig;
 

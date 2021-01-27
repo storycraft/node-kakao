@@ -4,9 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export enum RelayEventType {
+export enum KnownRelayEventType {
 
-    UNDEFINED = 0,
     SHOUT = 1
 
 }
+
+export type RelayEventType = KnownRelayEventType | number;

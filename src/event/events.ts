@@ -7,8 +7,7 @@
 import { FeedChat } from "../talk/chat_old/chat";
 import { ChatUser } from "../talk/user_old/chat-user";
 import { Long } from "bson";
-import { OpenMemberType } from "../talk/open_old/open-link-type";
-import { RelayEventType } from "../relay/relay-event-type";
+import { KnownRelayEventType } from "../relay/relay-event-type";
 import { KickoutType } from "../packet/chat/kickout";
 import { Chatlog, ChatLogged, TypedChatlog } from "../chat/chat";
 import { TalkChannel } from "../talk/channel/talk-channel";
@@ -16,7 +15,7 @@ import { ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info"
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 import { KnownChatType } from "../chat/chat-type";
-import { ChatFeeds, DeleteAllFeed, OpenJoinFeed, OpenKickFeed, OpenLinkDeletedFeed, OpenRewriteFeed } from "../chat/feed/chat-feed";
+import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenLinkDeletedFeed, OpenRewriteFeed } from "../chat/feed/chat-feed";
 import { OpenLinkChannelUserInfo } from "../openlink/open-link-user-info";
 import { OpenChannel } from "../openlink/open-channel";
 
@@ -74,7 +73,7 @@ declare interface OpenChannelEvent {
     'link_deleted': (channel: OpenChannel, feed: FeedChat<OpenLinkDeletedFeed>) => void;
 
     // 외치기 등 이벤트성 기능 사용시
-    'chat_event': (channel: OpenChannel, user: ChatUser, type: RelayEventType, count: number, logId: Long) => void;
+    'chat_event': (channel: OpenChannel, user: ChatUser, type: KnownRelayEventType, count: number, logId: Long) => void;
 
 
 }
@@ -82,7 +81,7 @@ declare interface OpenChannelEvent {
 declare interface OpenChannelListEvent {
 
     // 채널에서 킥 되었을시 호출
-    'channel_kicked': (channel: OpenChannel, feed?: FeedChat<OpenKickFeed>) => void;
+    'channel_kicked': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: OpenChannel, feed: OpenKickFeed) => void;
 
 }
 
@@ -98,7 +97,8 @@ declare interface ClientEvent {
     // 서버에 의해 연결이 끊어졌을시 호출 (서버 변경 포함)
     'disconnected': (reason: KickoutType) => void;
 
-    // 클라이언트 처리 에러
+    // 클라이언트 처리 에러.
+    // 핸들링 되지 않을시 클라이언트 세션이 종료됨.
     'error': (error: any) => void;
 
 }
