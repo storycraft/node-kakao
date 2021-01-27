@@ -9,6 +9,7 @@ import { KnownChatType } from "../../chat/chat-type";
 import { feedFromChat, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
+import { OpenChannelUserPerm } from "../../openlink";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { DefaultRes } from "../../packet/bson-data-codec";
 import { LinkKickedRes } from "../../packet/chat/link-kicked";
@@ -57,6 +58,17 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
                     this._updater.updateUserInfo(user, { perm });
                     const info = this._channel.getUserInfo(user);
                     if (lastInfo && info) {
+                        if (perm === OpenChannelUserPerm.OWNER) {
+                            const lastLink = this._channel.info.openLink;
+                            if (lastLink) {
+                                this._channel.getLatestOpenLink().then((res) => {
+                                    if (!res.success) return;
+
+                                    this._callEvent(parentCtx, 'host_handover', this._channel, lastLink, res.result);
+                                });
+                            }
+                        }
+
                         this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
                     }
                 }

@@ -8,7 +8,7 @@ import { SetChannelMeta } from "../../channel/channel-info";
 import { Chatlog, ChatLogged, ChatLoggedType, TypedChatlog } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
-import { InformedOpenLink } from "../../openlink";
+import { InformedOpenLink, OpenLink } from "../../openlink";
 import { OpenLinkChannelUserInfo } from "../../openlink/open-link-user-info";
 import { KickoutType } from "../../packet/chat/kickout";
 import { ChannelMetaType } from "../../packet/struct/channel";
@@ -60,6 +60,9 @@ declare interface OpenChannelEvent {
 
     // 오픈채팅 권한 변경시 호출
     'perm_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenChannelUserInfo) => void;
+
+    // 오픈 채팅 방장이 바뀌었을시 호출
+    'host_handover': (channel: TalkOpenChannel, lastLink: OpenLink, link: OpenLink) => void;
 
     // 메세지가 가려졌을시 호출
     'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenRewriteFeed) => void;
