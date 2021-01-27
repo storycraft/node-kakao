@@ -5,11 +5,11 @@
  */
 
 import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "../../../openlink/open-link-user-info";
-import { ChannelUserInfo, OpenChannelUserInfo } from "../../../user/channel-user-info";
+import { NormalChannelUserInfo, OpenChannelUserInfo } from "../../../user/channel-user-info";
 import { UserType } from "../../../user/user-type";
 import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenLinkKickedMemberStruct, OpenMemberStruct } from "../user";
 
-export function structToChannelUserInfo(struct: NormalMemberStruct): ChannelUserInfo {
+export function structToChannelUserInfo(struct: NormalMemberStruct): NormalChannelUserInfo {
     return {
         userId: struct.userId,
         userType: struct.type,

@@ -7,7 +7,7 @@
 import { Long } from "bson";
 
 /**
- * Normal channel
+ * Channel
  */
 export interface Channel {
 

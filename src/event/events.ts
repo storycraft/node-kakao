@@ -11,8 +11,8 @@ import { OpenMemberType } from "../talk/open_old/open-link-type";
 import { RelayEventType } from "../relay/relay-event-type";
 import { KickoutType } from "../packet/chat/kickout";
 import { Chatlog, ChatLogged, TypedChatlog } from "../chat/chat";
-import { AnyTalkChannel } from "../talk/channel/talk-channel";
-import { AnyChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
+import { TalkChannel } from "../talk/channel/talk-channel";
+import { ChannelUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
 import { SetChannelMeta } from "../channel/channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
 import { KnownChatType } from "../chat/chat-type";
@@ -23,36 +23,36 @@ import { OpenChannel } from "../openlink/open-channel";
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
-    'chat': (chat: Readonly<Chatlog>, channel: AnyTalkChannel) => void;
+    'chat': (chat: Readonly<Chatlog>, channel: TalkChannel) => void;
 
     // 유저가 챗 읽었을시 호출
-    'chat_read': (chat: Readonly<ChatLogged>, channel: AnyTalkChannel, reader?: AnyChannelUserInfo) => void;
+    'chat_read': (chat: Readonly<ChatLogged>, channel: TalkChannel, reader?: ChannelUserInfo) => void;
 
     // 쳇 삭제되었을시 호출
-    'chat_deleted': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, feed: DeleteAllFeed) => void;
+    'chat_deleted': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkChannel, feed: DeleteAllFeed) => void;
 
 }
 
 declare interface ChannelEvent {
 
     // 채널 meta 정보가 수정될때 호출
-    'meta_change': (channel: AnyTalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
+    'meta_change': (channel: TalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
+
+    // 유저가 방에 들어올시 호출
+    'user_join': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkChannel, user: ChannelUserInfo, feed: ChatFeeds) => void
+
+    // 유저가 방에서 나갈시 호출 (킥 미포함)
+    'user_left': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkChannel, user: ChannelUserInfo, feed: ChatFeeds) => void;
 
 }
 
 declare interface ChannelListEvent {
 
-    // 유저가 방에 들어올시 호출
-    'user_join': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, user: AnyChannelUserInfo, feed: ChatFeeds) => void
-
-    // 유저가 방에서 나갈시 호출 (킥 미포함)
-    'user_left': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: AnyTalkChannel, user: AnyChannelUserInfo, feed: ChatFeeds) => void;
-
     // 클라이언트가 채널 들어올시 호출
-    'channel_join': (channel: AnyTalkChannel, feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, feed: ChatFeeds) => void;
+    'channel_join': (channel: TalkChannel, feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, feed: ChatFeeds) => void;
 
     // 클라이언트가 채널 나갈시 호출
-    'channel_left': (channel: AnyTalkChannel) => void;
+    'channel_left': (channel: TalkChannel) => void;
 
 }
 
@@ -79,6 +79,13 @@ declare interface OpenChannelEvent {
 
 }
 
+declare interface OpenChannelListEvent {
+
+    // 채널에서 킥 되었을시 호출
+    'channel_kicked': (channel: OpenChannel, feed?: FeedChat<OpenKickFeed>) => void;
+
+}
+
 declare interface OpenLinkEvent {
 
 }
@@ -96,8 +103,14 @@ declare interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & ChannelListEvents & OpenLinkEvents;
+export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvents;
+export type TalkChannelListEvents = OpenChannelListEvents & NormalChannelListEvents;
+
+export type NormalChannelListEvents = ChannelListEvents & ChannelEvents;
+export type OpenChannelListEvents = ChannelListEvents & OpenChannelEvents & OpenChannelListEvent;
+export type ChannelListEvents = ChannelListEvent;
+
 export type OpenLinkEvents = OpenLinkEvent;
-export type ChannelListEvents = ChannelListEvent & OpenChannelEvents;
+
 export type ChannelEvents = ChannelEvent & ChatEvent;
 export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;

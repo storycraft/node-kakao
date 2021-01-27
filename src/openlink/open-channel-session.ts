@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { ChannelManageSession } from "../channel/channel-session";
 import { ChatLogged } from "../chat/chat";
 import { AsyncCommandResult } from "../request/command-result";
 import { ChannelUser } from "../user/channel-user";
@@ -88,5 +89,14 @@ export interface OpenChannelSession {
      * @param user
      */
     handoverHost(user: ChannelUser): AsyncCommandResult;
+
+}
+
+/**
+ * Classes which can manage open channels should implement this.
+ */
+export interface OpenChannelManageSession extends ChannelManageSession {
+    
+
 
 }

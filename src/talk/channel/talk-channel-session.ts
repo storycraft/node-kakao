@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from "../../channel/channel-info";
-import { ChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
+import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from "../../channel/channel-session";
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../../client";
@@ -34,7 +34,7 @@ import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToChannelUserInfo, structToOpenChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult, CommandResult } from "../../request/command-result";
 import { ChannelUser, OpenChannelUser } from "../../user/channel-user";
-import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
+import { NormalChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
 import { MediaDownloader } from "../media/media-downloader";
 import { TalkOpenLinkSession } from "../openlink/talk-openlink-session";
@@ -222,7 +222,7 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
-    async getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]> {
+    async getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<NormalChannelUserInfo[]> {
         const res = await this._session.request<MemberRes>(
             'MEMBER',
             {
@@ -238,7 +238,7 @@ export class TalkChannelSession implements ChannelSession {
         return { success: true, status: res.status, result };
     }
 
-    async getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]> {
+    async getAllLatestUserInfo(): AsyncCommandResult<NormalChannelUserInfo[]> {
         const res = await this._session.request<GetMemRes>(
             'GETMEM',
             {
@@ -464,7 +464,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
 /**
  * Default ChannelManageSession implementation.
  */
-export class TalkChannelManageSession implements ChannelManageSession {
+export class TalkChannelManageSession implements NormalChannelManageSession {
 
     private _session: TalkSession;
 
@@ -472,7 +472,7 @@ export class TalkChannelManageSession implements ChannelManageSession {
         this._session = session;
     }
 
-    async createChannel(template: ChannelTemplate): AsyncCommandResult<[Channel, NormalChannelInfo | null]> {
+    async createChannel(template: ChannelTemplate): AsyncCommandResult<Channel> {
         const data: Record<string, any> = {
             'memberIds': template.userList.map(user => user.userId)
         };
@@ -483,20 +483,14 @@ export class TalkChannelManageSession implements ChannelManageSession {
         const res = await this._session.request<CreateRes>('CREATE', data);
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
-        if (res.chatRoom) result[1] = (structToNormalChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
-
-        return { status: res.status, success: true, result };
+        return { status: res.status, success: true, result: { channelId: res.chatId } };
     }
 
-    async createMemoChannel(): AsyncCommandResult<[Channel, NormalChannelInfo | null]> {
+    async createMemoChannel(): AsyncCommandResult<Channel> {
         const res = await this._session.request<CreateRes>('CREATE', { 'memoChat': true });
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        let result: [Channel, NormalChannelInfo | null] = [ { channelId: res.chatId }, null ];
-        if (res.chatRoom) result[1] = (structToNormalChannelInfo(res.chatRoom as ChannelInfoStruct & NormalChannelInfoExtra));
-
-        return { status: res.status, success: true, result };
+        return { status: res.status, success: true, result: { channelId: res.chatId } };
     }
 
     async leaveChannel(channel: Channel, block: boolean = false): AsyncCommandResult<Long> {

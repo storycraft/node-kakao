@@ -7,7 +7,6 @@
 import { CommandSession, LocoSession, SessionFactory } from "./network/request-session";
 import { ChannelUser } from "./user/channel-user";
 import { DefaultReq, DefaultRes } from "./packet/bson-data-codec";
-import { TalkChannelList } from "./talk/channel/talk-channel-list";
 import { Managed } from "./talk/managed";
 import { OAuthCredential } from "./oauth/credential";
 import { AsyncCommandResult } from "./request/command-result";
@@ -22,6 +21,7 @@ import { KickoutRes } from "./packet/chat/kickout";
 import { EventContext } from "./event/event-context";
 import { ClientStatus } from "./client-status";
 import { OpenLinkService } from "./talk/openlink/open-link-service";
+import { TalkChannelList } from "./talk/channel/talk-channel-list";
 
 /**
  * Talk client session with client user

@@ -23,7 +23,6 @@
     "@types/chai": "^4.2.3",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.22",
-    "@types/rusha": "^0.8.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.3",
     "tiny-typed-emitter": "^2.0.3",
@@ -40,7 +39,6 @@
     "bson": "^4.2.2",
     "form-data": "^3.0.0",
     "json-proxy-mapper": "^1.1.2",
-    "lossless-json": "^1.0.3",
-    "rusha": "^0.8.13"
+    "lossless-json": "^1.0.3"
   }
 }

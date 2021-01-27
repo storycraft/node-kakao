@@ -26,7 +26,7 @@ export interface DisplayUserInfo extends ChannelUser {
 /**
  * Common channel user info
  */
-export interface AnyChannelUserInfo extends DisplayUserInfo {
+export interface ChannelUserInfo extends DisplayUserInfo {
 
     /**
      * Full user profile url
@@ -48,7 +48,7 @@ export interface AnyChannelUserInfo extends DisplayUserInfo {
 /**
  * Normal channel user info
  */
-export interface ChannelUserInfo extends AnyChannelUserInfo {
+export interface NormalChannelUserInfo extends ChannelUserInfo {
 
     /**
      * User country name
@@ -85,7 +85,7 @@ export interface ChannelUserInfo extends AnyChannelUserInfo {
 /**
  * Open channel user info
  */
-export interface OpenChannelUserInfo extends OpenChannelUser, AnyChannelUserInfo, OpenTokenComponent {
+export interface OpenChannelUserInfo extends OpenChannelUser, ChannelUserInfo, OpenTokenComponent {
 
     perm: OpenChannelUserPerm;
 

@@ -11,7 +11,7 @@ import { Long } from "..";
 import { ChannelUser } from "../user/channel-user";
 import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";
 import { ChannelMetaType } from "../packet/struct/channel";
-import { AnyChannelUserInfo } from "../user/channel-user-info";
+import { ChannelUserInfo } from "../user/channel-user-info";
 import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 import { MediaDownloader } from "../talk/media/media-downloader";
 import { MediaComponent } from "../media/media";
@@ -85,14 +85,14 @@ export interface ChannelSession {
      *
      * @param channelUser
      */
-    getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<AnyChannelUserInfo[]>;
+    getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]>;
 
     /**
      * Updates every user info to latest.
      * The updated ChannelUserInfo may omit some detailed properties.
      * @see getLatestUserInfo method for getting detailed info per user.
      */
-    getAllLatestUserInfo(): AsyncCommandResult<AnyChannelUserInfo[]>;
+    getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]>;
 
     /**
      * Set push alert settings
@@ -129,24 +129,7 @@ export interface ChannelSession {
 
 }
 
-/**
- * Classes which can manage channels should implement this.
- */
 export interface ChannelManageSession {
-
-    /**
-     * Create channel.
-     * Perform CREATE command.
-     *
-     * @param userList Users to be included.
-     */
-    createChannel(template: ChannelTemplate): AsyncCommandResult<[Channel, NormalChannelInfo | null]>;
-
-    /**
-     * Create memo channel.
-     * Perform CREATE command.
-     */
-    createMemoChannel(): AsyncCommandResult<[Channel, NormalChannelInfo | null]>;
 
    /**
     * Leave channel.
@@ -157,6 +140,27 @@ export interface ChannelManageSession {
     *
     * @returns last channel token on success.
     */
-    leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;
+   leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long>;
+
+}
+
+/**
+ * Classes which can manage normal channels should implement this.
+ */
+export interface NormalChannelManageSession extends ChannelManageSession {
+
+    /**
+     * Create channel.
+     * Perform CREATE command.
+     *
+     * @param userList Users to be included.
+     */
+    createChannel(template: ChannelTemplate): AsyncCommandResult<Channel>;
+
+    /**
+     * Create memo channel.
+     * Perform CREATE command.
+     */
+    createMemoChannel(): AsyncCommandResult<Channel>;
 
 }
