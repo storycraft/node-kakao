@@ -129,6 +129,25 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 break;
             }
 
+            case 'FEED': {
+                const channelId: Long = data['c'];
+                if (!this._channel.channelId.equals(channelId)) break;
+
+                const chatLog = structToChatlog(data['chatLog']);
+                this._callEvent(
+                    parentCtx,
+                    'chat',
+                    chatLog,
+                    this._channel
+                );
+
+                this._updater.updateInfo({
+                    lastChatLogId: chatLog.logId,
+                    lastChatLog: chatLog
+                });
+                break;
+            }
+
             case 'DECUNREAD': {
                 const readData = data as DefaultRes & DecunreadRes;
 
