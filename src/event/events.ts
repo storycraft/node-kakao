@@ -58,9 +58,6 @@ declare interface ChannelListEvent {
 
 declare interface OpenChannelEvent {
 
-    // 유저가 킥 되었을시 호출
-    'user_kicked': (channel: OpenChannel, user: ChatUser, feed?: FeedChat<OpenKickFeed>) => void;
-
     // 유저가 오픈프로필 변경시 호출
     'profile_changed': (channel: OpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
 
