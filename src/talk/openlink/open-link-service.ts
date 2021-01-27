@@ -8,7 +8,7 @@ import { Long } from "bson";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
-import { InformedOpenLink, OpenLinkComponent } from "../../openlink/open-link";
+import { InformedOpenLink, OpenLinkComponent } from "../../openlink";
 import { OpenLinkSession } from "../../openlink/open-link-session";
 import { OpenLinkKickedUser } from "../../openlink/open-link-user-info";
 import { DefaultRes } from "../../packet/bson-data-codec";

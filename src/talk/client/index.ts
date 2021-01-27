@@ -8,11 +8,11 @@ import { CommandSession, LocoSession, SessionFactory } from "../../network/reque
 import { ChannelUser } from "../../user/channel-user";
 import { DefaultReq, DefaultRes } from "../../packet/bson-data-codec";
 import { Managed } from "../managed";
-import { OAuthCredential } from "../../oauth/credential";
+import { OAuthCredential } from "../../oauth";
 import { AsyncCommandResult } from "../../request";
 import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "../../config/client-config-provider";
 import { ClientSession, LoginResult } from "../../client/client-session";
-import { TalkSessionFactory } from "../network/talk-session-factory";
+import { TalkSessionFactory } from "../network";
 import { TalkClientSession } from "../client/talk-client-session";
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { KickoutRes } from "../../packet/chat/kickout";

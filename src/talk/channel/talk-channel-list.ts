@@ -16,7 +16,7 @@ import { ChainedIterator } from "../../util/chained-iterator";
 import { OpenChannelListEvents, TalkChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannelList } from "../openlink/talk-open-channel-list";
-import { TalkChannel } from "./talk-channel";
+import { TalkChannel } from ".";
 import { TalkNormalChannelList } from "./talk-normal-channel-list";
 
 /**

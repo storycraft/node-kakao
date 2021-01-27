@@ -26,7 +26,7 @@ import { AsyncCommandResult } from "../../request";
 import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo } from "../../user/channel-user-info";
 import { Managed } from "../managed";
-import { TalkChannel } from "./talk-channel";
+import { TalkChannel } from ".";
 import { TalkNormalChannelList } from "./talk-normal-channel-list";
 
 /**

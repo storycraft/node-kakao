@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { OpenLinkComponent } from "../openlink/open-link";
+import { OpenLinkComponent } from "../openlink";
 import { OpenChannelUserPerm } from "../openlink/open-link-type";
 
 /**

@@ -1,7 +1,13 @@
 /*
- * Created on Wed Jan 27 2021
+ * Created on Sun Aug 02 2020
  *
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./relay-event-type";
+export enum KnownRelayEventType {
+
+    SHOUT = 1
+
+}
+
+export type RelayEventType = KnownRelayEventType | number;

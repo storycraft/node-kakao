@@ -5,7 +5,7 @@
  */
 
 import { AsyncCommandResult } from "../request";
-import { InformedOpenLink, OpenLinkComponent, OpenLink } from "./open-link";
+import { InformedOpenLink, OpenLinkComponent, OpenLink } from ".";
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "./open-link-user-info";
 
 export interface OpenLinkSession {

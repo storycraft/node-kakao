@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket, LocoPacketHeader } from "../packet/loco-packet";
+import { LocoPacket, LocoPacketHeader } from "../packet";
 import { ChunkedArrayBufferList } from "./chunk";
 import { Stream } from "./stream";
 

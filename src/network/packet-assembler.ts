@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { LocoPacket, LocoPacketDataCodec } from "../packet/loco-packet";
+import { LocoPacket, LocoPacketDataCodec } from "../packet";
 
 /**
  * Construct LocoPacket object from packet data.

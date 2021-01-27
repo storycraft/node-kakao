@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { Channel } from "../channel/channel";
 import { ClientStatus } from "../client-status";
-import { OAuthCredential } from "../oauth/credential";
+import { OAuthCredential } from "../oauth";
 import { OpenChannel } from "../openlink/open-channel";
 import { AsyncCommandResult } from "../request";
 

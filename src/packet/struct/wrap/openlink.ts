@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLink, OpenLinkInfo } from "../../../openlink/open-link";
+import { OpenLink, OpenLinkInfo } from "../../../openlink";
 import { OpenLinkInfoStruct, OpenLinkStruct } from "../openlink";
 import { structToOpenLinkChannelUserInfo } from "./user";
 

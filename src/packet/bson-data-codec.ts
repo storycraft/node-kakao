@@ -5,7 +5,7 @@
  */
 
 import * as Bson from "bson";
-import { LocoPacketDataCodec } from "./loco-packet";
+import { LocoPacketDataCodec } from ".";
 
 export interface DefaultReq {
 

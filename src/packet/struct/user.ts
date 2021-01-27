@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { LinkPrivilegeMask } from "../../openlink/open-link";
+import { LinkPrivilegeMask } from "../../openlink";
 import { OpenChannelUserPerm, OpenProfileType } from "../../openlink/open-link-type";
 import { ChannelUser } from "../../user/channel-user";
 import { UserType } from "../../user/user-type";

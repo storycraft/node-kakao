@@ -6,7 +6,7 @@
 
 import { Channel } from "../../channel/channel";
 import { TalkSession } from "../client";
-import { MediaComponent, MediaTypeComponent } from "../../media/media";
+import { MediaComponent, MediaTypeComponent } from "../../media";
 import { DefaultLocoSession } from "../../network/request-session";
 import { Stream } from "../../network/stream";
 import { DataStatusCode, KnownDataStatusCode } from "../../packet/status-code";

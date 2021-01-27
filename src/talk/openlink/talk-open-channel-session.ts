@@ -3,7 +3,7 @@ import { TalkSession } from "../client";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
-import { OpenLink } from "../../openlink/open-link";
+import { OpenLink } from "../../openlink";
 import { OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { GetMemRes } from "../../packet/chat/get-mem";
@@ -18,7 +18,7 @@ import { ChannelUser } from "../../user/channel-user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 import { OpenChannelUserPerm } from "../../openlink/open-link-type";
-import { RelayEventType } from "../../relay/relay-event-type";
+import { RelayEventType } from "../../relay";
 
 /**
  * Default OpenChannelSession implementation.

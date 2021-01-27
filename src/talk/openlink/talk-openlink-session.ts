@@ -5,7 +5,7 @@
  */
 
 import { TalkSession } from "../client";
-import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink/open-link";
+import { InformedOpenLink, OpenLink, OpenLinkComponent } from "../../openlink";
 import { OpenLinkSession } from "../../openlink/open-link-session";
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "../../openlink/open-link-user-info";
 import { JoinInfoRes } from "../../packet/chat/join-info";

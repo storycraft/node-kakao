@@ -6,12 +6,12 @@
 
 import { ChannelManageSession } from "../channel/channel-session";
 import { ChatLogged, ChatLoggedType } from "../chat/chat";
-import { RelayEventType } from "../relay/relay-event-type";
+import { RelayEventType } from "../relay";
 import { AsyncCommandResult } from "../request";
 import { ChannelUser } from "../user/channel-user";
 import { OpenChannelUserInfo } from "../user/channel-user-info";
 import { OpenChannelInfo } from "./open-channel-info";
-import { OpenLink } from "./open-link";
+import { OpenLink } from ".";
 import { OpenChannelUserPerm } from "./open-link-type";
 import { OpenLinkKickedUserInfo } from "./open-link-user-info";
 

@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { ChannelInfo } from "../channel/channel-info";
 import { OpenChannel } from "./open-channel";
-import { OpenLink, OpenTokenComponent } from "./open-link";
+import { OpenLink, OpenTokenComponent } from ".";
 
 /**
  * Open channel info

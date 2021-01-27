@@ -14,7 +14,7 @@ import { ChannelMetaType } from "../packet/struct/channel";
 import { ChannelUserInfo } from "../user/channel-user-info";
 import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 import { MediaDownloader } from "../talk/media/media-downloader";
-import { MediaComponent } from "../media/media";
+import { MediaComponent } from "../media";
 import { ChatType } from "../chat/chat-type";
 
 export interface ChannelTemplate {

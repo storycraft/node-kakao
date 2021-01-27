@@ -8,13 +8,13 @@ import { SetChannelMeta } from "../../channel/channel-info";
 import { Chatlog, ChatLogged, ChatLoggedType, TypedChatlog } from "../../chat/chat";
 import { KnownChatType } from "../../chat/chat-type";
 import { ChatFeeds, DeleteAllFeed, OpenKickFeed, OpenRewriteFeed } from "../../chat/feed/chat-feed";
-import { InformedOpenLink } from "../../openlink/open-link";
+import { InformedOpenLink } from "../../openlink";
 import { OpenLinkChannelUserInfo } from "../../openlink/open-link-user-info";
 import { KickoutType } from "../../packet/chat/kickout";
 import { ChannelMetaType } from "../../packet/struct/channel";
-import { RelayEventType } from "../../relay/relay-event-type";
+import { RelayEventType } from "../../relay";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
-import { TalkChannel } from "../channel/talk-channel";
+import { TalkChannel } from "../channel";
 import { TalkOpenChannel } from "../openlink/talk-open-channel";
 
 declare interface ChatEvent {

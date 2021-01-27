@@ -5,7 +5,7 @@
  */
 
 import { Channel } from "../channel/channel";
-import { OpenLinkComponent } from "./open-link";
+import { OpenLinkComponent } from ".";
 
 /**
  * Open chat channel

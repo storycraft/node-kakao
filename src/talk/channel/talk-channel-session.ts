@@ -11,7 +11,7 @@ import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from "../
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../client";
-import { MediaComponent } from "../../media/media";
+import { MediaComponent } from "../../media";
 import { DefaultReq } from "../../packet/bson-data-codec";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";

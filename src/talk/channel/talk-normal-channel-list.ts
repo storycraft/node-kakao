@@ -16,7 +16,7 @@ import { KnownDataStatusCode } from "../../packet/status-code";
 import { AsyncCommandResult } from "../../request";
 import { NormalChannelListEvents } from "../event/events";
 import { Managed } from "../managed";
-import { TalkNormalChannel } from "./talk-channel";
+import { TalkNormalChannel } from "./talk-normal-channel";
 import { TalkChannelListHandler } from "./talk-channel-handler";
 import { TalkChannelManageSession } from "./talk-channel-session";
 

@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { ChatType } from "../../chat/chat-type";
-import { RelayEventType } from "../../relay/relay-event-type";
+import { RelayEventType } from "../../relay";
 
 export interface SyncEventRes {
 
