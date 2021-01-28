@@ -20,8 +20,6 @@
     "exclude": [
         "node_modules",
         "dist",
-        "**/*.deno.ts",
-        "deno_dist",
         "**/*.spec.ts",
         "**/node_modules/*"
     ]
