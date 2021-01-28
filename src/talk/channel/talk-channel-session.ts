@@ -301,7 +301,7 @@ export class TalkChannelSession implements ChannelSession {
 
         const socket = new LocoSecureLayer(
             await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
-            newCryptoStore(this._session.configuration.locoPEMPublicKey));
+            await newCryptoStore(this._session.configuration.locoPEMPublicKey));
 
         return { status: res.status, success: true, result: new MediaDownloader(socket, this._session, this._channel, media) };
     }

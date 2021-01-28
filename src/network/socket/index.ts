@@ -4,10 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./node-net-socket";
-
+import { isBrowser, isDeno, isNode } from "../../util/platform";
 import { Stream } from "../stream";
-import { NodeSocket } from "./node-net-socket";
 
 export interface NetSocketOptions {
 
@@ -18,21 +16,18 @@ export interface NetSocketOptions {
 
 }
 
-declare var process: any;
-declare var Deno: any;
-declare var navigator: any;
-
 
 /**
  * Create TCP net stream using options.
  * This detect environment automatically.
  */
-export function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
-    if (process && process.release && process.release.name === 'node') {
+export async function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
+    if (isNode()) {
+        const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connect(option);
-    } else if (Deno && 'connect' in Deno) {
+    } else if (isDeno()) {
         throw new Error('Deno runtime is not implemented yet.');
-    } else if (navigator && 'userAgent' in navigator) {
+    } else if (isBrowser()) {
         throw new Error('Browser environments are not supported');
     } else {
         throw new Error('Unknown environment');
@@ -44,12 +39,13 @@ export function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
  * Create TCP TLS net stream using options.
  * This detect environment automatically.
  */
-export function createTLSSocket(option: NetSocketOptions): Promise<Stream> {
-    if (process && process.release && process.release.name === 'node') {
+export async function createTLSSocket(option: NetSocketOptions): Promise<Stream> {
+    if (isNode()) {
+        const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connectTls(option);
-    } else if (Deno && 'connectTls' in Deno) {
+    } else if (isDeno()) {
         throw new Error('Deno runtime is not implemented yet.');
-    } else if (navigator && 'userAgent' in navigator) {
+    } else if (isBrowser()) {
         throw new Error('Browser environments are not supported');
     } else {
         throw new Error('Unknown environment');

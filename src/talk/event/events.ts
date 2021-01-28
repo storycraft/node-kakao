@@ -91,6 +91,13 @@ declare interface OpenLinkEvent {
     'link_deleted': (link: InformedOpenLink) => void;
 }
 
+declare interface BlockListEvent {
+    
+    // 차단 리스트가 변경되었을시 호출
+    'block_list_changed': () => void;
+
+}
+
 declare interface ClientEvent {
 
     // 서버 변경시 호출
@@ -105,7 +112,8 @@ declare interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvents;
+export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvents & BlockListEvents;
+export type BlockListEvents = BlockListEvent;
 export type TalkChannelListEvents = OpenChannelListEvents & NormalChannelListEvents;
 
 export type NormalChannelListEvents = ChannelListEvents & ChannelEvents;

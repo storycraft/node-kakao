@@ -36,7 +36,7 @@ export class TalkSessionFactory implements SessionFactory {
             host: bookingRes.result.ticket.lsl[0],
             port: bookingRes.result.wifi.ports[0],
             keepAlive: false
-        }), newCryptoStore(config.locoPEMPublicKey));
+        }), await newCryptoStore(config.locoPEMPublicKey));
 
         const checkinRes = await getCheckinData(checkinStream, config);
         if (!checkinRes.success) return { status: checkinRes.status, success: false };
@@ -45,7 +45,7 @@ export class TalkSessionFactory implements SessionFactory {
             host: checkinRes.result.host,
             port: checkinRes.result.port,
             keepAlive: true
-        }), newCryptoStore(config.locoPEMPublicKey));
+        }), await newCryptoStore(config.locoPEMPublicKey));
 
         return { status: KnownDataStatusCode.SUCCESS, success: true, result: new DefaultLocoSession(locoStream) };
     }

@@ -242,11 +242,6 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 break;
             }
 
-            case 'INVOICE': {
-                // TODO
-                break;
-            }
-
             case 'SYNCDLMSG': {
                 const struct = data['chatLog'] as ChatlogStruct;
                 if (!this._channel.channelId.eq(struct.chatId)) break;

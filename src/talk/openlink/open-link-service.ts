@@ -98,10 +98,14 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
     }
 
     /**
-     * Update every properties
+     * Initialize OpenLinkService
+     *
+     * @param service
      */
-    updateAll() {
-        return this.getLatestLinkList();
+    static async initialize(service: OpenLinkService) {
+        service._clientMap.clear();
+
+        await service.getLatestLinkList();
     }
 
     private _callEvent<U extends keyof OpenLinkEvents>(parentCtx: EventContext<OpenLinkEvents>, event: U, ...args: Parameters<OpenLinkEvents[U]>) {
