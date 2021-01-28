@@ -6,7 +6,6 @@
 
 import { AxiosRequestConfig } from "axios";
 import Axios from "axios";
-import { URLSearchParams } from "url";
 import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, ApiClient, FileRequestData } from ".";
 import { DefaultRes } from "../request";
 import { JsonUtil } from "../util";

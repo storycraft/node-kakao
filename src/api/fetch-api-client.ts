@@ -4,7 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { URLSearchParams } from "url";
 import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, ApiClient, FileRequestData } from ".";
 import { DefaultRes } from "../request";
 import { JsonUtil } from "../util";
