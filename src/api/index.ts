@@ -8,7 +8,7 @@
 export * from "./auth-client";
 
 import { DefaultRes } from "../request";
-import { isDeno, isNode } from "../util/platform";
+import { isBrowser, isDeno, isNode } from "../util/platform";
 
 export type RequestHeader = Record<string, any>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
@@ -33,16 +33,6 @@ export interface ApiClient extends HeaderDecorator {
      * @param headers
      */
     request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
-
-    /**
-     * Request form as param
-     *
-     * @param method
-     * @param path
-     * @param form
-     * @param headers
-     */
-    requestParams(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
     /**
      * Request multipart form
@@ -74,9 +64,11 @@ export interface HeaderDecorator {
  */
 export async function createApiClient(scheme: string, host: string, decorator?: HeaderDecorator): Promise<ApiClient> {
     if (isNode()) {
-        return new (await import('./node-api-client')).NodeApiClient(scheme, host, decorator);
+        return new (await import('./axios-api-client')).AxiosApiClient(scheme, host, decorator);
     } else if (isDeno()) {
-        throw new Error('Deno runtime is not supported yet');
+        return new (await import('./fetch-api-client')).FetchApiClient(scheme, host, decorator);
+    } else if (isBrowser()) {
+        return new (await import('./fetch-api-client')).FetchApiClient(scheme, host, decorator);
     } else {
         throw new Error('Unknown environment');
     }

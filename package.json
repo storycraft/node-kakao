@@ -42,5 +42,9 @@
     "json-proxy-mapper": "^1.1.2",
     "lossless-json": "^1.0.3",
     "sha.js": "^2.4.11"
+  },
+  "map": {
+    "form-data": "@empty",
+    "axios": "@empty"
   }
 }

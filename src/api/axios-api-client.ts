@@ -12,7 +12,10 @@ import { DefaultRes } from "../request";
 import { JsonUtil } from "../util";
 import FormData from "form-data";
 
-export class NodeApiClient implements ApiClient, HeaderDecorator {
+/**
+ * ApiClient implementation wrapped with axios
+ */
+export class AxiosApiClient implements ApiClient, HeaderDecorator {
 
     constructor(public scheme: string, public host: string, private _decorator?: HeaderDecorator) {
 
@@ -39,14 +42,14 @@ export class NodeApiClient implements ApiClient, HeaderDecorator {
     }
 
     private buildAxiosReqData(method: RequestMethod, header?: RequestHeader): AxiosRequestConfig {
-        const reqHeader: RequestHeader = {};
+        const headers: RequestHeader = {};
 
-        this.fillHeader(reqHeader);
+        this.fillHeader(headers);
 
         const reqData: AxiosRequestConfig = {
-            headers: reqHeader,
+            headers,
 
-            method: method,
+            method,
 
             // https://github.com/axios/axios/issues/811
             // https://github.com/axios/axios/issues/907
@@ -55,7 +58,7 @@ export class NodeApiClient implements ApiClient, HeaderDecorator {
             responseType: 'text'
         };
 
-        if (header) Object.assign(reqHeader, header);
+        if (header) Object.assign(headers, header);
 
         return reqData;
     }
@@ -68,19 +71,6 @@ export class NodeApiClient implements ApiClient, HeaderDecorator {
             const formData = this.convertToFormData(form);
 
             reqData.data = formData.toString();
-        }
-
-        return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
-    }
-
-    async requestParams(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
-        const reqData = this.buildAxiosReqData(method, headers);
-        reqData.url = this.toApiURL(path);
-
-        if (form) {
-            const formData = this.convertToFormData(form);
-
-            reqData.params = formData.toString();
         }
 
         return JsonUtil.parseLoseless((await Axios.request(reqData)).data);

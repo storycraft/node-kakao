@@ -205,7 +205,6 @@ export class AuthClient {
     calculateFullXVCKey(deviceUUID: string, userAgent: string, email: string): string {
         let source = `${this.config.xvcSeedList[0]}|${userAgent}|${this.config.xvcSeedList[1]}|${email}|${deviceUUID}`;
 
-        // TODO
         let hash = new ShaJS.sha512();
 
         hash.update(source);

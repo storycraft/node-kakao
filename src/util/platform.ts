@@ -14,7 +14,7 @@ export function isNode() {
 }
 
 export function isDeno() {
-    return window && 'Deno' in window;
+    return window && window.Deno && window.Deno.version && window.Deno.version.deno;
 }
 
 export function isBrowser() {
