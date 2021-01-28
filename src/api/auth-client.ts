@@ -11,6 +11,7 @@ import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";
 import { fillAHeader, fillBaseHeader, getWinAgent } from "./header-util";
 import { AccessDataStruct, structToLoginData } from "./struct";
+import * as ShaJS from "sha.js";
 
 /**
  * Login data
@@ -205,8 +206,10 @@ export class AuthClient {
         let source = `${this.config.xvcSeedList[0]}|${userAgent}|${this.config.xvcSeedList[1]}|${email}|${deviceUUID}`;
 
         // TODO
-        let hash = require('crypto').createHash('sha512');
+        let hash = new ShaJS.sha512();
+
         hash.update(source);
+
         return hash.digest('hex');
     }
 

@@ -49,6 +49,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
      * Ping request interval. (Default = 900000 (15 min))
      */
     public pingInterval: number;
+    private _pingTask: number | null;
 
     private _clientSession: TalkClientSession;
 
@@ -64,6 +65,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         super();
 
         this.pingInterval = 900000;
+        this._pingTask = null;
 
         this._session = null;
         this._clientSession = new TalkClientSession(this.createSessionProxy(), { ...DefaultConfiguration, ...config });
@@ -176,6 +178,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
             case 'KICKOUT': {
                 super.emit('disconnected', (data as DefaultRes & KickoutRes).reason);
+                this.close();
                 break;
             }
 
@@ -212,6 +215,9 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private listenEnd() {
         if (this._session) this._session = null;
+        if (this._pingTask) {
+            clearTimeout(this._pingTask as any);
+        }
     }
 
     private onError(err: any) {
@@ -239,7 +245,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
             if (!this.logon) return;
 
             this.session.request('PING', {});
-            setTimeout(pingHandler, this.pingInterval);
+            this._pingTask = setTimeout(pingHandler, this.pingInterval) as unknown as number;
         };
         pingHandler();
     }
