@@ -40,25 +40,29 @@ export interface DefaultRes {
 /**
  * Wrapped request response.
  */
-interface CommandResultFailed {
+interface RootCommandResult {
 
-    readonly success: false;
+    readonly success: boolean;
     readonly status: DataStatusCode;
 
 }
 
-interface CommandResultDone<T> {
+interface CommandResultFailed extends RootCommandResult {
+
+    readonly success: false;
+
+}
+
+interface CommandResultDone<T> extends RootCommandResult {
 
     readonly success: true;
-    readonly status: DataStatusCode;
     readonly result: T;
 
 }
 
-interface CommandResultDoneVoid {
+interface CommandResultDoneVoid extends RootCommandResult {
 
     readonly success: true;
-    readonly status: DataStatusCode;
 
 }
 

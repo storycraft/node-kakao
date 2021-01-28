@@ -20,17 +20,10 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
 
     }
 
-    /**
-     * Returns url
-     */
     get url() {
         return `${this.scheme}://${this.host}`;
     }
 
-    /**
-     * Returns full url with path
-     * @param path
-     */
     toApiURL(path: string) {
         return `${this.url}/${path}`;
     }

@@ -5,13 +5,13 @@
  */
 
 import { Long } from "bson";
+import { sha512 } from "hash-wasm";
 import { ApiClient, createApiClient, RequestForm, RequestHeader } from ".";
 import { DefaultConfiguration, OAuthLoginConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";
 import { fillAHeader, fillBaseHeader, getWinAgent } from "./header-util";
 import { AccessDataStruct, structToLoginData } from "./struct";
-import * as ShaJS from "sha.js";
 
 /**
  * Login data
@@ -111,14 +111,14 @@ export class AuthClient {
         return this._deviceUUID;
     }
 
-    private createAuthHeader(form: LoginForm): RequestHeader {
+    private async createAuthHeader(form: LoginForm): Promise<RequestHeader> {
         const header: RequestHeader = {};
 
         fillBaseHeader(header, this.config);
         fillAHeader(header, this.config);
         const userAgent = getWinAgent(this.config);
         header['User-Agent'] = userAgent;
-        header['X-VC'] = this.calculateXVCKey(this.deviceUUID, userAgent, form.email);
+        header['X-VC'] = await this.calculateXVCKey(this.deviceUUID, userAgent, form.email);
 
         return header;
     }
@@ -140,7 +140,7 @@ export class AuthClient {
             'POST',
             this.getApiPath('login.json'),
             this.fillAuthForm(form),
-            this.createAuthHeader(form)
+            await this.createAuthHeader(form)
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
@@ -157,7 +157,7 @@ export class AuthClient {
             'POST',
             this.getApiPath('login.json'),
             this.fillAuthForm({ ...form, auto_login: true }),
-            this.createAuthHeader(form)
+            await this.createAuthHeader(form)
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
@@ -175,7 +175,7 @@ export class AuthClient {
             'POST',
             this.getApiPath('request_passcode.json'),
             this.fillAuthForm({ ...form, permanent }),
-            this.createAuthHeader(form)
+            await this.createAuthHeader(form)
         );
 
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -192,24 +192,19 @@ export class AuthClient {
             'POST',
             this.getApiPath('register_device.json'),
             this.fillAuthForm({ ...form, passcode }),
-            this.createAuthHeader(form)
+            await this.createAuthHeader(form)
         );
 
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    calculateXVCKey(deviceUUID: string, userAgent: string, email: string): string {
-        return this.calculateFullXVCKey(deviceUUID, userAgent, email).substring(0, 16);
+    async calculateXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
+        return (await this.calculateFullXVCKey(deviceUUID, userAgent, email)).substring(0, 16);
     }
 
-    calculateFullXVCKey(deviceUUID: string, userAgent: string, email: string): string {
+    async calculateFullXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
         let source = `${this.config.xvcSeedList[0]}|${userAgent}|${this.config.xvcSeedList[1]}|${email}|${deviceUUID}`;
-
-        let hash = new ShaJS.sha512();
-
-        hash.update(source);
-
-        return hash.digest('hex');
+        return sha512(source);
     }
 
     private getApiPath(api: string) {

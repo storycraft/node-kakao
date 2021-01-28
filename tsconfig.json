@@ -1,3 +1,28 @@
 {
-    "extends": "./tsconfig-node.json"
+    "compilerOptions": {
+        "lib": ["ES2018", "DOM"],
+        "module": "umd",
+        "moduleResolution": "node",
+        "target": "ES2018",
+        "noImplicitAny": true,
+        "removeComments": false,
+        "strict": true,
+        "pretty": true,
+        "outDir": "dist",
+        "declaration": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.deno.ts",
+        "deno_dist",
+        "**/*.spec.ts",
+        "**/node_modules/*"
+    ]
 }

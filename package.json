@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
-    "build": "./node_modules/.bin/tsc --project tsconfig-node.json",
+    "build": "npm run build:node",
+    "build:node": "./node_modules/.bin/tsc",
     "docs": "./node_modules/.bin/typedoc src",
     "prepublishOnly": "npm run test && npm run build"
   },
@@ -18,12 +19,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node10": "^1.0.7",
     "@types/bson": "^4.0.0",
     "@types/chai": "^4.2.3",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.22",
-    "@types/sha.js": "^2.4.0",
     "chai": "^4.2.0",
     "mocha": "^6.2.3",
     "tiny-typed-emitter": "^2.0.3",
@@ -39,9 +38,9 @@
     "axios": "^0.21.1",
     "bson": "^4.2.2",
     "form-data": "^3.0.0",
+    "hash-wasm": "^4.4.1",
     "json-proxy-mapper": "^1.1.2",
-    "lossless-json": "^1.0.3",
-    "sha.js": "^2.4.11"
+    "lossless-json": "^1.0.3"
   },
   "map": {
     "form-data": "@empty",
