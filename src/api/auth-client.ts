@@ -10,6 +10,7 @@ import { DefaultConfiguration, OAuthLoginConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";
 import { fillAHeader, fillBaseHeader, getWinAgent } from "./header-util";
+import { AccessDataStruct, structToLoginData } from "./struct";
 
 /**
  * Login data
@@ -93,35 +94,6 @@ export interface TokenLoginForm extends LoginForm {
 }
 
 /**
- * Raw login data
- */
-interface AccessDataStruct {
-    
-    userId: number | Long;
-
-    countryIso: string;
-    countryCode: string;
-
-    accountId: number;
-
-    server_time: number;
-
-    resetUserData: boolean;
-
-    story_url: string;
-    
-    access_token: string;
-    refresh_token: string;
-    token_type: string;
-
-    autoLoginAccountId: string;
-    displayAccountId: string;
-
-    mainDeviceAgentName: string;
-    mainDeviceAppVersion: string;
-}
-
-/**
  * Provides default pc login api which can obtain OAuthCredential
  */
 export class AuthClient {
@@ -157,36 +129,6 @@ export class AuthClient {
         return form;
     }
 
-    private structToLoginData(struct: AccessDataStruct): LoginData {
-        return {
-            userId: struct.userId,
-
-            countryIso: struct.countryIso,
-            countryCode: struct.countryCode,
-        
-            accountId: struct.accountId,
-        
-            serverTime: struct.server_time,
-        
-            resetUserData: struct.resetUserData,
-        
-            storyURL: struct.story_url,
-
-            accessToken: struct.access_token,
-            refreshToken: struct.refresh_token,
-
-            deviceUUID: this._deviceUUID,
-            
-            tokenType: struct.token_type,
-        
-            autoLoginAccountId: struct.autoLoginAccountId,
-            displayAccountId: struct.displayAccountId,
-        
-            mainDeviceAgentName: struct.mainDeviceAgentName,
-            mainDeviceAppVersion: struct.mainDeviceAppVersion
-        }
-    }
-
     /**
      * Login using given data.
      *
@@ -201,7 +143,7 @@ export class AuthClient {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        return { status: res.status, success: true, result: this.structToLoginData(res as DefaultRes & AccessDataStruct) };
+        return { status: res.status, success: true, result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID) };
     }
 
     /**
@@ -218,7 +160,7 @@ export class AuthClient {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        return { status: res.status, success: true, result: this.structToLoginData(res as DefaultRes & AccessDataStruct) };
+        return { status: res.status, success: true, result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID) };
     }
 
     /**

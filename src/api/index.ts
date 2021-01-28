@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+// export * from "./struct";
 export * from "./auth-client";
 
 import { DefaultRes } from "../request";
