@@ -9,12 +9,12 @@ import { Channel } from "../../channel/channel";
 import { TalkSession } from "../client";
 import { ClientStatus } from "../../client-status";
 import { ClientSession, LoginResult } from "../../client/client-session";
-import { ClientConfigProvider } from "../../config/client-config-provider";
 import { OAuthCredential } from "../../oauth";
 import { OpenChannel } from "../../openlink/open-channel";
 import { LoginListRes } from "../../packet/chat/login-list";
 import { KnownDataStatusCode } from "../../request";
 import { CommandResult } from "../../request";
+import { ClientConfig } from "../../config";
 
 export class TalkClientSession implements ClientSession {
 
@@ -22,7 +22,7 @@ export class TalkClientSession implements ClientSession {
     private _lastTokenId: Long;
     private _lastBlockTk: number;
 
-    constructor(private _session: TalkSession, private _configProvider: ClientConfigProvider) {
+    constructor(private _session: TalkSession, public configuration: ClientConfig) {
         this._lastLoginRev = 0;
 
         this._lastTokenId = Long.ZERO;
@@ -33,12 +33,9 @@ export class TalkClientSession implements ClientSession {
         return this._session;
     }
 
-    get configProvider() {
-        return this._configProvider;
-    }
 
     async login(credential: OAuthCredential): Promise<CommandResult<LoginResult>> {
-        const config = this._configProvider.configuration;
+        const config = this.configuration;
 
         const req: Record<string, any> = {
             'appVer': config.appVersion,

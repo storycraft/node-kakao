@@ -145,7 +145,7 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
 
                 this._callEvent(
                     parentCtx,
-                    'link_deleted',
+                    'channel_link_deleted',
                     chatLog,
                     this._channel,
                     feed

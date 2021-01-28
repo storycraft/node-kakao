@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SessionConfig } from "../config/client-config-provider";
+import { SessionConfig } from "../config";
 import { LocoSession, PacketResData, SessionFactory } from "../network/request-session";
 import { DefaultRes, DefaultReq } from "../request";
 import { LocoPacket } from "../packet";

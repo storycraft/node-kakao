@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SessionConfig } from "../../config/client-config-provider";
+import { SessionConfig } from "../../config";
 import { newCryptoStore } from "../../crypto";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { DefaultLocoSession, LocoSession, SessionFactory } from "../../network/request-session";

@@ -62,7 +62,6 @@ typings/
 
 dist/
 loco-test.ts
-loco-test-2.ts
 
 # vim swp file
 *.swp

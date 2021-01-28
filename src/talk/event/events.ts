@@ -65,7 +65,7 @@ declare interface OpenChannelEvent {
     'host_handover': (channel: TalkOpenChannel, lastLink: OpenLink, link: OpenLink) => void;
 
     // 채팅방 링크가 삭제 되었을시 호출
-    'link_deleted': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenLinkDeletedFeed) => void;
+    'channel_link_deleted': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenLinkDeletedFeed) => void;
 
     // 메세지가 가려졌을시 호출
     'message_hidden': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenRewriteFeed) => void;

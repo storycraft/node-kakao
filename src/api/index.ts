@@ -4,8 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AxiosRequestConfig } from "axios";
-import { URLSearchParams } from "url";
+export * from "./auth-client";
+
+import { DefaultRes } from "../request";
+import { isDeno, isNode } from "../util/platform";
 
 export type RequestHeader = Record<string, any>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
@@ -23,72 +25,33 @@ export interface ApiClient extends HeaderDecorator {
     readonly url: string;
 
     /**
-     * Returns full url with path
-     * @param path
+     * Request with optional form and header overrides
+     * @param method 
+     * @param path 
+     * @param form 
+     * @param headers 
      */
-    toApiURL(): string;
-
-}
-
-export class ApiClient implements HeaderDecorator {
-
-    constructor(public scheme: string, public host: string, private _decorator?: HeaderDecorator) {
-
-    }
+    request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
     /**
-     * Returns url
+     * Request form as param
+     * 
+     * @param method 
+     * @param path 
+     * @param form 
+     * @param headers 
      */
-    get url() {
-        return `${this.scheme}://${this.host}`;
-    }
+    requestParams(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
     /**
-     * Returns full url with path
-     * @param path
+     * Request multipart form
+     *
+     * @param method 
+     * @param path 
+     * @param form 
+     * @param headers 
      */
-    toApiURL(path: string) {
-        return `${this.url}/${path}`;
-    }
-
-    fillHeader(header: RequestHeader) {
-        header['Host'] = this.host;
-        this._decorator?.fillHeader(header);
-    }
-
-    private buildAxiosReqData(method: RequestMethod, header?: RequestHeader): AxiosRequestConfig {
-        const reqHeader: RequestHeader = {};
-
-        this.fillHeader(reqHeader);
-
-        let reqData: AxiosRequestConfig = {
-            headers: reqHeader,
-
-            method: method,
-
-            // https://github.com/axios/axios/issues/811
-            // https://github.com/axios/axios/issues/907
-            transformResponse: (data) => data,
-
-            responseType: 'text'
-        };
-
-        if (header) Object.assign(reqHeader, header);
-
-        return reqData;
-    }
-
-    protected convertToFormData(form: RequestForm): URLSearchParams {
-        let formData = new URLSearchParams();
-
-        let entries = Object.entries(form);
-        for (let [ key, value ] of entries) {
-            // hax for undefined, null values
-            formData.append(key, value + '');
-        }
-
-        return formData;
-    }
+    requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
 }
 
@@ -100,3 +63,21 @@ export interface HeaderDecorator {
     fillHeader(header: RequestHeader): void;
 
 }
+
+/**
+ * Create api client by platform
+ *
+ * @param scheme
+ * @param host
+ * @param decorator
+ */
+export async function createApiClient(scheme: string, host: string, decorator?: HeaderDecorator): Promise<ApiClient> {
+    if (isNode()) {
+        return new (await import('./node-api-client')).NodeApiClient(scheme, host, decorator);
+    } else if (isDeno()) {
+        throw new Error('Deno runtime is not supported yet');
+    } else {
+        throw new Error('Unknown environment');
+    }
+}
+

@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { BookingConfig, CheckinConfig } from "../../config/client-config-provider";
+import { BookingConfig, CheckinConfig } from "../../config";
 import { GetConfRes } from "../../packet/booking/get-conf";
 import { CheckinRes } from "../../packet/checkin/checkin";
 import { KnownDataStatusCode } from "../../request";

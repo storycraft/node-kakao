@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SessionConfig } from "../config/client-config-provider";
+import { SessionConfig } from "../config";
 import { BsonDataCodec } from "../packet/bson-data-codec";
 import { DefaultReq, DefaultRes } from "../request";
 import { LocoPacket } from "../packet";

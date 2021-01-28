@@ -10,7 +10,7 @@ import { DefaultReq, DefaultRes } from "../../request";
 import { Managed } from "../managed";
 import { OAuthCredential } from "../../oauth";
 import { AsyncCommandResult } from "../../request";
-import { ClientConfig, ClientConfigProvider, DefaultConfiguration } from "../../config/client-config-provider";
+import { ClientConfig, DefaultConfiguration } from "../../config";
 import { ClientSession, LoginResult } from "../../client/client-session";
 import { TalkSessionFactory } from "../network";
 import { TalkClientSession } from "../client/talk-client-session";
@@ -66,7 +66,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         this.pingInterval = 900000;
 
         this._session = null;
-        this._clientSession = new TalkClientSession(this.createSessionProxy(), new ClientConfigProvider(Object.assign(DefaultConfiguration, config)));
+        this._clientSession = new TalkClientSession(this.createSessionProxy(), { ...DefaultConfiguration, ...config });
 
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
@@ -77,8 +77,12 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         this._blockList = new TalkBlockList(this.createSessionProxy());
     }
 
-    get configProvider() {
-        return this._clientSession.configProvider;
+    get configuration() {
+        return this._clientSession.configuration;
+    }
+
+    set configuration(configuration) {
+        this._clientSession.configuration = configuration;
     }
 
     get channelList() {
@@ -122,7 +126,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         if (this.logon) throw new Error('Already logon');
 
         // Create session
-        const sessionRes = await this._sessionFactory.createSession(this.configProvider.configuration);
+        const sessionRes = await this._sessionFactory.createSession(this.configuration);
         if (!sessionRes.success) return sessionRes;
         this._session = sessionRes.result;
         this.listen();
@@ -197,7 +201,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
             },
 
             get configuration() {
-                return instance.configProvider.configuration;
+                return instance.configuration;
             }
         }
     }
