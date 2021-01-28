@@ -1,24 +1,3 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "noImplicitAny": true,
-        "removeComments": false,
-        "pretty": true,
-        "strict": true,
-        "outDir": "dist",
-        "declaration": true,
-        "sourceMap": true,
-        "target": "es2017",
-        "lib": ["es2017"]
-    },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "**/*.spec.ts",
-        "**/node_modules/*"
-    ]
+    "extends": "./tsconfig-node.json"
 }

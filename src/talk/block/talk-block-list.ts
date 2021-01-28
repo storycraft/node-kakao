@@ -6,8 +6,8 @@
 
 import { TypedEmitter } from "tiny-typed-emitter";
 import { EventContext } from "../../event";
-import { DefaultRes } from "../../packet";
 import { AsyncCommandResult } from "../../request";
+import { DefaultRes } from "../../request";
 import { TalkSession } from "../client";
 import { BlockListEvents } from "../event";
 import { Managed } from "../managed";

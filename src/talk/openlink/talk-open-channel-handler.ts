@@ -11,7 +11,7 @@ import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
 import { OpenChannelUserPerm } from "../../openlink";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../../request";
 import { LinkKickedRes } from "../../packet/chat/link-kicked";
 import { SyncEventRes } from "../../packet/chat/sync-event";
 import { SyncLinkPfRes } from "../../packet/chat/sync-link-pf";

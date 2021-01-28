@@ -9,7 +9,7 @@ import { TalkSession } from "../client";
 import { MediaComponent, MediaTypeComponent } from "../../media";
 import { DefaultLocoSession } from "../../network/request-session";
 import { Stream } from "../../network/stream";
-import { DataStatusCode, KnownDataStatusCode } from "../../packet/status-code";
+import { DataStatusCode, KnownDataStatusCode } from "../../request";
 import { AsyncCommandResult } from "../../request";
 
 interface DataWriter {

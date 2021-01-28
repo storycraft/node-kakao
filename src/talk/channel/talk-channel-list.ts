@@ -11,7 +11,7 @@ import { ChannelList } from "../../channel/channel-list";
 import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
 import { OpenChannel } from "../../openlink/open-channel";
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../../request";
 import { ChainedIterator } from "../../util/chained-iterator";
 import { OpenChannelListEvents, TalkChannelListEvents } from "../event/events";
 import { Managed } from "../managed";

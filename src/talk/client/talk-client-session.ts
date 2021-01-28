@@ -13,7 +13,7 @@ import { ClientConfigProvider } from "../../config/client-config-provider";
 import { OAuthCredential } from "../../oauth";
 import { OpenChannel } from "../../openlink/open-channel";
 import { LoginListRes } from "../../packet/chat/login-list";
-import { KnownDataStatusCode } from "../../packet/status-code";
+import { KnownDataStatusCode } from "../../request";
 import { CommandResult } from "../../request";
 
 export class TalkClientSession implements ClientSession {

@@ -14,7 +14,7 @@ import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
 import { ChannelEvents, ChannelListEvents, NormalChannelListEvents, OpenChannelEvents } from "../event/events";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../../request";
 import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
 import { LeftRes } from "../../packet/chat/left";

@@ -11,7 +11,7 @@ import { DefaultLocoSession, LocoSession, SessionFactory } from "../../network/r
 import { getBookingData, getCheckinData } from "../../network/util/loco-entrance";
 import { CommandResult } from "../../request";
 import * as NetSocket from "../../network/socket";
-import { KnownDataStatusCode } from "../../packet/status-code";
+import { KnownDataStatusCode } from "../../request";
 
 /**
  * Create loco stream by performing booking and checkin.

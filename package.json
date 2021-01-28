@@ -7,7 +7,7 @@
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
     "locotest-2": "./node_modules/.bin/ts-node loco-test-2.ts",
-    "build": "./node_modules/.bin/tsc",
+    "build": "./node_modules/.bin/tsc --project tsconfig-node.json",
     "docs": "./node_modules/.bin/typedoc src",
     "prepublishOnly": "npm run test && npm run build"
   },
@@ -19,6 +19,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@tsconfig/node10": "^1.0.7",
     "@types/bson": "^4.0.0",
     "@types/chai": "^4.2.3",
     "@types/mocha": "^8.2.0",

@@ -6,19 +6,7 @@
 
 import * as Bson from "bson";
 import { LocoPacketDataCodec } from ".";
-
-export interface DefaultReq {
-
-    [key: string]: any;
-
-};
-
-export interface DefaultRes {
-
-    status: number;
-    [key: string]: any;
-
-};
+import { DefaultReq, DefaultRes } from "../request";
 
 export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     canDecode(dataType: number): boolean {

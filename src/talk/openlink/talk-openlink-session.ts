@@ -11,7 +11,7 @@ import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "../../openlink/open-
 import { JoinInfoRes } from "../../packet/chat/join-info";
 import { KLSyncRes } from "../../packet/chat/kl-sync";
 import { SyncLinkRes } from "../../packet/chat/sync-link";
-import { KnownDataStatusCode } from "../../packet/status-code";
+import { KnownDataStatusCode } from "../../request";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { structToOpenLinkKickedUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult } from "../../request";

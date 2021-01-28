@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../../request";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelUser } from "../../user/channel-user";

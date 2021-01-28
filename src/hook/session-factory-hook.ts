@@ -6,7 +6,7 @@
 
 import { SessionConfig } from "../config/client-config-provider";
 import { LocoSession, PacketResData, SessionFactory } from "../network/request-session";
-import { DefaultRes, DefaultReq } from "../packet/bson-data-codec";
+import { DefaultRes, DefaultReq } from "../request";
 import { LocoPacket } from "../packet";
 import { CommandResult } from "../request";
 

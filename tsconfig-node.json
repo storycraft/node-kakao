@@ -1,0 +1,21 @@
+{
+    "extends": "@tsconfig/node10/tsconfig.json",
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "removeComments": false,
+        "pretty": true,
+        "outDir": "dist",
+        "declaration": true,
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.spec.ts",
+        "**/node_modules/*"
+    ]
+}

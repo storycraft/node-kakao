@@ -15,6 +15,21 @@ export type RequestForm = { [key: string]: FileRequestData | any };
 /**
  * Provides various web request api
  */
+export interface ApiClient extends HeaderDecorator {
+
+    /**
+     * Returns url
+     */
+    readonly url: string;
+
+    /**
+     * Returns full url with path
+     * @param path
+     */
+    toApiURL(): string;
+
+}
+
 export class ApiClient implements HeaderDecorator {
 
     constructor(public scheme: string, public host: string, private _decorator?: HeaderDecorator) {

@@ -11,7 +11,7 @@ import { EventContext } from "../../event/event-context";
 import { InformedOpenLink, OpenLinkComponent } from "../../openlink";
 import { OpenLinkSession } from "../../openlink/open-link-session";
 import { OpenLinkKickedUser } from "../../openlink/open-link-user-info";
-import { DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultRes } from "../../request";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { AsyncCommandResult } from "../../request";
 import { OpenLinkEvents } from "../event/events";

@@ -14,7 +14,7 @@ import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "../../openlink/
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { GetMemRes } from "../../packet/chat/get-mem";
 import { MemberRes } from "../../packet/chat/member";
-import { KnownDataStatusCode } from "../../packet/status-code";
+import { KnownDataStatusCode } from "../../request";
 import { ChannelInfoStruct, OpenChannelInfoExtra } from "../../packet/struct/channel";
 import { OpenMemberStruct } from "../../packet/struct/user";
 import { structToOpenChannelInfo } from "../../packet/struct/wrap/channel";

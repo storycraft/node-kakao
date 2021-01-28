@@ -8,7 +8,6 @@ export * from "./booking";
 export * from "./bson-data-codec";
 export * from "./chat";
 export * from "./checkin";
-export * from "./status-code";
 export * from "./struct";
 
 export interface LocoPacket {

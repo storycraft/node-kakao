@@ -6,7 +6,7 @@
 
 import { ListenerSignature } from "tiny-typed-emitter";
 import { EventContext } from "../event/event-context";
-import { DefaultRes } from "../packet/bson-data-codec";
+import { DefaultRes } from "../request";
 
 export interface Managed<T extends ListenerSignature<T>> {
 

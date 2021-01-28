@@ -18,7 +18,6 @@ export * from "./media";
 export * from "./oauth";
 export * from "./openlink";
 // export * from "./packet";
-export { DataStatusCode, KnownDataStatusCode } from "./packet";
 export * from "./relay";
 export * from "./request";
 // export * from "./talk";

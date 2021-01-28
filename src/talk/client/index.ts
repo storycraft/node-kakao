@@ -6,7 +6,7 @@
 
 import { CommandSession, LocoSession, SessionFactory } from "../../network/request-session";
 import { ChannelUser } from "../../user/channel-user";
-import { DefaultReq, DefaultRes } from "../../packet/bson-data-codec";
+import { DefaultReq, DefaultRes } from "../../request";
 import { Managed } from "../managed";
 import { OAuthCredential } from "../../oauth";
 import { AsyncCommandResult } from "../../request";
