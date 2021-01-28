@@ -36,7 +36,7 @@ export class TalkBlockList extends TypedEmitter<BlockListEvents> implements Mana
     }
 
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<BlockListEvents>) {
-        
+
     }
 
     /**

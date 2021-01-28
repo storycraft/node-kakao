@@ -17,7 +17,7 @@ import * as ShaJS from "sha.js";
  * Login data
  */
 export interface LoginData extends OAuthCredential {
-    
+
     /**
      * User id
      */
@@ -52,7 +52,7 @@ export interface LoginData extends OAuthCredential {
      * Story URL
      */
     storyURL: string;
-    
+
     /**
      * OAuth token type
      */
@@ -85,7 +85,7 @@ export interface LoginForm {
     password: string;
 
     forced?: boolean;
-    
+
 }
 
 export interface TokenLoginForm extends LoginForm {
@@ -100,7 +100,7 @@ export interface TokenLoginForm extends LoginForm {
 export class AuthClient {
 
     constructor(private _client: ApiClient, private _name: string, private _deviceUUID: string, public config: OAuthLoginConfig) {
-        
+
     }
 
     get name() {
@@ -167,7 +167,7 @@ export class AuthClient {
     /**
      * Request passcode
      *
-     * @param form 
+     * @param form
      * @param permanent If true the device will be registered as permanent
      */
     async requestPasscode(form: LoginForm, permanent: boolean = true): AsyncCommandResult {
@@ -177,15 +177,15 @@ export class AuthClient {
             this.fillAuthForm({ ...form, permanent }),
             this.createAuthHeader(form)
         );
-        
+
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
     /**
      * Try to register device with passcode
      *
-     * @param form 
-     * @param passcode 
+     * @param form
+     * @param passcode
      */
     async registerDevice(form: LoginForm, passcode: string): AsyncCommandResult {
         const res = await this._client.request(
@@ -194,7 +194,7 @@ export class AuthClient {
             this.fillAuthForm({ ...form, passcode }),
             this.createAuthHeader(form)
         );
-        
+
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
@@ -219,7 +219,7 @@ export class AuthClient {
 
     /**
      * Create default AuthClient using config.
-     * 
+     *
      * @param config
      */
     static async create(name: string, deviceUUID: string, config: Partial<OAuthLoginConfig> = {}): Promise<AuthClient> {

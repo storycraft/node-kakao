@@ -92,7 +92,7 @@ declare interface OpenLinkEvent {
 }
 
 declare interface BlockListEvent {
-    
+
     // 차단 리스트가 변경되었을시 호출
     'block_list_changed': () => void;
 

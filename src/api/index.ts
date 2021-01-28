@@ -27,30 +27,30 @@ export interface ApiClient extends HeaderDecorator {
 
     /**
      * Request with optional form and header overrides
-     * @param method 
-     * @param path 
-     * @param form 
-     * @param headers 
+     * @param method
+     * @param path
+     * @param form
+     * @param headers
      */
     request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
     /**
      * Request form as param
-     * 
-     * @param method 
-     * @param path 
-     * @param form 
-     * @param headers 
+     *
+     * @param method
+     * @param path
+     * @param form
+     * @param headers
      */
     requestParams(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
     /**
      * Request multipart form
      *
-     * @param method 
-     * @param path 
-     * @param form 
-     * @param headers 
+     * @param method
+     * @param path
+     * @param form
+     * @param headers
      */
     requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 

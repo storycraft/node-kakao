@@ -72,7 +72,7 @@ export class NodeApiClient implements ApiClient, HeaderDecorator {
 
         return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
     }
-    
+
     async requestParams(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
         const reqData = this.buildAxiosReqData(method, headers);
         reqData.url = this.toApiURL(path);
@@ -82,7 +82,7 @@ export class NodeApiClient implements ApiClient, HeaderDecorator {
 
             reqData.params = formData.toString();
         }
-        
+
         return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
     }
 
