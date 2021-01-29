@@ -61,7 +61,9 @@ typings/
 .next
 
 dist/
+dist_esm/
 loco-test.ts
+deno-test.ts
 
 # vim swp file
 *.swp

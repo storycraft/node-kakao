@@ -10,13 +10,13 @@ declare var window: any;
 declare var navigator: any;
 
 export function isNode() {
-    return process && process.release && process.release.name === 'node';
+    return typeof process !== 'undefined' && process.release && process.release.name === 'node';
 }
 
 export function isDeno() {
-    return window && window.Deno && window.Deno.version && window.Deno.version.deno;
+    return typeof window !== 'undefined' && window.Deno && window.Deno.version && window.Deno.version.deno;
 }
 
 export function isBrowser() {
-    return navigator && 'userAgent' in navigator;
+    return typeof navigator !== 'undefined' && 'userAgent' in navigator;
 }

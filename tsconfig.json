@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "lib": ["ES2018", "DOM"],
-        "module": "umd",
+        "module": "UMD",
         "moduleResolution": "node",
         "target": "ES2018",
         "noImplicitAny": true,

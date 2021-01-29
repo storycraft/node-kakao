@@ -1,5 +1,7 @@
 src/
 node_modules/
 tests/
+dist_esm/
+rollup.config.js
 tsconfig.json
 loco-test.ts
