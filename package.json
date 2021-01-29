@@ -21,6 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-multi-entry": "^4.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
     "@types/bson": "^4.0.0",
     "@types/chai": "^4.2.3",

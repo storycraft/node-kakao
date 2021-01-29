@@ -5,6 +5,7 @@
  */
 
 import * as Bson from "bson";
+import { Buffer } from "buffer";
 import { LocoPacketDataCodec } from ".";
 import { DefaultReq, DefaultRes } from "../request";
 

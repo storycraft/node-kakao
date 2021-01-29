@@ -26,7 +26,8 @@ export async function createTCPSocket(option: NetSocketOptions): Promise<Stream>
         const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connect(option);
     } else if (isDeno()) {
-        throw new Error('Deno runtime is not implemented yet.');
+        const { DenoSocket } = await import('./deno-net-socket');
+        return DenoSocket.connect(option);
     } else if (isBrowser()) {
         throw new Error('Browser environments are not supported');
     } else {
@@ -44,7 +45,9 @@ export async function createTLSSocket(option: NetSocketOptions): Promise<Stream>
         const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connectTls(option);
     } else if (isDeno()) {
-        throw new Error('Deno runtime is not implemented yet.');
+        // TODO
+        const { DenoSocket } = await import('./deno-net-socket');
+        return DenoSocket.connectTls(option);
     } else if (isBrowser()) {
         throw new Error('Browser environments are not supported');
     } else {
