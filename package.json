@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
-    "build": "npm run build:node & npm run build:other",
+    "build": "npm run build:node & npm run build:esm",
     "build:node": "./node_modules/.bin/tsc",
     "build:esm": "./node_modules/.bin/rollup -c",
     "docs": "./node_modules/.bin/typedoc src",
