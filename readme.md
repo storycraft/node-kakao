@@ -1,5 +1,5 @@
 [![npm version](https://badge.fury.io/js/node-kakao.svg)](https://www.npmjs.com/package/node-kakao)
-# NodeKakao - Loco protocol compatible library
+# DenoKakao - Loco protocol compatible library
 
 Note: this implemention can stop working anytime.
 
