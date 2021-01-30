@@ -37,12 +37,9 @@ export class DenoSocket implements Stream {
 
             next: async () => {
                 const next = await iter.next();
-                if (next.done) {
-                    this._ended = true;
-                    return next;
-                }
+                if (next.done) this._ended = true;
 
-                return { done: false, value: next.value };
+                return next;
             }
         }
     }

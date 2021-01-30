@@ -27,5 +27,9 @@ export interface CryptoStore {
  * @param pubKey
  */
 export async function newCryptoStore(pubKey: string): Promise<CryptoStore> {
-    return (await import('./forge-crypto-store')).createForgeCrypto(pubKey);
+    if (isNode()) {
+        return (await import('./node-crypto-store')).createNodeCrypto(pubKey);
+    } else {
+        return (await import('./forge-crypto-store')).createForgeCrypto(pubKey);
+    }
 }
