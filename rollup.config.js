@@ -55,12 +55,14 @@ export default () => {
       'hash-wasm'
     ],
     shimMissingExports: true,
+    treeshake: false,
     output: [
       {
         dir: 'dist_esm',
         format: 'esm',
         sourcemap: true,
         preserveModules: true,
+        minifyInternalExports: false,
         preserveModulesRoot: 'src',
         paths: {
           'bson': 'https://unpkg.com/bson/dist/bson.browser.esm.js',
