@@ -4,10 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export const DefaultConfiguration: LocoLoginConfig & OAuthLoginConfig & ClientConfig = {
+export const DefaultConfiguration: OAuthLoginConfig & ClientConfig = {
 
-    locoBookingURL: 'booking-loco.kakao.com',
+    locoBookingHost: 'booking-loco.kakao.com',
     locoBookingPort: 443,
+
+    locoCheckinFallbackHost: '203.217.239.46',
+    locoCheckinFallbackPort: 5242,
 
     locoPEMPublicKey: `-----BEGIN PUBLIC KEY-----\nMIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKCAQEApElgRBx+g7sniYFW7LE8ivrwXShKTRFV8lXNItMXbN5QSC8vJ/cTSOTS619Xv5Zx7xXJIk4EKxtWesEGbgZpEUP2xQ+IeH9oz0JxayEMvvD1nVNAWgpWE4pociEoArsK7qY3YwXb1CiDHo9hojLv7djbo3cwXvlyMh4TUrX2RjCZPlVJxk/LVjzcl9ohJLkl3eoSrf0AE4kQ9mk3+raEhq5Dv+IDxKYX+fIytUWKmrQJusjtre9oVUX5sBOYZ0dzez/XapusEhUWImmB6mciVXfRXQ8IK4IH6vfNyxMSOTfLEhRYN2SMLzplAYFiMV536tLS3VmG5GJRdkpDubqPeQIBAw==\n-----END PUBLIC KEY-----`,
 
@@ -37,6 +40,9 @@ export const DefaultConfiguration: LocoLoginConfig & OAuthLoginConfig & ClientCo
 }
 
 export interface BookingConfig {
+    
+    locoBookingHost: string;
+    locoBookingPort: number;
 
     agent: string;
     mccmnc: string;
@@ -46,6 +52,9 @@ export interface BookingConfig {
 
 export interface CheckinConfig extends BookingConfig {
 
+    locoCheckinFallbackHost?: string;
+    locoCheckinFallbackPort?: number;
+
     subDevice: boolean;
     appVersion: string;
 
@@ -53,6 +62,8 @@ export interface CheckinConfig extends BookingConfig {
     language: string;
 
     netType: number;
+    
+    locoPEMPublicKey: string;
 }
 
 export interface WebApiConfig {
@@ -69,7 +80,7 @@ export interface WebApiConfig {
 
 }
 
-export interface SessionConfig extends LocoLoginConfig, CheckinConfig {
+export interface SessionConfig extends CheckinConfig {
 
 }
 
@@ -81,14 +92,5 @@ export interface OAuthLoginConfig extends WebApiConfig {
 
     xvcSeedList: [ string, string ];
     loginTokenSeedList: [ string, string ];
-
-}
-
-export interface LocoLoginConfig {
-
-    locoBookingURL: string;
-    locoBookingPort: number;
-
-    locoPEMPublicKey: string;
 
 }

@@ -9,7 +9,7 @@ import { BookingConfig, CheckinConfig } from "../../config";
 import { GetConfRes } from "../../packet/booking/get-conf";
 import { CheckinRes } from "../../packet/checkin/checkin";
 import { KnownDataStatusCode } from "../../request";
-import { CommandResult } from "../../request";
+import { AsyncCommandResult } from "../../request";
 import { DefaultLocoSession } from "../request-session";
 import { Stream } from "../stream";
 
@@ -19,7 +19,7 @@ import { Stream } from "../stream";
  *
  * @param stream
  */
-export async function getBookingData(stream: Stream, config: BookingConfig): Promise<CommandResult<GetConfRes>> {
+export async function getBookingData(stream: Stream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
     const bookingSession = new DefaultLocoSession(stream);
 
     (async () => {
@@ -44,7 +44,7 @@ export async function getBookingData(stream: Stream, config: BookingConfig): Pro
  *
  * @param stream
  */
-export async function getCheckinData(stream: Stream, config: CheckinConfig, userId?: Long): Promise<CommandResult<CheckinRes>> {
+export async function getCheckinData(stream: Stream, config: CheckinConfig, userId?: Long): AsyncCommandResult<CheckinRes> {
     const checkinSession = new DefaultLocoSession(stream);
 
     (async () => {
