@@ -5,3 +5,4 @@ dist_esm/
 rollup.config.js
 tsconfig.json
 loco-test.ts
+deno-test.ts

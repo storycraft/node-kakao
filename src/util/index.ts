@@ -6,3 +6,4 @@
 
 export * from "./chained-iterator";
 export * from "./json-util";
+export * from "./device";
