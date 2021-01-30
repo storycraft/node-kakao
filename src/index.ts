@@ -145,7 +145,7 @@ export * from './oauth/access-data-provider';
 export * from './client-status';
 export * from './client';
 
-import { Long } from 'bson';
+import { Long } from './js-bson/src/bson';
 export { Long };
 
 export * from './util/json-util';
