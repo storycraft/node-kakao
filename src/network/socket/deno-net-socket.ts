@@ -7,15 +7,12 @@
 import { NetSocketOptions } from ".";
 import { Stream } from "../stream";
 
-// Typings hack
-type Conn = any;
-declare const Deno: any;
 
 export class DenoSocket implements Stream {
 
     private _ended: boolean;
 
-    constructor(private _conn: Conn) {
+    constructor(private _conn: Deno.Conn) {
         this._ended = false;
     }
 
