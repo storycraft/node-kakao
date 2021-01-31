@@ -37,9 +37,6 @@ export default () => {
         // Excluded
         'axios',
         'form-data',
-        'net',
-        'tls',
-        'util',
     
         // Substituted
         'bson',
