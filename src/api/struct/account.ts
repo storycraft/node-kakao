@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from "bson";
+
 /*
  * Created on Sun Nov 03 2019
  *
@@ -45,7 +47,7 @@ export interface MoreSettingsStruct {
     seasonProfileRev: number,
     seasonNoticeRev: number,
 
-    serviceUserId: number,
+    serviceUserId: Long | number,
 
     accountId: number;
     accountDisplayId: string;

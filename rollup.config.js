@@ -23,6 +23,7 @@ export default () => {
       tsconfigOverride: {
         compilerOptions: {
           module: 'ESNext',
+          declaration: false,
           removeComments: true,
         }
       }

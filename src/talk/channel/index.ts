@@ -19,7 +19,11 @@ import { ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { ChannelEvents } from "../event/events";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 
+/**
+ * TalkChannel interface includes managed methods and other methods that make it easier to use
+ */
 export interface TalkChannel extends Channel, ChannelSession, TypedEmitter<ChannelEvents> {
 
     /**
@@ -80,5 +84,54 @@ export interface TalkChannel extends Channel, ChannelSession, TypedEmitter<Chann
      * Update channel info and every user info
      */
     updateAll(): AsyncCommandResult;
+
+    /**
+     * Set channel title
+     *
+     * @param title
+     */
+    setTitleMeta(title: string): AsyncCommandResult;
+
+    /**
+     * Set channel notice
+     *
+     * @param notice 
+     */
+    setNoticeMeta(notice: string): AsyncCommandResult;
+
+    /**
+     * Set channel profile
+     *
+     * @param content 
+     */
+    setProfileMeta(content: ProfileMetaContent): AsyncCommandResult;
+
+    /**
+     * Set channel tv meta
+     *
+     * @param content 
+     */
+    setTvMeta(content: TvMetaContent): AsyncCommandResult;
+
+    /**
+     * Set channel tv live meta
+     *
+     * @param content 
+     */
+    setTvLiveMeta(content: TvLiveMetaContent): AsyncCommandResult;
+
+    /**
+     * Set live talk count meta
+     *
+     * @param content 
+     */
+    setLiveTalkCountMeta(content: LiveTalkCountMetaContent): AsyncCommandResult;
+
+    /**
+     * Set group profile meta
+     *
+     * @param content 
+     */
+    setGroupMeta(content: GroupMetaContent): AsyncCommandResult;
 
 }

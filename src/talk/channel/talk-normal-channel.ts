@@ -25,6 +25,8 @@ import { MediaKeyComponent } from "../../media";
 import { ChatType } from "../../chat/chat-type";
 import { ChannelEvents } from "../event/events";
 import { TalkChannel } from ".";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
+import { JsonUtil } from "../../util";
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
 
@@ -159,6 +161,34 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
         }
 
         return res;
+    }
+
+    async setTitleMeta(title: string) {
+        return this.setMeta(KnownChannelMetaType.TITLE, title);
+    }
+
+    async setNoticeMeta(notice: string) {
+        return this.setMeta(KnownChannelMetaType.NOTICE, notice);
+    }
+
+    async setProfileMeta(content: ProfileMetaContent) {
+        return this.setMeta(KnownChannelMetaType.PROFILE, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setTvMeta(content: TvMetaContent) {
+        return this.setMeta(KnownChannelMetaType.TV, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setTvLiveMeta(content: TvLiveMetaContent) {
+        return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent) {
+        return this.setMeta(KnownChannelMetaType.LIVE_TALK_COUNT, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setGroupMeta(content: GroupMetaContent) {
+        return this.setMeta(KnownChannelMetaType.GROUP, JsonUtil.stringifyLoseless(content));
     }
 
     async setPushAlert(flag: boolean) {

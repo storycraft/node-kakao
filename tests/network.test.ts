@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultConfiguration } from '../src/config/client-config-provider';
-import { TalkSessionFactory } from '../src/talk/network/talk-session-factory';
+import { DefaultConfiguration } from '../src/config';
+import { TalkSessionFactory } from '../src/talk/network';
 
 describe('Network', () => {
     it('Create loco session', async () => {

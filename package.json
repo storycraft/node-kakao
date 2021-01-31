@@ -1,9 +1,21 @@
 {
   "name": "node-kakao",
-  "version": "4.0.0",
+  "version": "4.0.0-alpha.0",
   "description": "Loco protocol compatible library",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist_esm/index.js",
+    "default": "./dist_esm/index.js"
+  },
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "dist_esm",
+    "lib",
+    "readme.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "./node_modules/.bin/ts-node loco-test.ts",
@@ -13,7 +25,12 @@
     "docs": "./node_modules/.bin/typedoc src",
     "prepublishOnly": "npm run test && npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "node-kakao",
+    "chat-protocol",
+    "chat-client",
+    "loco-protocol"
+  ],
   "author": {
     "name": "storycraft",
     "email": "storycraft@pancake.sh",
@@ -45,6 +62,7 @@
     "url": "https://github.com/storycraft/node-kakao.git"
   },
   "dependencies": {
+    "@skypack/package-check": "^0.2.2",
     "axios": "^0.21.1",
     "bson": "^4.2.2",
     "form-data": "^3.0.0",

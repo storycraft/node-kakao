@@ -34,6 +34,8 @@ import { OpenChannelEvents } from "../event/events";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
 import { OpenLinkProfiles, OpenLinkChannelUserInfo } from "../../openlink";
+import { JsonUtil } from "../../util";
+import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from "../../channel/meta";
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 
@@ -176,7 +178,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
-    async setMeta(type: ChannelMetaType, meta: ChannelMeta) {
+    async setMeta(type: ChannelMetaType, meta: string | ChannelMeta) {
         const res = await this._channelSession.setMeta(type, meta);
 
         if (res.success) {
@@ -184,6 +186,53 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         }
 
         return res;
+    }
+
+    async setTitleMeta(title: string) {
+        return this.setMeta(KnownChannelMetaType.TITLE, title);
+    }
+
+    async setNoticeMeta(notice: string) {
+        return this.setMeta(KnownChannelMetaType.NOTICE, notice);
+    }
+
+    /**
+     * Set privileged settings.
+     * Need to be owner of the channel to set.
+     *
+     * @param content 
+     */
+    async setPrivilegeMeta(content: PrivilegeMetaContent) {
+        return this.setMeta(KnownChannelMetaType.PRIVILEGE, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setProfileMeta(content: ProfileMetaContent) {
+        return this.setMeta(KnownChannelMetaType.PROFILE, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setTvMeta(content: TvMetaContent) {
+        return this.setMeta(KnownChannelMetaType.TV, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setTvLiveMeta(content: TvLiveMetaContent) {
+        return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent) {
+        return this.setMeta(KnownChannelMetaType.LIVE_TALK_COUNT, JsonUtil.stringifyLoseless(content));
+    }
+
+    async setGroupMeta(content: GroupMetaContent) {
+        return this.setMeta(KnownChannelMetaType.GROUP, JsonUtil.stringifyLoseless(content));
+    }
+
+    /**
+     * Set bot meta
+     *
+     * @param content 
+     */
+    async setBotMeta(content: BotMetaContent) {
+        return this.setMeta(KnownChannelMetaType.BOT, JsonUtil.stringifyLoseless(content));
     }
 
     async setPushAlert(flag: boolean) {
