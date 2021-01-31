@@ -4,17 +4,16 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { WebApiStruct } from "../../web-api-struct";
 import { FriendStruct } from "./friend-struct";
 
-export interface FriendSearchUserListStruct extends WebApiStruct {
+export interface FriendSearchUserListStruct {
 
     count: number;
     list: FriendStruct[];
 
 }
 
-export interface FriendSearchStruct extends WebApiStruct {
+export interface FriendSearchStruct {
 
     query: string;
     user?: FriendSearchUserListStruct;

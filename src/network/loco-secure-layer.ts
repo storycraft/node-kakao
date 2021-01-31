@@ -6,19 +6,19 @@
 
 import { CryptoStore } from "../crypto";
 import { ChunkedArrayBufferList } from "./chunk";
-import { Stream } from "./stream";
+import { BiStream } from "../stream";
 
 /**
  * Loco secure layer that encrypt outgoing packets
  */
-export class LocoSecureLayer implements Stream {
+export class LocoSecureLayer implements BiStream {
 
-    private _stream: Stream;
+    private _stream: BiStream;
     private _crypto: CryptoStore;
 
     private _handshaked: boolean;
 
-    constructor(socket: Stream, crypto: CryptoStore) {
+    constructor(socket: BiStream, crypto: CryptoStore) {
         this._stream = socket;
         this._crypto = crypto;
 
@@ -109,9 +109,9 @@ export class LocoSecureLayer implements Stream {
         return this._handshaked;
     }
 
-    write(data: ArrayBuffer): void {
+    async write(data: ArrayBuffer) {
         if (!this._handshaked) {
-            this.sendHandshake();
+            await this.sendHandshake();
             this._handshaked = true;
         }
 
@@ -126,10 +126,10 @@ export class LocoSecureLayer implements Stream {
         packetArr.set(new Uint8Array(iv), 4);
         packetArr.set(new Uint8Array(encrypted), 20);
 
-        this._stream.write(packet);
+        return this._stream.write(packet);
     }
 
-    protected sendHandshake() {
+    protected async sendHandshake() {
         const encryptedKey = this._crypto.getRSAEncryptedKey();
         const handshakePacket = new ArrayBuffer(12 + encryptedKey.byteLength);
 
@@ -140,7 +140,7 @@ export class LocoSecureLayer implements Stream {
         view.setUint32(8, 2, true); // AES_CFB128 NOPADDING
         new Uint8Array(handshakePacket).set(new Uint8Array(encryptedKey), 12);
 
-        this._stream.write(handshakePacket);
+        await this._stream.write(handshakePacket);
     }
 
     close(): void {

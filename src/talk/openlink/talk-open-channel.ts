@@ -12,7 +12,7 @@ import { Chat, ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { ChatType } from "../../chat/chat-type";
 import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
-import { MediaComponent } from "../../media";
+import { MediaKeyComponent } from "../../media";
 import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
@@ -365,8 +365,8 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._openChannelSession.hideChat(chat);
     }
 
-    createMediaDownloader(media: MediaComponent, type: ChatType) {
-        return this._channelSession.createMediaDownloader(media, type);
+    downloadMedia(media: MediaKeyComponent, type: ChatType) {
+        return this._channelSession.downloadMedia(media, type);
     }
 
     async updateAll(): AsyncCommandResult {

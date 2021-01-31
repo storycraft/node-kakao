@@ -14,8 +14,9 @@ import { ChannelMetaType } from "../packet/struct/channel";
 import { ChannelUserInfo } from "../user/channel-user-info";
 import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 import { MediaDownloader } from "../talk/media/media-downloader";
-import { MediaComponent } from "../media";
+import { MediaKeyComponent } from "../media";
 import { ChatType } from "../chat/chat-type";
+import { MediaUploader } from "../talk";
 
 export interface ChannelTemplate {
 
@@ -125,7 +126,7 @@ export interface ChannelSession {
      * @param media
      * @param type
      */
-    createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader>;
+    downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader>;
 
 }
 

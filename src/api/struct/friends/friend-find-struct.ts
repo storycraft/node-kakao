@@ -4,18 +4,17 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { WebApiStruct } from "../../web-api-struct";
 import { FriendStruct } from "./friend-struct";
 import { Long } from "bson";
 
-export interface FriendFindIdStruct extends WebApiStruct {
+export interface FriendFindIdStruct {
 
     token: Long;
     friend: FriendStruct;
 
 }
 
-export interface FriendFindUUIDStruct extends WebApiStruct {
+export interface FriendFindUUIDStruct {
 
     member: FriendStruct;
 

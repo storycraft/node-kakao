@@ -4,7 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { StructBase } from "../../struct-base";
 import { Long } from "bson";
 
 export enum ApiUserType {
@@ -14,7 +13,7 @@ export enum ApiUserType {
 
 }
 
-export interface FriendExt extends StructBase {
+export interface FriendExt {
 
     addible: boolean;
     yellowid: boolean;
@@ -28,9 +27,9 @@ export interface FriendExt extends StructBase {
 
 }
 
-export interface FriendStruct extends StructBase {
+export interface FriendStruct {
 
-    userId: Long;
+    userId: Long | number;
     nickName: string;
     type: number;
     phoneNumber: string;

@@ -9,10 +9,9 @@ import { BsonDataCodec } from "../packet/bson-data-codec";
 import { DefaultReq, DefaultRes } from "../request";
 import { LocoPacket } from "../packet";
 import { CommandResult } from "../request";
-import { ChannelUser } from "../user/channel-user";
 import { LocoPacketDispatcher } from "./loco-packet-dispatcher";
 import { PacketAssembler } from "./packet-assembler";
-import { Stream } from "./stream";
+import { BiStream } from "../stream";
 
 export interface CommandSession {
 
@@ -61,7 +60,7 @@ export class DefaultLocoSession implements LocoSession {
     private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
     private _dispatcher: LocoPacketDispatcher;
 
-    constructor(stream: Stream) {
+    constructor(stream: BiStream) {
         this._assembler = new PacketAssembler(BsonDataCodec);
         this._dispatcher = new LocoPacketDispatcher(stream);
     }

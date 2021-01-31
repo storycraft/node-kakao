@@ -4,16 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { WebApiStruct } from "../../web-api-struct";
 import { FriendStruct } from "./friend-struct";
 
-export interface FriendReqStruct extends WebApiStruct {
+export interface FriendReqStruct {
 
     friend: FriendStruct;
 
 }
 
-export interface FriendReqPhoneNumberStruct extends WebApiStruct {
+export interface FriendReqPhoneNumberStruct {
 
     pstn_number: string;
 

@@ -76,8 +76,6 @@ export interface WebApiConfig {
 
     language: string;
 
-    deviceType: number;
-
 }
 
 export interface SessionConfig extends CheckinConfig {
@@ -85,6 +83,8 @@ export interface SessionConfig extends CheckinConfig {
 }
 
 export interface ClientConfig extends SessionConfig, WebApiConfig {
+
+    deviceType: number;
 
 }
 

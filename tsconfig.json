@@ -16,7 +16,7 @@
     },
     "include": [
         "src/**/*"
-    ],
+, "platform"    ],
     "exclude": [
         "node_modules",
         "dist",

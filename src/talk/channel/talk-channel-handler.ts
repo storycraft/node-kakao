@@ -9,11 +9,10 @@ import { Channel } from "../../channel/channel";
 import { ChannelInfo, SetChannelMeta } from "../../channel/channel-info";
 import { ChannelList } from "../../channel/channel-list";
 import { KnownChatType } from "../../chat/chat-type";
-import { DeleteAllFeed, feedFromChat, OpenRewriteFeed } from "../../chat/feed/chat-feed";
+import { DeleteAllFeed, feedFromChat } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
-import { ChannelEvents, ChannelListEvents, NormalChannelListEvents, OpenChannelEvents } from "../event/events";
-import { OpenChannelInfo } from "../../openlink/open-channel-info";
+import { ChannelEvents, ChannelListEvents } from "../event/events";
 import { DefaultRes } from "../../request";
 import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
@@ -27,12 +26,11 @@ import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo } from "../../user/channel-user-info";
 import { Managed } from "../managed";
 import { TalkChannel } from ".";
-import { TalkNormalChannelList } from "./talk-normal-channel-list";
 
 /**
  * Update channel info from handler
  */
-export interface ChannelInfoUpdater<T extends ChannelInfo = ChannelInfo, U extends ChannelUserInfo = ChannelUserInfo> {
+export interface ChannelInfoUpdater<T extends ChannelInfo, U extends ChannelUserInfo> {
 
     /**
      * Update channel info

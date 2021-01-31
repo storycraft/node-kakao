@@ -5,7 +5,7 @@
  */
 
 import { isBrowser, isDeno, isNode } from "../../util/platform";
-import { Stream } from "../stream";
+import { BiStream } from "../../stream";
 
 export interface NetSocketOptions {
 
@@ -21,7 +21,7 @@ export interface NetSocketOptions {
  * Create TCP net stream using options.
  * This detect environment automatically.
  */
-export async function createTCPSocket(option: NetSocketOptions): Promise<Stream> {
+export async function createTCPSocket(option: NetSocketOptions): Promise<BiStream> {
     if (isNode()) {
         const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connect(option);
@@ -40,7 +40,7 @@ export async function createTCPSocket(option: NetSocketOptions): Promise<Stream>
  * Create TCP TLS net stream using options.
  * This detect environment automatically.
  */
-export async function createTLSSocket(option: NetSocketOptions): Promise<Stream> {
+export async function createTLSSocket(option: NetSocketOptions): Promise<BiStream> {
     if (isNode()) {
         const { NodeSocket } = await import('./node-net-socket');
         return NodeSocket.connectTls(option);

@@ -6,15 +6,9 @@
 
 import { ChatType } from "../chat/chat-type";
 
-export interface MediaComponent {
+export interface MediaKeyComponent {
 
     key: string;
-
-}
-
-export interface MediaTypeComponent {
-
-    type: ChatType;
 
 }
 

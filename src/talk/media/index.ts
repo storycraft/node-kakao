@@ -6,3 +6,9 @@
 
 export * from "./media-downloader";
 export * from "./media-uploader";
+
+export interface MediaUploadTemplate {
+
+
+
+}

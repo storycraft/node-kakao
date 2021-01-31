@@ -5,10 +5,9 @@
  */
 
 import { NetSocketOptions } from ".";
-import { Stream } from "../stream";
+import { BiStream } from "../../stream";
 
-
-export class DenoSocket implements Stream {
+export class DenoSocket implements BiStream {
 
     private _ended: boolean;
 
@@ -20,8 +19,8 @@ export class DenoSocket implements Stream {
         return this._ended;
     }
 
-    write(data: ArrayBuffer): void {
-        this._conn.write(new Uint8Array(data));
+    async write(data: ArrayBuffer) {
+        await this._conn.write(new Uint8Array(data));
     }
 
     iterate(): AsyncIterableIterator<ArrayBuffer> {
@@ -46,11 +45,11 @@ export class DenoSocket implements Stream {
         this._ended = true;
     }
 
-    static async connect(option: NetSocketOptions): Promise<Stream> {
+    static async connect(option: NetSocketOptions): Promise<BiStream> {
         return new DenoSocket(await Deno.connect({ hostname: option.host, port: option.port }));
     }
 
-    static async connectTls(option: NetSocketOptions): Promise<Stream> {
+    static async connectTls(option: NetSocketOptions): Promise<BiStream> {
         return new DenoSocket(await Deno.connectTls({ hostname: option.host, port: option.port }));
     }
 

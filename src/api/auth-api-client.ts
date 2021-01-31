@@ -10,7 +10,7 @@ import { ApiClient, createApiClient, RequestForm, RequestHeader } from ".";
 import { DefaultConfiguration, OAuthLoginConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";
-import { fillAHeader, fillBaseHeader, getWinAgent } from "./header-util";
+import { fillAHeader, fillBaseHeader, getUserAgent } from "./header-util";
 import { AccessDataStruct, structToLoginData } from "./struct";
 
 /**
@@ -95,9 +95,27 @@ export interface TokenLoginForm extends LoginForm {
 }
 
 /**
+ * Status code for auth client results
+ */
+export enum KnownAuthStatusCode {
+
+    LOGIN_FAILED_REASON = 12,
+    LOGIN_FAILED = 30,
+    MOBILE_UNREGISTERED = 32,
+    DEVICE_NOT_REGISTERED = -100,
+    ANOTHER_LOGON = -101,
+    DEVICE_REGISTER_FAILED = -102,
+    INVALID_DEVICE_REGISTER = -110,
+    INCORRECT_PASSCODE = -111,
+    PASSCODE_REQUEST_FAILED = -112,
+    ACCOUNT_RESTRICTED = -997
+
+}
+
+/**
  * Provides default pc login api which can obtain OAuthCredential
  */
-export class AuthClient {
+export class AuthApiClient {
 
     constructor(private _client: ApiClient, private _name: string, private _deviceUUID: string, public config: OAuthLoginConfig) {
 
@@ -116,7 +134,7 @@ export class AuthClient {
 
         fillBaseHeader(header, this.config);
         fillAHeader(header, this.config);
-        const userAgent = getWinAgent(this.config);
+        const userAgent = getUserAgent(this.config);
         header['User-Agent'] = userAgent;
         header['X-VC'] = await this.calculateXVCKey(this.deviceUUID, userAgent, form.email);
 
@@ -216,8 +234,8 @@ export class AuthClient {
      *
      * @param config
      */
-    static async create(name: string, deviceUUID: string, config: Partial<OAuthLoginConfig> = {}): Promise<AuthClient> {
-        return new AuthClient(
+    static async create(name: string, deviceUUID: string, config: Partial<OAuthLoginConfig> = {}): Promise<AuthApiClient> {
+        return new AuthApiClient(
             await createApiClient('https', 'katalk.kakao.com'),
             name,
             deviceUUID,

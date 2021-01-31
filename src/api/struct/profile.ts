@@ -4,9 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { StructBase } from "../../struct-base";
-
-export interface ProfileFeed extends StructBase {
+export interface ProfileFeed {
 
     id: string;
     serviceName: string;
@@ -27,14 +25,14 @@ export interface ProfileFeed extends StructBase {
 
 }
 
-export interface ProfileFeedList extends StructBase {
+export interface ProfileFeedList {
 
     totalCnts: number;
     feeds: ProfileFeed[];
 
 }
 
-export interface ProfileDecoration extends StructBase {
+export interface ProfileDecoration {
 
     itemKind: string;
     itemId: string;
@@ -63,7 +61,7 @@ export interface StickerDecoration extends ProfileDecoration {
 
 }
 
-export interface ProfileStruct extends StructBase {
+export interface ProfileStruct {
 
     backgroundImageUrl: string;
     originalBackgroundImageUrl: string;
@@ -85,5 +83,14 @@ export interface ProfileStruct extends StructBase {
     allowPay: boolean;
 
     screenToken: number;
+
+}
+
+export interface ProfileReqStruct {
+
+    profile: ProfileStruct;
+
+    itemNewBadgeToken: number;
+    lastSeenAt: number;
 
 }

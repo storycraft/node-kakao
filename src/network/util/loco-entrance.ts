@@ -11,7 +11,7 @@ import { CheckinRes } from "../../packet/checkin/checkin";
 import { KnownDataStatusCode } from "../../request";
 import { AsyncCommandResult } from "../../request";
 import { DefaultLocoSession } from "../request-session";
-import { Stream } from "../stream";
+import { BiStream } from "../../stream";
 
 /**
  * Do booking process and return result.
@@ -19,7 +19,7 @@ import { Stream } from "../stream";
  *
  * @param stream
  */
-export async function getBookingData(stream: Stream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
+export async function getBookingData(stream: BiStream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
     const bookingSession = new DefaultLocoSession(stream);
 
     (async () => {
@@ -44,7 +44,7 @@ export async function getBookingData(stream: Stream, config: BookingConfig): Asy
  *
  * @param stream
  */
-export async function getCheckinData(stream: Stream, config: CheckinConfig, userId?: Long): AsyncCommandResult<CheckinRes> {
+export async function getCheckinData(stream: BiStream, config: CheckinConfig, userId?: Long): AsyncCommandResult<CheckinRes> {
     const checkinSession = new DefaultLocoSession(stream);
 
     (async () => {

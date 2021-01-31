@@ -6,7 +6,7 @@
 
 import { LocoPacket } from "../packet";
 import { LocoPacketCodec } from "./loco-packet-codec";
-import { Stream } from "./stream";
+import { BiStream } from "../stream";
 
 export interface PacketRes {
 
@@ -21,7 +21,7 @@ export class LocoPacketDispatcher {
 
     private _packetMap: Map<number, [resolve: (value: LocoPacket | PromiseLike<LocoPacket>) => void, reject: (reason?: any) => void]>;
 
-    constructor(stream: Stream) {
+    constructor(stream: BiStream) {
         this._codec = new LocoPacketCodec(stream);
         this._packetMap = new Map();
     }
@@ -35,13 +35,16 @@ export class LocoPacketDispatcher {
      *
      * @returns response
      */
-    sendPacket(packet: LocoPacket) {
+    async sendPacket(packet: LocoPacket) {
         if (this._packetMap.has(packet.header.id)) throw new Error(`Packet#${packet.header.id} can conflict`);
 
-        return new Promise<LocoPacket>((resolve, reject) => {
+        const promise = new Promise<LocoPacket>((resolve, reject) => {
             this._packetMap.set(packet.header.id, [resolve, reject]);
-            this._codec.send(packet);
         });
+
+        await this._codec.send(packet);
+
+        return promise;
     }
 
     /**
@@ -52,11 +55,11 @@ export class LocoPacketDispatcher {
         const iterator = this._codec.iterate();
 
         return {
-            [Symbol.asyncIterator](): AsyncIterator<Readonly<PacketRes>> {
+            [Symbol.asyncIterator]() {
                 return this;
             },
 
-            async next(): Promise<IteratorResult<Readonly<PacketRes>>> {
+            async next(): Promise<IteratorResult<PacketRes>> {
                 const next = await iterator.next();
 
                 if (next.done) return { done: true, value: null };

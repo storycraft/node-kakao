@@ -6,16 +6,16 @@
 
 import { LocoPacket, LocoPacketHeader } from "../packet";
 import { ChunkedArrayBufferList } from "./chunk";
-import { Stream } from "./stream";
+import { BiStream } from "../stream";
 
 /**
  * Write / Read loco packet to stream
  */
 export class LocoPacketCodec {
 
-    private _stream: Stream;
+    private _stream: BiStream;
 
-    constructor(stream: Stream) {
+    constructor(stream: BiStream) {
         this._stream = stream;
     }
 
@@ -46,7 +46,7 @@ export class LocoPacketCodec {
         packetArray.set(new Uint8Array(namebuffer), 6);
         packetArray.set(new Uint8Array(packet.data[1]), 22);
 
-        this._stream.write(packetBuffer);
+        return this._stream.write(packetBuffer);
     }
 
     iterate() {

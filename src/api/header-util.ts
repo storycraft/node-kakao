@@ -16,6 +16,14 @@ export function fillBaseHeader(header: RequestHeader, config: WebApiConfig) {
     header['Accept-Language'] = config.language;
 }
 
-export function getWinAgent(config: WebApiConfig) {
-    return `KT/${config.version} Wd/${config.osVersion} ${config.language}`;
+export function getUserAgent(config: WebApiConfig) {
+    let os = '';
+    if (config.agent === 'win32') {
+        os = `Wd/${config.osVersion}`;
+    } else {
+        // TODO
+        os = `Wd/${config.osVersion}`;
+    }
+
+    return `KT/${config.version} ${os} ${config.language}`;
 }

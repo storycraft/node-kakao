@@ -6,32 +6,18 @@
 
 import { Channel } from "../../channel/channel";
 import { TalkSession } from "../client";
-import { MediaComponent } from "../../media";
+import { MediaKeyComponent } from "../../media";
 import { DefaultLocoSession } from "../../network/request-session";
-import { Stream } from "../../network/stream";
+import { BiStream, FixedReadStream } from "../../stream";
 import { KnownDataStatusCode } from "../../request";
 import { AsyncCommandResult } from "../../request";
 
-/**
- * DownloadInfo contains size and async stream iterator for download.
- */
-export interface DownloadInfo {
-
-    size: number;
-    iterator: AsyncIterableIterator<ArrayBuffer>;
-
-}
-
 export class MediaDownloader {
 
-    private _done: boolean;
+    private _used: boolean;
 
-    constructor(private _stream: Stream, private _talkSession: TalkSession, private _channel: Channel, private _media: MediaComponent) {
-        this._done = false;
-    }
-
-    get done() {
-        return this._done;
+    constructor(private _stream: BiStream, private _talkSession: TalkSession, private _channel: Channel, private _media: MediaKeyComponent) {
+        this._used = false;
     }
 
     /**
@@ -39,7 +25,6 @@ export class MediaDownloader {
      */
     close() {
         this._stream.close();
-        this._done = true;
     }
 
     /**
@@ -47,8 +32,8 @@ export class MediaDownloader {
      *
      * @param offset data start offset to download (default = 0)
      */
-    async download(offset: number = 0): AsyncCommandResult<DownloadInfo> {
-        if (this._done) throw new Error('Cannot download using finished downloader');
+    async download(offset: number = 0): AsyncCommandResult<FixedReadStream> {
+        if (this._used) throw new Error('Download stream already created');
 
         const session = new DefaultLocoSession(this._stream);
         const clientConfig = this._talkSession.configuration;
@@ -68,6 +53,7 @@ export class MediaDownloader {
 
         const next = await session.listen().next();
         if (next.done) return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
+        this._used = true;
 
         const { method, data } = next.value;
         if (method !== 'DOWN' || data.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: data.status };
@@ -77,10 +63,7 @@ export class MediaDownloader {
         return {
             status: KnownDataStatusCode.SUCCESS,
             success: true,
-            result: {
-                size,
-                iterator: this.createDownloadIter(size)
-            }
+            result: new FixedReadStream(this._stream, size)
         };
     }
 
@@ -90,8 +73,10 @@ export class MediaDownloader {
      *
      * @param offset data start offset to download (default = 0)
      */
-    async downloadThumb(offset: number = 0): AsyncCommandResult<DownloadInfo> {
-        if (this._done) throw new Error('Cannot download using finished downloader');
+    async downloadThumb(offset: number = 0): AsyncCommandResult<FixedReadStream> {
+        if (this._used) throw new Error('Download stream already created');
+        if (this._stream.ended) throw new Error('Cannot download using finished downloader');
+        this._used = true;
 
         const session = new DefaultLocoSession(this._stream);
         const clientConfig = this._talkSession.configuration;
@@ -124,44 +109,7 @@ export class MediaDownloader {
         return {
             status: KnownDataStatusCode.SUCCESS,
             success: true,
-            result: {
-                size,
-                iterator: this.createDownloadIter(size)
-            }
-        };
-    }
-
-    private createDownloadIter(size: number): AsyncIterableIterator<ArrayBuffer> {
-        let downloaded = 0;
-
-        const iterable = this._stream.iterate();
-        const instance = this;
-
-        return {
-            [Symbol.asyncIterator]() {
-                return this;
-            },
-
-            async next(): Promise<IteratorResult<ArrayBuffer>> {
-                if (downloaded >= size) {
-                    instance._done = true;
-                    return { done: true, value: null };
-                }
-
-                const next = await iterable.next();
-                if (next.done) {
-                    instance._done = true;
-                    return next;
-                }
-
-                downloaded += next.value.byteLength;
-
-                if (downloaded > size) {
-                    return { done: false, value: next.value.slice(0, downloaded - size) }
-                }
-
-                return { done: false, value: next.value };
-            }
+            result: new FixedReadStream(this._stream, size)
         };
     }
 

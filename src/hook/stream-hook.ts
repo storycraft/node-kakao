@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Stream } from "../network/stream";
+import { BiStream } from "../stream";
 
 export interface StreamHook {
 
@@ -24,9 +24,9 @@ export interface StreamHook {
 
 }
 
-export class HookedStream implements Stream {
+export class HookedStream implements BiStream {
 
-    constructor(private _stream: Stream, public hook: Partial<StreamHook> = {}) {
+    constructor(private _stream: BiStream, public hook: Partial<StreamHook> = {}) {
 
     }
 
@@ -34,10 +34,10 @@ export class HookedStream implements Stream {
         return this._stream.ended;
     }
 
-    write(data: ArrayBuffer): void {
+    write(data: ArrayBuffer) {
         if (this.hook.onWrite) this.hook.onWrite(data);
 
-        this._stream.write(data);
+        return this._stream.write(data);
     }
 
     iterate() {

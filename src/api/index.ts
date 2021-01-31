@@ -5,10 +5,16 @@
  */
 
 export * as struct from "./struct";
-export * from "./auth-client";
+export * from "./auth-api-client";
+export * from "./service-api-client";
+export * as webApiUtil from "./web-api-util";
+export * as headerUtil from "./header-util";
 
+import { WebApiConfig } from "../config";
+import { OAuthCredential } from "../oauth";
 import { DefaultRes } from "../request";
 import { isBrowser, isDeno, isNode } from "../util/platform";
+import { fillBaseHeader, getUserAgent } from "./header-util";
 
 export type RequestHeader = Record<string, any>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
@@ -47,6 +53,45 @@ export interface ApiClient extends HeaderDecorator {
 }
 
 /**
+ * Api client with credential
+ */
+export class SessionApiClient implements ApiClient {
+
+    constructor(private _client: ApiClient, private _credential: OAuthCredential, public config: WebApiConfig) {
+        
+    }
+    
+    get url() {
+        return this._client.url;
+    }
+
+    private createSessionHeader(headers?: Record<string, any>): Record<string, any> {
+        const credentialHeader = headers ? { ...headers } : {};
+        this.fillHeader(credentialHeader);
+
+        fillBaseHeader(credentialHeader, this.config);
+        
+        const userAgent = getUserAgent(this.config);
+        credentialHeader['User-Agent'] = userAgent;
+
+        return credentialHeader;
+    }
+
+    request(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+        return this._client.request(method, path, form, this.createSessionHeader(headers));
+    }
+
+    requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+        return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
+    }
+
+    fillHeader(header: Record<string, any>): void {
+        header['Authorization'] = `${this._credential.accessToken}-${this._credential.deviceUUID}`;
+    }
+
+}
+
+/**
  * Decorate common request headers
  */
 export interface HeaderDecorator {
@@ -54,6 +99,8 @@ export interface HeaderDecorator {
     fillHeader(header: RequestHeader): void;
 
 }
+
+
 
 /**
  * Create api client by platform
@@ -74,3 +121,6 @@ export async function createApiClient(scheme: string, host: string, decorator?: 
     }
 }
 
+export async function createSessionApiClient(credential: OAuthCredential, config: WebApiConfig, scheme: string, host: string, decorator?: HeaderDecorator): Promise<SessionApiClient> {
+    return new SessionApiClient(await createApiClient(scheme, host, decorator), credential, config);
+}

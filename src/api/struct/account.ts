@@ -1,8 +1,8 @@
-import { Long } from "bson";
-import { NameMapping, ObjectMapper, ConvertMap } from "json-proxy-mapper";
-import { WebApiStruct, WebApiStatusCode } from "../../web-api-struct";
-import { JsonUtil } from "../../../../util/json-util";
-import { StructBase } from "../../struct-base";
+/*
+ * Created on Sun Jan 31 2021
+ *
+ * Copyright (c) storycraft. Licensed under the MIT Licence.
+ */
 
 /*
  * Created on Sun Nov 03 2019
@@ -10,7 +10,7 @@ import { StructBase } from "../../struct-base";
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface OpenChatSettingsStruct extends StructBase {
+export interface OpenChatSettingsStruct {
 
     chatMemberMaxJoin: number;
     chatRoomMaxJoin: number;
@@ -22,7 +22,7 @@ export interface OpenChatSettingsStruct extends StructBase {
 
 }
 
-export interface MoreSettingsStruct extends WebApiStruct {
+export interface MoreSettingsStruct {
 
     since: number;
 
@@ -78,7 +78,7 @@ export interface MoreSettingsStruct extends WebApiStruct {
 
 }
 
-export interface LessSettingsStruct extends WebApiStruct {
+export interface LessSettingsStruct {
 
     kakaoAutoLoginDomain: string[];
     daumSsoDomain: string[];
@@ -91,5 +91,12 @@ export interface LessSettingsStruct extends WebApiStruct {
     profileActions: boolean;
     postExpirationSetting: { flagOn: boolean, newPostTerm: number };
     kakaoAlertIds: number[];
+
+}
+
+export interface LoginTokenStruct {
+
+    token: string;
+    expires: number; // usage or days?
 
 }

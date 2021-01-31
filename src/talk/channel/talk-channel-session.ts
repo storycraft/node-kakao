@@ -11,7 +11,7 @@ import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from "../
 import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../../chat/chat";
 import { ChatType, KnownChatType } from "../../chat/chat-type";
 import { TalkSession } from "../client";
-import { MediaComponent } from "../../media";
+import { MediaKeyComponent } from "../../media";
 import { DefaultReq } from "../../request";
 import { ChatInfoRes } from "../../packet/chat/chat-info";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
@@ -37,6 +37,8 @@ import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
+import { MediaUploader } from "../media";
+import { ShipRes } from "../../packet";
 
 /**
  * Default ChannelSession implementation
@@ -288,7 +290,7 @@ export class TalkChannelSession implements ChannelSession {
         };
     }
 
-    async createMediaDownloader(media: MediaComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
+    async downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
         const res = await this._session.request<GetTrailerRes>(
             'GETTRAILER',
             {

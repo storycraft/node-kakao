@@ -4,76 +4,35 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Stream } from "../stream";
+import { BiStream } from "../../stream";
 import * as net from 'net';
 import * as tls from 'tls';
+import * as util from "util";
 import { NetSocketOptions } from ".";
 
-export class NodeSocket implements Stream {
+export class NodeSocket implements BiStream {
 
     private _socket: net.Socket;
-
     private _ended: boolean;
-    private _err: any | null;
 
     private constructor(socket: net.Socket) {
         this._socket = socket;
         this._ended = false;
-        this._err = null;
-
-        this._socket.on('error', (err) => this.onError(err));
-        this._socket.on('end', () => this.onEnd());
     }
 
     iterate() {
-        const instance = this;
+        const iterator = this._socket[Symbol.asyncIterator]();
 
         return {
             [Symbol.asyncIterator]() {
                 return this;
             },
 
-            next(): Promise<IteratorResult<ArrayBuffer>> {
-                return new Promise((resolve, reject) => {
-                    if (instance._err) {
-                        reject(instance._err);
-                        return;
-                    }
+            next: async () => {
+                const next = await iterator.next();
+                if (next.done) this._ended = true;
 
-                    const errHandler = (err: any) => {
-                        reject(err);
-                    };
-
-                    const endHandler = () => {
-                        resolve({ done: true, value: null });
-                    };
-
-                    instance._socket.once('end', endHandler);
-                    instance._socket.once('close', endHandler);
-                    instance._socket.once('error', errHandler);
-
-                    const read = instance._socket.read();
-                    if (read) {
-                        instance._socket.off('end', endHandler);
-                        instance._socket.off('close', endHandler);
-                        instance._socket.off('error', errHandler);
-
-                        resolve({ done: false, value: read });
-                        return;
-                    }
-
-                    instance._socket.once('readable', () => {
-                        const read = instance._socket.read();
-
-                        instance._socket.off('end', endHandler);
-                        instance._socket.off('close', endHandler);
-                        instance._socket.off('error', errHandler);
-
-                        if (!read) return;
-
-                        resolve({ done: false, value: read });
-                    });
-                });
+                return next;
             }
         };
     }
@@ -82,10 +41,10 @@ export class NodeSocket implements Stream {
         return this._ended;
     }
 
-    write(data: ArrayBuffer): void {
+    write(data: ArrayBuffer) {
         if (this._ended) throw new Error('Tried to send data from closed socket');
 
-        this._socket.write(new Uint8Array(data));
+        return util.promisify(this._socket.write.bind(this._socket))(new Uint8Array(data));
     }
 
     close(): void {
@@ -94,17 +53,8 @@ export class NodeSocket implements Stream {
         this._ended = true;
         this._socket.end();
     }
-
-    private onError(err: any) {
-        this._ended = true;
-        this._err = err;
-    }
-
-    private onEnd() {
-        this._ended = true;
-    }
-
-    static connect(option: NetSocketOptions): Promise<Stream> {
+    
+    static connect(option: NetSocketOptions): Promise<BiStream> {
         return new Promise<NodeSocket>((resolve, reject) => {
             const onErr = (err: any) => {
                 reject(err);
@@ -120,7 +70,7 @@ export class NodeSocket implements Stream {
         });
     }
 
-    static connectTls(option: NetSocketOptions): Promise<Stream> {
+    static connectTls(option: NetSocketOptions): Promise<BiStream> {
         return new Promise<NodeSocket>((resolve, reject) => {
             const onErr = (err: any) => {
                 reject(err);

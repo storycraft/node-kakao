@@ -7,7 +7,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
 import commonjs from '@rollup/plugin-commonjs';
-import dts from "rollup-plugin-dts";
+import typescript from 'rollup-plugin-typescript2';
 
 export default () => {
 
@@ -17,18 +17,28 @@ export default () => {
     }),
     nodePolyfills(),
     nodeResolve(),
-    
+    typescript({
+      // bug fix 
+      rollupCommonJSResolveHack: true,
+      tsconfigOverride: {
+        compilerOptions: {
+          module: 'ESNext',
+          removeComments: true,
+        }
+      }
+    })
   ];
 
   return [
     {
-      input: './dist/index.js',
+      input: 'src/index.ts',
       external: [
         // Excluded
         'axios',
         'form-data',
         'net',
         'tls',
+        'util',
     
         // Substituted
         'bson',
@@ -47,11 +57,6 @@ export default () => {
         },
       ],
       plugins
-    },
-    {
-      input: "./dist/index.d.ts",
-      output: [{ file: "dist_esm/index.d.ts", format: "es" }],
-      plugins: [dts()],
     }
   ];
 }

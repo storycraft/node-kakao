@@ -11,5 +11,4 @@ export * from "./loco-secure-layer";
 export * from "./packet-assembler";
 export * from "./request-session";
 export * from "./socket";
-export * from "./stream";
 export * from "./util";

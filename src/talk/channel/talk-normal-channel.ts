@@ -21,7 +21,7 @@ import { Long } from "bson";
 import { NormalMemberStruct } from "../../packet/struct/user";
 import { TalkSession } from "../client";
 import { structToChannelUserInfo } from "../../packet/struct/wrap/user";
-import { MediaComponent } from "../../media";
+import { MediaKeyComponent } from "../../media";
 import { ChatType } from "../../chat/chat-type";
 import { ChannelEvents } from "../event/events";
 import { TalkChannel } from ".";
@@ -262,8 +262,8 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
         return infoRes;
     }
 
-    createMediaDownloader(media: MediaComponent, type: ChatType) {
-        return this._channelSession.createMediaDownloader(media, type);
+    downloadMedia(media: MediaKeyComponent, type: ChatType) {
+        return this._channelSession.downloadMedia(media, type);
     }
 
     async updateAll(): AsyncCommandResult {
