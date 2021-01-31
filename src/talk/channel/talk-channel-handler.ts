@@ -26,6 +26,7 @@ import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo } from "../../user/channel-user-info";
 import { Managed } from "../managed";
 import { TalkChannel } from ".";
+import { TalkChatData } from "../chat";
 
 /**
  * Update channel info from handler
@@ -115,7 +116,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 this._callEvent(
                     parentCtx,
                     'chat',
-                    chatLog,
+                    new TalkChatData(chatLog),
                     this._channel
                 );
 
@@ -135,7 +136,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
                 this._callEvent(
                     parentCtx,
                     'chat',
-                    chatLog,
+                    new TalkChatData(chatLog),
                     this._channel
                 );
 

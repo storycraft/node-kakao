@@ -22,7 +22,7 @@ export * from "./relay";
 export * from "./request";
 export * as stream from "./stream";
 export * as talk from "./talk";
-export { TalkChannel, TalkOpenChannel, TalkNormalChannel } from "./talk";
+export { TalkChannel, TalkOpenChannel, TalkNormalChannel, TalkChatData as TalkChat } from "./talk";
 export * from "./user";
 export * as util from "./util";
 export * from "./voip";

@@ -5,7 +5,7 @@
  */
 
 /*
- * Follwing this example will make automatic response at text "안녕하세요".
+ * Following this example will make automatic response at text "안녕하세요".
  */
 
 import { AuthApiClient, TalkClient } from "node-kakao";

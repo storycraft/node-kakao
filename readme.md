@@ -1,10 +1,9 @@
 [![npm version](https://badge.fury.io/js/node-kakao.svg)](https://www.npmjs.com/package/node-kakao)
 [![CodeFactor](https://www.codefactor.io/repository/github/storycraft/node-kakao/badge)](https://www.codefactor.io/repository/github/storycraft/node-kakao)
-
 # NodeKakao - Loco protocol compatible library
 
 ```txt
-import * as NodeKakao from "";
+import * as NodeKakao from "https://cdn.skypack.dev/node-kakao?dts";
 ```
 
 ```txt

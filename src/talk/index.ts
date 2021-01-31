@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from "./chat";
 export * from "./channel";
 export * from "./client";
 export * from "./event";

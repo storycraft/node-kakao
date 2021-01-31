@@ -15,12 +15,13 @@ import { ChannelMetaType } from "../../packet/struct/channel";
 import { RelayEventType } from "../../relay";
 import { ChannelUserInfo, OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkChannel } from "../channel";
+import { TalkChatData } from "../chat";
 import { TalkOpenChannel } from "../openlink/talk-open-channel";
 
 declare interface ChatEvent {
 
     // 챗을 받을시 호출
-    'chat': (chat: Readonly<Chatlog>, channel: TalkChannel) => void;
+    'chat': (data: TalkChatData, channel: TalkChannel) => void;
 
     // 유저가 챗 읽었을시 호출
     'chat_read': (chat: Readonly<ChatLogged>, channel: TalkChannel, reader?: ChannelUserInfo) => void;

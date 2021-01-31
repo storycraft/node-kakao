@@ -7,7 +7,6 @@
 import { Long } from "bson";
 import { ChannelUser } from "../user/channel-user";
 import { ChatType } from "./chat-type";
-import { KnownChatFeeds } from "./feed/chat-feed";
 
 /**
  * Chat interface
@@ -63,7 +62,7 @@ export interface ChatLogLinked extends ChatLogged {
 
 }
 
-export interface ChatWritten {
+export interface ChatWritten extends Chat {
 
     /**
      * Chat sender
@@ -82,7 +81,7 @@ export interface ChatWritten {
 
 }
 
-export interface Chatlog extends ChatLogLinked, Chat, ChatWritten {
+export interface Chatlog extends ChatLogLinked, ChatWritten {
 
 
 }
