@@ -28,7 +28,7 @@ import { structToNormalChannelInfo } from "../../packet/struct/wrap/channel";
 import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToChannelUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult, CommandResult } from "../../request";
-import { ChannelUser, OpenChannelUser } from "../../user/channel-user";
+import { ChannelUser } from "../../user/channel-user";
 import { NormalChannelUserInfo } from "../../user/channel-user-info";
 import { JsonUtil } from "../../util/json-util";
 import { MediaDownloader } from "../media/media-downloader";
@@ -37,8 +37,6 @@ import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
-import { MediaUploader } from "../media";
-import { ShipRes } from "../../packet";
 
 /**
  * Default ChannelSession implementation

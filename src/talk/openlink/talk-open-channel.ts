@@ -32,10 +32,11 @@ import { TalkOpenChannelSession } from "./talk-open-channel-session";
 import { OpenChannelEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
-import { OpenLinkProfiles, OpenLinkChannelUserInfo } from "../../openlink";
+import { OpenLinkProfiles } from "../../openlink";
 import { JsonUtil } from "../../util";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from "../../channel/meta";
 import { TypedEmitter } from "../../event";
+import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 
@@ -245,7 +246,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
-    async chatON() {
+    async chatON(): AsyncCommandResult<ChatOnRoomRes> {
         const res = await this._channelSession.chatON();
 
         if (res.success) {

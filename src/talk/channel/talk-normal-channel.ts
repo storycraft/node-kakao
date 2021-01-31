@@ -27,6 +27,7 @@ import { TalkChannel } from ".";
 import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 import { JsonUtil } from "../../util";
 import { TypedEmitter } from "../../event";
+import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
 
@@ -215,7 +216,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
-    async chatON() {
+    async chatON(): AsyncCommandResult<ChatOnRoomRes> {
         const res = await this._channelSession.chatON();
 
         if (res.success) {

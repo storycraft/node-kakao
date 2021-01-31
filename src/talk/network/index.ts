@@ -12,7 +12,8 @@ import { getBookingData, getCheckinData } from "../../network/util/loco-entrance
 import { AsyncCommandResult } from "../../request";
 import * as NetSocket from "../../network/socket";
 import { KnownDataStatusCode } from "../../request";
-import { CheckinRes, GetConfRes } from "../../packet";
+import { GetConfRes } from "../../packet/booking";
+import { CheckinRes } from "../../packet/checkin";
 
 /**
  * Create loco stream by performing booking and checkin.
