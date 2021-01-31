@@ -14,7 +14,6 @@ import { ClientConfig, DefaultConfiguration } from "../../config";
 import { ClientSession, LoginResult } from "../../client/client-session";
 import { TalkSessionFactory } from "../network";
 import { TalkClientSession } from "../client/talk-client-session";
-import { TypedEmitter } from 'tiny-typed-emitter';
 import { KickoutRes } from "../../packet/chat/kickout";
 import { EventContext } from "../../event/event-context";
 import { ClientStatus } from "../../client-status";
@@ -23,6 +22,7 @@ import { TalkChannelList } from "../channel/talk-channel-list";
 import { ClientEvents } from "../event/events";
 import { Long } from "bson";
 import { TalkBlockList } from "../block/talk-block-list";
+import { TypedEmitter } from "../../event";
 
 export * from "./talk-client-session";
 

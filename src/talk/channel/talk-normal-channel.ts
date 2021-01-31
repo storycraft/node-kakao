@@ -13,7 +13,6 @@ import { Chat, ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request";
 import { TalkChannelSession } from "./talk-channel-session";
 import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Managed } from "../managed";
 import { EventContext } from "../../event/event-context";
 import { TalkChannelHandler } from "./talk-channel-handler";
@@ -25,8 +24,9 @@ import { MediaKeyComponent } from "../../media";
 import { ChatType } from "../../chat/chat-type";
 import { ChannelEvents } from "../event/events";
 import { TalkChannel } from ".";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
+import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 import { JsonUtil } from "../../util";
+import { TypedEmitter } from "../../event";
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
 

@@ -5,7 +5,6 @@
  */
 
 import { Long } from "bson";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta } from "../../channel/channel-info";
 import { Chat, ChatLogged, ChatLoggedType } from "../../chat/chat";
@@ -36,6 +35,7 @@ import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
 import { OpenLinkProfiles, OpenLinkChannelUserInfo } from "../../openlink";
 import { JsonUtil } from "../../util";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from "../../channel/meta";
+import { TypedEmitter } from "../../event";
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 

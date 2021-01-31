@@ -4,9 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { TypedEmitter } from "tiny-typed-emitter";
-import { EventContext } from "../../event";
-import { AsyncCommandResult } from "../../request";
+import { EventContext, TypedEmitter } from "../../event";
 import { DefaultRes } from "../../request";
 import { TalkSession } from "../client";
 import { BlockListEvents } from "../event";

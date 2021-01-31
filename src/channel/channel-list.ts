@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { TypedEmitter } from "../event/event-context";
+import { TypedEmitter } from "../event";
 import { ChannelListEvents } from "../talk/event/events";
 import { Channel } from "./channel";
 

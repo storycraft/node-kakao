@@ -11,7 +11,7 @@ export * from './client';
 export * from "./client-status";
 export * from "./config";
 export * as crypto from "./crypto";
-export * from "./event";
+export * as event from "./event";
 export * from "./hook";
 export * from "./media";
 export * as network from "./network";

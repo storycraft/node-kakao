@@ -5,7 +5,6 @@
  */
 
 import { Long } from "bson";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
 import { ChannelList } from "../../channel/channel-list";
 import { NormalChannelManageSession, ChannelTemplate } from "../../channel/channel-session";
@@ -19,6 +18,7 @@ import { Managed } from "../managed";
 import { TalkNormalChannel } from "./talk-normal-channel";
 import { TalkChannelListHandler } from "./talk-channel-handler";
 import { TalkChannelManageSession } from "./talk-channel-session";
+import { TypedEmitter } from "../../event";
 
 /**
  * Manage session channels

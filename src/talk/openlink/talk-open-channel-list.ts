@@ -5,7 +5,6 @@
  */
 
 import { Long } from "bson";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Channel } from "../../channel/channel";
 import { ChannelList } from "../../channel/channel-list";
 import { TalkSession } from "../client";
@@ -20,6 +19,7 @@ import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelListHandler } from "./talk-open-channel-handler";
 import { OpenChannelManageSession, OpenLinkComponent, OpenLinkProfiles } from "../../openlink";
 import { TalkOpenChannelManageSession } from "./talk-open-channel-session";
+import { TypedEmitter } from "../../event";
 
 export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> implements Managed<OpenChannelListEvents>, OpenChannelManageSession, ChannelList<TalkOpenChannel> {
 

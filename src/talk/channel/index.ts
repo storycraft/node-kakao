@@ -17,7 +17,7 @@ import { ChannelUser } from "../../user/channel-user";
 import { ChannelUserInfo } from "../../user/channel-user-info";
 import { ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request";
-import { TypedEmitter } from "tiny-typed-emitter";
+import { TypedEmitter } from "../../event";
 import { ChannelEvents } from "../event/events";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 

@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ListenerSignature } from "tiny-typed-emitter";
+import { TypedListeners } from "../event";
 import { EventContext } from "../event/event-context";
 import { DefaultRes } from "../request";
 
-export interface Managed<T extends ListenerSignature<T>> {
+export interface Managed<T extends TypedListeners<T>> {
 
     /**
      * Called when broadcast packets are recevied
