@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { sha512 } from "hash-wasm";
-import { ApiClient, createApiClient, RequestForm, RequestHeader } from ".";
+import { ApiClient, createApiClient, RequestForm, RequestHeader } from "./web-api-client";
 import { DefaultConfiguration, OAuthLoginConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";

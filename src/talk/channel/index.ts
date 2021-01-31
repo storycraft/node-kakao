@@ -5,7 +5,6 @@
  */
 
 export * from "./talk-channel-handler";
-export * from "./talk-channel-list";
 export * from "./talk-channel-session";
 export * from "./talk-normal-channel";
 export * from "./talk-normal-channel-list";
@@ -18,8 +17,8 @@ import { ChannelUserInfo } from "../../user/channel-user-info";
 import { ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request";
 import { TypedEmitter } from "../../event";
-import { ChannelEvents } from "../event/events";
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
+import { ChannelEvents } from "../event";
+import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 
 /**
  * TalkChannel interface includes managed methods and other methods that make it easier to use

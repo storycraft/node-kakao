@@ -29,7 +29,7 @@ import { TalkChannel } from "../channel";
 import { TalkChannelHandler, ChannelInfoUpdater } from "../channel/talk-channel-handler";
 import { TalkChannelSession } from "../channel/talk-channel-session";
 import { TalkOpenChannelSession } from "./talk-open-channel-session";
-import { OpenChannelEvents } from "../event/events";
+import { OpenChannelEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenChannelHandler } from "./talk-open-channel-handler";
 import { OpenLinkProfiles, OpenLinkChannelUserInfo } from "../../openlink";

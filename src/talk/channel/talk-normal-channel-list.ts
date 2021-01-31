@@ -13,7 +13,7 @@ import { EventContext } from "../../event/event-context";
 import { DefaultRes } from "../../request";
 import { KnownDataStatusCode } from "../../request";
 import { AsyncCommandResult } from "../../request";
-import { NormalChannelListEvents } from "../event/events";
+import { NormalChannelListEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkNormalChannel } from "./talk-normal-channel";
 import { TalkChannelListHandler } from "./talk-channel-handler";

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, ApiClient, FileRequestData } from ".";
+import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, FileRequestData, ApiClient } from "./web-api-client";
 import { DefaultRes } from "../request";
 import { JsonUtil } from "../util";
 

@@ -6,7 +6,7 @@
 
 import { AxiosRequestConfig } from "axios";
 import Axios from "axios";
-import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, ApiClient, FileRequestData } from ".";
+import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, FileRequestData, ApiClient } from "./web-api-client";
 import { DefaultRes } from "../request";
 import { JsonUtil } from "../util";
 import FormData from "form-data";

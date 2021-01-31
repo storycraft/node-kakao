@@ -6,7 +6,7 @@
 
 import { Long } from "bson";
 import { TypedEmitter } from "../event";
-import { ChannelListEvents } from "../talk/event/events";
+import { ChannelListEvents } from "../talk/event";
 import { Channel } from "./channel";
 
 /**

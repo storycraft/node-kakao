@@ -13,7 +13,7 @@ import { OpenLinkKickedUser } from "../../openlink/open-link-user-info";
 import { DefaultRes } from "../../request";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { AsyncCommandResult } from "../../request";
-import { OpenLinkEvents } from "../event/events";
+import { OpenLinkEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 import { TypedEmitter } from "../../event";

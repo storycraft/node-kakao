@@ -22,7 +22,7 @@ import { TalkSession } from "../client";
 import { structToChannelUserInfo } from "../../packet/struct/wrap/user";
 import { MediaKeyComponent } from "../../media";
 import { ChatType } from "../../chat/chat-type";
-import { ChannelEvents } from "../event/events";
+import { ChannelEvents } from "../event";
 import { TalkChannel } from ".";
 import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
 import { JsonUtil } from "../../util";

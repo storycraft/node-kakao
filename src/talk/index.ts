@@ -6,8 +6,9 @@
 
 export * from "./chat";
 export * from "./channel";
+export * from "./talk-channel-list";
 export * from "./client";
-export * from "./event";
+export * as event from "./event";
 export * from "./managed";
 export * from "./media";
 export * from "./network";

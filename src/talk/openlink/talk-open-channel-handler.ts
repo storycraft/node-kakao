@@ -22,7 +22,7 @@ import { structToChatlog } from "../../packet/struct/wrap/chat";
 import { structToOpenLinkChannelUserInfo } from "../../packet/struct/wrap/user";
 import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { ChannelInfoUpdater, ChannelListUpdater } from "../channel/talk-channel-handler";
-import { OpenChannelEvents, OpenChannelListEvents } from "../event/events";
+import { OpenChannelEvents, OpenChannelListEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelList } from "./talk-open-channel-list";

@@ -5,19 +5,19 @@
  */
 
 import { Long } from "bson";
-import { Channel } from "../../channel/channel";
-import { ChannelList } from "../../channel/channel-list";
-import { TalkSession } from "../client";
-import { EventContext } from "../../event/event-context";
-import { OpenChannel } from "../../openlink/open-channel";
-import { DefaultRes } from "../../request";
-import { ChainedIterator } from "../../util/chained-iterator";
-import { OpenChannelListEvents, TalkChannelListEvents } from "../event/events";
-import { Managed } from "../managed";
-import { TalkOpenChannelList } from "../openlink/talk-open-channel-list";
-import { TalkChannel } from ".";
-import { TalkNormalChannelList } from "./talk-normal-channel-list";
-import { TypedEmitter } from "../../event";
+import { Channel } from "../channel/channel";
+import { ChannelList } from "../channel/channel-list";
+import { TalkSession } from "./client";
+import { EventContext } from "../event/event-context";
+import { OpenChannel } from "../openlink/open-channel";
+import { DefaultRes } from "../request";
+import { ChainedIterator } from "../util/chained-iterator";
+import { OpenChannelListEvents, TalkChannelListEvents } from "./event";
+import { Managed } from "./managed";
+import { TalkOpenChannelList } from "./openlink/talk-open-channel-list";
+import { TalkChannel } from "./channel";
+import { TalkNormalChannelList } from "./channel/talk-normal-channel-list";
+import { TypedEmitter } from "../event";
 
 /**
  * Manage normal channels and open channels

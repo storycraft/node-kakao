@@ -5,7 +5,7 @@
  */
 
 import { Long } from "bson";
-import { createSessionApiClient, SessionApiClient } from ".";
+import { createSessionApiClient, SessionApiClient } from "./web-api-client";
 import { DefaultConfiguration, WebApiConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../request";

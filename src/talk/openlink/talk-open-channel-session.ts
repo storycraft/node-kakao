@@ -25,10 +25,8 @@ import { OpenChannelUserInfo } from "../../user/channel-user-info";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 import { OpenChannelUserPerm } from "../../openlink/open-link-type";
 import { RelayEventType } from "../../relay";
-import { Long } from "bson";
 import { Channel } from "../../channel";
 import { TalkChannelManageSession } from "../channel";
-import { stringify } from "querystring";
 import { JoinLinkRes } from "../../packet/chat/join-link";
 
 /**

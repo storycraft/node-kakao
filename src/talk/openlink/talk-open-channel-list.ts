@@ -13,7 +13,7 @@ import { OpenChannel } from "../../openlink/open-channel";
 import { DefaultRes } from "../../request";
 import { KnownDataStatusCode, AsyncCommandResult } from "../../request";
 import { ChannelListUpdater, TalkChannelListHandler } from "../channel/talk-channel-handler";
-import { OpenChannelListEvents } from "../event/events";
+import { OpenChannelListEvents } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenChannel } from "./talk-open-channel";
 import { TalkOpenChannelListHandler } from "./talk-open-channel-handler";
