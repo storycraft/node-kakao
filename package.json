@@ -1,6 +1,6 @@
 {
   "name": "node-kakao",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "description": "Loco protocol compatible library",
   "main": "./dist/index.js",
   "exports": {

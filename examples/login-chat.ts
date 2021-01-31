@@ -19,8 +19,8 @@ const PASSWORD = process.env['accountPwd'];
 
 const CLIENT = new TalkClient();
 
-CLIENT.on('chat', (chat, channel) => {
-    if (chat.text === '안녕하세요') {
+CLIENT.on('chat', (data, channel) => {
+    if (data.chat.text === '안녕하세요') {
         channel.sendChat('안녕하세요');
     }
 });
