@@ -95,42 +95,42 @@ export interface TalkChannel extends Channel, ChannelSession, TypedEmitter<Chann
     /**
      * Set channel notice
      *
-     * @param notice 
+     * @param notice
      */
     setNoticeMeta(notice: string): AsyncCommandResult;
 
     /**
      * Set channel profile
      *
-     * @param content 
+     * @param content
      */
     setProfileMeta(content: ProfileMetaContent): AsyncCommandResult;
 
     /**
      * Set channel tv meta
      *
-     * @param content 
+     * @param content
      */
     setTvMeta(content: TvMetaContent): AsyncCommandResult;
 
     /**
      * Set channel tv live meta
      *
-     * @param content 
+     * @param content
      */
     setTvLiveMeta(content: TvLiveMetaContent): AsyncCommandResult;
 
     /**
      * Set live talk count meta
      *
-     * @param content 
+     * @param content
      */
     setLiveTalkCountMeta(content: LiveTalkCountMetaContent): AsyncCommandResult;
 
     /**
      * Set group profile meta
      *
-     * @param content 
+     * @param content
      */
     setGroupMeta(content: GroupMetaContent): AsyncCommandResult;
 

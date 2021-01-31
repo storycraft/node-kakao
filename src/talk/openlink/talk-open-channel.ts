@@ -200,7 +200,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
      * Set privileged settings.
      * Need to be owner of the channel to set.
      *
-     * @param content 
+     * @param content
      */
     async setPrivilegeMeta(content: PrivilegeMetaContent) {
         return this.setMeta(KnownChannelMetaType.PRIVILEGE, JsonUtil.stringifyLoseless(content));
@@ -229,7 +229,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
     /**
      * Set bot meta
      *
-     * @param content 
+     * @param content
      */
     async setBotMeta(content: BotMetaContent) {
         return this.setMeta(KnownChannelMetaType.BOT, JsonUtil.stringifyLoseless(content));

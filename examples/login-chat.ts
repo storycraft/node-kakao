@@ -34,12 +34,12 @@ async function main() {
         // This option force login even other devices are logon
         forced: true
     });
-    if (!loginRes.success) throw `Web login failed with status: ${loginRes.status}`;
+    if (!loginRes.success) throw new Error(`Web login failed with status: ${loginRes.status}`);
     
     console.log(`Received access token: ${loginRes.result.accessToken}`);
     
     const res = await CLIENT.login(loginRes.result);
-    if (!res.success) throw `Login failed with status: ${res.status}`;
+    if (!res.success) throw new Error(`Login failed with status: ${res.status}`);
     
     console.log('Login success');
 }
