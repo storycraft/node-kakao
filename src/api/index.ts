@@ -14,7 +14,7 @@ import { WebApiConfig } from "../config";
 import { OAuthCredential } from "../oauth";
 import { DefaultRes } from "../request";
 import { isBrowser, isDeno, isNode } from "../util/platform";
-import { fillBaseHeader, getUserAgent } from "./header-util";
+import { fillAHeader, fillBaseHeader, getUserAgent } from "./header-util";
 
 export type RequestHeader = Record<string, any>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
@@ -70,6 +70,7 @@ export class SessionApiClient implements ApiClient {
         this.fillHeader(credentialHeader);
 
         fillBaseHeader(credentialHeader, this.config);
+        fillAHeader(credentialHeader, this.config);
         
         const userAgent = getUserAgent(this.config);
         credentialHeader['User-Agent'] = userAgent;
