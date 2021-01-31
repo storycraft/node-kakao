@@ -30,7 +30,7 @@ export class ServiceApiClient {
 
     /**
      * Request more settings. Official client sends this after login
-     * 
+     *
      * @param since Unknown
      */
     async requestMoreSettings(since: number = 0): AsyncCommandResult<MoreSettingsStruct> {
@@ -76,7 +76,7 @@ export class ServiceApiClient {
     /**
      * Create session url. Redirect to redirectURL with session info included.
      *
-     * @param redirectURL 
+     * @param redirectURL
      */
     async requestSessionURL(redirectURL: string): AsyncCommandResult<string> {
         let res = await this.requestWebLoginToken();
