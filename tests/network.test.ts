@@ -13,5 +13,6 @@ describe('Network', () => {
 
         const res = await factory.createSession(DefaultConfiguration);
         if (!res.success) throw new Error(`Session creation failed with status: ${res.status}`);
+        res.result.close();
     });
 });
