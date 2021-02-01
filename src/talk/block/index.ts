@@ -40,7 +40,7 @@ export class TalkBlockSession {
      * Block plus user
      *
      * @param plusUser
-     * @param type 
+     * @param type
      */
     async blockPlusUser(plusUser: ChannelUser, type: TalkBlockType = TalkBlockType.BLOCK): AsyncCommandResult {
         const res = await this._session.request(
