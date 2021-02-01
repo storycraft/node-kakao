@@ -21,7 +21,6 @@ import { OpenLinkService } from "../openlink/open-link-service";
 import { TalkChannelList } from "../talk-channel-list";
 import { ClientEvents } from "../event";
 import { Long } from "bson";
-import { TalkBlockList } from "../block/talk-block-list";
 import { TypedEmitter } from "../../event";
 
 export * from "./talk-client-session";
@@ -59,8 +58,6 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private _openLink: OpenLinkService;
 
-    private _blockList: TalkBlockList;
-
     constructor(config: Partial<ClientConfig> = {}, private _sessionFactory: SessionFactory = new TalkSessionFactory()) {
         super();
 
@@ -75,8 +72,6 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         this._cilentUser = { userId: Long.ZERO };
 
         this._openLink = new OpenLinkService(this.createSessionProxy());
-
-        this._blockList = new TalkBlockList(this.createSessionProxy());
     }
 
     get configuration() {
@@ -103,12 +98,6 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         if (!this.logon) throw new Error('Cannot access without logging in');
 
         return this._openLink;
-    }
-
-    get blockList() {
-        if (!this.logon) throw new Error('Cannot access without logging in');
-
-        return this._blockList;
     }
 
     /**
@@ -142,8 +131,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
         await OpenLinkService.initialize(this._openLink);
-        await TalkBlockList.initialize(this._blockList);
-
+        
         return { status: loginRes.status, success: true, result: loginRes.result };
     }
 

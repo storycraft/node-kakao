@@ -6,49 +6,46 @@
 
 import { Chat } from "./chat";
 import { ChatType, KnownChatType } from "./chat-type";
+import { ChatContent } from "./content";
 
 /**
  * Build Chat object
  */
-export class ChatBuilder {
+export class ChatBuilder<T extends ChatType> {
 
     private _attachment: Record<string, any>;
+    private _text: string;
 
-    constructor(private _type: ChatType, private _text: string = '') {
+    constructor(private _type: T) {
         this._attachment = {};
+        this._text = '';
     }
 
     /**
-     * Set chat text
-     * @param text
+     * Append text or chat content
+     *
+     * @param content
      */
-    text(text: string): this {
-        this._text = text;
+    append(content: string | ChatContent): this {
+        if (typeof content === 'string') {
+            this._text += content;
+            return this;
+        }
+
+        
 
         return this;
     }
 
     /**
-     * Set json attachment
-     * @param attachment
-     */
-    attachment(attachment: Record<string, any>): this {
-        this._attachment = attachment;
-        return this;
-    }
-
-    /**
-     * Build into chat
+     * Build into chat object
      */
     build(): Chat {
         const chat: Chat = {
             type: this._type,
-            text: this._text
+            text: this._text,
+            attachment: this._attachment
         };
-
-        if (this._attachment) {
-            chat['attachment'] = this._attachment;
-        }
 
         return chat;
     }

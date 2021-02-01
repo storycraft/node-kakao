@@ -36,7 +36,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        const list: InformedOpenLink[] = res.ols.map(struct => {
+        const list: InformedOpenLink[] = !res.ols ? [] : res.ols.map(struct => {
             return { openLink: structToOpenLink(struct), info: structToOpenLinkInfo(struct) };
         });
 
