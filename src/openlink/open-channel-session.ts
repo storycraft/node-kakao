@@ -88,6 +88,13 @@ export interface OpenChannelSession {
     kickUser(user: ChannelUser): AsyncCommandResult;
 
     /**
+     * Block open user from the this channel permanently in client. This cannot be undone.
+     *
+     * @param user
+     */
+    blockUser(user: ChannelUser): AsyncCommandResult;
+
+    /**
      * Get latest channel openlink
      */
     getLatestOpenLink(): AsyncCommandResult<OpenLink>;

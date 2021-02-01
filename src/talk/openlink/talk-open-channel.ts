@@ -393,6 +393,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return res;
     }
 
+    async blockUser(user: ChannelUser) {
+        return this._openChannelSession.blockUser(user);
+    }
+
     react(flag: boolean) {
         return this._openChannelSession.react(flag);
     }

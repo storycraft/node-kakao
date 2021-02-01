@@ -6,10 +6,9 @@
 
 import { Long } from "bson";
 import { OpenLinkComponent } from "../openlink";
-import { OpenChannelUserPerm } from "../openlink/open-link-type";
 
 /**
- * Channel user
+ * Any user that can talk via channel.
  */
 export interface ChannelUser {
 

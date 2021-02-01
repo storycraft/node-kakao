@@ -90,8 +90,10 @@ export class TalkChannelList extends TypedEmitter<TalkChannelListEvents> impleme
             }
         });
 
-        await TalkNormalChannelList.initialize(talkChannelList._normalList, normalList);
-        await TalkOpenChannelList.initialize(talkChannelList._openList, openList);
+        await Promise.all([
+            TalkNormalChannelList.initialize(talkChannelList._normalList, normalList),
+            TalkOpenChannelList.initialize(talkChannelList._openList, openList)
+        ]);
 
         return talkChannelList;
     }

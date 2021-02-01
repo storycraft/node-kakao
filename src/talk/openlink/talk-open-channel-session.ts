@@ -201,6 +201,21 @@ export class TalkOpenChannelSession implements OpenChannelSession {
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
+    async blockUser(user: ChannelUser): AsyncCommandResult {
+        const res = await this._session.request(
+            'BLIND',
+            {
+                'c': this._channel.channelId,
+                'li': this._channel.linkId,
+                'mid': user.userId,
+                // Reporting user is not supported.
+                'r': false
+            }
+        );
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
     async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null> {
         const res = await this._session.request(
             'UPLINKPROF',

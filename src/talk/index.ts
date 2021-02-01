@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from "./block";
 export * from "./chat";
 export * from "./channel";
 export * from "./talk-channel-list";
