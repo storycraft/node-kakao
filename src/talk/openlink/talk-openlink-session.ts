@@ -15,6 +15,7 @@ import { KnownDataStatusCode } from "../../request";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { structToOpenLinkKickedUserInfo } from "../../packet/struct/wrap/user";
 import { AsyncCommandResult } from "../../request";
+import { InfoLinkRes } from "../../packet/chat/info-link";
 
 /**
  * Provides openlink operations
@@ -46,7 +47,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
     }
 
     async getOpenLink(...components: OpenLinkComponent[]): AsyncCommandResult<Readonly<OpenLink>[]> {
-        const res = await this._session.request<SyncLinkRes>(
+        const res = await this._session.request<InfoLinkRes>(
             'INFOLINK',
             {
                 'lis': components.map(component => component.linkId)
@@ -54,7 +55,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
         );
         if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-        const list: OpenLink[] = res.ols.map(structToOpenLink);
+        const list: OpenLink[] = res.ols ? res.ols.map(structToOpenLink) : [];
 
         return { status: res.status, success: true, result: list };
     }

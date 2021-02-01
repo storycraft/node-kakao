@@ -8,6 +8,6 @@ import { OpenLinkStruct } from "../struct/openlink";
 
 export interface InfoLinkRes {
 
-    ols: OpenLinkStruct[];
+    ols?: OpenLinkStruct[];
 
 }
