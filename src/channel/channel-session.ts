@@ -121,6 +121,13 @@ export interface ChannelSession {
     syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>>;
 
     /**
+     * Get every chats from next chat of startLogId to end.
+     *
+     * @param startLogId logId to start.
+     */
+    getChatListFrom(startLogId?: Long): AsyncCommandResult<Chatlog[]>;
+
+    /**
      * Create media downloader
      *
      * @param media

@@ -22,6 +22,7 @@ export * from "./login-list";
 export * from "./member";
 export * from "./msg";
 export * from "./mship";
+export * from "./mchatlogs";
 export * from "./set-meta";
 export * from "./ship";
 export * from "./sync-event";

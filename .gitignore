@@ -60,6 +60,7 @@ typings/
 # next.js build output
 .next
 
+docs/
 dist/
 dist_esm/
 loco-test.ts

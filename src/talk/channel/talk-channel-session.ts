@@ -37,6 +37,7 @@ import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
+import { MChatlogsRes } from "../../packet/chat";
 
 /**
  * Default ChannelSession implementation
@@ -283,9 +284,23 @@ export class TalkChannelSession implements ChannelSession {
                 const result = res.chatLogs.map(structToChatlog);
                 curLogId = result[result.length - 1].logId;
 
-                return { done: false, value: { status: KnownDataStatusCode.SUCCESS, success: true, result } };
+                return { done: false, value: { status: res.status, success: true, result } };
             }
         };
+    }
+
+    async getChatListFrom(startLogId: Long = Long.ZERO): AsyncCommandResult<Chatlog[]> {
+        const res = await this._session.request<MChatlogsRes>(
+            'MCHATLOGS',
+            {
+                'chatIds': [this._channel.channelId],
+                'sinces': [startLogId]
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        return { status: res.status, success: true, result: res.chatLogs.map(structToChatlog) };
     }
 
     async downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {

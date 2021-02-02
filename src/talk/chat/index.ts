@@ -46,7 +46,7 @@ export class TalkChatData {
     /**
      * Get mention list
      */
-    get mentions(): TalkChatMention[] {
+    get mentions(): ChatMentionStruct[] {
         if (!this._chat.attachment || !Array.isArray(this._chat.attachment.mentions)) return [];
 
         return this._chat.attachment.mentions;
@@ -72,7 +72,7 @@ export class TalkChatData {
      * Check if any users are mentioned.
      *
      * @param users Users to find
-     * @returns true if any one is mentioned
+     * @returns true if anyone is mentioned
      */
     isMentioned(...users: ChannelUser[]) {
         const mentions = this.mentions;
@@ -94,7 +94,7 @@ export class TalkChatData {
 /**
  * Raw chat mention typings
  */
-export interface TalkChatMention {
+export interface ChatMentionStruct {
 
     /**
      * Index list

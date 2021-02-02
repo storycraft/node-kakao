@@ -169,6 +169,10 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
+    getChatListFrom(startLogId?: Long) {
+        return this._channelSession.getChatListFrom(startLogId);
+    }
+
     async markRead(chat: ChatLogged) {
         const res = await this._openChannelSession.markRead(chat);
 

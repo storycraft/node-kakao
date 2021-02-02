@@ -216,6 +216,10 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
         return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
+    getChatListFrom(startLogId?: Long) {
+        return this._channelSession.getChatListFrom(startLogId);
+    }
+
     async chatON(): AsyncCommandResult<ChatOnRoomRes> {
         const res = await this._channelSession.chatON();
 
