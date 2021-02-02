@@ -18,7 +18,7 @@ import { TalkChannel } from "../channel";
 import { TalkChatData } from "../chat";
 import { TalkOpenChannel } from "../openlink/talk-open-channel";
 
-declare interface ChatEvent {
+export interface ChatEvent {
 
     // 챗을 받을시 호출
     'chat': (data: TalkChatData, channel: TalkChannel) => void;
@@ -31,7 +31,7 @@ declare interface ChatEvent {
 
 }
 
-declare interface ChannelEvent {
+export interface ChannelEvent {
 
     // 채널 meta 정보가 수정될때 호출
     'meta_change': (channel: TalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
@@ -44,7 +44,7 @@ declare interface ChannelEvent {
 
 }
 
-declare interface ChannelListEvent {
+export interface ChannelListEvent {
 
     // 클라이언트가 채널 들어갔을시 호출
     'channel_join': (channel: TalkChannel) => void;
@@ -54,7 +54,7 @@ declare interface ChannelListEvent {
 
 }
 
-declare interface OpenChannelEvent {
+export interface OpenChannelEvent {
 
     // 유저가 오픈프로필 변경시 호출
     'profile_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
@@ -76,14 +76,14 @@ declare interface OpenChannelEvent {
 
 }
 
-declare interface OpenChannelListEvent {
+export interface OpenChannelListEvent {
 
     // 채널에서 킥 되었을시 호출
     'channel_kicked': (feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>, channel: TalkOpenChannel, feed: OpenKickFeed) => void;
 
 }
 
-declare interface OpenLinkEvent {
+export interface OpenLinkEvent {
 
     // 클라이언트 오픈링크가 생성 되었을시 호출
     'link_created': (link: InformedOpenLink) => void;
@@ -92,14 +92,7 @@ declare interface OpenLinkEvent {
     'link_deleted': (link: InformedOpenLink) => void;
 }
 
-declare interface BlockListEvent {
-
-    // 차단 리스트가 변경되었을시 호출
-    'block_list_changed': () => void;
-
-}
-
-declare interface ClientEvent {
+export interface ClientEvent {
 
     // 서버 변경시 호출
     'switch_server': () => void;
@@ -113,15 +106,11 @@ declare interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvents & BlockListEvents;
-export type BlockListEvents = BlockListEvent;
+export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvent;
 export type TalkChannelListEvents = OpenChannelListEvents & NormalChannelListEvents;
 
-export type NormalChannelListEvents = ChannelListEvents & ChannelEvents;
-export type OpenChannelListEvents = ChannelListEvents & OpenChannelEvents & OpenChannelListEvent;
-export type ChannelListEvents = ChannelListEvent;
-
-export type OpenLinkEvents = OpenLinkEvent;
+export type NormalChannelListEvents = ChannelListEvent & ChannelEvents;
+export type OpenChannelListEvents = ChannelListEvent & OpenChannelEvents & OpenChannelListEvent;
 
 export type ChannelEvents = ChannelEvent & ChatEvent;
 export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;

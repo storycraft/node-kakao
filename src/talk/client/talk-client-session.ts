@@ -12,7 +12,7 @@ import { ClientSession, LoginResult } from "../../client/client-session";
 import { OAuthCredential } from "../../oauth";
 import { OpenChannel } from "../../openlink/open-channel";
 import { LoginListRes } from "../../packet/chat/login-list";
-import { KnownDataStatusCode } from "../../request";
+import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from "../../request";
 import { CommandResult } from "../../request";
 import { ClientConfig } from "../../config";
 
@@ -85,10 +85,19 @@ export class TalkClientSession implements ClientSession {
         };
     }
 
-    async setStatus(status: ClientStatus) {
+    async setStatus(status: ClientStatus): AsyncCommandResult {
         const res = await this._session.request<LoginListRes>('SETST', { st: status });
 
         return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
+    }
+
+    /**
+     * Unknown
+     */
+    async getTokens(unknown: number[]): AsyncCommandResult<DefaultRes> {
+        const res = await this._session.request('GETTOKEN', { ts: unknown });
+
+        return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res };
     }
 
 }

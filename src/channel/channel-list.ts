@@ -6,13 +6,13 @@
 
 import { Long } from "bson";
 import { TypedEmitter } from "../event";
-import { ChannelListEvents } from "../talk/event";
+import { ChannelListEvent } from "../talk/event";
 import { Channel } from "./channel";
 
 /**
  * ChannelList manage speific type of channels or child channel list.
  */
-export interface ChannelList<T extends Channel> extends TypedEmitter<ChannelListEvents> {
+export interface ChannelList<T extends Channel> extends TypedEmitter<ChannelListEvent> {
 
     /**
      * Try to get channel instance with channel id

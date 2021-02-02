@@ -148,6 +148,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         return this._clientSession.setStatus(status);
     }
 
+    getTokens(unknown: number[]) {
+        return this._clientSession.getTokens(unknown);
+    }
+
     /**
      * @param user Target user to compare
      *

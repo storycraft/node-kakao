@@ -13,7 +13,7 @@ import { OpenLinkKickedUser } from "../../openlink/open-link-user-info";
 import { DefaultRes } from "../../request";
 import { structToOpenLink, structToOpenLinkInfo } from "../../packet/struct/wrap/openlink";
 import { AsyncCommandResult } from "../../request";
-import { OpenLinkEvents } from "../event";
+import { OpenLinkEvent } from "../event";
 import { Managed } from "../managed";
 import { TalkOpenLinkSession } from "./talk-openlink-session";
 import { TypedEmitter } from "../../event";
@@ -21,7 +21,7 @@ import { TypedEmitter } from "../../event";
 /**
  * Provide openlink services
  */
-export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Managed<OpenLinkEvents>, OpenLinkSession {
+export class OpenLinkService extends TypedEmitter<OpenLinkEvent> implements Managed<OpenLinkEvent>, OpenLinkSession {
 
     private _session: TalkOpenLinkSession;
 
@@ -108,12 +108,12 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvents> implements Man
         await service.getLatestLinkList();
     }
 
-    private _callEvent<U extends keyof OpenLinkEvents>(parentCtx: EventContext<OpenLinkEvents>, event: U, ...args: Parameters<OpenLinkEvents[U]>) {
+    private _callEvent<U extends keyof OpenLinkEvent>(parentCtx: EventContext<OpenLinkEvent>, event: U, ...args: Parameters<OpenLinkEvent[U]>) {
         this.emit(event, ...args);
         parentCtx.emit(event, ...args);
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>) {
         switch (method) {
 
             case 'SYNCLINKCR': {

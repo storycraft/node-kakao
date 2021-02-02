@@ -12,7 +12,7 @@ import { KnownChatType } from "../../chat/chat-type";
 import { DeleteAllFeed, feedFromChat } from "../../chat/feed/chat-feed";
 import { KnownFeedType } from "../../chat/feed/feed-type";
 import { EventContext } from "../../event/event-context";
-import { ChannelEvents, ChannelListEvents } from "../event";
+import { ChannelEvents, ChannelListEvent } from "../event";
 import { DefaultRes } from "../../request";
 import { ChgMetaRes } from "../../packet/chat/chg-meta";
 import { DecunreadRes } from "../../packet/chat/decunread";
@@ -266,18 +266,18 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
 
 }
 
-export class TalkChannelListHandler implements Managed<ChannelListEvents> {
+export class TalkChannelListHandler implements Managed<ChannelListEvent> {
 
     constructor(private _list: ChannelList<TalkChannel>, private _updater: ChannelListUpdater<TalkChannel>) {
 
     }
 
-    private _callEvent<U extends keyof ChannelListEvents>(parentCtx: EventContext<ChannelListEvents>, event: U, ...args: Parameters<ChannelListEvents[U]>) {
+    private _callEvent<U extends keyof ChannelListEvent>(parentCtx: EventContext<ChannelListEvent>, event: U, ...args: Parameters<ChannelListEvent[U]>) {
         this._list.emit(event, ...args);
         parentCtx.emit(event, ...args);
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent>) {
         switch (method) {
             case 'LEFT': {
                 const leftData = data as DefaultRes & LeftRes;

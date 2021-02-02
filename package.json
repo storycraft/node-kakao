@@ -64,6 +64,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bson": "^4.2.2",
+    "eventemitter3": "^4.0.7",
     "form-data": "^3.0.0",
     "hash-wasm": "^4.4.1",
     "lossless-json": "^1.0.3",
