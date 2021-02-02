@@ -1,0 +1,272 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>NodeKakao - v4.0.0-alpha.5</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.5">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">NodeKakao - v4.0.0-alpha.5</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>NodeKakao - v4.0.0-alpha.5</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p><a href="https://www.npmjs.com/package/node-kakao"><img src="https://badge.fury.io/js/node-kakao.svg" alt="npm version"></a>
+				<a href="https://www.codefactor.io/repository/github/storycraft/node-kakao"><img src="https://www.codefactor.io/repository/github/storycraft/node-kakao/badge" alt="CodeFactor"></a></p>
+				<a href="#nodekakao---loco-protocol-compatible-library" id="nodekakao---loco-protocol-compatible-library" style="color: inherit; text-decoration: none;">
+					<h1>NodeKakao - Loco protocol compatible library</h1>
+				</a>
+				<p>ES Module &amp; Deno</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">NodeKakao</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;https://cdn.skypack.dev/node-kakao?dts&quot;</span><span style="color: #000000">;</span>
+</code></pre>
+				<p>Node</p>
+				<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">i</span><span style="color: #000000"> --</span><span style="color: #001080">save</span><span style="color: #000000"> </span><span style="color: #001080">node</span><span style="color: #000000">-</span><span style="color: #001080">kakao</span>
+</code></pre>
+				<p>Note: this implemention can stop working anytime.</p>
+				<a href="#warning" id="warning" style="color: inherit; text-decoration: none;">
+					<h2>Warning</h2>
+				</a>
+				<p>Client can act differently unlike official client. Abusing this client can cause permanent service restriction.</p>
+				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+					<h2>Example</h2>
+				</a>
+				<p>Check <code>examples</code> folder. Examples are written in typescript.</p>
+				<a href="#migrating-from-v3" id="migrating-from-v3" style="color: inherit; text-decoration: none;">
+					<h2>Migrating from v3</h2>
+				</a>
+				<p>todo</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>node-kakao is following MIT License.<br>See <code>LICENSE</code> for full text.</p>
+				<a href="#basic-reference" id="basic-reference" style="color: inherit; text-decoration: none;">
+					<h2>Basic Reference</h2>
+				</a>
+				<p><a href="https://github.com/hallazzang/pykakao/">pykakao</a>(hallazzang)<br><a href="https://github.com/ssut/pykakao">pykakao</a>(ssut)</p>
+				<ul>
+					<li><a href="http://www.bpak.org/blog/2012/12/kakaotalk-loco-%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C-%EB%B6%84%EC%84%9D-1/">[KakaoTalk+] LOCO 프로토콜 분석 (1)</a></li>
+					<li><a href="http://www.bpak.org/blog/2012/12/kakaotalk-loco-%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C-%EB%B6%84%EC%84%9D-2/">[KakaoTalk+] LOCO 프로토콜 분석 (2)</a></li>
+					<li><a href="http://www.bpak.org/blog/2012/12/kakaotalk-loco-%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C-%EB%B6%84%EC%84%9D-3/">[KakaoTalk+] LOCO 프로토콜 분석 (3)</a></li>
+					<li><a href="http://www.bpak.org/blog/2012/12/kakaotalk-loco-%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C-%EB%B6%84%EC%84%9D-4/">[KakaoTalk+] LOCO 프로토콜 분석 (4)</a></li>
+					<li><a href="https://www.bpak.org/blog/2013/08/kakaotalkpc-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-pc-%EB%B2%84%EC%A0%84-%EB%B6%84%EC%84%9D-1/">[KakaoTalkPC] 카카오톡 PC 버전 분석 (1)</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/api.html">api</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/api_struct.html">api/struct</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/api_struct_friends.html">api/struct/friends</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/channel.html">channel</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/chat.html">chat</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/chat_attachment.html">chat/attachment</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/chat_content.html">chat/content</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/chat_feed.html">chat/feed</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/client.html">client</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/config.html">config</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/crypto.html">crypto</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/event.html">event</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/hook.html">hook</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/index.html">index</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/media.html">media</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/network.html">network</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/network_chunk.html">network/chunk</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/network_socket.html">network/socket</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/network_util.html">network/util</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/oauth.html">oauth</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/openlink.html">openlink</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet.html">packet</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet_booking.html">packet/booking</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet_chat.html">packet/chat</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet_checkin.html">packet/checkin</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet_struct.html">packet/struct</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/packet_struct_wrap.html">packet/struct/wrap</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/relay.html">relay</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/request.html">request</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/stream.html">stream</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk.html">talk</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_block.html">talk/block</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_channel.html">talk/channel</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_chat.html">talk/chat</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_client.html">talk/client</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_event.html">talk/event</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_media.html">talk/media</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_network.html">talk/network</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/talk_openlink.html">talk/openlink</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/user.html">user</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/util.html">util</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/voip.html">voip</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
