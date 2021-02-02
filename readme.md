@@ -2,15 +2,17 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/storycraft/node-kakao/badge)](https://www.codefactor.io/repository/github/storycraft/node-kakao)
 # NodeKakao - Loco protocol compatible library
 
-```txt
+ES Module & Deno
+```typescript
 import * as NodeKakao from "https://cdn.skypack.dev/node-kakao?dts";
 ```
 
-```txt
+Node
+```
 npm i --save node-kakao
 ```
 
-Note: this implemention can stop working anytime.
+> this implemention can stop working anytime.
 
 ## Warning
 Client can act differently unlike official client. Abusing this client can cause permanent service restriction.
