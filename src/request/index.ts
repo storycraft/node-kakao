@@ -26,7 +26,7 @@ export type DataStatusCode = KnownDataStatusCode | number;
 
 export interface DefaultReq {
 
-    [key: string]: any;
+    [key: string]: unknown;
 
 }
 

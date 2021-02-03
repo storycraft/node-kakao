@@ -44,9 +44,9 @@ export namespace OpenLinkProfiles {
     /**
      * Serialize template to packet key / value structure.
      * @param {OpenLinkProfiles} template
-     * @return {Record<string, any>}
+     * @return {Record<string, unknown>}
      */
-    export function templateToSerialized(template: OpenLinkProfiles): Record<string, any> {
+    export function templateToSerialized(template: OpenLinkProfiles): Record<string, unknown> {
       if ('linkId' in template) {
         return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
       } else if ('nickname' in template) {

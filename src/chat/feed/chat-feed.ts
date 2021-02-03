@@ -90,7 +90,7 @@ export type KnownChatFeeds = InviteFeed
   | OpenLinkFeeds
   | ChannelDeletedFeed
   | DeleteAllFeed;
-export type ChatFeeds = KnownChatFeeds | Record<string, any> & ChatFeed;
+export type ChatFeeds = KnownChatFeeds | Record<string, unknown> & ChatFeed;
 
 /**
  * Read chat text and deserialize

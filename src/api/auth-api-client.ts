@@ -161,7 +161,7 @@ export class AuthApiClient {
     const res = await this._client.request(
         'POST',
         this.getApiPath('login.json'),
-        this.fillAuthForm(form),
+        this.fillAuthForm({...form}),
         await this.createAuthHeader(form),
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };

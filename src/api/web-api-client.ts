@@ -4,16 +4,17 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from 'bson';
 import { WebApiConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { DefaultRes } from '../request';
 import { isNode, isDeno, isBrowser } from '../util/platform';
 import { fillAHeader, fillBaseHeader, getUserAgent } from './header-util';
 
-export type RequestHeader = Record<string, any>;
+export type RequestHeader = Record<string, string>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
 export type FileRequestData = { value: ArrayBuffer, options: { filename: string, contentType?: string } };
-export type RequestForm = { [key: string]: FileRequestData | any };
+export type RequestForm = { [key: string]: FileRequestData | number | string | undefined | null | boolean | Long };
 
 /**
  * Provides various web request api
@@ -63,7 +64,7 @@ export class SessionApiClient implements ApiClient {
     return this._client.url;
   }
 
-  private createSessionHeader(headers?: Record<string, any>): Record<string, any> {
+  private createSessionHeader(headers?: RequestHeader): RequestHeader {
     const credentialHeader = headers ? { ...headers } : {};
     this.fillHeader(credentialHeader);
 
@@ -76,7 +77,7 @@ export class SessionApiClient implements ApiClient {
     return credentialHeader;
   }
 
-  request(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes> {
     return this._client.request(method, path, form, this.createSessionHeader(headers));
   }
 
@@ -84,12 +85,12 @@ export class SessionApiClient implements ApiClient {
       method: RequestMethod,
       path: string,
       form?: RequestForm,
-      headers?: Record<string, any>,
+      headers?: RequestHeader,
   ): Promise<DefaultRes> {
     return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
   }
 
-  fillHeader(header: Record<string, any>): void {
+  fillHeader(header: RequestHeader): void {
     header['Authorization'] = `${this._credential.accessToken}-${this._credential.deviceUUID}`;
   }
 }

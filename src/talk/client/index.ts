@@ -222,7 +222,7 @@ export class TalkClient
       }
     }
 
-    private onError(err: any) {
+    private onError(err: unknown) {
       super.emit('error', err);
 
       if (this.listeners('error').length > 0) {

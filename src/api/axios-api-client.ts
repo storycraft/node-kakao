@@ -65,7 +65,7 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
       method: RequestMethod,
       path: string,
       form?: RequestForm,
-      headers?: Record<string, any>,
+      headers?: RequestHeader,
   ): Promise<DefaultRes> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);
@@ -83,7 +83,7 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
       method: RequestMethod,
       path: string,
       form?: RequestForm,
-      headers?: Record<string, any>,
+      headers?: RequestHeader,
   ): Promise<DefaultRes> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);

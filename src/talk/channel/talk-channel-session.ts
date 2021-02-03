@@ -414,7 +414,7 @@ export class TalkChannelManageSession implements NormalChannelManageSession {
     }
 
     async createChannel(template: ChannelTemplate): AsyncCommandResult<Channel> {
-      const data: Record<string, any> = {
+      const data: DefaultReq = {
         'memberIds': template.userList.map((user) => user.userId),
       };
 

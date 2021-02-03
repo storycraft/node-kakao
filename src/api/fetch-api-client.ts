@@ -55,7 +55,7 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
       method: RequestMethod,
       path: string,
       form?: RequestForm,
-      headers?: Record<string, any>,
+      headers?: RequestHeader,
   ): Promise<DefaultRes> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
@@ -71,7 +71,7 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
       method: RequestMethod,
       path: string,
       form?: RequestForm,
-      headers?: Record<string, any>,
+      headers?: RequestHeader,
   ): Promise<DefaultRes> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
@@ -87,7 +87,7 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(form)) {
-      if (value && 'value' in value && 'options' in value) {
+      if (typeof value === 'object' && value && 'value' in value && 'options' in value) {
         const file = value as FileRequestData;
         formData.append(
             key,

@@ -8,7 +8,7 @@ import { Long } from 'bson';
 import { BookingConfig, CheckinConfig } from '../../config';
 import { GetConfRes } from '../../packet/booking';
 import { CheckinRes } from '../../packet/checkin';
-import { KnownDataStatusCode } from '../../request';
+import { DefaultReq, KnownDataStatusCode } from '../../request';
 import { AsyncCommandResult } from '../../request';
 import { DefaultLocoSession } from '../request-session';
 import { BiStream } from '../../stream';
@@ -60,7 +60,7 @@ export async function getCheckinData(
     for await (const _ of checkinSession.listen()) { }
   })();
 
-  const req: Record<string, any> = {
+  const req: DefaultReq = {
     'MCCMNC': config.mccmnc,
     'appVer': config.appVersion,
     'countryISO': config.countryIso,

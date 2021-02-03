@@ -9,7 +9,6 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default () => {
   const plugins = [
     commonjs({

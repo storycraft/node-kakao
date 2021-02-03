@@ -12,7 +12,7 @@ import { ClientSession, LoginResult } from '../../client';
 import { OAuthCredential } from '../../oauth';
 import { OpenChannel } from '../../openlink';
 import { LoginListRes } from '../../packet/chat';
-import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
+import { AsyncCommandResult, CommandResult, DefaultReq, DefaultRes, KnownDataStatusCode } from '../../request';
 import { ClientConfig } from '../../config';
 
 export class TalkClientSession implements ClientSession {
@@ -35,7 +35,7 @@ export class TalkClientSession implements ClientSession {
     async login(credential: OAuthCredential): Promise<CommandResult<LoginResult>> {
       const config = this.configuration;
 
-      const req: Record<string, any> = {
+      const req: DefaultReq = {
         'appVer': config.appVersion,
         'prtVer': '1',
         'os': config.agent,

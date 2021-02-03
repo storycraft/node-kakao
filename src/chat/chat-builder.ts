@@ -12,7 +12,7 @@ import { ChatContent } from './content';
  * Build Chat object
  */
 export class ChatBuilder<T extends ChatType> {
-    private _attachment: Record<string, any>;
+    private _attachment: Record<string, unknown>;
     private _text: string;
 
     constructor(private _type: T) {

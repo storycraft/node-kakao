@@ -19,7 +19,7 @@ import {
   OpenLinkProfiles,
 } from '../../openlink';
 import { ChatInfoRes, GetMemRes, MemberRes } from '../../packet/chat';
-import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
+import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
 import {
   ChannelInfoStruct,
   OpenChannelInfoExtra,
@@ -304,7 +304,7 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
         token = tokenRes['tk'];
       }
 
-      const reqData: Record<string, any> = {
+      const reqData: DefaultReq = {
         'li': link.linkId,
         'ref': 'EW:',
         ...OpenLinkProfiles.templateToSerialized(profile),
