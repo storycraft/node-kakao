@@ -100,7 +100,7 @@ export class MediaUploader {
         // TODO: This should be process properly.
         const offset = postRes['o'];
 
-        this._stream.write(this._template.data).then();
+        this._stream.write(this._template.data.slice(offset)).then();
       }).catch(reject);
     });
   }
