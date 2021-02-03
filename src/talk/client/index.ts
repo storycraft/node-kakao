@@ -51,7 +51,7 @@ export class TalkClient
 
     private _clientSession: TalkClientSession;
 
-    private _cilentUser: ChannelUser;
+    private _clientUser: ChannelUser;
     private _blockList: TalkBlockSession;
 
     private _channelList: TalkChannelList;
@@ -71,8 +71,7 @@ export class TalkClient
       this._clientSession = new TalkClientSession(this.createSessionProxy(), { ...DefaultConfiguration, ...config });
 
       this._channelList = new TalkChannelList(this.createSessionProxy());
-
-      this._cilentUser = { userId: Long.ZERO };
+      this._clientUser = { userId: Long.ZERO };
       this._blockList = new TalkBlockSession(this.createSessionProxy());
 
       this._openLink = new OpenLinkService(this.createSessionProxy());
@@ -92,7 +91,7 @@ export class TalkClient
       return this._channelList!;
     }
 
-    get cilentUser(): ChannelUser {
+    get clientUser(): ChannelUser {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
       return this._cilentUser;
@@ -136,8 +135,7 @@ export class TalkClient
       if (!loginRes.success) return loginRes;
 
       this.addPingHandler();
-
-      this._cilentUser = { userId: loginRes.result.userId };
+      this._clientUser = { userId: loginRes.result.userId };
 
       await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
       await OpenLinkService.initialize(this._openLink);
@@ -159,7 +157,7 @@ export class TalkClient
      * @return {boolean} true if client user.
      */
     isClientUser(user: ChannelUser): boolean {
-      return user.userId.equals(this._cilentUser.userId);
+      return user.userId.equals(this._clientUser.userId);
     }
 
     /**
@@ -203,7 +201,7 @@ export class TalkClient
         request: (method, data) => this.request(method, data),
 
         get clientUser() {
-          return instance.cilentUser;
+          return instance.clientUser;
         },
 
         get configuration() {
