@@ -20,6 +20,9 @@ Client can act differently unlike official client. Abusing this client can cause
 ## Example
 Check `examples` folder. Examples are written in typescript.
 
+## Documentation
+[TypeDoc](https://storycraft.github.io/node-kakao/)
+
 ## Migrating from v3
 todo
 
