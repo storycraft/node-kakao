@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkClient | NodeKakao - v4.0.0-alpha.5</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.5">
+	<title>TalkClient | NodeKakao - v4.0.0-alpha.7</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.7">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.5</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.7</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-alpha.5</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-alpha.7</a>
 				</li>
 				<li>
 					<a href="../modules/talk_client.html">talk/client</a>
@@ -130,7 +130,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_client.talkclient.html#createsessionproxy" class="tsd-kind-icon">create<wbr>Session<wbr>Proxy</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#emit" class="tsd-kind-icon">emit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk_client.talkclient.html#getmaxlisteners" class="tsd-kind-icon">get<wbr>Max<wbr>Listeners</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_client.talkclient.html#gettokens" class="tsd-kind-icon">get<wbr>Tokens</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_client.talkclient.html#isclientuser" class="tsd-kind-icon">is<wbr>Client<wbr>User</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk_client.talkclient.html#listenercount" class="tsd-kind-icon">listener<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#listeners" class="tsd-kind-icon">listeners</a></li>
@@ -138,14 +138,10 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#once" class="tsd-kind-icon">once</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#prependlistener" class="tsd-kind-icon">prepend<wbr>Listener</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#prependoncelistener" class="tsd-kind-icon">prepend<wbr>Once<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_client.talkclient.html#pushreceived" class="tsd-kind-icon">push<wbr>Received</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#rawlisteners" class="tsd-kind-icon">raw<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk_client.talkclient.html#removealllisteners" class="tsd-kind-icon">remove<wbr>All<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk_client.talkclient.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="talk_client.talkclient.html#request" class="tsd-kind-icon">request</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk_client.talkclient.html#setmaxlisteners" class="tsd-kind-icon">set<wbr>Max<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_client.talkclient.html#setstatus" class="tsd-kind-icon">set<wbr>Status</a></li>
 							</ul>
 						</section>
@@ -165,7 +161,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L61">talk/client/index.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L61">talk/client/index.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -190,7 +186,7 @@
 					<div class="tsd-signature tsd-kind-icon">ping<wbr>Interval<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L51">talk/client/index.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L51">talk/client/index.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -212,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L100">talk/client/index.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L100">talk/client/index.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="talk_block.talkblocksession.html" class="tsd-signature-type" data-tsd-kind="Class">TalkBlockSession</a></h4>
@@ -229,7 +225,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L88">talk/client/index.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L88">talk/client/index.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="talk.talkchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelList</a></h4>
@@ -246,7 +242,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L94">talk/client/index.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L94">talk/client/index.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/index.channeluser.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUser</a></h4>
@@ -264,7 +260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L80">talk/client/index.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L80">talk/client/index.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/config.clientconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientConfig</a></h4>
@@ -272,7 +268,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L84">talk/client/index.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L84">talk/client/index.ts:84</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -295,7 +291,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L115">talk/client/index.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L115">talk/client/index.ts:115</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -317,7 +313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L106">talk/client/index.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L106">talk/client/index.ts:106</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -334,7 +330,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L119">talk/client/index.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L119">talk/client/index.ts:119</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/network.locosession.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoSession</a></h4>
@@ -355,13 +351,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L17">event/typed.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L17">event/typed.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -387,7 +383,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L163">talk/client/index.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L167">talk/client/index.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -409,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L193">talk/client/index.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L197">talk/client/index.ts:197</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -432,13 +428,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L25">event/typed.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L23">event/typed.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -465,34 +461,39 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L26">event/typed.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L24">event/typed.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="getmaxlisteners" class="tsd-anchor"></a>
-					<h3>get<wbr>Max<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Max<wbr>Listeners<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="gettokens" class="tsd-anchor"></a>
+					<h3>get<wbr>Tokens</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Tokens<span class="tsd-signature-symbol">(</span>unknown<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#getmaxlisteners">getMaxListeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L30">event/typed.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L151">talk/client/index.ts:151</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>unknown: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -506,7 +507,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L156">talk/client/index.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L160">talk/client/index.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -527,20 +528,20 @@
 					<a name="listenercount" class="tsd-anchor"></a>
 					<h3>listener<wbr>Count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">listener<wbr>Count<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">listener<wbr>Count<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listenercount">listenerCount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L27">event/typed.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L25">event/typed.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>type: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h5>
+									<h5>type: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -558,13 +559,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listeners">listeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L28">event/typed.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L26">event/typed.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -588,7 +589,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/client.clientsession.html">ClientSession</a>.<a href="../interfaces/client.clientsession.html#login">login</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L125">talk/client/index.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L125">talk/client/index.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -612,13 +613,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L24">event/typed.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L22">event/typed.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -645,13 +646,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L23">event/typed.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L21">event/typed.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -678,79 +679,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L22">event/typed.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L20">event/typed.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <span class="tsd-signature-type">U</span></h5>
-								</li>
-								<li>
-									<h5>listener: <a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="prependlistener" class="tsd-anchor"></a>
-					<h3>prepend<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">prepend<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#prependlistener">prependListener</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L18">event/typed.ts:18</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <span class="tsd-signature-type">U</span></h5>
-								</li>
-								<li>
-									<h5>listener: <a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="prependoncelistener" class="tsd-anchor"></a>
-					<h3>prepend<wbr>Once<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">prepend<wbr>Once<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#prependoncelistener">prependOnceListener</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L19">event/typed.ts:19</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -776,7 +711,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L167">talk/client/index.ts:167</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L171">talk/client/index.ts:171</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -792,54 +727,24 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="rawlisteners" class="tsd-anchor"></a>
-					<h3>raw<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">raw<wbr>Listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#rawlisteners">rawListeners</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L29">event/typed.ts:29</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>type: <span class="tsd-signature-type">U</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/talk_event.html#clientevents" class="tsd-signature-type" data-tsd-kind="Type alias">ClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="removealllisteners" class="tsd-anchor"></a>
 					<h3>remove<wbr>All<wbr>Listeners</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>All<wbr>Listeners<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>All<wbr>Listeners<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removealllisteners">removeAllListeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L21">event/typed.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L19">event/typed.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></h4>
@@ -857,13 +762,13 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removelistener">removeListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L20">event/typed.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L18">event/typed.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;block_list_changed&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;switch_server&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;disconnected&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;error&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;profile_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;perm_changed&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;host_handover&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_link_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;message_hidden&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_event&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_kicked&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -890,7 +795,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/network.commandsession.html">CommandSession</a>.<a href="../interfaces/network.commandsession.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L209">talk/client/index.ts:209</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L213">talk/client/index.ts:213</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -912,42 +817,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="setmaxlisteners" class="tsd-anchor"></a>
-					<h3>set<wbr>Max<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Max<wbr>Listeners<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#setmaxlisteners">setMaxListeners</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L31">event/typed.ts:31</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>n: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk_client.talkclient.html" class="tsd-signature-type" data-tsd-kind="Class">TalkClient</a></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="setstatus" class="tsd-anchor"></a>
 					<h3>set<wbr>Status</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Status<span class="tsd-signature-symbol">(</span>status<span class="tsd-signature-symbol">: </span><a href="../enums/index.clientstatus.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ClientStatus</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>success<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Status<span class="tsd-signature-symbol">(</span>status<span class="tsd-signature-symbol">: </span><a href="../enums/index.clientstatus.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ClientStatus</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/client.clientsession.html">ClientSession</a>.<a href="../interfaces/client.clientsession.html#setstatus">setStatus</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/client/index.ts#L147">talk/client/index.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/client/index.ts#L147">talk/client/index.ts:147</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -956,7 +837,7 @@
 									<h5>status: <a href="../enums/index.clientstatus.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ClientStatus</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>success<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1022,8 +903,8 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="talk_client.talkclient.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="talk_client.talkclient.html#getmaxlisteners" class="tsd-kind-icon">get<wbr>Max<wbr>Listeners</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="talk_client.talkclient.html#gettokens" class="tsd-kind-icon">get<wbr>Tokens</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk_client.talkclient.html#isclientuser" class="tsd-kind-icon">is<wbr>Client<wbr>User</a>
@@ -1046,17 +927,8 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="talk_client.talkclient.html#once" class="tsd-kind-icon">once</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk_client.talkclient.html#prependlistener" class="tsd-kind-icon">prepend<wbr>Listener</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk_client.talkclient.html#prependoncelistener" class="tsd-kind-icon">prepend<wbr>Once<wbr>Listener</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk_client.talkclient.html#pushreceived" class="tsd-kind-icon">push<wbr>Received</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk_client.talkclient.html#rawlisteners" class="tsd-kind-icon">raw<wbr>Listeners</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="talk_client.talkclient.html#removealllisteners" class="tsd-kind-icon">remove<wbr>All<wbr>Listeners</a>
@@ -1066,9 +938,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="talk_client.talkclient.html#request" class="tsd-kind-icon">request</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="talk_client.talkclient.html#setmaxlisteners" class="tsd-kind-icon">set<wbr>Max<wbr>Listeners</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk_client.talkclient.html#setstatus" class="tsd-kind-icon">set<wbr>Status</a>

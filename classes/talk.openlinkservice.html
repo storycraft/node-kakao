@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>OpenLinkService | NodeKakao - v4.0.0-alpha.5</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.5">
+	<title>OpenLinkService | NodeKakao - v4.0.0-alpha.7</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.7">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.5</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.7</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-alpha.5</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-alpha.7</a>
 				</li>
 				<li>
 					<a href="../modules/talk.html">talk</a>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#openlinkevents" class="tsd-signature-type" data-tsd-kind="Type alias">OpenLinkEvents</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">OpenLinkService</span>
@@ -89,7 +89,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/talk.managed.html" class="tsd-signature-type" data-tsd-kind="Interface">Managed</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#openlinkevents" class="tsd-signature-type" data-tsd-kind="Type alias">OpenLinkEvents</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/talk.managed.html" class="tsd-signature-type" data-tsd-kind="Interface">Managed</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><a href="../interfaces/index.openlinksession.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkSession</a></li>
 				</ul>
 			</section>
@@ -115,7 +115,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#getjoininfo" class="tsd-kind-icon">get<wbr>Join<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#getkicklist" class="tsd-kind-icon">get<wbr>Kick<wbr>List</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#getlatestlinklist" class="tsd-kind-icon">get<wbr>Latest<wbr>Link<wbr>List</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk.openlinkservice.html#getmaxlisteners" class="tsd-kind-icon">get<wbr>Max<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#getopenlink" class="tsd-kind-icon">get<wbr>Open<wbr>Link</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#getreaction" class="tsd-kind-icon">get<wbr>Reaction</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk.openlinkservice.html#listenercount" class="tsd-kind-icon">listener<wbr>Count</a></li>
@@ -123,15 +122,11 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#once" class="tsd-kind-icon">once</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#prependlistener" class="tsd-kind-icon">prepend<wbr>Listener</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#prependoncelistener" class="tsd-kind-icon">prepend<wbr>Once<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#pushreceived" class="tsd-kind-icon">push<wbr>Received</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#rawlisteners" class="tsd-kind-icon">raw<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#react" class="tsd-kind-icon">react</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk.openlinkservice.html#removealllisteners" class="tsd-kind-icon">remove<wbr>All<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.openlinkservice.html#removekicked" class="tsd-kind-icon">remove<wbr>Kicked</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.openlinkservice.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk.openlinkservice.html#setmaxlisteners" class="tsd-kind-icon">set<wbr>Max<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="talk.openlinkservice.html#initialize" class="tsd-kind-icon">initialize</a></li>
 							</ul>
 						</section>
@@ -151,7 +146,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L28">talk/openlink/open-link-service.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L28">talk/openlink/open-link-service.ts:28</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -171,14 +166,14 @@
 					<a name="addlistener" class="tsd-anchor"></a>
 					<h3>add<wbr>Listener</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L17">event/typed.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L17">event/typed.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -193,7 +188,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -210,7 +205,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L41">talk/openlink/open-link-service.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L41">talk/openlink/open-link-service.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -233,7 +228,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#deletelink">deleteLink</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L82">talk/openlink/open-link-service.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L82">talk/openlink/open-link-service.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -250,14 +245,14 @@
 					<a name="emit" class="tsd-anchor"></a>
 					<h3>emit</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">emit&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">emit&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L25">event/typed.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L23">event/typed.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -272,7 +267,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -290,7 +285,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L26">event/typed.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L24">event/typed.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -313,7 +308,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L48">talk/openlink/open-link-service.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L48">talk/openlink/open-link-service.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -342,7 +337,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getjoininfo">getJoinInfo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L70">talk/openlink/open-link-service.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L70">talk/openlink/open-link-service.ts:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -369,7 +364,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getkicklist">getKickList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L74">talk/openlink/open-link-service.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L74">talk/openlink/open-link-service.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -393,28 +388,10 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getlatestlinklist">getLatestLinkList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L52">talk/openlink/open-link-service.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L52">talk/openlink/open-link-service.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="getmaxlisteners" class="tsd-anchor"></a>
-					<h3>get<wbr>Max<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Max<wbr>Listeners<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#getmaxlisteners">getMaxListeners</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L30">event/typed.ts:30</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -429,7 +406,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getopenlink">getOpenLink</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L66">talk/openlink/open-link-service.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L66">talk/openlink/open-link-service.ts:66</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -453,7 +430,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getreaction">getReaction</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L96">talk/openlink/open-link-service.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L96">talk/openlink/open-link-service.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -477,7 +454,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listenercount">listenerCount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L27">event/typed.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L25">event/typed.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -494,14 +471,14 @@
 					<a name="listeners" class="tsd-anchor"></a>
 					<h3>listeners</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listeners">listeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L28">event/typed.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L26">event/typed.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -516,7 +493,7 @@
 									<h5>type: <span class="tsd-signature-type">U</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -524,14 +501,14 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">off&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
+						<li class="tsd-signature tsd-kind-icon">off&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L24">event/typed.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L22">event/typed.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -546,7 +523,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -557,14 +534,14 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
+						<li class="tsd-signature tsd-kind-icon">on&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L23">event/typed.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L21">event/typed.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -579,7 +556,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -590,14 +567,14 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">once&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
+						<li class="tsd-signature tsd-kind-icon">once&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L22">event/typed.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L20">event/typed.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -612,73 +589,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="prependlistener" class="tsd-anchor"></a>
-					<h3>prepend<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">prepend<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#prependlistener">prependListener</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L18">event/typed.ts:18</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <span class="tsd-signature-type">U</span></h5>
-								</li>
-								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="prependoncelistener" class="tsd-anchor"></a>
-					<h3>prepend<wbr>Once<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">prepend<wbr>Once<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#prependoncelistener">prependOnceListener</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L19">event/typed.ts:19</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <span class="tsd-signature-type">U</span></h5>
-								</li>
-								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -689,14 +600,14 @@
 					<a name="pushreceived" class="tsd-anchor"></a>
 					<h3>push<wbr>Received</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">push<wbr>Received<span class="tsd-signature-symbol">(</span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a>, parentCtx<span class="tsd-signature-symbol">: </span><a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">push<wbr>Received<span class="tsd-signature-symbol">(</span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a>, parentCtx<span class="tsd-signature-symbol">: </span><a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/talk.managed.html">Managed</a>.<a href="../interfaces/talk.managed.html#pushreceived">pushReceived</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L116">talk/openlink/open-link-service.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L116">talk/openlink/open-link-service.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -708,40 +619,10 @@
 									<h5>data: <a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a></h5>
 								</li>
 								<li>
-									<h5>parentCtx: <a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>parentCtx: <a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-					<a name="rawlisteners" class="tsd-anchor"></a>
-					<h3>raw<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">raw<wbr>Listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#rawlisteners">rawListeners</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L29">event/typed.ts:29</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;link_created&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;link_deleted&quot;</span></h4>
-								</li>
-							</ul>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>type: <span class="tsd-signature-type">U</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -756,7 +637,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#react">react</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L92">talk/openlink/open-link-service.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L92">talk/openlink/open-link-service.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -783,7 +664,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removealllisteners">removeAllListeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L21">event/typed.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L19">event/typed.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -807,7 +688,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#removekicked">removeKicked</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L78">talk/openlink/open-link-service.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L78">talk/openlink/open-link-service.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -827,14 +708,14 @@
 					<a name="removelistener" class="tsd-anchor"></a>
 					<h3>remove<wbr>Listener</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removelistener">removeListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L20">event/typed.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/event/typed.ts#L18">event/typed.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -849,31 +730,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <span class="tsd-signature-type">OpenLinkEvent</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="setmaxlisteners" class="tsd-anchor"></a>
-					<h3>set<wbr>Max<wbr>Listeners</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Max<wbr>Listeners<span class="tsd-signature-symbol">(</span>n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#setmaxlisteners">setMaxListeners</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/event/typed.ts#L31">event/typed.ts:31</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>n: <span class="tsd-signature-type">number</span></h5>
+									<h5>listener: <a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Class">OpenLinkService</a></h4>
@@ -890,7 +747,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/f838db4/src/talk/openlink/open-link-service.ts#L105">talk/openlink/open-link-service.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/openlink/open-link-service.ts#L105">talk/openlink/open-link-service.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -937,6 +794,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk.mediauploader.html" class="tsd-kind-icon">Media<wbr>Uploader</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk.multimediauploader.html" class="tsd-kind-icon">Multi<wbr>Media<wbr>Uploader</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
@@ -972,9 +832,6 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk.openlinkservice.html#getlatestlinklist" class="tsd-kind-icon">get<wbr>Latest<wbr>Link<wbr>List</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="talk.openlinkservice.html#getmaxlisteners" class="tsd-kind-icon">get<wbr>Max<wbr>Listeners</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk.openlinkservice.html#getopenlink" class="tsd-kind-icon">get<wbr>Open<wbr>Link</a>
 							</li>
@@ -996,17 +853,8 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="talk.openlinkservice.html#once" class="tsd-kind-icon">once</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk.openlinkservice.html#prependlistener" class="tsd-kind-icon">prepend<wbr>Listener</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk.openlinkservice.html#prependoncelistener" class="tsd-kind-icon">prepend<wbr>Once<wbr>Listener</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk.openlinkservice.html#pushreceived" class="tsd-kind-icon">push<wbr>Received</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="talk.openlinkservice.html#rawlisteners" class="tsd-kind-icon">raw<wbr>Listeners</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk.openlinkservice.html#react" class="tsd-kind-icon">react</a>
@@ -1019,9 +867,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="talk.openlinkservice.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="talk.openlinkservice.html#setmaxlisteners" class="tsd-kind-icon">set<wbr>Max<wbr>Listeners</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="talk.openlinkservice.html#initialize" class="tsd-kind-icon">initialize</a>
@@ -1107,6 +952,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/talk.talksession.html" class="tsd-kind-icon">Talk<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/talk.html#sendmultimedia" class="tsd-kind-icon">send<wbr>Multi<wbr>Media</a>
 					</li>
 				</ul>
 			</nav>
