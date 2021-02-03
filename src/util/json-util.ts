@@ -8,8 +8,8 @@ import * as LosslessJSON from 'lossless-json';
  */
 
 export namespace JsonUtil {
-  const bsonLongRiver = (key: string, value: any) => {
-    if (value && value.isLosslessNumber) {
+  const bsonLongReceiver = (key: string, value: unknown) => {
+    if (typeof value === 'object' && value && 'isLosslessNumber' in value) {
       try {
         return value.valueOf();
       } catch (e) {
@@ -28,17 +28,8 @@ export namespace JsonUtil {
     return value;
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  export function readLong(value: any): Long {
-    if (value && value.unsigned !== undefined) {
-      return (value as Long);
-    }
-
-    return Long.fromNumber(value);
-  }
-
   export function parseLoseless(obj: string): any {
-    return LosslessJSON.parse(obj, bsonLongRiver);
+    return LosslessJSON.parse(obj, bsonLongReceiver);
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

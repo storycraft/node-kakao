@@ -55,7 +55,7 @@ export class NodeSocket implements BiStream {
 
   static connect(option: NetSocketOptions): Promise<BiStream> {
     return new Promise<NodeSocket>((resolve, reject) => {
-      const onErr = (err: any) => {
+      const onErr = (err: unknown) => {
         reject(err);
       };
 
@@ -71,7 +71,7 @@ export class NodeSocket implements BiStream {
 
   static connectTls(option: NetSocketOptions): Promise<BiStream> {
     return new Promise<NodeSocket>((resolve, reject) => {
-      const onErr = (err: any) => {
+      const onErr = (err: unknown) => {
         reject(err);
       };
 
