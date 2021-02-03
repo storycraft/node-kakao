@@ -5,7 +5,10 @@
  */
 
 export * from "./media-downloader";
+
+export * from "./upload";
 export * from "./media-uploader";
+export * from "./multi-media-uploader";
 
 export interface MediaUploadTemplate {
 

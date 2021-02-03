@@ -37,7 +37,10 @@ import { GetTrailerRes } from "../../packet/chat/get-trailer";
 import { LocoSecureLayer } from "../../network/loco-secure-layer";
 import { newCryptoStore } from "../../crypto";
 import { SyncMsgRes } from "../../packet/chat/sync-msg";
-import { MChatlogsRes } from "../../packet/chat";
+import { MChatlogsRes, MShipRes, ShipRes } from "../../packet/chat";
+import { MediaUploader, MultiMediaUploader } from "../media";
+import { MediaUploadTemplate } from "../media/upload";
+import { sha1 } from "hash-wasm";
 
 /**
  * Default ChannelSession implementation
@@ -55,7 +58,7 @@ export class TalkChannelSession implements ChannelSession {
 
         this.currentMsgId = 0;
     }
-
+    
     get session() {
         return this._session;
     }
@@ -319,6 +322,72 @@ export class TalkChannelSession implements ChannelSession {
             await newCryptoStore(this._session.configuration.locoPEMPublicKey));
 
         return { status: res.status, success: true, result: new MediaDownloader(socket, this._session, this._channel, media) };
+    }
+
+    async uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {
+        const res = await this._session.request<ShipRes>(
+            'SHIP',
+            {
+                'c': this._channel.channelId,
+                't': type,
+                's': template.data.byteLength,
+                'cs': await sha1(new Uint8Array(template.data)),
+                'e': template.ext || ''
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        return {
+            success: true,
+            status: res.status,
+            result: new MediaUploader(
+                { key: res.k },
+                type,
+                template,
+                this._session,
+                this._channel,
+                new LocoSecureLayer(
+                    await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
+                    await newCryptoStore(this._session.configuration.locoPEMPublicKey)
+                )
+            )
+        };
+    }
+
+    async uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]> {
+        const res = await this._session.request<MShipRes>(
+            'MSHIP',
+            {
+                'c': this._channel.channelId,
+                't': type,
+                'sl': templates.map(template => template.data.byteLength),
+                'csl': await Promise.all(templates.map(template => sha1(new Uint8Array(template.data)))),
+                'el': templates.map(template => template.ext || '')
+            }
+        );
+
+        if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+
+        const len = res.kl.length;
+        const list: MultiMediaUploader[] = [];
+        for (let i = 0; i < len; i++) {
+            const key = res.kl[i];
+            list.push(
+                new MultiMediaUploader(
+                    { key },
+                    type,
+                    templates[i],
+                    this._session,
+                    new LocoSecureLayer(
+                        await NetSocket.createTCPSocket({ host: res.vhl[i], port: res.pl[i], keepAlive: true }),
+                        await newCryptoStore(this._session.configuration.locoPEMPublicKey)
+                    )
+                )
+            );
+        }
+
+        return { success: true, status: res.status, result: list };
     }
 
 }

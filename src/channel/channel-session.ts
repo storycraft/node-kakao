@@ -16,7 +16,8 @@ import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
 import { MediaDownloader } from "../talk/media/media-downloader";
 import { MediaKeyComponent } from "../media";
 import { ChatType } from "../chat/chat-type";
-import { MediaUploader } from "../talk";
+import { MediaUploader, MultiMediaUploader } from "../talk";
+import { MediaUploadTemplate } from "../talk/media/upload";
 
 export interface ChannelTemplate {
 
@@ -134,6 +135,20 @@ export interface ChannelSession {
      * @param type
      */
     downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader>;
+
+    /**
+     * Create media uploader.
+     *
+     * @param type
+     */
+    uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader>;
+
+    /**
+     * Create multi media uploader.
+     *
+     * @param type Media type. Currently works only with MULTIPHOTO.
+     */
+    uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]>;
 
 }
 

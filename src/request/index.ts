@@ -47,13 +47,13 @@ interface RootCommandResult {
 
 }
 
-interface CommandResultFailed extends RootCommandResult {
+export interface CommandResultFailed extends RootCommandResult {
 
     readonly success: false;
 
 }
 
-interface CommandResultDone<T> extends RootCommandResult {
+interface CommandResultDoneValue<T> extends RootCommandResult {
 
     readonly success: true;
     readonly result: T;
@@ -66,5 +66,6 @@ interface CommandResultDoneVoid extends RootCommandResult {
 
 }
 
-export type CommandResult<T = void> = CommandResultFailed | (T extends void ? CommandResultDoneVoid : CommandResultDone<T>);
+export type CommandResultDone<T> = (T extends void ? CommandResultDoneVoid : CommandResultDoneValue<T>);
+export type CommandResult<T = void> = CommandResultFailed | CommandResultDone<T>;
 export type AsyncCommandResult<T = void> = Promise<CommandResult<T>>;

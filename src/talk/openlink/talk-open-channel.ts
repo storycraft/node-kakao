@@ -7,7 +7,7 @@
 import { Long } from "bson";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta } from "../../channel/channel-info";
-import { Chat, ChatLogged, ChatLoggedType } from "../../chat/chat";
+import { Chat, Chatlog, ChatLogged, ChatLoggedType } from "../../chat/chat";
 import { ChatType } from "../../chat/chat-type";
 import { TalkSession } from "../client";
 import { EventContext } from "../../event/event-context";
@@ -16,7 +16,7 @@ import { OpenChannel } from "../../openlink/open-channel";
 import { OpenChannelInfo } from "../../openlink/open-channel-info";
 import { OpenChannelSession } from "../../openlink/open-channel-session";
 import { OpenChannelUserPerm } from "../../openlink/open-link-type";
-import { DefaultRes } from "../../request";
+import { CommandResultDone, DefaultRes } from "../../request";
 import { KnownDataStatusCode } from "../../request";
 import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
 import { OpenMemberStruct } from "../../packet/struct/user";
@@ -37,6 +37,8 @@ import { JsonUtil } from "../../util";
 import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from "../../channel/meta";
 import { TypedEmitter } from "../../event";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
+import { MediaUploadTemplate } from "../media/upload";
+import { sendMultiMedia } from "../channel/common";
 
 export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 
@@ -425,6 +427,25 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
 
     downloadMedia(media: MediaKeyComponent, type: ChatType) {
         return this._channelSession.downloadMedia(media, type);
+    }
+
+    uploadMedia(type: ChatType, template: MediaUploadTemplate) {
+        return this._channelSession.uploadMedia(type, template);
+    }
+
+    uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]) {
+        return this._channelSession.uploadMultiMedia(type, templates);
+    }
+
+    async sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
+        const res = await this._channelSession.uploadMedia(type, template);
+        if (!res.success) return res;
+
+        return res.result.upload();
+    }
+
+    async sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
+        return sendMultiMedia(this._channelSession, type, templates);
     }
 
     async updateAll(): AsyncCommandResult {

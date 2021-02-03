@@ -4,12 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { DefaultRes } from "../../request";
+import { CommandResultDone, DefaultRes } from "../../request";
 import { Channel } from "../../channel/channel";
 import { ChannelMeta, NormalChannelInfo } from "../../channel/channel-info";
 import { ChannelUser } from "../../user/channel-user";
 import { NormalChannelUserInfo } from "../../user/channel-user-info";
-import { Chat, ChatLogged } from "../../chat/chat";
+import { Chat, Chatlog, ChatLogged } from "../../chat/chat";
 import { AsyncCommandResult } from "../../request";
 import { TalkChannelSession } from "./talk-channel-session";
 import { ChannelMetaType, KnownChannelMetaType } from "../../packet/struct/channel";
@@ -28,6 +28,9 @@ import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMeta
 import { JsonUtil } from "../../util";
 import { TypedEmitter } from "../../event";
 import { ChatOnRoomRes } from "../../packet/chat/chat-on-room";
+import { MediaUploader, MultiMediaUploader } from "../media";
+import { MediaUploadTemplate } from "../media/upload";
+import { sendMultiMedia } from "./common";
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
 
@@ -70,6 +73,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
 
         this._info = NormalChannelInfo.createPartial(info);
     }
+    
 
     get clientUser() {
         return this._channelSession.session.clientUser;
@@ -299,6 +303,25 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
 
     downloadMedia(media: MediaKeyComponent, type: ChatType) {
         return this._channelSession.downloadMedia(media, type);
+    }
+
+    uploadMedia(type: ChatType, template: MediaUploadTemplate) {
+        return this._channelSession.uploadMedia(type, template);
+    }
+
+    uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]) {
+        return this._channelSession.uploadMultiMedia(type, templates);
+    }
+
+    async sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
+        const res = await this._channelSession.uploadMedia(type, template);
+        if (!res.success) return res;
+
+        return res.result.upload();
+    }
+
+    async sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
+        return sendMultiMedia(this._channelSession, type, templates);
     }
 
     async updateAll(): AsyncCommandResult {

@@ -16,7 +16,7 @@ export class PacketAssembler<T, R> {
     private _dataCodec: LocoPacketDataCodec<T, R>;
 
     constructor(dataCodec: LocoPacketDataCodec<T, R>) {
-        this._currentId = 0;
+        this._currentId = 1;
         this._dataCodec = dataCodec;
     }
 
@@ -31,7 +31,7 @@ export class PacketAssembler<T, R> {
 
         return {
             header: {
-                id: ++this._currentId,
+                id: (this._currentId = (this._currentId + 1) % 100000),
                 method,
                 status: 0,
             },

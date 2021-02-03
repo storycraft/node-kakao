@@ -4,18 +4,16 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Channel } from "../../channel/channel";
 import { TalkSession } from "../client";
 import { MediaKeyComponent } from "../../media";
 import { DefaultLocoSession } from "../../network/request-session";
-import { BiStream } from "../../stream";
-import { DefaultReq, KnownDataStatusCode } from "../../request";
+import { BiStream, FixedWriteStream } from "../../stream";
+import { KnownDataStatusCode } from "../../request";
 import { AsyncCommandResult } from "../../request";
-import { Chatlog, ChatType } from "../../chat";
+import { ChatType } from "../../chat";
 import { MediaUploadTemplate } from "./upload";
-import { structToChatlog } from "../../packet/struct";
 
-export class MediaUploader {
+export class MultiMediaUploader {
 
     private _canUpload: boolean;
 
@@ -24,7 +22,6 @@ export class MediaUploader {
         private _type: ChatType,
         private _template: MediaUploadTemplate,
         private _talkSession: TalkSession,
-        private _channel: Channel,
         private _stream: BiStream
     ) {
         this._canUpload = true;
@@ -48,9 +45,8 @@ export class MediaUploader {
 
     /**
      * Create data writer with given template and start uploading.
-     * When upload done the server send to channel.
      */
-    upload(): AsyncCommandResult<Chatlog> {
+    upload(): AsyncCommandResult<MediaKeyComponent> {
         if (!this._canUpload) throw new Error('Upload task already started');
 
         const session = new DefaultLocoSession(this._stream);
@@ -61,8 +57,7 @@ export class MediaUploader {
             (async () => {
                 for await (const { method, data } of session.listen()) {
                     if (method === 'COMPLETE') {
-                        const chatlog = structToChatlog(data['chatLog']);
-                        return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
+                        return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: this._media };
                     }
                 }
             })().then((res) => {
@@ -74,32 +69,23 @@ export class MediaUploader {
                 }
             }).catch(reject);
 
-            const reqData: DefaultReq = {
+            session.request('MPOST', {
                 'k': this._media.key,
                 's': this._template.data.byteLength,
                 't': this._type,
-
-                'c': this._channel.channelId,
-                'mid': Math.floor(Math.random() * 1000000),
-                'ns': true,
     
                 'u': this._talkSession.clientUser.userId,
                 'os': clientConfig.agent,
                 'av': clientConfig.appVersion,
                 'nt': clientConfig.netType,
                 'mm': clientConfig.mccmnc
-            };
-
-            if (this._template.width) reqData['w'] = this._template.width;
-            if (this._template.height) reqData['h'] = this._template.height;
-
-            session.request('POST', reqData).then((postRes) => {
+            }).then((postRes) => {
                 if (postRes.status !== KnownDataStatusCode.SUCCESS) resolve({ status: postRes.status, success: false });
                 this._canUpload = false;
     
                 // TODO: This should be process properly.
                 const offset = postRes['o'];
-                
+
                 this._stream.write(this._template.data).then();
             }).catch(reject);
         });
