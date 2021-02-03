@@ -35,12 +35,12 @@ async function main() {
         forced: true
     });
     if (!loginRes.success) throw new Error(`Web login failed with status: ${loginRes.status}`);
-    
+
     console.log(`Received access token: ${loginRes.result.accessToken}`);
-    
+
     const res = await CLIENT.login(loginRes.result);
     if (!res.success) throw new Error(`Login failed with status: ${res.status}`);
-    
+
     console.log('Login success');
 }
 main().then();

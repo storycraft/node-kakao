@@ -10,7 +10,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 
 export default () => {
-
   const plugins = [
     commonjs({
       include: 'node_modules/**',
@@ -18,7 +17,7 @@ export default () => {
     nodePolyfills(),
     nodeResolve(),
     typescript({
-      // bug fix 
+      // bug fix
       rollupCommonJSResolveHack: true,
       tsconfigOverride: {
         compilerOptions: {
@@ -37,7 +36,7 @@ export default () => {
         // Excluded
         'axios',
         'form-data',
-    
+
         // Substituted
         'bson',
         'hash-wasm'
@@ -58,4 +57,4 @@ export default () => {
       plugins
     }
   ];
-}
+};
