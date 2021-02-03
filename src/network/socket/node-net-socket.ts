@@ -19,7 +19,7 @@ export class NodeSocket implements BiStream {
       this._ended = false;
     }
 
-    iterate(): {[Symbol.asyncIterator](): any, next: () => Promise<IteratorResult<any, unknown>>} {
+    iterate(): AsyncIterableIterator<any> {
       const iterator = this._socket[Symbol.asyncIterator]();
 
       return {

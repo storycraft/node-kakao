@@ -53,9 +53,9 @@ export class LocoPacketDispatcher {
     /**
      * Listen and process incoming packets.
      *
-     * @return {any}
+     * @return {AsyncIterableIterator<PacketRes>}
      */
-    listen(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<PacketRes>>} {
+    listen(): AsyncIterableIterator<PacketRes> {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
       const iterator = this._codec.iterate();

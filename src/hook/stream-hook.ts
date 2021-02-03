@@ -39,7 +39,7 @@ export class HookedStream implements BiStream {
     return this._stream.write(data);
   }
 
-  iterate(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<ArrayBuffer>>} {
+  iterate(): AsyncIterableIterator<ArrayBuffer> {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const instance = this;
     const iterator = this._stream.iterate();

@@ -84,7 +84,7 @@ export class MultiMediaUploader {
           this._canUpload = false;
 
           // TODO: This should be process properly.
-          // const offset = postRes['o'];
+          const offset = postRes['o'];
 
           this._stream.write(this._template.data).then();
         }).catch(reject);

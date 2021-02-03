@@ -24,7 +24,7 @@ export class LocoSecureLayer implements BiStream {
       this._handshaked = false;
     }
 
-    iterate(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<ArrayBuffer>>} {
+    iterate(): AsyncIterableIterator<ArrayBuffer> {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
       const iterator = instance._stream.iterate();

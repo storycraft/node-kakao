@@ -58,7 +58,7 @@ export class HookedLocoSession implements LocoSession {
 
   }
 
-  listen(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<PacketResData>>} {
+  listen(): AsyncIterableIterator<PacketResData> {
     const hook = this.hook;
     const iterator = this._session.listen();
 
