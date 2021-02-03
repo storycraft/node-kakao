@@ -137,7 +137,7 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
       }
 
       case 'LNKDELETED': {
-        if (!this._channel.linkId.eq(data['li'])) break;
+        if (!this._channel.linkId.eq(data['li'] as Long)) break;
         const struct = data['chatLog'] as ChatlogStruct;
 
         const chatLog = structToChatlog(struct);
@@ -177,7 +177,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
     switch (method) {
       case 'SYNCLINKCR': {
-        const chatRoom: ChannelInfoStruct = data['chatRoom'];
+        const chatRoom = data['chatRoom'] as ChannelInfoStruct;
         if (!chatRoom) break;
 
         this._updater.addChannel({ channelId: chatRoom.chatId }).then((channelRes) => {
@@ -216,7 +216,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
       }
 
       case 'SYNCLINKDL': {
-        const linkId: Long = data['li'];
+        const linkId = data['li'] as Long;
 
         const channel = this._list.getByLinkId(linkId);
         if (!channel) return;

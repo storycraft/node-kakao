@@ -12,7 +12,7 @@ import { BiStream } from '../../stream';
 import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
 import { Chatlog, ChatType } from '../../chat';
 import { MediaUploadTemplate } from './upload';
-import { structToChatlog } from '../../packet/struct';
+import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 
 export class MediaUploader {
   private _canUpload: boolean;
@@ -61,7 +61,7 @@ export class MediaUploader {
       (async () => {
         for await (const { method, data } of session.listen()) {
           if (method === 'COMPLETE') {
-            const chatlog = structToChatlog(data['chatLog']);
+            const chatlog = structToChatlog(data['chatLog'] as ChatlogStruct);
             return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
           }
         }
@@ -97,8 +97,7 @@ export class MediaUploader {
         if (postRes.status !== KnownDataStatusCode.SUCCESS) resolve({ status: postRes.status, success: false });
         this._canUpload = false;
 
-        // TODO: This should be process properly.
-        const offset = postRes['o'];
+        const offset = postRes['o'] as number;
 
         this._stream.write(this._template.data.slice(offset)).then();
       }).catch(reject);

@@ -133,6 +133,10 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       );
       if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-      return { status: res.status, success: true, result: [res['rc'], res['rt']] };
+      return {
+        status: res.status,
+        success: true,
+        result: [res['rc'] as number, res['rt'] as boolean],
+      };
     }
 }

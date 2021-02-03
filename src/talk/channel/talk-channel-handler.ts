@@ -120,10 +120,10 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
       }
 
       case 'FEED': {
-        const channelId: Long = data['c'];
+        const channelId = data['c'] as Long;
         if (!this._channel.channelId.equals(channelId)) break;
 
-        const chatLog = structToChatlog(data['chatLog']);
+        const chatLog = structToChatlog(data['chatLog'] as ChatlogStruct);
         this._callEvent(
             parentCtx,
             'chat',

@@ -83,8 +83,7 @@ export class MultiMediaUploader {
         if (postRes.status !== KnownDataStatusCode.SUCCESS) resolve({ status: postRes.status, success: false });
         this._canUpload = false;
 
-        // TODO: This should be process properly.
-        const offset = postRes['o'];
+        const offset = postRes['o'] as number;
 
         this._stream.write(this._template.data.slice(offset)).then();
       }).catch(reject);

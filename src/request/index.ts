@@ -33,7 +33,7 @@ export interface DefaultReq {
 export interface DefaultRes {
 
   status: DataStatusCode;
-  [key: string]: any;
+  [key: string]: unknown;
 
 }
 

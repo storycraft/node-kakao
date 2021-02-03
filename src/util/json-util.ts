@@ -8,7 +8,7 @@ import * as LosslessJSON from 'lossless-json';
  */
 
 export namespace JsonUtil {
-  const bsonLongReceiver = (key: string, value: unknown) => {
+  const bsonLongReviver = (key: string, value: unknown) => {
     if (typeof value === 'object' && value && 'isLosslessNumber' in value) {
       try {
         return value.valueOf();
@@ -28,8 +28,9 @@ export namespace JsonUtil {
     return value;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export function parseLoseless(obj: string): any {
-    return LosslessJSON.parse(obj, bsonLongReceiver);
+    return LosslessJSON.parse(obj, bsonLongReviver);
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -16,7 +16,7 @@ import {
   OpenLinkSession,
 } from '../../openlink';
 import { AsyncCommandResult, CommandResult, DefaultRes } from '../../request';
-import { structToOpenLink, structToOpenLinkInfo } from '../../packet/struct';
+import { InformedOpenLinkStruct, structToOpenLink, structToOpenLinkInfo } from '../../packet/struct';
 import { OpenLinkEvent } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenLinkSession } from './talk-openlink-session';
@@ -127,7 +127,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvent> implements Mana
     pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>): void {
       switch (method) {
         case 'SYNCLINKCR': {
-          const linkStruct = data['ol'];
+          const linkStruct = data['ol'] as InformedOpenLinkStruct;
 
           const informed: InformedOpenLink = {
             openLink: structToOpenLink(linkStruct),
@@ -141,7 +141,7 @@ export class OpenLinkService extends TypedEmitter<OpenLinkEvent> implements Mana
         }
 
         case 'SYNCLINKDL': {
-          const linkId: Long = data['li'];
+          const linkId = data['li'] as Long;
           const clientLink = this.get(linkId);
 
           if (!clientLink) return;

@@ -23,6 +23,7 @@ import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../reque
 import {
   ChannelInfoStruct,
   OpenChannelInfoExtra,
+  OpenLinkChannelUserStruct,
   OpenMemberStruct,
   structToOpenChannelInfo,
   structToOpenChannelUserInfo,
@@ -240,7 +241,11 @@ export class TalkOpenChannelSession implements OpenChannelSession {
       if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
       if (res['olu']) {
-        return { status: res.status, success: true, result: structToOpenLinkChannelUserInfo(res['olu']) };
+        return {
+          status: res.status,
+          success: true,
+          result: structToOpenLinkChannelUserInfo(res['olu'] as OpenLinkChannelUserStruct),
+        };
       }
 
       return { status: res.status, success: true, result: null };
@@ -301,7 +306,7 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
 
         if (tokenRes.status !== KnownDataStatusCode.SUCCESS) return { status: tokenRes.status, success: false };
 
-        token = tokenRes['tk'];
+        token = tokenRes['tk'] as string;
       }
 
       const reqData: DefaultReq = {

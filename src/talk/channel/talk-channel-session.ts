@@ -443,6 +443,10 @@ export class TalkChannelManageSession implements NormalChannelManageSession {
           },
       );
 
-      return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res['lastTokenId'] };
+      return {
+        status: res.status,
+        success: res.status === KnownDataStatusCode.SUCCESS,
+        result: res['lastTokenId'] as Long,
+      };
     }
 }

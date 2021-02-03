@@ -63,7 +63,7 @@ export class MediaDownloader {
       return { success: false, status: data.status };
     }
 
-    const size = data['s'];
+    const size = data['s'] as number;
 
     return {
       status: KnownDataStatusCode.SUCCESS,
@@ -111,7 +111,7 @@ export class MediaDownloader {
       return { success: false, status: data.status };
     }
 
-    const size = data['s'];
+    const size = data['s'] as number;
 
     return {
       status: KnownDataStatusCode.SUCCESS,
