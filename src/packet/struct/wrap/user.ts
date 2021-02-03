@@ -17,7 +17,7 @@ export function structToChannelUserInfo(struct: NormalMemberStruct): NormalChann
     countryIso: struct.countryIso,
     statusMessage: struct.statusMessage,
     suspended: struct.suspended,
-    linkedServies: struct.linkedServices,
+    linkedServices: struct.linkedServices,
     profileURL: struct.profileImageUrl,
     fullProfileURL: struct.fullProfileImageUrl,
     originalProfileURL: struct.originalProfileImageUrl,

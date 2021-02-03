@@ -67,7 +67,7 @@ export interface NormalChannelUserInfo extends ChannelUserInfo {
     /**
      * Linked services
      */
-    linkedServies: string;
+    linkedServices: string;
 
     /**
      * User type(?) unknown
