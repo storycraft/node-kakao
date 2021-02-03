@@ -34,7 +34,7 @@ export namespace JsonUtil {
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  export function stringifyLoseless(obj: any): string {
+  export function stringifyLoseless(obj: unknown): string {
     return LosslessJSON.stringify(obj, bsonLongReplacer);
   }
 
