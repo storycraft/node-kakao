@@ -24,9 +24,9 @@ export default () => {
           module: 'ESNext',
           declaration: false,
           removeComments: true,
-        }
-      }
-    })
+        },
+      },
+    }),
   ];
 
   return [
@@ -39,7 +39,7 @@ export default () => {
 
         // Substituted
         'bson',
-        'hash-wasm'
+        'hash-wasm',
       ],
       shimMissingExports: true,
       output: [
@@ -50,11 +50,11 @@ export default () => {
           paths: {
             'bson': 'https://unpkg.com/bson/dist/bson.browser.esm.js',
             'hash-wasm': 'https://cdn.jsdelivr.net/npm/hash-wasm/dist/index.esm.min.js',
-            'eventemitter3': 'https://unpkg.com/eventemitter3@latest/umd/eventemitter3.min.js'
-          }
+            'eventemitter3': 'https://unpkg.com/eventemitter3@latest/umd/eventemitter3.min.js',
+          },
         },
       ],
-      plugins
-    }
+      plugins,
+    },
   ];
 };
