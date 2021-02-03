@@ -28,6 +28,7 @@ export namespace JsonUtil {
       return value;
     };
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     export function readLong(value: any): Long {
       if (value && value.unsigned !== undefined) {
         return (value as Long);
@@ -40,6 +41,7 @@ export namespace JsonUtil {
       return LosslessJSON.parse(obj, bsonLongRiver);
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     export function stringifyLoseless(obj: any): string {
       return LosslessJSON.stringify(obj, bsonLongReplacer);
     }
