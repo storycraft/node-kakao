@@ -738,13 +738,13 @@ declare namespace Deno {
   /** The Deno abstraction for reading and writing files. */
   export class File
     implements
-      Reader,
-      ReaderSync,
-      Writer,
-      WriterSync,
-      Seeker,
-      SeekerSync,
-      Closer {
+    Reader,
+    ReaderSync,
+    Writer,
+    WriterSync,
+    Seeker,
+    SeekerSync,
+    Closer {
     readonly rid: number;
     constructor(rid: number);
     write(p: Uint8Array): Promise<number>;
@@ -2346,7 +2346,7 @@ interface AbortSignal extends EventTarget {
 
 declare var AbortSignal: {
   prototype: AbortSignal;
-  new (): AbortSignal;
+  new(): AbortSignal;
 };
 
 interface FileReaderEventMap {
@@ -2366,8 +2366,8 @@ interface FileReader extends EventTarget {
   onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null;
   onloadend: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null;
   onloadstart:
-    | ((this: FileReader, ev: ProgressEvent<FileReader>) => any)
-    | null;
+  | ((this: FileReader, ev: ProgressEvent<FileReader>) => any)
+  | null;
   onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null;
   readonly readyState: number;
   readonly result: string | ArrayBuffer | null;
@@ -2403,7 +2403,7 @@ interface FileReader extends EventTarget {
 
 declare var FileReader: {
   prototype: FileReader;
-  new (): FileReader;
+  new(): FileReader;
   readonly DONE: number;
   readonly EMPTY: number;
   readonly LOADING: number;
@@ -2461,7 +2461,7 @@ interface ReadableStreamReader<R = any> {
 
 declare var ReadableStreamReader: {
   prototype: ReadableStreamReader;
-  new (): ReadableStreamReader;
+  new(): ReadableStreamReader;
 };
 
 interface ReadableByteStreamControllerCallback {
@@ -2508,7 +2508,7 @@ interface ReadableStreamDefaultController<R = any> {
 
 declare var ReadableStreamDefaultController: {
   prototype: ReadableStreamDefaultController;
-  new (): ReadableStreamDefaultController;
+  new(): ReadableStreamDefaultController;
 };
 
 interface ReadableByteStreamController {
@@ -2521,7 +2521,7 @@ interface ReadableByteStreamController {
 
 declare var ReadableByteStreamController: {
   prototype: ReadableByteStreamController;
-  new (): ReadableByteStreamController;
+  new(): ReadableByteStreamController;
 };
 
 interface PipeOptions {
@@ -2584,7 +2584,7 @@ interface ReadableStream<R = any> {
 
 declare var ReadableStream: {
   prototype: ReadableStream;
-  new (
+  new(
     underlyingSource: UnderlyingByteSource,
     strategy?: { highWaterMark?: number; size?: undefined },
   ): ReadableStream<Uint8Array>;
@@ -2655,7 +2655,7 @@ interface WritableStreamDefaultWriter<W = any> {
 
 declare var WritableStreamDefaultWriter: {
   prototype: WritableStreamDefaultWriter;
-  new (): WritableStreamDefaultWriter;
+  new(): WritableStreamDefaultWriter;
 };
 
 interface TransformStream<I = any, O = any> {
@@ -3689,19 +3689,19 @@ declare interface Crypto {
   readonly subtle: null;
   getRandomValues<
     T extends
-      | Int8Array
-      | Int16Array
-      | Int32Array
-      | Uint8Array
-      | Uint16Array
-      | Uint32Array
-      | Uint8ClampedArray
-      | Float32Array
-      | Float64Array
-      | DataView
-      | null,
-  >(
-    array: T,
+    | Int8Array
+    | Int16Array
+    | Int32Array
+    | Uint8Array
+    | Uint16Array
+    | Uint32Array
+    | Uint8ClampedArray
+    | Float32Array
+    | Float64Array
+    | DataView
+    | null,
+    >(
+      array: T,
   ): T;
 }
 

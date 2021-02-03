@@ -11,15 +11,15 @@ export * from './fixed';
  */
 export interface Stream {
 
-    /**
-     * Indicate current stream is ended or not
-     */
-    readonly ended: boolean;
+  /**
+   * Indicate current stream is ended or not
+   */
+  readonly ended: boolean;
 
-    /**
-     * Close current stream
-     */
-    close(): void;
+  /**
+   * Close current stream
+   */
+  close(): void;
 
 }
 
@@ -29,10 +29,10 @@ export interface Stream {
  */
 export interface ReadStream extends Stream {
 
-    /**
-     * Try to read data from stream
-     */
-    iterate(): AsyncIterableIterator<ArrayBuffer>;
+  /**
+   * Try to read data from stream
+   */
+  iterate(): AsyncIterableIterator<ArrayBuffer>;
 
 }
 
@@ -42,11 +42,11 @@ export interface ReadStream extends Stream {
  */
 export interface WriteStream extends Stream {
 
-    /**
-     * Write data
-     * @param data
-     */
-    write(data: ArrayBuffer): Promise<void>;
+  /**
+   * Write data
+   * @param data
+   */
+  write(data: ArrayBuffer): Promise<void>;
 
 }
 

@@ -9,14 +9,14 @@ import { NormalMemberStruct, OpenMemberStruct } from '../struct';
 
 export interface MemberRes {
 
-    /**
-     * Channel id
-     */
-    chatId: Long;
+  /**
+   * Channel id
+   */
+  chatId: Long;
 
-    /**
-     * Member list
-     */
-    members: NormalMemberStruct[] | OpenMemberStruct[];
+  /**
+   * Member list
+   */
+  members: NormalMemberStruct[] | OpenMemberStruct[];
 
 }

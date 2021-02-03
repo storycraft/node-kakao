@@ -10,12 +10,12 @@ import { ChannelBoardStruct } from "./channel-board-struct";
 
 export enum PostType {
 
-    TEXT = 'TEXT',
-    POLL = 'POLL',
-    FILE = 'FILE',
-    IMAGE = 'IMAGE',
-    VIDEO = 'VIDEO',
-    SCHEDULE = 'SCHEDULE'
+  TEXT = 'TEXT',
+  POLL = 'POLL',
+  FILE = 'FILE',
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+  SCHEDULE = 'SCHEDULE'
 
 }
 
@@ -27,174 +27,174 @@ export enum PostPermission {
 
 export enum BoardEmotionType {
 
-    LIKE = 'LIKE'
+  LIKE = 'LIKE'
 
 }
 
 export namespace ChannelPost {
 
-    export enum ContentType {
+  export enum ContentType {
 
-        TEXT = 'text',
-        MENTION = 'user',
-        EVERYONE_MENTION = 'user_all'
+    TEXT = 'text',
+    MENTION = 'user',
+    EVERYONE_MENTION = 'user_all'
 
-    }
+  }
 
-    export interface Comment extends StructBase {
+  export interface Comment extends StructBase {
 
-        id: string;
-        content: string;
+    id: string;
+    content: string;
 
-        permission: PostPermission;
+    permission: PostPermission;
 
-        owner_id: Long;
-        created_at: string;
+    owner_id: Long;
+    created_at: string;
 
-    }
+  }
 
-    export interface Emotion {
+  export interface Emotion {
 
-        id: string;
-        emotion: BoardEmotionType;
-        owner_id: Long;
-        created_at: string;
+    id: string;
+    emotion: BoardEmotionType;
+    owner_id: Long;
+    created_at: string;
 
-    }
+  }
 
 
 
-    export enum PollItemType {
+  export enum PollItemType {
 
-        TEXT = 'text',
+    TEXT = 'text',
 
-    }
+  }
 
-    export interface PollItem {
+  export interface PollItem {
 
-        id: string;
-        title: string;
-        voted: boolean;
-        user_count: number;
+    id: string;
+    title: string;
+    voted: boolean;
+    user_count: number;
 
-    }
+  }
 
-    export interface Poll {
+  export interface Poll {
 
-        id: string;
+    id: string;
 
-        subject: string;
+    subject: string;
 
-        secret: boolean;
-        closed: boolean;
-        voted: boolean;
+    secret: boolean;
+    closed: boolean;
+    voted: boolean;
 
-        items: PollItem[];
+    items: PollItem[];
 
-        permission: PostPermission;
+    permission: PostPermission;
 
-        item_type: PollItemType;
-        item_addable: boolean;
+    item_type: PollItemType;
+    item_addable: boolean;
 
-        multiSelect: boolean;
+    multiSelect: boolean;
 
-        user_count: number;
+    user_count: number;
 
-        post_id: string;
-        created_at: string;
-    }
+    post_id: string;
+    created_at: string;
+  }
 
-    export interface File {
+  export interface File {
 
-        id: string;
-        filename: string;
+    id: string;
+    filename: string;
 
-        size: number;
+    size: number;
 
-        ext: string;
+    ext: string;
 
-        download_url: string;
-        repo: string;
+    download_url: string;
+    repo: string;
 
-        valid_until: Long;
+    valid_until: Long;
 
-        post_id: string;
-        owner_id: Long;
-        created_at: string;
-    }
+    post_id: string;
+    owner_id: Long;
+    created_at: string;
+  }
 
-    export interface Schedule {
+  export interface Schedule {
 
-        subject: string;
+    subject: string;
 
-        start_at: number;
-        end_at: number;
+    start_at: number;
+    end_at: number;
 
-        all_day: string;
+    all_day: string;
 
-        location?: string;
-        alarm_at?: number;
+    location?: string;
+    alarm_at?: number;
 
-        ask_attend: boolean;
+    ask_attend: boolean;
 
-    }
+  }
 
-    export interface Media {
+  export interface Media {
 
-        id: string;
+    id: string;
 
-        media_type: string;
+    media_type: string;
 
-        small_url?: string;
-        medium_url?: string;
-        large_url?: string;
-        original_url?: string;
+    small_url?: string;
+    medium_url?: string;
+    large_url?: string;
+    original_url?: string;
 
-        video_download_low_quality_url?: string;
-        video_download_high_quality_url?: string;
+    video_download_low_quality_url?: string;
+    video_download_high_quality_url?: string;
 
-        video_streaming_low_quality_url?: string;
-        video_streaming_high_quality_url?: string;
+    video_streaming_low_quality_url?: string;
+    video_streaming_high_quality_url?: string;
 
-        valid_until: Long;
+    valid_until: Long;
 
-        post_id: string;
-        owner_id: Long;
-        created_at: string;
-    }
+    post_id: string;
+    owner_id: Long;
+    created_at: string;
+  }
 
-    export interface Scrap {
+  export interface Scrap {
 
-        url: string;
-        canonicalUrl: string;
+    url: string;
+    canonicalUrl: string;
 
-        contentType: string;
+    contentType: string;
 
-        title: string;
-        description: string;
-        mainImageUrl: string;
+    title: string;
+    description: string;
+    mainImageUrl: string;
 
-    }
+  }
 
-    export interface Text {
+  export interface Text {
 
-        text: string;
-        type: ContentType.TEXT;
+    text: string;
+    type: ContentType.TEXT;
 
-    }
+  }
 
-    export interface Mention {
+  export interface Mention {
 
-        type: ContentType.MENTION,
-        id: Long;
+    type: ContentType.MENTION,
+    id: Long;
 
-    }
+  }
 
-    export interface EveryoneMention {
+  export interface EveryoneMention {
 
-        type: ContentType.EVERYONE_MENTION
+    type: ContentType.EVERYONE_MENTION
 
-    }
+  }
 
 }
 
@@ -203,42 +203,42 @@ export type PostContent = ChannelPost.Text | ChannelPost.Mention | ChannelPost.E
 
 export interface SimpleChannelPostStruct extends StructBase {
 
-    id: string;
+  id: string;
 
-    owner_id: Long;
+  owner_id: Long;
 
-    object_type: PostType;
+  object_type: PostType;
 
-    created_at: string;
+  created_at: string;
 
-    read_count: number;
+  read_count: number;
 
-    comment_count: number;
-    emotion_count: number;
+  comment_count: number;
+  emotion_count: number;
 
-    notice: boolean;
+  notice: boolean;
 
-    // bit flag?
-    permission: PostPermission;
+  // bit flag?
+  permission: PostPermission;
 
-    // JSON ChannelPost.Text
-    content?: string;
-    poll?: ChannelPost.Poll;
-    files?: ChannelPost.File[];
-    media?: ChannelPost.Media;
+  // JSON ChannelPost.Text
+  content?: string;
+  poll?: ChannelPost.Poll;
+  files?: ChannelPost.File[];
+  media?: ChannelPost.Media;
 
-    // JSON ChannelPost.Scrap
-    scrap?: string;
+  // JSON ChannelPost.Scrap
+  scrap?: string;
 
 }
 
 export interface ChannelPostStruct extends SimpleChannelPostStruct {
 
-    comments: ChannelPost.Comment[];
-    has_more_comments: boolean;
+  comments: ChannelPost.Comment[];
+  has_more_comments: boolean;
 
-    emotions: ChannelPost.Emotion[];
-    my_emotion?: ChannelPost.Emotion;
+  emotions: ChannelPost.Emotion[];
+  my_emotion?: ChannelPost.Emotion;
 
 }
 

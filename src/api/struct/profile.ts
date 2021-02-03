@@ -6,91 +6,91 @@
 
 export interface ProfileFeed {
 
-    id: string;
-    serviceName: string;
-    typeIconUrl: string;
-    downloadId: string;
-    contents: Array<{ type: string, value: string }>;
-    url: string;
-    serviceUrl: string;
-    webUrl: string;
-    serviceWebUrl: string;
-    updatedAt: number;
-    cursor: number;
-    feedMessage: string;
-    permission: number;
-    type: number;
-    isCurrent: boolean;
-    extra: unknown;
+  id: string;
+  serviceName: string;
+  typeIconUrl: string;
+  downloadId: string;
+  contents: Array<{ type: string, value: string }>;
+  url: string;
+  serviceUrl: string;
+  webUrl: string;
+  serviceWebUrl: string;
+  updatedAt: number;
+  cursor: number;
+  feedMessage: string;
+  permission: number;
+  type: number;
+  isCurrent: boolean;
+  extra: unknown;
 
 }
 
 export interface ProfileFeedList {
 
-    totalCnts: number;
-    feeds: ProfileFeed[];
+  totalCnts: number;
+  feeds: ProfileFeed[];
 
 }
 
 export interface ProfileDecoration {
 
-    itemKind: string;
-    itemId: string;
-    parameters: { resourceUrl: string };
+  itemKind: string;
+  itemId: string;
+  parameters: { resourceUrl: string };
 
 }
 
 export interface BgEffectDecoration extends ProfileDecoration {
 
-    itemKind: 'BgEffect';
+  itemKind: 'BgEffect';
 
 }
 
 export interface StickerDecoration extends ProfileDecoration {
 
-    itemKind: 'Sticker';
+  itemKind: 'Sticker';
 
-    // position by percent
-    x: number;
-    y: number;
-    cx: number;
-    cy: number;
-    width: number;
-    height: number;
-    rotation: number;
+  // position by percent
+  x: number;
+  y: number;
+  cx: number;
+  cy: number;
+  width: number;
+  height: number;
+  rotation: number;
 
 }
 
 export interface ProfileStruct {
 
-    backgroundImageUrl: string;
-    originalBackgroundImageUrl: string;
+  backgroundImageUrl: string;
+  originalBackgroundImageUrl: string;
 
-    statusMessage: string;
+  statusMessage: string;
 
-    profileImageUrl: string;
-    fullProfileImageUrl: string;
-    originalProfileImageUrl: string;
+  profileImageUrl: string;
+  fullProfileImageUrl: string;
+  originalProfileImageUrl: string;
 
-    decoration: ProfileDecoration[];
+  decoration: ProfileDecoration[];
 
-    profileFeeds: ProfileFeedList;
-    backgroundFeeds: ProfileFeedList;
+  profileFeeds: ProfileFeedList;
+  backgroundFeeds: ProfileFeedList;
 
-    allowStory: boolean;
-    allowStoryPost: boolean;
-    hasProfile2Photos: boolean;
-    allowPay: boolean;
+  allowStory: boolean;
+  allowStoryPost: boolean;
+  hasProfile2Photos: boolean;
+  allowPay: boolean;
 
-    screenToken: number;
+  screenToken: number;
 
 }
 
 export interface ProfileReqStruct {
 
-    profile: ProfileStruct;
+  profile: ProfileStruct;
 
-    itemNewBadgeToken: number;
-    lastSeenAt: number;
+  itemNewBadgeToken: number;
+  lastSeenAt: number;
 
 }

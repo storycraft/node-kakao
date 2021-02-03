@@ -12,10 +12,10 @@ import { OpenChannelUserPerm, OpenProfileType } from './open-link-type';
 
 export interface OpenLinkKickedUser extends ChannelUser {
 
-    /**
-     * Kicked channel id
-     */
-    kickedChannelId: Long;
+  /**
+   * Kicked channel id
+   */
+  kickedChannelId: Long;
 
 }
 
@@ -26,35 +26,35 @@ export interface OpenLinkKickedUserInfo extends OpenLinkKickedUser, DisplayUserI
 
 export interface OpenLinkUserInfo extends OpenLinkComponent, OpenTokenComponent, OpenPrivilegeComponent {
 
-    /**
-     * nickname
-     */
-    nickname: string;
+  /**
+   * nickname
+   */
+  nickname: string;
 
-    /**
-     * profile url
-     */
-    profileURL: string;
+  /**
+   * profile url
+   */
+  profileURL: string;
 
-    /**
-     * Full profile url
-     */
-    fullProfileURL: string;
+  /**
+   * Full profile url
+   */
+  fullProfileURL: string;
 
-    /**
-     * Original profile url
-     */
-    originalProfileURL: string;
+  /**
+   * Original profile url
+   */
+  originalProfileURL: string;
 
-    /**
-     * Link profile type
-     */
-    profileType: OpenProfileType;
+  /**
+   * Link profile type
+   */
+  profileType: OpenProfileType;
 
-    /**
-     * Link chat user perm
-     */
-    perm: OpenChannelUserPerm;
+  /**
+   * Link chat user perm
+   */
+  perm: OpenChannelUserPerm;
 
 }
 

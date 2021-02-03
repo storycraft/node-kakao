@@ -12,45 +12,45 @@ import { KnownChatType } from '../chat-type';
 
 export namespace FeedFragment {
 
-    export interface Member {
+  export interface Member {
 
-        readonly member: FeedMember;
+    readonly member: FeedMember;
 
-    }
+  }
 
-    export interface MemberList {
+  export interface MemberList {
 
-        readonly members: FeedMember[];
+    readonly members: FeedMember[];
 
-    }
+  }
 
-    export interface Inviter {
+  export interface Inviter {
 
-        readonly inviter: FeedMember;
+    readonly inviter: FeedMember;
 
-    }
+  }
 
-    export type Message = ChatLogged
+  export type Message = ChatLogged
 
-    export interface OpenHandOver {
+  export interface OpenHandOver {
 
-        readonly prevHost: FeedMember;
-        readonly newHost: FeedMember;
+    readonly prevHost: FeedMember;
+    readonly newHost: FeedMember;
 
-    }
+  }
 
 }
 
 export interface FeedMember extends ChannelUser {
 
-    nickName: string;
+  nickName: string;
 
 }
 
 export interface ChatFeed<T extends FeedType = FeedType> {
 
-    readonly feedType: T;
-    readonly hidden?: boolean;
+  readonly feedType: T;
+  readonly hidden?: boolean;
 
 }
 

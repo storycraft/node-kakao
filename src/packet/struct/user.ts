@@ -14,54 +14,54 @@ import { UserType } from '../../user';
  */
 export interface NormalMemberStruct {
 
-    /**
-     * User id
-     */
-    userId: Long;
+  /**
+   * User id
+   */
+  userId: Long;
 
-    /**
-     * Account id
-     */
-    accountId: number;
+  /**
+   * Account id
+   */
+  accountId: number;
 
-    /**
-     * Nickname
-     */
-    nickName: string;
+  /**
+   * Nickname
+   */
+  nickName: string;
 
-    /**
-     * User country iso
-     */
-    countryIso: string;
+  /**
+   * User country iso
+   */
+  countryIso: string;
 
-    profileImageUrl: string;
-    fullProfileImageUrl: string;
-    originalProfileImageUrl: string;
+  profileImageUrl: string;
+  fullProfileImageUrl: string;
+  originalProfileImageUrl: string;
 
-    /**
-     * Profile status message
-     */
-    statusMessage: string;
+  /**
+   * Profile status message
+   */
+  statusMessage: string;
 
-    /**
-     * Linked kakao services. (ex: story)
-     */
-    linkedServices: string;
+  /**
+   * Linked kakao services. (ex: story)
+   */
+  linkedServices: string;
 
-    /**
-     * User type
-     */
-    type: UserType;
+  /**
+   * User type
+   */
+  type: UserType;
 
-    /**
-     * Account status
-     */
-    suspended: boolean;
+  /**
+   * Account status
+   */
+  suspended: boolean;
 
-    /**
-     * User type(?) Unknown
-     */
-    ut: number;
+  /**
+   * User type(?) Unknown
+   */
+  ut: number;
 
 }
 
@@ -70,121 +70,121 @@ export interface NormalMemberStruct {
  */
 export interface OpenMemberStruct {
 
-    userId: Long;
+  userId: Long;
 
-    /**
-     * User type always 1000 for open chat member.
-     */
-    type: UserType;
+  /**
+   * User type always 1000 for open chat member.
+   */
+  type: UserType;
 
-    /**
-     * Nickname
-     */
-    nickName: string;
+  /**
+   * Nickname
+   */
+  nickName: string;
 
-    /**
-     * Profile image url
-     */
-    pi: string;
+  /**
+   * Profile image url
+   */
+  pi: string;
 
-    /**
-     * Full profile image url
-     */
-    fpi: string;
+  /**
+   * Full profile image url
+   */
+  fpi: string;
 
-    /**
-     * Original profile image url
-     */
-    opi: string;
+  /**
+   * Original profile image url
+   */
+  opi: string;
 
-    /**
-     * open token
-     */
-    opt: number;
+  /**
+   * open token
+   */
+  opt: number;
 
-    /**
-     * Only presetns if user is using open profile.
-     */
-    pli?: Long;
+  /**
+   * Only presetns if user is using open profile.
+   */
+  pli?: Long;
 
-    /**
-     * Open chat user permission
-     */
-    mt: OpenChannelUserPerm;
+  /**
+   * Open chat user permission
+   */
+  mt: OpenChannelUserPerm;
 
 }
 
 export interface OpenLinkKickedMemberStruct {
 
-    userId: Long;
+  userId: Long;
 
-    nickName: string;
+  nickName: string;
 
-    /**
-     * Profile image
-     */
-    pi: string;
+  /**
+   * Profile image
+   */
+  pi: string;
 
-    /**
-     * Kicked channel
-     */
-    c: Long;
+  /**
+   * Kicked channel
+   */
+  c: Long;
 
-    /**
-     * Unknown
-     */
-    dc: boolean;
+  /**
+   * Unknown
+   */
+  dc: boolean;
 
 }
 
 export interface OpenLinkUserStruct {
 
-    /**
-     * Openlink profile type
-     */
-    ptp: OpenProfileType;
+  /**
+   * Openlink profile type
+   */
+  ptp: OpenProfileType;
 
-    /**
-     * Open chat user permission
-     */
-    lmt: OpenChannelUserPerm
+  /**
+   * Open chat user permission
+   */
+  lmt: OpenChannelUserPerm
 
-    /**
-     * Nickname
-     */
-    nn: string;
+  /**
+   * Nickname
+   */
+  nn: string;
 
-    /**
-     * Profile image url
-     */
-    pi: string;
+  /**
+   * Profile image url
+   */
+  pi: string;
 
-    /**
-     * Full profile image url
-     */
-    fpi: string;
+  /**
+   * Full profile image url
+   */
+  fpi: string;
 
-    /**
-     * Original profile image url
-     */
-    opi: string;
+  /**
+   * Original profile image url
+   */
+  opi: string;
 
-    opt: number;
+  opt: number;
 
-    /**
-     * Profile link id
-     */
-    pli: Long;
+  /**
+   * Profile link id
+   */
+  pli: Long;
 
-    /**
-     * Special link privilege mask
-     */
-    pv: LinkPrivilegeMask;
+  /**
+   * Special link privilege mask
+   */
+  pv: LinkPrivilegeMask;
 
 }
 
 export interface OpenLinkChannelUserStruct extends OpenLinkUserStruct {
 
-    userId: Long;
+  userId: Long;
 
 }

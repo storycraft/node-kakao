@@ -8,42 +8,42 @@ import * as LosslessJSON from 'lossless-json';
  */
 
 export namespace JsonUtil {
-    const bsonLongRiver = (key: string, value: any) => {
-      if (value && value.isLosslessNumber) {
-        try {
-          return value.valueOf();
-        } catch (e) {
-          return Long.fromString(value.toString());
-        }
+  const bsonLongRiver = (key: string, value: any) => {
+    if (value && value.isLosslessNumber) {
+      try {
+        return value.valueOf();
+      } catch (e) {
+        return Long.fromString(value.toString());
       }
-
-      return value;
-    };
-
-    const bsonLongReplacer = (key: string, value: unknown) => {
-      if (value && value instanceof Long) {
-        return new LosslessJSON.LosslessNumber(value.toString());
-      }
-
-      return value;
-    };
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    export function readLong(value: any): Long {
-      if (value && value.unsigned !== undefined) {
-        return (value as Long);
-      }
-
-      return Long.fromNumber(value);
     }
 
-    export function parseLoseless(obj: string): any {
-      return LosslessJSON.parse(obj, bsonLongRiver);
+    return value;
+  };
+
+  const bsonLongReplacer = (key: string, value: unknown) => {
+    if (value && value instanceof Long) {
+      return new LosslessJSON.LosslessNumber(value.toString());
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    export function stringifyLoseless(obj: any): string {
-      return LosslessJSON.stringify(obj, bsonLongReplacer);
+    return value;
+  };
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  export function readLong(value: any): Long {
+    if (value && value.unsigned !== undefined) {
+      return (value as Long);
     }
+
+    return Long.fromNumber(value);
+  }
+
+  export function parseLoseless(obj: string): any {
+    return LosslessJSON.parse(obj, bsonLongRiver);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  export function stringifyLoseless(obj: any): string {
+    return LosslessJSON.stringify(obj, bsonLongReplacer);
+  }
 
 }

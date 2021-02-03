@@ -6,10 +6,10 @@
 
 export interface OAuthCredential {
 
-    readonly deviceUUID: string;
+  readonly deviceUUID: string;
 
-    readonly accessToken: string;
-    readonly refreshToken: string;
+  readonly accessToken: string;
+  readonly refreshToken: string;
 
 }
 
@@ -18,6 +18,6 @@ export interface OAuthCredential {
  */
 export interface CredentialProvider {
 
-    getCredential(): OAuthCredential;
+  getCredential(): OAuthCredential;
 
 }

@@ -6,29 +6,29 @@
 
 export interface MediaUploadTemplate {
 
-    /**
-     * Name of the file
-     */
-    name: string;
+  /**
+   * Name of the file
+   */
+  name: string;
 
-    /**
-     * File data
-     */
-    data: ArrayBuffer;
+  /**
+   * File data
+   */
+  data: ArrayBuffer;
 
-    /**
-     * Media width (only photo, video)
-     */
-    width?: number;
+  /**
+   * Media width (only photo, video)
+   */
+  width?: number;
 
-    /**
-     * Media height (only photo, video)
-     */
-    height?: number;
+  /**
+   * Media height (only photo, video)
+   */
+  height?: number;
 
-    /**
-     * File extension (optional?)
-     */
-    ext?: string;
+  /**
+   * File extension (optional?)
+   */
+  ext?: string;
 
 }

@@ -10,48 +10,48 @@ import { StructBase } from "../../struct-base";
 
 export interface OpenPresetItemStruct extends StructBase {
 
-    id: number;
+  id: number;
 
-    linkImagePath: string;
-    linkImageURL: string;
+  linkImagePath: string;
+  linkImageURL: string;
 
 }
 
 export namespace OpenPresetItemStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        id: 'id',
-        linkImagePath: 'lip',
-        linkImageURL: 'liu'
+    id: 'id',
+    linkImagePath: 'lip',
+    linkImageURL: 'liu'
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPresetStruct extends OpenStruct {
 
-    preset: OpenPresetItemStruct;
+  preset: OpenPresetItemStruct;
 
 }
 
 export namespace OpenPresetStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        preset: 'preset'
+    preset: 'preset'
 
-    }
+  }
 
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        preset: new Converter.Object(OpenPresetItemStruct.Mappings)
+    preset: new Converter.Object(OpenPresetItemStruct.Mappings)
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+  export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }

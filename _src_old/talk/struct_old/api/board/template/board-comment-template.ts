@@ -9,8 +9,8 @@ import { PostContent } from "../channel-post-struct";
 
 export interface BoardCommentTemplate {
 
-    text: PostContent;
+  text: PostContent;
 
-    emoticon?: EmoticonAttachment;
+  emoticon?: EmoticonAttachment;
 
 }

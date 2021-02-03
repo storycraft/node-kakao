@@ -8,13 +8,13 @@ import { WebApiStruct, WebApiStatusCode } from "../../web-api-struct";
 
 export enum OpenStatusCode {
 
-    INVALID_REQUEST = -203,
-    NO_RESULT = -1002
+  INVALID_REQUEST = -203,
+  NO_RESULT = -1002
 
 }
 
 export interface OpenStruct extends WebApiStruct {
 
-    status: OpenStatusCode | WebApiStatusCode;
+  status: OpenStatusCode | WebApiStatusCode;
 
 }

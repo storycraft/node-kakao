@@ -11,33 +11,33 @@ import { LoginData } from '..';
  * Raw login data
  */
 export interface AccessDataStruct {
-    userId: number | Long;
+  userId: number | Long;
 
-    countryIso: string;
-    countryCode: string;
+  countryIso: string;
+  countryCode: string;
 
-    accountId: number;
+  accountId: number;
 
-    // eslint-disable-next-line camelcase
-    server_time: number;
+  // eslint-disable-next-line camelcase
+  server_time: number;
 
-    resetUserData: boolean;
+  resetUserData: boolean;
 
-    // eslint-disable-next-line camelcase
-    story_url: string;
+  // eslint-disable-next-line camelcase
+  story_url: string;
 
-    // eslint-disable-next-line camelcase
-    access_token: string;
-    // eslint-disable-next-line camelcase
-    refresh_token: string;
-    // eslint-disable-next-line camelcase
-    token_type: string;
+  // eslint-disable-next-line camelcase
+  access_token: string;
+  // eslint-disable-next-line camelcase
+  refresh_token: string;
+  // eslint-disable-next-line camelcase
+  token_type: string;
 
-    autoLoginAccountId: string;
-    displayAccountId: string;
+  autoLoginAccountId: string;
+  displayAccountId: string;
 
-    mainDeviceAgentName: string;
-    mainDeviceAppVersion: string;
+  mainDeviceAgentName: string;
+  mainDeviceAppVersion: string;
 }
 
 export function structToLoginData(struct: AccessDataStruct, deviceUUID: string): LoginData {

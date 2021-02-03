@@ -9,6 +9,6 @@ import { ChannelPost } from "./channel-post-struct";
 
 export interface ChannelPostCommentStruct extends WebApiStruct {
 
-    comments: ChannelPost.Comment[];
+  comments: ChannelPost.Comment[];
 
 }

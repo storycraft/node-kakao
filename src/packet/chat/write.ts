@@ -9,15 +9,15 @@ import { ChatlogStruct } from '../struct';
 
 export interface WriteRes {
 
-    msgId: number;
+  msgId: number;
 
-    chatId: Long;
+  chatId: Long;
 
-    logId: Long;
-    prevId: Long;
+  logId: Long;
+  prevId: Long;
 
-    sendAt: number;
+  sendAt: number;
 
-    chatLog?: ChatlogStruct;
+  chatLog?: ChatlogStruct;
 
 }

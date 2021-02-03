@@ -13,28 +13,28 @@ import { AsyncCommandResult } from '../request';
 
 export interface LoginResult {
 
-    channelList: (Channel | OpenChannel)[];
+  channelList: (Channel | OpenChannel)[];
 
-    /**
-     * Client user id
-     */
-    userId: Long;
+  /**
+   * Client user id
+   */
+  userId: Long;
 
 }
 
 export interface ClientSession {
 
-    /**
-     * Login using credential.
-     * Perform LOGINLIST
-     *
-     * @param credential
-     */
-    login(credential: OAuthCredential): AsyncCommandResult<LoginResult>;
+  /**
+   * Login using credential.
+   * Perform LOGINLIST
+   *
+   * @param credential
+   */
+  login(credential: OAuthCredential): AsyncCommandResult<LoginResult>;
 
-    /**
-     * Set client status
-     */
-    setStatus(status: ClientStatus): AsyncCommandResult;
+  /**
+   * Set client status
+   */
+  setStatus(status: ClientStatus): AsyncCommandResult;
 
 }

@@ -9,8 +9,8 @@ import { ChatType } from '../../chat';
 
 export enum ChatRefererType {
 
-    KAKAOI = 1,
-    BOT = 2
+  KAKAOI = 1,
+  BOT = 2
 
 }
 
@@ -21,59 +21,59 @@ export type ChatReferer = ChatRefererType | number;
  */
 export interface ChatlogStruct {
 
-    /**
-     * Chat log id
-     */
-    logId: Long;
+  /**
+   * Chat log id
+   */
+  logId: Long;
 
-    /**
-     * Channel id
-     */
-    chatId: Long;
+  /**
+   * Channel id
+   */
+  chatId: Long;
 
-    /**
-     * Chat type
-     */
-    type: ChatType;
+  /**
+   * Chat type
+   */
+  type: ChatType;
 
-    /**
-     * Sender user id
-     */
-    authorId: Long;
+  /**
+   * Sender user id
+   */
+  authorId: Long;
 
-    /**
-     * Message content
-     */
-    message: string;
+  /**
+   * Message content
+   */
+  message: string;
 
-    /**
-     * Message sent time. (multiply by 1000 to convert to js Date timestamp)
-     */
-    sendAt: number;
+  /**
+   * Message sent time. (multiply by 1000 to convert to js Date timestamp)
+   */
+  sendAt: number;
 
-    /**
-     * Message extra attachment
-     */
-    attachment: string;
+  /**
+   * Message extra attachment
+   */
+  attachment: string;
 
-    /**
-     * Unknown
-     */
-    msgId: number | Long;
+  /**
+   * Unknown
+   */
+  msgId: number | Long;
 
-    /**
-     * Previous log id (0 if first chat)
-     */
-    prevId: Long;
+  /**
+   * Previous log id (0 if first chat)
+   */
+  prevId: Long;
 
-    /**
-     * Plus chat only (contains quick reply, custom gui config)
-     */
-    supplement?: string;
+  /**
+   * Plus chat only (contains quick reply, custom gui config)
+   */
+  supplement?: string;
 
-    /**
-     * Plus chat only(?)
-     */
-    referer?: ChatReferer;
+  /**
+   * Plus chat only(?)
+   */
+  referer?: ChatReferer;
 
 }

@@ -18,28 +18,28 @@ import { OpenLinkUserInfo } from './open-link-user-info';
 
 export interface OpenLinkComponent {
 
-    /**
-     * OpenLink id
-     */
-    linkId: Long;
+  /**
+   * OpenLink id
+   */
+  linkId: Long;
 
 }
 
 export interface OpenTokenComponent {
 
-    /**
-     * Info last update time
-     */
-    openToken: number;
+  /**
+   * Info last update time
+   */
+  openToken: number;
 
 }
 
 export interface OpenPrivilegeComponent {
 
-    /**
-     * Special privilege masks
-     */
-    privilege: LinkPrivilegeMask;
+  /**
+   * Special privilege masks
+   */
+  privilege: LinkPrivilegeMask;
 
 }
 
@@ -48,51 +48,51 @@ export interface OpenPrivilegeComponent {
  */
 export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPrivilegeComponent {
 
-    /**
-     * Link type
-     */
-    type: OpenLinkType;
+  /**
+   * Link type
+   */
+  type: OpenLinkType;
 
-    /**
-     * Link name
-     */
-    linkName: string;
+  /**
+   * Link name
+   */
+  linkName: string;
 
-    /**
-     * Open token (Last update time)
-     */
-    openToken: number;
+  /**
+   * Open token (Last update time)
+   */
+  openToken: number;
 
-    /**
-     * OpenLink url
-     */
-    linkURL: string;
+  /**
+   * OpenLink url
+   */
+  linkURL: string;
 
-    /**
-     * Cover image url
-     */
-    linkCoverURL: string;
+  /**
+   * Cover image url
+   */
+  linkCoverURL: string;
 
-    /**
-     * Owner info
-     */
-    linkOwner: OpenLinkUserInfo;
+  /**
+   * Owner info
+   */
+  linkOwner: OpenLinkUserInfo;
 
-    /**
-     * Link description
-     */
-    description: string;
+  /**
+   * Link description
+   */
+  description: string;
 
-    /**
-     * Profile tag list
-     */
-    profileTagList: string[];
+  /**
+   * Profile tag list
+   */
+  profileTagList: string[];
 
-    searchable: boolean;
+  searchable: boolean;
 
-    createdAt: number;
+  createdAt: number;
 
-    activated: boolean;
+  activated: boolean;
 
 }
 
@@ -101,15 +101,15 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
  */
 export interface OpenLinkInfo {
 
-    /**
-     * Open profile dm limit
-     */
-    directLimit: number;
+  /**
+   * Open profile dm limit
+   */
+  directLimit: number;
 
-    /**
-     * Open channel user limit
-     */
-    channelLimit: number;
+  /**
+   * Open channel user limit
+   */
+  channelLimit: number;
 
 }
 
@@ -118,21 +118,21 @@ export interface OpenLinkInfo {
  */
 export interface InformedOpenLink {
 
-    openLink: OpenLink;
-    info: OpenLinkInfo;
+  openLink: OpenLink;
+  info: OpenLinkInfo;
 
 }
 
 export enum KnownLinkPrivilegeMask {
 
-    URL_SHARABLE = 2,
-    REPORTABLE = 4,
-    PROFILE_EDITABLE = 8,
-    ANY_PROFILE_ALLOWED = 32,
-    USE_PASS_CODE = 64,
-    BLINDABLE = 128,
-    NON_SPECIAL_LINK = 512,
-    USE_BOT = 1024,
+  URL_SHARABLE = 2,
+  REPORTABLE = 4,
+  PROFILE_EDITABLE = 8,
+  ANY_PROFILE_ALLOWED = 32,
+  USE_PASS_CODE = 64,
+  BLINDABLE = 128,
+  NON_SPECIAL_LINK = 512,
+  USE_BOT = 1024,
 
 }
 

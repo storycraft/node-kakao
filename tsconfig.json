@@ -1,26 +1,29 @@
 {
-    "compilerOptions": {
-        "lib": ["ES2018", "DOM"],
-        "module": "UMD",
-        "moduleResolution": "node",
-        "target": "ES2018",
-        "noImplicitAny": true,
-        "removeComments": false,
-        "strict": true,
-        "pretty": true,
-        "outDir": "dist",
-        "declaration": true,
-        "sourceMap": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true
-    },
-    "include": [
-        "src/**/*"
+  "compilerOptions": {
+    "lib": [
+      "ES2018",
+      "DOM"
     ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "**/*.spec.ts",
-        "**/node_modules/*"
-    ]
+    "module": "UMD",
+    "moduleResolution": "node",
+    "target": "ES2018",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "strict": true,
+    "pretty": true,
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/node_modules/*"
+  ]
 }

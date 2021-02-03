@@ -14,35 +14,35 @@ import { OpenLink, OpenTokenComponent } from '.';
  */
 export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComponent {
 
-    /**
-     * true if direct channel
-     */
-    directChannel: boolean;
+  /**
+   * true if direct channel
+   */
+  directChannel: boolean;
 
-    /**
-     * Unknown
-     */
-    o: Long;
+  /**
+   * Unknown
+   */
+  o: Long;
 
-    openLink?: OpenLink;
+  openLink?: OpenLink;
 
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace OpenChannelInfo {
 
-    export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {
-      return Object.assign({
-        ...ChannelInfo.createPartial(info),
-        linkId: Long.ZERO,
-        openToken: 0,
+  export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {
+    return Object.assign({
+      ...ChannelInfo.createPartial(info),
+      linkId: Long.ZERO,
+      openToken: 0,
 
-        directChannel: false,
+      directChannel: false,
 
-        openLink: null,
+      openLink: null,
 
-        o: Long.ZERO,
-      }, info);
-    }
+      o: Long.ZERO,
+    }, info);
+  }
 
 }

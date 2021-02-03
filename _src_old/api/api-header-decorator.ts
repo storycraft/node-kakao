@@ -10,52 +10,52 @@ import { ClientConfigProvider, DefaultClientConfigProvider } from "../config/cli
 
 export interface ApiHeaderDecorator {
 
-    fillHeader(header: RequestHeader): void;
+  fillHeader(header: RequestHeader): void;
 
 }
 
 export class BasicHeaderDecorator implements ApiHeaderDecorator {
 
-    static readonly INSTANCE = new BasicHeaderDecorator(new DefaultClientConfigProvider());
+  static readonly INSTANCE = new BasicHeaderDecorator(new DefaultClientConfigProvider());
 
-    constructor(private configProvider: ClientConfigProvider) {
+  constructor(private configProvider: ClientConfigProvider) {
 
-    }
+  }
 
-    get UserAgent() {
-        return `KT/${this.configProvider.Configuration.version} Wd/${this.configProvider.Configuration.osVersion} ${this.configProvider.Configuration.language}`;
-    }
+  get UserAgent() {
+    return `KT/${this.configProvider.Configuration.version} Wd/${this.configProvider.Configuration.osVersion} ${this.configProvider.Configuration.language}`;
+  }
 
-    fillHeader(header: RequestHeader) {
-        header['Accept'] = '*/*';
-        header['Accept-Language'] = this.configProvider.Configuration.language;
-        header['User-Agent'] = this.UserAgent;
-    }
+  fillHeader(header: RequestHeader) {
+    header['Accept'] = '*/*';
+    header['Accept-Language'] = this.configProvider.Configuration.language;
+    header['User-Agent'] = this.UserAgent;
+  }
 
 }
 
 export class AHeaderDecorator implements ApiHeaderDecorator {
 
-    static readonly INSTANCE = new AHeaderDecorator(new DefaultClientConfigProvider());
+  static readonly INSTANCE = new AHeaderDecorator(new DefaultClientConfigProvider());
 
-    constructor(private configProvider: ClientConfigProvider) {
+  constructor(private configProvider: ClientConfigProvider) {
 
-    }
+  }
 
-    fillHeader(header: RequestHeader) {
-        header['A'] = `${this.configProvider.Configuration.agent}/${this.configProvider.Configuration.version}/${this.configProvider.Configuration.language}`;
-    }
+  fillHeader(header: RequestHeader) {
+    header['A'] = `${this.configProvider.Configuration.agent}/${this.configProvider.Configuration.version}/${this.configProvider.Configuration.language}`;
+  }
 
 }
 
 export class CHeaderDecorator implements ApiHeaderDecorator {
 
-    constructor() {
+  constructor() {
 
-    }
+  }
 
-    fillHeader(header: RequestHeader) {
-        //header['C'] = uuid;
-    }
+  fillHeader(header: RequestHeader) {
+    //header['C'] = uuid;
+  }
 
 }

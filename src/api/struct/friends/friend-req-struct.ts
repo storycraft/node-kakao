@@ -8,13 +8,13 @@ import { FriendStruct } from './friend-struct';
 
 export interface FriendReqStruct {
 
-    friend: FriendStruct;
+  friend: FriendStruct;
 
 }
 
 export interface FriendReqPhoneNumberStruct {
 
-    // eslint-disable-next-line camelcase
-    pstn_number: string;
+  // eslint-disable-next-line camelcase
+  pstn_number: string;
 
 }

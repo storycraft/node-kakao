@@ -8,6 +8,6 @@ import { StructBase } from "../../struct-base";
 
 export interface OpenUploadKeyStruct extends StructBase {
 
-    access_key: string;
+  access_key: string;
 
 }

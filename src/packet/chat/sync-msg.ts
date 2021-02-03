@@ -9,28 +9,28 @@ import { ChatlogStruct } from '../struct';
 
 export interface SyncMsgRes {
 
-    /**
-     * false if there are more chats.
-     */
-    isOK: boolean;
+  /**
+   * false if there are more chats.
+   */
+  isOK: boolean;
 
-    chatLogs?: ChatlogStruct[],
+  chatLogs?: ChatlogStruct[],
 
-    /**
-     * Minimum logId can request
-     */
-    minLogId?: Long,
+  /**
+   * Minimum logId can request
+   */
+  minLogId?: Long,
 
-    /**
-     * Unknown same as minLogId
-     */
-    jsi?: Long,
+  /**
+   * Unknown same as minLogId
+   */
+  jsi?: Long,
 
-    /**
-     * link id
-     */
-    li?: Long;
+  /**
+   * link id
+   */
+  li?: Long;
 
-    lastTokenId: Long;
+  lastTokenId: Long;
 
 }

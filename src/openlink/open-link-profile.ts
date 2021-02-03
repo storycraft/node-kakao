@@ -12,15 +12,15 @@ import { OpenProfileType } from './open-link-type';
  */
 export interface OpenLinkAnonProfile {
 
-    /**
-     * Nickname
-     */
-    nickname: string;
+  /**
+   * Nickname
+   */
+  nickname: string;
 
-    /**
-     * Profile image path(not url)
-     */
-    profilePath: string;
+  /**
+   * Profile image path(not url)
+   */
+  profilePath: string;
 
 }
 
@@ -41,20 +41,20 @@ export type OpenLinkProfiles = OpenLinkAnonProfile | OpenLinkMainProfile | OpenL
 // eslint-disable-next-line no-redeclare
 export namespace OpenLinkProfiles {
 
-    /**
-     * Serialize template to packet key / value structure.
-     * @param {OpenLinkProfiles} template
-     * @return {Record<string, unknown>}
-     */
-    export function templateToSerialized(template: OpenLinkProfiles): Record<string, unknown> {
-      if ('linkId' in template) {
-        return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
-      } else if ('nickname' in template) {
-        return { ptp: OpenProfileType.KAKAO_ANON, nn: template.nickname, pp: template.profilePath };
-      } else {
-        return { ptp: OpenProfileType.MAIN };
-      }
+  /**
+   * Serialize template to packet key / value structure.
+   * @param {OpenLinkProfiles} template
+   * @return {Record<string, unknown>}
+   */
+  export function templateToSerialized(template: OpenLinkProfiles): Record<string, unknown> {
+    if ('linkId' in template) {
+      return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
+    } else if ('nickname' in template) {
+      return { ptp: OpenProfileType.KAKAO_ANON, nn: template.nickname, pp: template.profilePath };
+    } else {
+      return { ptp: OpenProfileType.MAIN };
     }
+  }
 
 }
 

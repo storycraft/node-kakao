@@ -6,13 +6,13 @@
 
 export interface MediaKeyComponent {
 
-    key: string;
+  key: string;
 
 }
 
 export interface SizedMediaComponent {
 
-    width: number;
-    height: number;
+  width: number;
+  height: number;
 
 }

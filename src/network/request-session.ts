@@ -14,31 +14,31 @@ import { BiStream } from '../stream';
 
 export interface CommandSession {
 
-    /**
-     * Request command response
-     *
-     * @param method method
-     * @param data data
-     */
-    request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T>;
+  /**
+   * Request command response
+   *
+   * @param method method
+   * @param data data
+   */
+  request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T>;
 
 }
 
 export interface PacketResData {
 
-    method: string;
-    data: DefaultRes;
-    push: boolean;
+  method: string;
+  data: DefaultRes;
+  push: boolean;
 
 }
 
 export interface LocoSession extends CommandSession {
 
-    listen(): AsyncIterable<PacketResData> & AsyncIterator<PacketResData>;
+  listen(): AsyncIterable<PacketResData> & AsyncIterator<PacketResData>;
 
-    sendPacket(packet: LocoPacket): Promise<LocoPacket>;
+  sendPacket(packet: LocoPacket): Promise<LocoPacket>;
 
-    close(): void;
+  close(): void;
 
 }
 
@@ -47,7 +47,7 @@ export interface LocoSession extends CommandSession {
  */
 export interface SessionFactory {
 
-    createSession(config: SessionConfig): Promise<CommandResult<LocoSession>>;
+  createSession(config: SessionConfig): Promise<CommandResult<LocoSession>>;
 
 }
 
@@ -55,47 +55,47 @@ export interface SessionFactory {
  * Holds current loco session.
  */
 export class DefaultLocoSession implements LocoSession {
-    private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
-    private _dispatcher: LocoPacketDispatcher;
+  private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
+  private _dispatcher: LocoPacketDispatcher;
 
-    constructor(stream: BiStream) {
-      this._assembler = new PacketAssembler(BsonDataCodec);
-      this._dispatcher = new LocoPacketDispatcher(stream);
-    }
+  constructor(stream: BiStream) {
+    this._assembler = new PacketAssembler(BsonDataCodec);
+    this._dispatcher = new LocoPacketDispatcher(stream);
+  }
 
-    listen(): {[Symbol.asyncIterator](): AsyncIterator<PacketResData>, next(): Promise<IteratorResult<PacketResData>>} {
-      const iterator = this._dispatcher.listen();
-      const assembler = this._assembler;
+  listen(): { [Symbol.asyncIterator](): AsyncIterator<PacketResData>, next(): Promise<IteratorResult<PacketResData>> } {
+    const iterator = this._dispatcher.listen();
+    const assembler = this._assembler;
 
-      return {
-        [Symbol.asyncIterator](): AsyncIterator<PacketResData> {
-          return this;
-        },
+    return {
+      [Symbol.asyncIterator](): AsyncIterator<PacketResData> {
+        return this;
+      },
 
-        async next(): Promise<IteratorResult<PacketResData>> {
-          const next = await iterator.next();
+      async next(): Promise<IteratorResult<PacketResData>> {
+        const next = await iterator.next();
 
-          if (next.done) return { done: true, value: null };
-          const { push, packet } = next.value;
+        if (next.done) return { done: true, value: null };
+        const { push, packet } = next.value;
 
-          return { done: false, value: { push, method: packet.header.method, data: assembler.deconstruct(packet) } };
-        },
-      };
-    }
+        return { done: false, value: { push, method: packet.header.method, data: assembler.deconstruct(packet) } };
+      },
+    };
+  }
 
-    async request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
-      const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
-      return this._assembler.deconstruct(res) as DefaultRes & T;
-    }
+  async request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
+    const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
+    return this._assembler.deconstruct(res) as DefaultRes & T;
+  }
 
-    sendPacket(packet: LocoPacket): Promise<LocoPacket> {
-      return this._dispatcher.sendPacket(packet);
-    }
+  sendPacket(packet: LocoPacket): Promise<LocoPacket> {
+    return this._dispatcher.sendPacket(packet);
+  }
 
-    /**
-     * Close session
-     */
-    close(): void {
-      this._dispatcher.stream.close();
-    }
+  /**
+   * Close session
+   */
+  close(): void {
+    this._dispatcher.stream.close();
+  }
 }

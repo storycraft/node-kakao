@@ -12,45 +12,45 @@ export * as struct from './struct';
 
 export interface LocoPacket {
 
-    /**
-     * Packet header
-     */
-    header: LocoPacketHeader;
+  /**
+   * Packet header
+   */
+  header: LocoPacketHeader;
 
-    /**
-     * [dataType, data buffer]
-     */
-    data: [number, ArrayBuffer];
+  /**
+   * [dataType, data buffer]
+   */
+  data: [number, ArrayBuffer];
 
 }
 
 export interface LocoPacketHeader {
 
-    id: number;
-    status: number;
-    method: string;
+  id: number;
+  status: number;
+  method: string;
 
 }
 
 export interface LocoPacketDataCodec<T, R = T> {
 
-    /**
-     * @param dataType
-     *
-     * @returns true if codec can decode data with supplied type.
-     */
-    canDecode(dataType: number): boolean;
+  /**
+   * @param dataType
+   *
+   * @returns true if codec can decode data with supplied type.
+   */
+  canDecode(dataType: number): boolean;
 
-    /**
-     * Decode packet data buffer to data
-     * @param data
-     */
-    decode(data: ArrayBuffer): R;
+  /**
+   * Decode packet data buffer to data
+   * @param data
+   */
+  decode(data: ArrayBuffer): R;
 
-    /**
-     * Encode data to packet data
-     * @param data
-     */
-    encode(data: T): [number, ArrayBuffer];
+  /**
+   * Encode data to packet data
+   * @param data
+   */
+  encode(data: T): [number, ArrayBuffer];
 
 }

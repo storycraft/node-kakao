@@ -10,96 +10,96 @@ import { OpenLinkChannelUserStruct } from './user';
 
 export interface OpenLinkStruct {
 
-    /**
-     * Link id
-     */
-    li: Long;
+  /**
+   * Link id
+   */
+  li: Long;
 
-    /**
-     * Open token
-     */
-    otk: number;
+  /**
+   * Open token
+   */
+  otk: number;
 
-    /**
-     * Link name
-     */
-    ln: string;
+  /**
+   * Link name
+   */
+  ln: string;
 
-    /**
-     * Link url
-     */
-    lu: string;
+  /**
+   * Link url
+   */
+  lu: string;
 
-    /**
-     * Link image url
-     */
-    liu: string;
+  /**
+   * Link image url
+   */
+  liu: string;
 
-    /**
-     * Link cover url
-     */
-    lcu: string;
+  /**
+   * Link cover url
+   */
+  lcu: string;
 
-    /**
-     * Owner link user
-     */
-    olu: OpenLinkChannelUserStruct;
+  /**
+   * Owner link user
+   */
+  olu: OpenLinkChannelUserStruct;
 
-    /**
-     * Unknown
-     */
-    vt: number;
+  /**
+   * Unknown
+   */
+  vt: number;
 
-    /**
-     * Link type
-     */
-    lt: OpenLinkType;
+  /**
+   * Link type
+   */
+  lt: OpenLinkType;
 
-    /**
-     * Description
-     */
-    desc: string;
+  /**
+   * Description
+   */
+  desc: string;
 
-    pc: string;
+  pc: string;
 
-    pa: boolean;
+  pa: boolean;
 
-    /**
-     * Activated
-     */
-    ac: boolean;
+  /**
+   * Activated
+   */
+  ac: boolean;
 
-    /**
-     * Searchable
-     */
-    sc: boolean;
+  /**
+   * Searchable
+   */
+  sc: boolean;
 
-    /**
-     * Link privilege mask(?)
-     */
-    pv: Long;
+  /**
+   * Link privilege mask(?)
+   */
+  pv: Long;
 
-    /**
-     * Unknown
-     */
-    ex: boolean;
+  /**
+   * Unknown
+   */
+  ex: boolean;
 
-    omt: unknown;
+  omt: unknown;
 
-    /**
-     * Link creation time
-     */
-    ca: number;
+  /**
+   * Link creation time
+   */
+  ca: number;
 
-    /**
-     * Open channel cover
-     */
-    oc?: { t: OpenLinkType; co: { desc: string }; };
+  /**
+   * Open channel cover
+   */
+  oc?: { t: OpenLinkType; co: { desc: string }; };
 
-    /**
-     * Open profile cover
-     */
-    op?: { desc: string; tags?: string[]; };
+  /**
+   * Open profile cover
+   */
+  op?: { desc: string; tags?: string[]; };
 
 }
 
@@ -108,15 +108,15 @@ export interface OpenLinkStruct {
  */
 export interface OpenLinkInfoStruct {
 
-    /**
-     * Max user limit (open channel)
-     */
-    ml?: number;
+  /**
+   * Max user limit (open channel)
+   */
+  ml?: number;
 
-    /**
-     * Max direct limit (open profile)
-     */
-    dcl?: number;
+  /**
+   * Max direct limit (open profile)
+   */
+  dcl?: number;
 
 }
 

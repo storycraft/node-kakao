@@ -14,21 +14,21 @@ import { Channel } from './channel';
  */
 export interface ChannelList<T extends Channel> extends TypedEmitter<ChannelListEvent> {
 
-    /**
-     * Try to get channel instance with channel id
-     *
-     * @param channelId
-     */
-    get(channelId: Long): T | undefined;
+  /**
+   * Try to get channel instance with channel id
+   *
+   * @param channelId
+   */
+  get(channelId: Long): T | undefined;
 
-    /**
-     * Iterate every channel list
-     */
-    all(): IterableIterator<T>;
+  /**
+   * Iterate every channel list
+   */
+  all(): IterableIterator<T>;
 
-    /**
-     * Total channel count
-     */
-    readonly size: number;
+  /**
+   * Total channel count
+   */
+  readonly size: number;
 
 }

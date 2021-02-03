@@ -15,93 +15,93 @@ import { MediaUploadTemplate } from './upload';
 import { structToChatlog } from '../../packet/struct';
 
 export class MediaUploader {
-    private _canUpload: boolean;
+  private _canUpload: boolean;
 
-    constructor(
-        private _media: MediaKeyComponent,
-        private _type: ChatType,
-        private _template: MediaUploadTemplate,
-        private _talkSession: TalkSession,
-        private _channel: Channel,
-        private _stream: BiStream,
-    ) {
-      this._canUpload = true;
-    }
+  constructor(
+    private _media: MediaKeyComponent,
+    private _type: ChatType,
+    private _template: MediaUploadTemplate,
+    private _talkSession: TalkSession,
+    private _channel: Channel,
+    private _stream: BiStream,
+  ) {
+    this._canUpload = true;
+  }
 
-    get media(): MediaKeyComponent {
-      return this._media;
-    }
+  get media(): MediaKeyComponent {
+    return this._media;
+  }
 
-    get type(): number {
-      return this._type;
-    }
+  get type(): number {
+    return this._type;
+  }
 
-    /**
-     * Close uploader without uploading
-     */
-    close(): void {
-      this._stream.close();
-      this._canUpload = false;
-    }
+  /**
+   * Close uploader without uploading
+   */
+  close(): void {
+    this._stream.close();
+    this._canUpload = false;
+  }
 
-    /**
-     * Create data writer with given template and start uploading.
-     * When upload done the server send to channel.
-     *
-     * @return {AsyncCommandResult<Chatlog>}
-     */
-    upload(): AsyncCommandResult<Chatlog> {
-      if (!this._canUpload) throw new Error('Upload task already started');
+  /**
+   * Create data writer with given template and start uploading.
+   * When upload done the server send to channel.
+   *
+   * @return {AsyncCommandResult<Chatlog>}
+   */
+  upload(): AsyncCommandResult<Chatlog> {
+    if (!this._canUpload) throw new Error('Upload task already started');
 
-      const session = new DefaultLocoSession(this._stream);
-      const clientConfig = this._talkSession.configuration;
+    const session = new DefaultLocoSession(this._stream);
+    const clientConfig = this._talkSession.configuration;
 
-      return new Promise((resolve, reject) => {
-        // Listen packets and wait the upload to complete
-        (async () => {
-          for await (const { method, data } of session.listen()) {
-            if (method === 'COMPLETE') {
-              const chatlog = structToChatlog(data['chatLog']);
-              return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
-            }
+    return new Promise((resolve, reject) => {
+      // Listen packets and wait the upload to complete
+      (async () => {
+        for await (const { method, data } of session.listen()) {
+          if (method === 'COMPLETE') {
+            const chatlog = structToChatlog(data['chatLog']);
+            return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
           }
-        })().then((res) => {
-          this.close();
-          if (res) {
-            resolve(res);
-          } else {
-            resolve({ status: KnownDataStatusCode.OPERATION_DENIED, success: false });
-          }
-        }).catch(reject);
+        }
+      })().then((res) => {
+        this.close();
+        if (res) {
+          resolve(res);
+        } else {
+          resolve({ status: KnownDataStatusCode.OPERATION_DENIED, success: false });
+        }
+      }).catch(reject);
 
-        const reqData: DefaultReq = {
-          'k': this._media.key,
-          's': this._template.data.byteLength,
-          't': this._type,
+      const reqData: DefaultReq = {
+        'k': this._media.key,
+        's': this._template.data.byteLength,
+        't': this._type,
 
-          'c': this._channel.channelId,
-          'mid': Math.floor(Math.random() * 1000000),
-          'ns': true,
+        'c': this._channel.channelId,
+        'mid': Math.floor(Math.random() * 1000000),
+        'ns': true,
 
-          'u': this._talkSession.clientUser.userId,
-          'os': clientConfig.agent,
-          'av': clientConfig.appVersion,
-          'nt': clientConfig.netType,
-          'mm': clientConfig.mccmnc,
-        };
+        'u': this._talkSession.clientUser.userId,
+        'os': clientConfig.agent,
+        'av': clientConfig.appVersion,
+        'nt': clientConfig.netType,
+        'mm': clientConfig.mccmnc,
+      };
 
-        if (this._template.width) reqData['w'] = this._template.width;
-        if (this._template.height) reqData['h'] = this._template.height;
+      if (this._template.width) reqData['w'] = this._template.width;
+      if (this._template.height) reqData['h'] = this._template.height;
 
-        session.request('POST', reqData).then((postRes) => {
-          if (postRes.status !== KnownDataStatusCode.SUCCESS) resolve({ status: postRes.status, success: false });
-          this._canUpload = false;
+      session.request('POST', reqData).then((postRes) => {
+        if (postRes.status !== KnownDataStatusCode.SUCCESS) resolve({ status: postRes.status, success: false });
+        this._canUpload = false;
 
-          // TODO: This should be process properly.
-          const offset = postRes['o'];
+        // TODO: This should be process properly.
+        const offset = postRes['o'];
 
-          this._stream.write(this._template.data).then();
-        }).catch(reject);
-      });
-    }
+        this._stream.write(this._template.data).then();
+      }).catch(reject);
+    });
+  }
 }

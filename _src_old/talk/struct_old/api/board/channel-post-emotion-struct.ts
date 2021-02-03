@@ -9,7 +9,7 @@ import { ChannelPost } from "./channel-post-struct";
 
 export interface ChannelPostEmotionStruct extends WebApiStruct {
 
-    comments: ChannelPost.Emotion[];
-    has_more: boolean;
+  comments: ChannelPost.Emotion[];
+  has_more: boolean;
 
 }

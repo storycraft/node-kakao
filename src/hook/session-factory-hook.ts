@@ -15,22 +15,22 @@ import { CommandResult } from '../request';
  */
 export interface SessionHook {
 
-    /**
-     * Hook incoming data
-     */
-    onData: (method: string, data: DefaultReq, push: boolean) => void;
+  /**
+   * Hook incoming data
+   */
+  onData: (method: string, data: DefaultReq, push: boolean) => void;
 
-    /**
-     * Hook command requests
-     */
-    onRequest: (method: string, data: DefaultReq) => void;
+  /**
+   * Hook command requests
+   */
+  onRequest: (method: string, data: DefaultReq) => void;
 
-    /**
-     * Hook loco packet
-     */
-    onSendPacket: (packet: LocoPacket) => void;
+  /**
+   * Hook loco packet
+   */
+  onSendPacket: (packet: LocoPacket) => void;
 
-    onClose(): () => void;
+  onClose(): () => void;
 
 }
 

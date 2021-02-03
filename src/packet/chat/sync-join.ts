@@ -9,14 +9,14 @@ import { ChatlogStruct } from '../struct';
 
 export interface SyncJoinRes {
 
-    /**
-     * Channel id
-     */
-    c: Long;
+  /**
+   * Channel id
+   */
+  c: Long;
 
-    /**
-     * Join chat (feed)
-     */
-    chatLog: ChatlogStruct;
+  /**
+   * Join chat (feed)
+   */
+  chatLog: ChatlogStruct;
 
 }

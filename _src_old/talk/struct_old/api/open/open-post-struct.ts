@@ -13,262 +13,262 @@ import { JsonUtil } from "../../../../util/json-util";
 
 export interface OpenPostDataStruct extends StructBase {
 
-    originalFileName: string;
-    path: string,
-    imagePaths: { originalImagePath: string, largeImagePath: string, smallImagePath: string };
-    width: number;
-    height: number;
+  originalFileName: string;
+  path: string,
+  imagePaths: { originalImagePath: string, largeImagePath: string, smallImagePath: string };
+  width: number;
+  height: number;
 
 }
 
 export enum OpenPostTagType {
 
-    SHARP = 2
+  SHARP = 2
 
 }
 
 export interface OpenPostTagStruct extends StructBase {
 
-    type: OpenPostTagType;
-    text: string;
+  type: OpenPostTagType;
+  text: string;
 
 }
 
 export namespace OpenPostTagStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        type: 't',
-        text: 'c'
+    type: 't',
+    text: 'c'
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostDescStruct extends StructBase {
 
-    text: string;
-    tagList: OpenPostTagStruct[];
+  text: string;
+  tagList: OpenPostTagStruct[];
 
 }
 
 export namespace OpenPostDescStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        text: 'text',
-        tagList: 'tags'
+    text: 'text',
+    tagList: 'tags'
 
-    }
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        tagList: new Converter.Array(OpenPostTagStruct.Mappings)
+    tagList: new Converter.Array(OpenPostTagStruct.Mappings)
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostReactionInfoStruct extends StructBase {
 
-    type: LinkReactionType;
-    count: number;
+  type: LinkReactionType;
+  count: number;
 
 }
 
 export interface OpenPostReactionStruct extends StructBase {
 
-    reactionId: Long;
-    linkId: Long;
-    type: LinkReactionType;
-    name: string;
-    description: string;
-    profileImageURL: string;
+  reactionId: Long;
+  linkId: Long;
+  type: LinkReactionType;
+  name: string;
+  description: string;
+  profileImageURL: string;
 
 }
 
 export namespace OpenPostReactionStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        reactionId: 'reactId',
-        linkId: 'linkId',
-        type: 'type',
-        name: 'name',
-        description: 'description',
-        profileImageURL: 'profileImagePath'
+    reactionId: 'reactId',
+    linkId: 'linkId',
+    type: 'type',
+    name: 'name',
+    description: 'description',
+    profileImageURL: 'profileImagePath'
 
-    }
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        linkId: JsonUtil.LongConverter,
-        reactionId: JsonUtil.LongConverter
+    linkId: JsonUtil.LongConverter,
+    reactionId: JsonUtil.LongConverter
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostScrapData extends StructBase {
 
-    url: string;
-    canonicalUrl: string;
+  url: string;
+  canonicalUrl: string;
 
-    title: string;
-    contentType: string;
+  title: string;
+  contentType: string;
 
-    mainImageUrl: string;
+  mainImageUrl: string;
 
-    description: string;
+  description: string;
 
-    suspected: number;
+  suspected: number;
 
 }
 
 export interface OpenPostStruct extends StructBase {
 
-    id: Long;
-    linkId: Long;
+  id: Long;
+  linkId: Long;
 
-    description?: OpenPostDescStruct;
-    postDataList?: OpenPostDataStruct[];
+  description?: OpenPostDescStruct;
+  postDataList?: OpenPostDataStruct[];
 
-    date: number;
-    reactionInfoList?: OpenPostReactionInfoStruct[];
-    reactionList?: OpenPostReactionStruct[];
-    scrapData?: OpenPostScrapData;
-    postURL: string;
-    latestUpdateToken: number;
+  date: number;
+  reactionInfoList?: OpenPostReactionInfoStruct[];
+  reactionList?: OpenPostReactionStruct[];
+  scrapData?: OpenPostScrapData;
+  postURL: string;
+  latestUpdateToken: number;
 
 }
 
 export namespace OpenPostStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        id: 'id',
-        linkId: 'linkId',
+    id: 'id',
+    linkId: 'linkId',
 
-        description: 'postDescription',
-        postDataList: 'postDatas',
+    description: 'postDescription',
+    postDataList: 'postDatas',
 
-        date: 'date',
-        postURL: 'postUrl',
+    date: 'date',
+    postURL: 'postUrl',
 
-        reactionList: 'reacts',
-        reactionUserList: 'reactUsers',
+    reactionList: 'reacts',
+    reactionUserList: 'reactUsers',
 
-        scrapData: 'scrapData',
+    scrapData: 'scrapData',
 
-        latestUpdateToken: 'latestUpdateToken'
-    }
+    latestUpdateToken: 'latestUpdateToken'
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        linkId: JsonUtil.LongConverter,
-        description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap),
-        reactionUserList: new Converter.Array(OpenPostReactionStruct.Mappings, OpenPostReactionStruct.ConvertMap),
+    linkId: JsonUtil.LongConverter,
+    description: new Converter.Object(OpenPostDescStruct.Mappings, OpenPostDescStruct.ConvertMap),
+    reactionUserList: new Converter.Array(OpenPostReactionStruct.Mappings, OpenPostReactionStruct.ConvertMap),
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+  export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
 
 export interface OpenPostListStruct extends OpenStruct {
 
-    count: number;
-    postList: OpenPostStruct[];
+  count: number;
+  postList: OpenPostStruct[];
 
 }
 
 export namespace OpenPostListStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        count: 'count',
-        postList: 'posts'
+    count: 'count',
+    postList: 'posts'
 
-    }
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        postList: new Converter.Array(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
+    postList: new Converter.Array(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+  export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }
 
 export interface OpenPostReactStruct extends OpenStruct {
 
-    postId: Long;
+  postId: Long;
 
 }
 
 export namespace OpenPostReactStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        postId: 'postId',
+    postId: 'postId',
 
-    }
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        postId: JsonUtil.LongConverter
+    postId: JsonUtil.LongConverter
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostReactNotiStruct extends OpenStruct {
 
-    linkIdList: number[];
+  linkIdList: number[];
 
 }
 
 export namespace OpenPostReactNotiStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        linkIdList: 'linkIds',
+    linkIdList: 'linkIds',
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export interface OpenPostApiStruct extends OpenStruct {
 
-    post: OpenPostStruct;
+  post: OpenPostStruct;
 
 }
 
 export namespace OpenPostApiStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        post: 'post',
+    post: 'post',
 
-    }
+  }
 
-    export const ConvertMap = {
+  export const ConvertMap = {
 
-        post: new Converter.Object(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
+    post: new Converter.Object(OpenPostStruct.Mappings, OpenPostStruct.ConvertMap)
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
+  export const MAPPER = new ObjectMapper(Mappings, ConvertMap);
 
 }

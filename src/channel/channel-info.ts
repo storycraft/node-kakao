@@ -12,17 +12,17 @@ import { ChannelType } from './channel-type';
 
 export interface ChannelMeta {
 
-    content: string;
+  content: string;
 
 }
 
 export interface SetChannelMeta extends ChannelMeta {
 
-    revision: number;
+  revision: number;
 
-    authorId: Long;
+  authorId: Long;
 
-    updatedAt: number;
+  updatedAt: number;
 
 }
 
@@ -33,78 +33,78 @@ export type ChannelMetaMap = Record<ChannelType, SetChannelMeta>
  */
 export interface ChannelInfo extends Channel {
 
-    /**
-     * Channel type
-     */
-    type: ChannelType;
+  /**
+   * Channel type
+   */
+  type: ChannelType;
 
-    /**
-     * Active user count
-     */
-    activeUserCount: number;
+  /**
+   * Active user count
+   */
+  activeUserCount: number;
 
-    /**
-     * Unread chat count
-     */
-    newChatCount: number;
+  /**
+   * Unread chat count
+   */
+  newChatCount: number;
 
-    /**
-     * true if new chat count is invalid
-     */
-    newChatCountInvalid: boolean;
+  /**
+   * true if new chat count is invalid
+   */
+  newChatCountInvalid: boolean;
 
-    /**
-     * Last chat log id
-     */
-    lastChatLogId: Long;
+  /**
+   * Last chat log id
+   */
+  lastChatLogId: Long;
 
-    /**
-     * Last seen chat log id
-     */
-    lastSeenLogId: Long;
+  /**
+   * Last seen chat log id
+   */
+  lastSeenLogId: Long;
 
-    /**
-     * Last chatlog
-     */
-    lastChatLog?: Chatlog;
+  /**
+   * Last chatlog
+   */
+  lastChatLog?: Chatlog;
 
-    // clientMeta?: ChannelClientMetaStruct;
+  // clientMeta?: ChannelClientMetaStruct;
 
-    metaMap: ChannelMetaMap;
+  metaMap: ChannelMetaMap;
 
-    displayUserList: DisplayUserInfo[];
+  displayUserList: DisplayUserInfo[];
 
-    /**
-     * Push alert settings
-     */
-    pushAlert: boolean;
+  /**
+   * Push alert settings
+   */
+  pushAlert: boolean;
 
 }
 
 // eslint-disable-next-line no-redeclare
 export namespace ChannelInfo {
 
-    export function createPartial(info: Partial<ChannelInfo>): ChannelInfo {
-      return Object.assign({
-        channelId: Long.ZERO,
+  export function createPartial(info: Partial<ChannelInfo>): ChannelInfo {
+    return Object.assign({
+      channelId: Long.ZERO,
 
-        type: '',
+      type: '',
 
-        activeUserCount: 0,
+      activeUserCount: 0,
 
-        newChatCount: 0,
-        newChatCountInvalid: true,
+      newChatCount: 0,
+      newChatCountInvalid: true,
 
-        lastChatLogId: Long.ZERO,
-        lastSeenLogId: Long.ZERO,
+      lastChatLogId: Long.ZERO,
+      lastSeenLogId: Long.ZERO,
 
-        displayUserList: [],
+      displayUserList: [],
 
-        metaMap: {},
+      metaMap: {},
 
-        pushAlert: false,
-      }, info);
-    }
+      pushAlert: false,
+    }, info);
+  }
 
 }
 
@@ -113,21 +113,21 @@ export namespace ChannelInfo {
  */
 export interface NormalChannelInfo extends ChannelInfo {
 
-    /**
-     * Channel join time (js Date timestamp)
-     */
-    joinTime: number;
+  /**
+   * Channel join time (js Date timestamp)
+   */
+  joinTime: number;
 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace,no-redeclare
 export namespace NormalChannelInfo {
 
-    export function createPartial(info: Partial<NormalChannelInfo>): NormalChannelInfo {
-      return Object.assign({
-        ...ChannelInfo.createPartial(info),
-        joinTime: 0,
-      }, info);
-    }
+  export function createPartial(info: Partial<NormalChannelInfo>): NormalChannelInfo {
+    return Object.assign({
+      ...ChannelInfo.createPartial(info),
+      joinTime: 0,
+    }, info);
+  }
 
 }

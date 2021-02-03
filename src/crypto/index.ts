@@ -11,14 +11,14 @@ import { isNode } from '../util/platform';
  */
 export interface CryptoStore {
 
-    toAESEncrypted(buffer: ArrayBuffer, iv: ArrayBuffer): ArrayBuffer;
-    toAESDecrypted(buffer: ArrayBuffer, iv: ArrayBuffer): ArrayBuffer;
+  toAESEncrypted(buffer: ArrayBuffer, iv: ArrayBuffer): ArrayBuffer;
+  toAESDecrypted(buffer: ArrayBuffer, iv: ArrayBuffer): ArrayBuffer;
 
-    toRSAEncrypted(buffer: ArrayBuffer): ArrayBuffer;
+  toRSAEncrypted(buffer: ArrayBuffer): ArrayBuffer;
 
-    randomCipherIV(): ArrayBuffer;
+  randomCipherIV(): ArrayBuffer;
 
-    getRSAEncryptedKey(): ArrayBuffer;
+  getRSAEncryptedKey(): ArrayBuffer;
 
 }
 

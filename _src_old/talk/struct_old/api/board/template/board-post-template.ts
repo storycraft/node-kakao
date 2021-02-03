@@ -9,15 +9,15 @@ import { EmoticonAttachment } from "../../../../chat_old/attachment/chat-attachm
 
 export interface BoardPostTemplate<T = PostType> {
 
-    object_type: T;
+  object_type: T;
 
-    content?: PostContent[] | string;
+  content?: PostContent[] | string;
 
-    emoticon?: EmoticonAttachment;
+  emoticon?: EmoticonAttachment;
 
-    scrap?: ChannelPost.Scrap;
+  scrap?: ChannelPost.Scrap;
 
-    notice: boolean;
+  notice: boolean;
 
 }
 
@@ -31,31 +31,31 @@ export interface BoardTextPostTemplate extends BoardPostTemplate<PostType.TEXT> 
 
 export interface BoardImagePostTemplate extends BoardPostTemplate<PostType.IMAGE> {
 
-    images: BoardPostFileMap;
+  images: BoardPostFileMap;
 
 }
 
 export interface BoardVideoPostTemplate extends BoardPostTemplate<PostType.VIDEO> {
 
-    vidoes: BoardPostFileMap;
+  vidoes: BoardPostFileMap;
 
 }
 
 export interface BoardFilePostTemplate extends BoardPostTemplate<PostType.FILE> {
 
-    files: BoardPostFileMap;
+  files: BoardPostFileMap;
 
 }
 
 export interface BoardPollPostTemplate extends BoardPostTemplate<PostType.POLL> {
 
-    poll_content: ChannelPost.Poll;
+  poll_content: ChannelPost.Poll;
 
 }
 
 export interface BoardSchedulePostTemplate extends BoardPostTemplate<PostType.SCHEDULE> {
 
-    schedule_content: ChannelPost.Schedule;
+  schedule_content: ChannelPost.Schedule;
 
 }
 

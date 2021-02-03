@@ -6,7 +6,7 @@
 
 export enum KnownRelayEventType {
 
-    SHOUT = 1
+  SHOUT = 1
 
 }
 

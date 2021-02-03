@@ -9,8 +9,8 @@ import { ChannelMetaStruct } from '../struct';
 
 export interface ChgMetaRes {
 
-    chatId: Long;
+  chatId: Long;
 
-    meta: ChannelMetaStruct;
+  meta: ChannelMetaStruct;
 
 }

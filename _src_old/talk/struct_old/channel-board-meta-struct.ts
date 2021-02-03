@@ -10,34 +10,34 @@ import { Long } from "bson";
 
 export interface ChannelBoardMetaStruct extends StructBase {
 
-    type: ChannelBoardMetaType;
-    content: string;
+  type: ChannelBoardMetaType;
+  content: string;
 
-    boardRevision: Long;
-    userRevision: Long;
+  boardRevision: Long;
+  userRevision: Long;
 
 }
 
 export namespace ChannelBoardMetaStruct {
 
-    export const Mappings = {
+  export const Mappings = {
 
-        'type': 't',
-        'content': 'ct',
-        'boardRevision': 'br',
-        'userRevision': 'ur'
+    'type': 't',
+    'content': 'ct',
+    'boardRevision': 'br',
+    'userRevision': 'ur'
 
-    }
+  }
 
-    export const MAPPER = new ObjectMapper(Mappings);
+  export const MAPPER = new ObjectMapper(Mappings);
 
 }
 
 export enum ChannelBoardMetaType {
 
-    NONE = 0,
-    FLOATING_NOTICE = 1,
-    SIDE_NOTICE = 2,
-    BADGE = 3
+  NONE = 0,
+  FLOATING_NOTICE = 1,
+  SIDE_NOTICE = 2,
+  BADGE = 3
 
 }

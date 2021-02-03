@@ -49,9 +49,9 @@ export async function getBookingData(stream: BiStream, config: BookingConfig): A
  * @param {Long} userId
  */
 export async function getCheckinData(
-    stream: BiStream,
-    config: CheckinConfig,
-    userId?: Long,
+  stream: BiStream,
+  config: CheckinConfig,
+  userId?: Long,
 ): AsyncCommandResult<CheckinRes> {
   const checkinSession = new DefaultLocoSession(stream);
 

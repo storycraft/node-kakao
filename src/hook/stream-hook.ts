@@ -8,19 +8,19 @@ import { BiStream } from '../stream';
 
 export interface StreamHook {
 
-    /**
-     * Hook data write
-     * @param data
-     */
-    onWrite(data: ArrayBuffer): void;
+  /**
+   * Hook data write
+   * @param data
+   */
+  onWrite(data: ArrayBuffer): void;
 
-    /**
-     * Hook data read
-     * @param buf
-     */
-    onRead(buf: ArrayBuffer): void;
+  /**
+   * Hook data read
+   * @param buf
+   */
+  onRead(buf: ArrayBuffer): void;
 
-    onClose(): void;
+  onClose(): void;
 
 }
 

@@ -9,32 +9,32 @@ import { OpenUploadKeyStruct } from "../talk/struct_old/api/open/open-upload-key
 
 export class OpenUploadApi extends WebApiClient {
 
-    get Scheme() {
-        return 'https';
-    }
+  get Scheme() {
+    return 'https';
+  }
 
-    get Host() {
-        return 'up-api1-kage.kakao.com';
-    }
+  get Host() {
+    return 'up-api1-kage.kakao.com';
+  }
 
-    async uploadLinkImage(name: string, file: Buffer, contentType: string = 'image/jpeg'): Promise<OpenUploadKeyStruct> {
-        return this.requestMultipart<OpenUploadKeyStruct>('POST', 'up/open-chat-profile/', { 'file_1': { value: file, options: { filename: name, contentType: contentType } } });
-    }
+  async uploadLinkImage(name: string, file: Buffer, contentType: string = 'image/jpeg'): Promise<OpenUploadKeyStruct> {
+    return this.requestMultipart<OpenUploadKeyStruct>('POST', 'up/open-chat-profile/', { 'file_1': { value: file, options: { filename: name, contentType: contentType } } });
+  }
 
-    async uploadLinkPostImage(name: string, file: Buffer, contentType: string = 'image/jpeg'): Promise<OpenUploadKeyStruct> {
-        return this.requestMultipart<OpenUploadKeyStruct>('POST', 'up/open-chat-profile-post/', { 'file_1': { value: file, options: { filename: name, contentType: contentType } } });
-    }
+  async uploadLinkPostImage(name: string, file: Buffer, contentType: string = 'image/jpeg'): Promise<OpenUploadKeyStruct> {
+    return this.requestMultipart<OpenUploadKeyStruct>('POST', 'up/open-chat-profile-post/', { 'file_1': { value: file, options: { filename: name, contentType: contentType } } });
+  }
 
-    getOriginalLinkImageURL(accessKey: string) {
-        return `http://open.kakaocdn.net/dn/${accessKey}/img.jpg`;
-    }
+  getOriginalLinkImageURL(accessKey: string) {
+    return `http://open.kakaocdn.net/dn/${accessKey}/img.jpg`;
+  }
 
-    getSmallLinkImageURL(accessKey: string) {
-        return `http://open.kakaocdn.net/dn/${accessKey}/img_s.jpg`;
-    }
+  getSmallLinkImageURL(accessKey: string) {
+    return `http://open.kakaocdn.net/dn/${accessKey}/img_s.jpg`;
+  }
 
-    getLargeLinkImageURL(accessKey: string) {
-        return `http://open.kakaocdn.net/dn/${accessKey}/img_l.jpg`;
-    }
+  getLargeLinkImageURL(accessKey: string) {
+    return `http://open.kakaocdn.net/dn/${accessKey}/img_l.jpg`;
+  }
 
 }

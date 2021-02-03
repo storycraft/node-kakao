@@ -11,9 +11,9 @@ import { Long } from 'bson';
  */
 export interface Channel {
 
-    /**
-     * Unique channel identifier
-     */
-    readonly channelId: Long;
+  /**
+   * Unique channel identifier
+   */
+  readonly channelId: Long;
 
 }

@@ -6,19 +6,19 @@
 
 export enum KnownDataStatusCode {
 
-    SUCCESS = 0,
-    INVALID_USER = -1,
-    INVALID_METHOD = -202,
-    INVALID_PARAMETER = -203,
-    INVALID_CHATROOM_OPERATION = -401,
-    CHAT_BLOCKED_BY_FRIEND = -402,
-    BLOCKED_IP = -444,
-    OPERATION_DENIED = -500,
-    INVALID_ACCESS_TOKEN = -950,
-    BLOCKED_ACCOUNT = -997,
-    AUTH_REQUIRED = -998,
-    UPDATE_REQUIRED = -999,
-    SERVER_UNDER_MAINTENANCE = -9797
+  SUCCESS = 0,
+  INVALID_USER = -1,
+  INVALID_METHOD = -202,
+  INVALID_PARAMETER = -203,
+  INVALID_CHATROOM_OPERATION = -401,
+  CHAT_BLOCKED_BY_FRIEND = -402,
+  BLOCKED_IP = -444,
+  OPERATION_DENIED = -500,
+  INVALID_ACCESS_TOKEN = -950,
+  BLOCKED_ACCOUNT = -997,
+  AUTH_REQUIRED = -998,
+  UPDATE_REQUIRED = -999,
+  SERVER_UNDER_MAINTENANCE = -9797
 
 }
 
@@ -26,14 +26,14 @@ export type DataStatusCode = KnownDataStatusCode | number;
 
 export interface DefaultReq {
 
-    [key: string]: unknown;
+  [key: string]: unknown;
 
 }
 
 export interface DefaultRes {
 
-    status: DataStatusCode;
-    [key: string]: any;
+  status: DataStatusCode;
+  [key: string]: any;
 
 }
 
@@ -42,27 +42,27 @@ export interface DefaultRes {
  */
 interface RootCommandResult {
 
-    readonly success: boolean;
-    readonly status: DataStatusCode;
+  readonly success: boolean;
+  readonly status: DataStatusCode;
 
 }
 
 export interface CommandResultFailed extends RootCommandResult {
 
-    readonly success: false;
+  readonly success: false;
 
 }
 
 interface CommandResultDoneValue<T> extends RootCommandResult {
 
-    readonly success: true;
-    readonly result: T;
+  readonly success: true;
+  readonly result: T;
 
 }
 
 interface CommandResultDoneVoid extends RootCommandResult {
 
-    readonly success: true;
+  readonly success: true;
 
 }
 

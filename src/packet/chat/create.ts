@@ -9,8 +9,8 @@ import { ChannelInfoStruct } from '../struct';
 
 export interface CreateRes {
 
-    chatId: Long;
+  chatId: Long;
 
-    chatRoom?: ChannelInfoStruct;
+  chatRoom?: ChannelInfoStruct;
 
 }

@@ -9,39 +9,39 @@ import { ChatlogStruct } from '../struct';
 
 export interface MsgRes {
 
-    /**
-     * Channel id
-     */
-    chatId: Long;
+  /**
+   * Channel id
+   */
+  chatId: Long;
 
-    /**
-     * Open channel link Id
-     */
-    li?: Long;
+  /**
+   * Open channel link Id
+   */
+  li?: Long;
 
-    /**
-     * Chat log id
-     */
-    logId: Long;
+  /**
+   * Chat log id
+   */
+  logId: Long;
 
-    /**
-     * Chat log struct
-     */
-    chatLog: ChatlogStruct;
+  /**
+   * Chat log struct
+   */
+  chatLog: ChatlogStruct;
 
-    /**
-     * true if chat sent without seen. (Official client seems always true except special cases like notification reply.)
-     */
-    noSeen: boolean;
+  /**
+   * true if chat sent without seen. (Official client seems always true except special cases like notification reply.)
+   */
+  noSeen: boolean;
 
-    /**
-     * Sender nickname
-     */
-    authorNickname: string;
+  /**
+   * Sender nickname
+   */
+  authorNickname: string;
 
-    /**
-     * true if notification read(?)
-     */
-    notiRead: boolean;
+  /**
+   * true if notification read(?)
+   */
+  notiRead: boolean;
 
 }

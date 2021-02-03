@@ -94,20 +94,20 @@ export class TalkChatData {
  */
 export interface ChatMentionStruct {
 
-    /**
-     * Index list
-     */
-    at: number[];
+  /**
+   * Index list
+   */
+  at: number[];
 
-    /**
-     * Mention text length, except @ prefix.
-     */
-    len: number;
+  /**
+   * Mention text length, except @ prefix.
+   */
+  len: number;
 
-    /**
-     * Target user id
-     */
-    // eslint-disable-next-line camelcase
-    user_id: Long | number;
+  /**
+   * Target user id
+   */
+  // eslint-disable-next-line camelcase
+  user_id: Long | number;
 
 }

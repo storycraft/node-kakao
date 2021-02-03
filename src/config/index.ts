@@ -39,40 +39,40 @@ export const DefaultConfiguration: OAuthLoginConfig & ClientConfig = {
 
 export interface BookingConfig {
 
-    locoBookingHost: string;
-    locoBookingPort: number;
+  locoBookingHost: string;
+  locoBookingPort: number;
 
-    agent: string;
-    mccmnc: string;
-    deviceModel: string;
+  agent: string;
+  mccmnc: string;
+  deviceModel: string;
 
 }
 
 export interface CheckinConfig extends BookingConfig {
 
-    locoCheckinFallbackHost?: string;
-    locoCheckinFallbackPort?: number;
+  locoCheckinFallbackHost?: string;
+  locoCheckinFallbackPort?: number;
 
-    subDevice: boolean;
-    appVersion: string;
+  subDevice: boolean;
+  appVersion: string;
 
-    countryIso: string;
-    language: string;
+  countryIso: string;
+  language: string;
 
-    netType: number;
+  netType: number;
 
-    locoPEMPublicKey: string;
+  locoPEMPublicKey: string;
 }
 
 export interface WebApiConfig {
 
-    agent: string;
+  agent: string;
 
-    version: string;
+  version: string;
 
-    osVersion: string;
+  osVersion: string;
 
-    language: string;
+  language: string;
 
 }
 
@@ -80,13 +80,13 @@ export type SessionConfig = CheckinConfig
 
 export interface ClientConfig extends SessionConfig, WebApiConfig {
 
-    deviceType: number;
+  deviceType: number;
 
 }
 
 export interface OAuthLoginConfig extends WebApiConfig {
 
-    xvcSeedList: [ string, string ];
-    loginTokenSeedList: [ string, string ];
+  xvcSeedList: [string, string];
+  loginTokenSeedList: [string, string];
 
 }

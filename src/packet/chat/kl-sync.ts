@@ -8,6 +8,6 @@ import { OpenLinkKickedMemberStruct } from '../struct';
 
 export interface KLSyncRes {
 
-    kickMembers: OpenLinkKickedMemberStruct[];
+  kickMembers: OpenLinkKickedMemberStruct[];
 
 }

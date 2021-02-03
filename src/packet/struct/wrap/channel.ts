@@ -11,14 +11,14 @@ import { structToChatlog } from './chat';
 
 export function structToChannelInfo(struct: ChannelInfoStruct): ChannelInfo {
   const displayUserList = struct.displayMembers.map(
-      (userStruct) => {
-        return {
-          userId: userStruct.userId,
-          nickname: userStruct.nickName,
-          countryIso: userStruct.countryIso || '',
-          profileURL: userStruct.profileImageUrl,
-        };
-      },
+    (userStruct) => {
+      return {
+        userId: userStruct.userId,
+        nickname: userStruct.nickName,
+        countryIso: userStruct.countryIso || '',
+        profileURL: userStruct.profileImageUrl,
+      };
+    },
   );
 
   const metaMap: ChannelMetaMap = {};

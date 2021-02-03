@@ -8,8 +8,8 @@ import { InformedOpenLinkStruct } from '../struct';
 
 export interface SyncLinkRes {
 
-    ols?: InformedOpenLinkStruct[];
+  ols?: InformedOpenLinkStruct[];
 
-    ltk: number;
+  ltk: number;
 
 }

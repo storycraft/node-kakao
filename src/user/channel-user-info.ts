@@ -10,15 +10,15 @@ import { UserType } from './user-type';
 
 export interface DisplayUserInfo extends ChannelUser {
 
-    /**
-     * User nickname
-     */
-    nickname: string;
+  /**
+   * User nickname
+   */
+  nickname: string;
 
-    /**
-     * User profile url
-     */
-    profileURL: string;
+  /**
+   * User profile url
+   */
+  profileURL: string;
 
 }
 
@@ -27,20 +27,20 @@ export interface DisplayUserInfo extends ChannelUser {
  */
 export interface ChannelUserInfo extends DisplayUserInfo {
 
-    /**
-     * Full user profile url
-     */
-    fullProfileURL: string;
+  /**
+   * Full user profile url
+   */
+  fullProfileURL: string;
 
-    /**
-     * Original user profile url
-     */
-    originalProfileURL: string;
+  /**
+   * Original user profile url
+   */
+  originalProfileURL: string;
 
-    /**
-     * User type
-     */
-    userType: UserType;
+  /**
+   * User type
+   */
+  userType: UserType;
 
 }
 
@@ -49,35 +49,35 @@ export interface ChannelUserInfo extends DisplayUserInfo {
  */
 export interface NormalChannelUserInfo extends ChannelUserInfo {
 
-    /**
-     * User country name
-     */
-    countryIso: string;
+  /**
+   * User country name
+   */
+  countryIso: string;
 
-    /**
-     * Account id
-     */
-    accountId: number;
+  /**
+   * Account id
+   */
+  accountId: number;
 
-    /**
-     * User status message
-     */
-    statusMessage: string;
+  /**
+   * User status message
+   */
+  statusMessage: string;
 
-    /**
-     * Linked services
-     */
-    linkedServices: string;
+  /**
+   * Linked services
+   */
+  linkedServices: string;
 
-    /**
-     * User type(?) unknown
-     */
-    ut: number;
+  /**
+   * User type(?) unknown
+   */
+  ut: number;
 
-    /**
-     * Account status
-     */
-    suspended: boolean;
+  /**
+   * Account status
+   */
+  suspended: boolean;
 
 }
 
@@ -86,6 +86,6 @@ export interface NormalChannelUserInfo extends ChannelUserInfo {
  */
 export interface OpenChannelUserInfo extends OpenChannelUser, ChannelUserInfo, OpenTokenComponent {
 
-    perm: OpenChannelUserPerm;
+  perm: OpenChannelUserPerm;
 
 }

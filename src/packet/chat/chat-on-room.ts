@@ -10,94 +10,94 @@ import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from 
 
 export interface ChatOnRoomRes {
 
-    /**
-     * Channel id
-     */
-    c: Long;
+  /**
+   * Channel id
+   */
+  c: Long;
 
-    /**
-     * Channel type
-     */
-    t: ChannelType;
+  /**
+   * Channel type
+   */
+  t: ChannelType;
 
-    /**
-     * Open token (openchat)
-     */
-    otk?: number;
+  /**
+   * Open token (openchat)
+   */
+  otk?: number;
 
-    /**
-     * Member struct list (length <= 100)
-     */
-    m?: (NormalMemberStruct | OpenMemberStruct)[];
+  /**
+   * Member struct list (length <= 100)
+   */
+  m?: (NormalMemberStruct | OpenMemberStruct)[];
 
-    /**
-     * Member id list (length > 100)
-     */
-    mi?: Long[];
+  /**
+   * Member id list (length > 100)
+   */
+  mi?: Long[];
 
-    /**
-     * Watermark user id keys
-     */
-    a?: Long[];
+  /**
+   * Watermark user id keys
+   */
+  a?: Long[];
 
-    /**
-     * Watermark values
-     */
-    w?: Long[];
+  /**
+   * Watermark values
+   */
+  w?: Long[];
 
-    /**
-     * Last log id
-     */
-    l: Long;
+  /**
+   * Last log id
+   */
+  l: Long;
 
-    /**
-     * Unknown
-     */
-    o: Long;
+  /**
+   * Unknown
+   */
+  o: Long;
 
-    /**
-     * Unknown
-     */
-    jsi: Long;
+  /**
+   * Unknown
+   */
+  jsi: Long;
 
-    /**
-     * Client openlink user struct
-     */
-    olu?: OpenLinkChannelUserStruct;
+  /**
+   * Client openlink user struct
+   */
+  olu?: OpenLinkChannelUserStruct;
 
-    /**
-     * Unknown (openchat)
-     */
-    notiRead?: boolean;
+  /**
+   * Unknown (openchat)
+   */
+  notiRead?: boolean;
 
-    /**
-     * Unknown (openchat)
-     */
-    ef?: boolean;
+  /**
+   * Unknown (openchat)
+   */
+  ef?: boolean;
 
-    /**
-     * Unknown
-     */
-    f: boolean;
+  /**
+   * Unknown
+   */
+  f: boolean;
 
-    /**
-     * Unknown json
-     */
-    mr: string;
+  /**
+   * Unknown json
+   */
+  mr: string;
 
-    /**
-     * Unknown
-     */
-    pct: unknown;
+  /**
+   * Unknown
+   */
+  pct: unknown;
 
-    /**
-     * Unknown (normal chat)
-     */
-    sui?: number;
+  /**
+   * Unknown (normal chat)
+   */
+  sui?: number;
 
-    /**
-     * Unknown (open chat)
-     */
-    msr?: Long;
+  /**
+   * Unknown (open chat)
+   */
+  msr?: Long;
 
 }

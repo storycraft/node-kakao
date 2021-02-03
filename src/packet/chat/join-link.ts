@@ -8,24 +8,24 @@ import { ChannelInfoStruct, ChatlogStruct, OpenLinkChannelUserStruct, OpenLinkSt
 
 export interface JoinLinkRes {
 
-    /**
-     * Target openlink struct
-     */
-    ol: OpenLinkStruct;
+  /**
+   * Target openlink struct
+   */
+  ol: OpenLinkStruct;
 
-    /**
-     * Link profile
-     */
-    olu?: OpenLinkChannelUserStruct;
+  /**
+   * Link profile
+   */
+  olu?: OpenLinkChannelUserStruct;
 
-    /**
-     * Channel info
-     */
-    chatRoom: ChannelInfoStruct;
+  /**
+   * Channel info
+   */
+  chatRoom: ChannelInfoStruct;
 
-    /**
-     * Join feed chatlog
-     */
-    chatLog: ChatlogStruct;
+  /**
+   * Join feed chatlog
+   */
+  chatLog: ChatlogStruct;
 
 }

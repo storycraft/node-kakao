@@ -12,10 +12,10 @@ import { OpenLinkComponent } from '../openlink';
  */
 export interface ChannelUser {
 
-    /**
-     * Unique identifier
-     */
-    userId: Long;
+  /**
+   * Unique identifier
+   */
+  userId: Long;
 
 }
 

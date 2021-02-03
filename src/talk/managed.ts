@@ -9,13 +9,13 @@ import { DefaultRes } from '../request';
 
 export interface Managed<T extends TypedListeners<T>> {
 
-    /**
-     * Called when broadcast packets are recevied
-     *
-     * @param method
-     * @param data
-     * @param parentCtx
-     */
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<T>): void;
+  /**
+   * Called when broadcast packets are recevied
+   *
+   * @param method
+   * @param data
+   * @param parentCtx
+   */
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<T>): void;
 
 }

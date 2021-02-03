@@ -9,19 +9,19 @@ import { OpenLinkChannelUserStruct } from '../struct';
 
 export interface SyncLinkPfRes {
 
-    /**
-     * Channel id
-     */
-    c: Long;
+  /**
+   * Channel id
+   */
+  c: Long;
 
-    /**
-     * Link id
-     */
-    li: Long;
+  /**
+   * Link id
+   */
+  li: Long;
 
-    /**
-     * Updated open link user
-     */
-    olu: OpenLinkChannelUserStruct;
+  /**
+   * Updated open link user
+   */
+  olu: OpenLinkChannelUserStruct;
 
 }

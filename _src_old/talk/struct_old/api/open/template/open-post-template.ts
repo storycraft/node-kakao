@@ -9,10 +9,10 @@ import { Long } from "bson";
 
 export interface OpenPostTemplate {
 
-    text?: string;
-    postDataList?: OpenPostDataStruct[];
-    scrapData?: OpenPostScrapData;
+  text?: string;
+  postDataList?: OpenPostDataStruct[];
+  scrapData?: OpenPostScrapData;
 
-    shareChannelList?: Long[];
+  shareChannelList?: Long[];
 
 }

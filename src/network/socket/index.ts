@@ -9,10 +9,10 @@ import { BiStream } from '../../stream';
 
 export interface NetSocketOptions {
 
-    host: string;
-    port: number;
+  host: string;
+  port: number;
 
-    keepAlive: boolean;
+  keepAlive: boolean;
 
 }
 
