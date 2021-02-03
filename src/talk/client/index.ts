@@ -94,7 +94,7 @@ export class TalkClient
     get clientUser(): ChannelUser {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
-      return this._cilentUser;
+      return this._clientUser;
     }
 
     get blockList(): TalkBlockSession {
