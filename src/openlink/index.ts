@@ -4,17 +4,17 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./open-channel-info";
-export * from "./open-channel-session";
-export * from "./open-channel";
-export * from "./open-link-profile";
-export * from "./open-link-session";
-export * from "./open-link-type";
-export * from "./open-link-user-info";
+export * from './open-channel-info';
+export * from './open-channel-session';
+export * from './open-channel';
+export * from './open-link-profile';
+export * from './open-link-session';
+export * from './open-link-type';
+export * from './open-link-user-info';
 
-import { Long } from "bson";
-import { OpenLinkType } from "./open-link-type";
-import { OpenLinkUserInfo } from "./open-link-user-info";
+import { Long } from 'bson';
+import { OpenLinkType } from './open-link-type';
+import { OpenLinkUserInfo } from './open-link-user-info';
 
 export interface OpenLinkComponent {
 

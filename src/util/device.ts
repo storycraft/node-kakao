@@ -8,5 +8,5 @@
  * Create random device uuid
  */
 export function randomDeviceUUID() {
-    return btoa(String.fromCharCode(...Array.from({length: 64}, () => Math.floor(Math.random() * 256))));
+  return btoa(String.fromCharCode(...Array.from({ length: 64 }, () => Math.floor(Math.random() * 256))));
 }

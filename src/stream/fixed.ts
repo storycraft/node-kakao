@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ReadStream, WriteStream } from ".";
+import { ReadStream, WriteStream } from '.';
 
 interface FixedStream {
 
@@ -25,101 +25,97 @@ interface FixedStream {
  * Extra bytes are removed.
  */
 export class FixedReadStream implements ReadStream, FixedStream {
-
     private _read: number;
-    
-    constructor(private  _stream: ReadStream, private _size: number) {
-        this._read = 0;
+
+    constructor(private _stream: ReadStream, private _size: number) {
+      this._read = 0;
     }
 
     get size() {
-        return this._size;
+      return this._size;
     }
 
     /**
      * Read size
      */
     get read() {
-        return this._read;
+      return this._read;
     }
 
     get done() {
-        return this._read >= this._size;
+      return this._read >= this._size;
     }
-    
+
     iterate(): AsyncIterableIterator<ArrayBuffer> {
-        const iterable = this._stream.iterate();
-        return {
-            [Symbol.asyncIterator]() {
-                return this;
-            },
+      const iterable = this._stream.iterate();
+      return {
+        [Symbol.asyncIterator]() {
+          return this;
+        },
 
-            next: async () => {
-                if (this.done) {
-                    return { done: true, value: null };
-                }
+        next: async () => {
+          if (this.done) {
+            return { done: true, value: null };
+          }
 
-                const next = await iterable.next();
-                if (next.done) {
-                    return next;
-                }
+          const next = await iterable.next();
+          if (next.done) {
+            return next;
+          }
 
-                this._read += next.value.byteLength;
+          this._read += next.value.byteLength;
 
-                if (this._read > this._size) {
-                    return { done: false, value: next.value.slice(0, this._read - this._size) }
-                }
+          if (this._read > this._size) {
+            return { done: false, value: next.value.slice(0, this._read - this._size) };
+          }
 
-                return { done: false, value: next.value };
-            }
-        };
+          return { done: false, value: next.value };
+        },
+      };
     }
-    
+
     get ended() {
-        return this._stream.ended;
+      return this._stream.ended;
     }
 
     close(): void {
-        this._stream.close();
+      this._stream.close();
     }
-
 }
 
 export class FixedWriteStream implements WriteStream, FixedStream {
-
     private _written: number;
 
-    constructor(private  _stream: WriteStream, private _size: number) {
-        this._written = 0;
+    constructor(private _stream: WriteStream, private _size: number) {
+      this._written = 0;
     }
 
     get size() {
-        return this._size;
+      return this._size;
     }
 
     get done() {
-        return this._written >= this._size;
+      return this._written >= this._size;
     }
 
     /**
      * Written size
      */
     get written() {
-        return this._written;
+      return this._written;
     }
 
     async write(data: ArrayBuffer) {
-        if (this._written + data.byteLength > this._size) throw new Error('Write size exceeded');
-        await this._stream.write(data);
-        this._written += data.byteLength;
+      if (this._written + data.byteLength > this._size) throw new Error('Write size exceeded');
+      await this._stream.write(data);
+      this._written += data.byteLength;
     }
 
     get ended() {
-        return this._stream.ended;
+      return this._stream.ended;
     }
 
     close(): void {
-        this._stream.close();
+      this._stream.close();
     }
-
 }

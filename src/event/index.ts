@@ -4,5 +4,5 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./event-context";
-export * from "./typed";
+export * from './event-context';
+export * from './typed';

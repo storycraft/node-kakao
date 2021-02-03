@@ -4,4 +4,4 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./get-conf";
+export * from './get-conf';

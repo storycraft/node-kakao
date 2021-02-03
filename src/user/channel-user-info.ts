@@ -4,10 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenTokenComponent } from "../openlink";
-import { OpenChannelUserPerm } from "../openlink/open-link-type";
-import { ChannelUser, OpenChannelUser } from "./channel-user";
-import { UserType } from "./user-type";
+import { OpenTokenComponent } from '../openlink';
+import { OpenChannelUserPerm } from '../openlink/open-link-type';
+import { ChannelUser, OpenChannelUser } from './channel-user';
+import { UserType } from './user-type';
 
 export interface DisplayUserInfo extends ChannelUser {
 

@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChatType } from "../../chat/chat-type";
+import { Long } from 'bson';
+import { ChatType } from '../../chat/chat-type';
 
 export enum ChatRefererType {
 

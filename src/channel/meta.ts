@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelMetaType } from "../packet/struct";
+import { Long } from 'bson';
+import { ChannelMetaType } from '../packet/struct';
 
 export enum ChannelClientMetaType {
-    
+
     UNDEFINED = 'undefined',
     NAME = 'name',
     IMAGE_PATH = 'image_path',
@@ -45,7 +45,6 @@ export interface ChannelClientMetaStruct {
 export interface MetaContent {
 
 
-
 }
 
 export interface PrivilegeMetaContent {
@@ -70,7 +69,7 @@ export interface TvMetaContent {
 export interface TvLiveMetaContent {
 
     url: string;
-    live?: "on";
+    live?: 'on';
 
 }
 
@@ -105,9 +104,7 @@ export interface BotAddCommandStruct extends BotCommandStruct {
 
 }
 
-export interface BotDelCommandStruct extends BotCommandStruct {
-
-}
+export type BotDelCommandStruct = BotCommandStruct
 
 export interface BotMetaContent {
 

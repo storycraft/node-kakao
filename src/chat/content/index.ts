@@ -7,5 +7,4 @@
 export interface ChatContent {
 
 
-
 }

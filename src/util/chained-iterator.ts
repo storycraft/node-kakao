@@ -5,29 +5,27 @@
  */
 
 export class ChainedIterator<T> implements IterableIterator<T> {
-
     private _list: Iterator<T>[];
 
     constructor(...list: Iterator<T>[]) {
-        this._list = list.reverse();
+      this._list = list.reverse();
     }
 
     [Symbol.iterator]() {
-        return this;
+      return this;
     }
 
     next(): IteratorResult<T> {
-        if (this._list.length < 1) return { done: true, value: null };
+      if (this._list.length < 1) return { done: true, value: null };
 
-        const last = this._list[this._list.length - 1];
-        const next = last.next();
+      const last = this._list[this._list.length - 1];
+      const next = last.next();
 
-        if (next.done) {
-            this._list.pop();
-            return this.next();
-        }
+      if (next.done) {
+        this._list.pop();
+        return this.next();
+      }
 
-        return next;
+      return next;
     }
-
 }

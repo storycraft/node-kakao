@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { FeedType, KnownFeedType } from "../../chat/feed/feed-type";
-import { ChannelUser } from "../../user/channel-user";
-import { JsonUtil } from "../../util/json-util";
-import { ChatLogged, TypedChat } from "../chat";
-import { KnownChatType } from "../chat-type";
+import { FeedType, KnownFeedType } from '../../chat/feed/feed-type';
+import { ChannelUser } from '../../user/channel-user';
+import { JsonUtil } from '../../util/json-util';
+import { ChatLogged, TypedChat } from '../chat';
+import { KnownChatType } from '../chat-type';
 
 export namespace FeedFragment {
 
@@ -30,9 +30,7 @@ export namespace FeedFragment {
 
     }
 
-    export interface Message extends ChatLogged {
-
-    }
+    export type Message = ChatLogged
 
     export interface OpenHandOver {
 
@@ -87,14 +85,14 @@ export type ChatFeeds = KnownChatFeeds | Record<string, any> & ChatFeed;
  * @param chat
  */
 export function feedFromChat(chat: TypedChat<KnownChatType.FEED>): ChatFeeds {
-    let feed: ChatFeeds = { feedType: -999999 };
-    try {
-        feed = { ...feed, ...JsonUtil.parseLoseless(chat.text) };
-    } catch (e) {
+  let feed: ChatFeeds = { feedType: -999999 };
+  try {
+    feed = { ...feed, ...JsonUtil.parseLoseless(chat.text) };
+  } catch (e) {
 
-    }
+  }
 
-    return feed;
+  return feed;
 }
 
 /**
@@ -103,5 +101,5 @@ export function feedFromChat(chat: TypedChat<KnownChatType.FEED>): ChatFeeds {
  * @param feed
  */
 export function feedToText(feed: ChatFeeds): string {
-    return JsonUtil.stringifyLoseless(feed);
+  return JsonUtil.stringifyLoseless(feed);
 }

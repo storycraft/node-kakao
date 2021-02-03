@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { FriendStruct } from "./friend-struct";
+import { FriendStruct } from './friend-struct';
 
 export interface FriendBlockedListStruct {
 

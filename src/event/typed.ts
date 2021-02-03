@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import EventEmitter from "eventemitter3";
+import EventEmitter from 'eventemitter3';
 
 // https://github.com/binier/tiny-typed-emitter
 export type TypedListeners<L> = {
@@ -14,16 +14,16 @@ export type TypedListeners<L> = {
 export type DefaultListeners = Record<string | symbol, (...args: any[]) => any>;
 
 declare class TypedEmitterDecl<L extends TypedListeners<L> = DefaultListeners> {
-    addListener<U extends keyof L>(event: U, listener: L[U]): this;
-    removeListener<U extends keyof L>(event: U, listener: L[U]): this;
-    removeAllListeners(event?: keyof L): this;
-    once<U extends keyof L>(event: U, listener: L[U]): this;
-    on<U extends keyof L>(event: U, listener: L[U]): this;
-    off<U extends keyof L>(event: U, listener: L[U]): this;
-    emit<U extends keyof L>(event: U, ...args: Parameters<L[U]>): boolean;
-    eventNames<U extends keyof L>(): U[];
-    listenerCount(type: keyof L): number;
-    listeners<U extends keyof L>(type: U): L[U][];
+  addListener<U extends keyof L>(event: U, listener: L[U]): this;
+  removeListener<U extends keyof L>(event: U, listener: L[U]): this;
+  removeAllListeners(event?: keyof L): this;
+  once<U extends keyof L>(event: U, listener: L[U]): this;
+  on<U extends keyof L>(event: U, listener: L[U]): this;
+  off<U extends keyof L>(event: U, listener: L[U]): this;
+  emit<U extends keyof L>(event: U, ...args: Parameters<L[U]>): boolean;
+  eventNames<U extends keyof L>(): U[];
+  listenerCount(type: keyof L): number;
+  listeners<U extends keyof L>(type: U): L[U][];
 }
 
 

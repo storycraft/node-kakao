@@ -4,24 +4,24 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./common";
-export * from "./talk-channel-handler";
-export * from "./talk-channel-session";
-export * from "./talk-normal-channel";
-export * from "./talk-normal-channel-list";
+export * from './common';
+export * from './talk-channel-handler';
+export * from './talk-channel-session';
+export * from './talk-normal-channel';
+export * from './talk-normal-channel-list';
 
-import { Channel } from "../../channel/channel";
-import { ChannelInfo } from "../../channel/channel-info";
-import { ChannelSession } from "../../channel/channel-session";
-import { ChannelUser } from "../../user/channel-user";
-import { ChannelUserInfo } from "../../user/channel-user-info";
-import { Chatlog, ChatLogged } from "../../chat/chat";
-import { AsyncCommandResult } from "../../request";
-import { TypedEmitter } from "../../event";
-import { ChannelEvents } from "../event";
-import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from "../../channel/meta";
-import { ChatType } from "../../chat";
-import { MediaUploadTemplate } from "../media/upload";
+import { Channel } from '../../channel/channel';
+import { ChannelInfo } from '../../channel/channel-info';
+import { ChannelSession } from '../../channel/channel-session';
+import { ChannelUser } from '../../user/channel-user';
+import { ChannelUserInfo } from '../../user/channel-user-info';
+import { Chatlog, ChatLogged } from '../../chat/chat';
+import { AsyncCommandResult } from '../../request';
+import { TypedEmitter } from '../../event';
+import { ChannelEvents } from '../event';
+import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from '../../channel/meta';
+import { ChatType } from '../../chat';
+import { MediaUploadTemplate } from '../media/upload';
 
 /**
  * TalkChannel interface includes managed methods and other methods that make it easier to use

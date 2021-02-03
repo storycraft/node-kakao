@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChatlogStruct } from "../struct/chat";
+import { Long } from 'bson';
+import { ChatlogStruct } from '../struct/chat';
 
 export interface SyncMsgRes {
 

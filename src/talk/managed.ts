@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { TypedListeners } from "../event";
-import { EventContext } from "../event/event-context";
-import { DefaultRes } from "../request";
+import { TypedListeners } from '../event';
+import { EventContext } from '../event/event-context';
+import { DefaultRes } from '../request';
 
 export interface Managed<T extends TypedListeners<T>> {
 

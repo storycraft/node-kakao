@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelType } from "../../channel/channel-type";
-import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from "../struct/user";
+import { Long } from 'bson';
+import { ChannelType } from '../../channel/channel-type';
+import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from '../struct/user';
 
 export interface ChatOnRoomRes {
 

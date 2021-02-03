@@ -4,20 +4,20 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../chat/chat";
-import { Channel } from "./channel";
-import { AsyncCommandResult, CommandResult } from "../request";
-import { Long } from "..";
-import { ChannelUser } from "../user/channel-user";
-import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";
-import { ChannelMetaType } from "../packet/struct/channel";
-import { ChannelUserInfo } from "../user/channel-user-info";
-import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
-import { MediaDownloader } from "../talk/media/media-downloader";
-import { MediaKeyComponent } from "../media";
-import { ChatType } from "../chat/chat-type";
-import { MediaUploader, MultiMediaUploader } from "../talk";
-import { MediaUploadTemplate } from "../talk/media/upload";
+import { Chat, Chatlog, ChatLogged, ChatLogLinked } from '../chat/chat';
+import { Channel } from './channel';
+import { AsyncCommandResult, CommandResult } from '../request';
+import { Long } from '..';
+import { ChannelUser } from '../user/channel-user';
+import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from './channel-info';
+import { ChannelMetaType } from '../packet/struct/channel';
+import { ChannelUserInfo } from '../user/channel-user-info';
+import { ChatOnRoomRes } from '../packet/chat/chat-on-room';
+import { MediaDownloader } from '../talk/media/media-downloader';
+import { MediaKeyComponent } from '../media';
+import { ChatType } from '../chat/chat-type';
+import { MediaUploader, MultiMediaUploader } from '../talk';
+import { MediaUploadTemplate } from '../talk/media/upload';
 
 export interface ChannelTemplate {
 

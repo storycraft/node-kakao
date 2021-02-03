@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { SessionConfig } from "../config";
-import { LocoSession, PacketResData, SessionFactory } from "../network/request-session";
-import { DefaultRes, DefaultReq } from "../request";
-import { LocoPacket } from "../packet";
-import { CommandResult } from "../request";
+import { SessionConfig } from '../config';
+import { LocoSession, PacketResData, SessionFactory } from '../network/request-session';
+import { DefaultRes, DefaultReq } from '../request';
+import { LocoPacket } from '../packet';
+import { CommandResult } from '../request';
 
 /**
  * Hook incoming datas
@@ -38,68 +38,64 @@ export interface SessionHook {
  * Hook created loco session
  */
 export class HookedSessionFactory implements SessionFactory {
+  constructor(private _factory: SessionFactory, private _hook: Partial<SessionHook> = {}) {
 
-    constructor(private _factory: SessionFactory, private _hook: Partial<SessionHook> = {}) {
+  }
 
-    }
+  async createSession(config: SessionConfig): Promise<CommandResult<LocoSession>> {
+    const sessionRes = await this._factory.createSession(config);
+    if (!sessionRes.success) return sessionRes;
 
-    async createSession(config: SessionConfig): Promise<CommandResult<LocoSession>> {
-        const sessionRes = await this._factory.createSession(config);
-        if (!sessionRes.success) return sessionRes;
-
-        return { status: sessionRes.status, success: true, result: new HookedLocoSession(sessionRes.result, this._hook) };
-    }
-
+    return { status: sessionRes.status, success: true, result: new HookedLocoSession(sessionRes.result, this._hook) };
+  }
 }
 
 /**
  * Hook loco session
  */
 export class HookedLocoSession implements LocoSession {
+  constructor(private _session: LocoSession, public hook: Partial<SessionHook> = {}) {
 
-    constructor(private _session: LocoSession, public hook: Partial<SessionHook> = {}) {
+  }
 
-    }
+  listen() {
+    const hook = this.hook;
+    const iterator = this._session.listen();
 
-    listen() {
-        const hook = this.hook;
-        const iterator = this._session.listen();
+    return {
+      [Symbol.asyncIterator]() {
+        return this;
+      },
 
-        return {
-            [Symbol.asyncIterator]() {
-                return this;
-            },
+      async next(): Promise<IteratorResult<PacketResData>> {
+        const next = await iterator.next();
 
-            async next(): Promise<IteratorResult<PacketResData>> {
-                const next = await iterator.next();
+        if (!next.done && hook.onData) {
+          const { method, data, push } = next.value;
 
-                if (!next.done && hook.onData) {
-                    const { method, data, push } = next.value;
-
-                    hook.onData(method, data, push);
-                }
-
-                return next;
-            }
+          hook.onData(method, data, push);
         }
-    }
 
-    request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
-        if (this.hook.onRequest) this.hook.onRequest(method, data);
+        return next;
+      },
+    };
+  }
 
-        return this._session.request(method, data);
-    }
+  request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
+    if (this.hook.onRequest) this.hook.onRequest(method, data);
 
-    sendPacket(packet: LocoPacket): Promise<LocoPacket> {
-        if (this.hook.onSendPacket) this.hook.onSendPacket(packet);
+    return this._session.request(method, data);
+  }
 
-        return this._session.sendPacket(packet);
-    }
+  sendPacket(packet: LocoPacket): Promise<LocoPacket> {
+    if (this.hook.onSendPacket) this.hook.onSendPacket(packet);
 
-    close(): void {
-        if (this.hook.onClose) this.hook.onClose();
+    return this._session.sendPacket(packet);
+  }
 
-        this._session.close();
-    }
+  close(): void {
+    if (this.hook.onClose) this.hook.onClose();
 
+    this._session.close();
+  }
 }

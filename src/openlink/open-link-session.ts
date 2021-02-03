@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AsyncCommandResult } from "../request";
-import { InformedOpenLink, OpenLinkComponent, OpenLink } from ".";
-import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "./open-link-user-info";
+import { AsyncCommandResult } from '../request';
+import { InformedOpenLink, OpenLinkComponent, OpenLink } from '.';
+import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from './open-link-user-info';
 
 export interface OpenLinkSession {
 

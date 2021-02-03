@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { OpenChannelUserPerm } from "../../openlink/open-link-type";
+import { Long } from 'bson';
+import { OpenChannelUserPerm } from '../../openlink/open-link-type';
 
 export interface SyncMemTRes {
 

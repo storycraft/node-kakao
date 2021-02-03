@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
+import { Long } from 'bson';
 
 export enum ApiUserType {
 

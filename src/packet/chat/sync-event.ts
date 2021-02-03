@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChatType } from "../../chat/chat-type";
-import { RelayEventType } from "../../relay";
+import { Long } from 'bson';
+import { ChatType } from '../../chat/chat-type';
+import { RelayEventType } from '../../relay';
 
 export interface SyncEventRes {
 

@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelMetaStruct } from "../struct/channel";
+import { Long } from 'bson';
+import { ChannelMetaStruct } from '../struct/channel';
 
 export interface ChgMetaRes {
 

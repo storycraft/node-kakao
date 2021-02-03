@@ -52,9 +52,9 @@ export type ChatType = KnownChatType | number;
 export const DELETED_MESSAGE_OFFSET = 16384;
 
 export function isDeletedChat(type: ChatType) {
-    return type >= DELETED_MESSAGE_OFFSET;
+  return type >= DELETED_MESSAGE_OFFSET;
 }
 
 export function getOriginalType(type: ChatType): ChatType {
-    return type & 0xffffbfff;
+  return type & 0xffffbfff;
 }

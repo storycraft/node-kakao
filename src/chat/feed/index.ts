@@ -4,5 +4,5 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./chat-feed";
-export * from "./feed-type";
+export * from './chat-feed';
+export * from './feed-type';

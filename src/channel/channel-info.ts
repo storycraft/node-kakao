@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { Chatlog } from "../chat/chat";
-import { DisplayUserInfo } from "../user/channel-user-info";
-import { Channel } from "./channel";
-import { ChannelType } from "./channel-type";
+import { Long } from 'bson';
+import { Chatlog } from '../chat/chat';
+import { DisplayUserInfo } from '../user/channel-user-info';
+import { Channel } from './channel';
+import { ChannelType } from './channel-type';
 
 export interface ChannelMeta {
 
@@ -26,11 +26,7 @@ export interface SetChannelMeta extends ChannelMeta {
 
 }
 
-export interface ChannelMetaMap extends Record<ChannelType, SetChannelMeta> {
-
-
-
-}
+export type ChannelMetaMap = Record<ChannelType, SetChannelMeta>
 
 /**
  * Common channel info
@@ -88,25 +84,25 @@ export interface ChannelInfo extends Channel {
 export namespace ChannelInfo {
 
     export function createPartial(info: Partial<ChannelInfo>): ChannelInfo {
-        return Object.assign({
-            channelId: Long.ZERO,
+      return Object.assign({
+        channelId: Long.ZERO,
 
-            type: '',
+        type: '',
 
-            activeUserCount: 0,
+        activeUserCount: 0,
 
-            newChatCount: 0,
-            newChatCountInvalid: true,
+        newChatCount: 0,
+        newChatCountInvalid: true,
 
-            lastChatLogId: Long.ZERO,
-            lastSeenLogId: Long.ZERO,
+        lastChatLogId: Long.ZERO,
+        lastSeenLogId: Long.ZERO,
 
-            displayUserList: [],
+        displayUserList: [],
 
-            metaMap: {},
+        metaMap: {},
 
-            pushAlert: false
-        }, info);
+        pushAlert: false,
+      }, info);
     }
 
 }
@@ -126,10 +122,10 @@ export interface NormalChannelInfo extends ChannelInfo {
 export namespace NormalChannelInfo {
 
     export function createPartial(info: Partial<NormalChannelInfo>): NormalChannelInfo {
-        return Object.assign({
-            ...ChannelInfo.createPartial(info),
-            joinTime: 0,
-        }, info);
+      return Object.assign({
+        ...ChannelInfo.createPartial(info),
+        joinTime: 0,
+      }, info);
     }
 
 }
