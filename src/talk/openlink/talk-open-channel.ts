@@ -167,7 +167,7 @@ export class TalkOpenChannel
       return this._channelSession.deleteChat(chat);
     }
 
-    async inviteUsers(users: ChannelUser[]): AsyncCommandResult {
+    async inviteUsers(): AsyncCommandResult {
       // Cannot invite users to open channel
       return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
     }

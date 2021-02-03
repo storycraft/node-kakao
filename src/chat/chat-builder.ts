@@ -5,7 +5,7 @@
  */
 
 import { Chat } from './chat';
-import { ChatType, KnownChatType } from './chat-type';
+import { ChatType } from './chat-type';
 import { ChatContent } from './content';
 
 /**
