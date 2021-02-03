@@ -14,6 +14,7 @@ export interface FriendReqStruct {
 
 export interface FriendReqPhoneNumberStruct {
 
+    // eslint-disable-next-line camelcase
     pstn_number: string;
 
 }

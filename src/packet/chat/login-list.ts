@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChatlogStruct } from '../struct/chat';
+import { ChatlogStruct } from '../struct';
 
 // TODO: Move to struct modules.
 // Generated using http://json2ts.com/

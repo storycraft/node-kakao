@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { OpenLinkChannelUserStruct } from '../struct/user';
+import { OpenLinkChannelUserStruct } from '../struct';
 
 export interface SyncLinkPfRes {
 

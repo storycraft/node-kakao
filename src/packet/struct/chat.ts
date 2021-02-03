@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChatType } from '../../chat/chat-type';
+import { ChatType } from '../../chat';
 
 export enum ChatRefererType {
 

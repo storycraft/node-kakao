@@ -19,7 +19,7 @@ export class NodeSocket implements BiStream {
       this._ended = false;
     }
 
-    iterate() {
+    iterate(): {[Symbol.asyncIterator](): any, next: () => Promise<IteratorResult<any, unknown>>} {
       const iterator = this._socket[Symbol.asyncIterator]();
 
       return {
@@ -36,11 +36,11 @@ export class NodeSocket implements BiStream {
       };
     }
 
-    get ended() {
+    get ended(): boolean {
       return this._ended;
     }
 
-    write(data: ArrayBuffer) {
+    write(data: ArrayBuffer): Promise<void> {
       if (this._ended) throw new Error('Tried to send data from closed socket');
 
       return util.promisify(this._socket.write.bind(this._socket))(new Uint8Array(data));

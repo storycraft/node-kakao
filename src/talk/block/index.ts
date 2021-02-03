@@ -20,8 +20,8 @@ export class TalkBlockSession {
   /**
      * Block normal user
      *
-     * @param user
-     * @param type
+     * @param {ChannelUser} user
+     * @param {TalkBlockType} type
      */
   async blockUser(user: ChannelUser, type: TalkBlockType = TalkBlockType.BLOCK): AsyncCommandResult {
     const res = await this._session.request(
@@ -38,8 +38,8 @@ export class TalkBlockSession {
   /**
      * Block plus user
      *
-     * @param plusUser
-     * @param type
+     * @param {ChannelUser} plusUser
+     * @param {TalkBlockType} type
      */
   async blockPlusUser(plusUser: ChannelUser, type: TalkBlockType = TalkBlockType.BLOCK): AsyncCommandResult {
     const res = await this._session.request(
@@ -56,9 +56,9 @@ export class TalkBlockSession {
   /**
      * Unblock normal user.
      *
-     * @param user
+     * @param {ChannelUser} user
      */
-  async unblockUser(user: ChannelUser) {
+  async unblockUser(user: ChannelUser): Promise<{success: boolean, status: number}> {
     const res = await this._session.request(
         'BLDELITEM',
         {
@@ -72,9 +72,9 @@ export class TalkBlockSession {
   /**
      * Unblock plus user.
      *
-     * @param plusUser
+     * @param {ChannelUser} plusUser
      */
-  async unblockPlusUser(plusUser: ChannelUser) {
+  async unblockPlusUser(plusUser: ChannelUser): Promise<{success: boolean, status: number}> {
     const res = await this._session.request(
         'BLDELITEM',
         {

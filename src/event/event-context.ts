@@ -20,7 +20,7 @@ export class EventContext<T extends TypedListeners<T>> implements ContextEmitter
       this._emitterList = emitters;
     }
 
-    emit<U extends keyof T>(event: U, ...args: Parameters<T[U]>) {
+    emit<U extends keyof T>(event: U, ...args: Parameters<T[U]>): void {
       this._emitterList.forEach((emitter) => emitter.emit(event, ...args));
     }
 }

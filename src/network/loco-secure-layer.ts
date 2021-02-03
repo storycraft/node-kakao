@@ -24,7 +24,8 @@ export class LocoSecureLayer implements BiStream {
       this._handshaked = false;
     }
 
-    iterate() {
+    iterate(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<ArrayBuffer>>} {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
       const iterator = instance._stream.iterate();
 
@@ -86,29 +87,29 @@ export class LocoSecureLayer implements BiStream {
       };
     }
 
-    get ended() {
+    get ended(): boolean {
       return this._stream.ended;
     }
 
-    get crypto() {
+    get crypto(): CryptoStore {
       return this._crypto;
     }
 
     /**
-     * @return original stream
+     * @return {BiStream} original stream
      */
-    get stream() {
+    get stream(): BiStream {
       return this._stream;
     }
 
     /**
-     * @return true if handshake sent.
+     * @return {boolean} true if handshake sent.
      */
-    get handshaked() {
+    get handshaked(): boolean {
       return this._handshaked;
     }
 
-    async write(data: ArrayBuffer) {
+    async write(data: ArrayBuffer): Promise<void> {
       if (!this._handshaked) {
         await this.sendHandshake();
         this._handshaked = true;
@@ -128,7 +129,7 @@ export class LocoSecureLayer implements BiStream {
       return this._stream.write(packet);
     }
 
-    protected async sendHandshake() {
+    protected async sendHandshake(): Promise<void> {
       const encryptedKey = this._crypto.getRSAEncryptedKey();
       const handshakePacket = new ArrayBuffer(12 + encryptedKey.byteLength);
 

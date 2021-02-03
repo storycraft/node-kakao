@@ -20,6 +20,8 @@ export interface NetSocketOptions {
 /**
  * Create TCP net stream using options.
  * This detect environment automatically.
+ *
+ * @param {NetSocketOptions} option
  */
 export async function createTCPSocket(option: NetSocketOptions): Promise<BiStream> {
   if (isNode()) {
@@ -38,6 +40,8 @@ export async function createTCPSocket(option: NetSocketOptions): Promise<BiStrea
 /**
  * Create TCP TLS net stream using options.
  * This detect environment automatically.
+ *
+ * @param {NetSocketOptions} option
  */
 export async function createTLSSocket(option: NetSocketOptions): Promise<BiStream> {
   if (isNode()) {

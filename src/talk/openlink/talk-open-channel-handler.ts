@@ -5,23 +5,19 @@
  */
 
 import { Long } from 'bson';
-import { KnownChatType } from '../../chat/chat-type';
-import { feedFromChat, OpenKickFeed, OpenRewriteFeed } from '../../chat/feed/chat-feed';
-import { KnownFeedType } from '../../chat/feed/feed-type';
-import { EventContext } from '../../event/event-context';
-import { OpenChannelUserPerm } from '../../openlink';
-import { OpenChannelInfo } from '../../openlink/open-channel-info';
+import { feedFromChat, KnownChatType, KnownFeedType, OpenKickFeed, OpenRewriteFeed } from '../../chat';
+import { EventContext } from '../../event';
+import { OpenChannelInfo, OpenChannelUserPerm } from '../../openlink';
 import { DefaultRes } from '../../request';
-import { LinkKickedRes } from '../../packet/chat/link-kicked';
-import { SyncEventRes } from '../../packet/chat/sync-event';
-import { SyncLinkPfRes } from '../../packet/chat/sync-link-pf';
-import { SyncMemTRes } from '../../packet/chat/sync-mem-t';
-import { ChannelInfoStruct } from '../../packet/struct/channel';
-import { ChatlogStruct } from '../../packet/struct/chat';
-import { structToChatlog } from '../../packet/struct/wrap/chat';
-import { structToOpenLinkChannelUserInfo } from '../../packet/struct/wrap/user';
-import { OpenChannelUserInfo } from '../../user/channel-user-info';
-import { ChannelInfoUpdater, ChannelListUpdater } from '../channel/talk-channel-handler';
+import { LinkKickedRes, SyncEventRes, SyncLinkPfRes, SyncMemTRes } from '../../packet/chat';
+import {
+  ChannelInfoStruct,
+  ChatlogStruct,
+  structToChatlog,
+  structToOpenLinkChannelUserInfo,
+} from '../../packet/struct';
+import { OpenChannelUserInfo } from '../../user';
+import { ChannelInfoUpdater, ChannelListUpdater } from '../channel';
 import { OpenChannelEvents, OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
@@ -31,16 +27,23 @@ import { TalkOpenChannelList } from './talk-open-channel-list';
  * Capture and handle pushes coming to open channel
  */
 export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
-  constructor(private _channel: TalkOpenChannel, private _updater: ChannelInfoUpdater<OpenChannelInfo, OpenChannelUserInfo>) {
+  constructor(
+    private _channel: TalkOpenChannel,
+    private _updater: ChannelInfoUpdater<OpenChannelInfo, OpenChannelUserInfo>,
+  ) {
 
   }
 
-  private _callEvent<U extends keyof OpenChannelEvents>(parentCtx: EventContext<OpenChannelEvents>, event: U, ...args: Parameters<OpenChannelEvents[U]>) {
+  private _callEvent<U extends keyof OpenChannelEvents>(
+      parentCtx: EventContext<OpenChannelEvents>,
+      event: U,
+      ...args: Parameters<OpenChannelEvents[U]>
+  ) {
     this._channel.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>): void {
     switch (method) {
       case 'SYNCMEMT': {
         const memTData = data as DefaultRes & SyncMemTRes;
@@ -162,12 +165,16 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
 
   }
 
-  private _callEvent<U extends keyof OpenChannelListEvents>(parentCtx: EventContext<OpenChannelListEvents>, event: U, ...args: Parameters<OpenChannelListEvents[U]>) {
+  private _callEvent<U extends keyof OpenChannelListEvents>(
+      parentCtx: EventContext<OpenChannelListEvents>,
+      event: U,
+      ...args: Parameters<OpenChannelListEvents[U]>
+  ) {
     this._list.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
     switch (method) {
       case 'SYNCLINKCR': {
         const chatRoom: ChannelInfoStruct = data['chatRoom'];
@@ -221,8 +228,6 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
             channel,
         );
       }
-
-      default: break;
     }
   }
 }

@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from '../../../openlink/open-link-user-info';
-import { NormalChannelUserInfo, OpenChannelUserInfo } from '../../../user/channel-user-info';
-import { UserType } from '../../../user/user-type';
+import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from '../../../openlink';
+import { NormalChannelUserInfo, OpenChannelUserInfo } from '../../../user';
+import { UserType } from '../../../user';
 import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenLinkKickedMemberStruct, OpenMemberStruct } from '../user';
 
 export function structToChannelUserInfo(struct: NormalMemberStruct): NormalChannelUserInfo {

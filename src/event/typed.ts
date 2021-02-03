@@ -28,6 +28,7 @@ declare class TypedEmitterDecl<L extends TypedListeners<L> = DefaultListeners> {
 
 
 // We can just use EventEmitter but the typings break on nested event map.
-export class TypedEmitter<L extends TypedListeners<L>> extends (EventEmitter as { new<L extends TypedListeners<L>>(): TypedEmitterDecl<L> })<L> {
+export class TypedEmitter<L extends TypedListeners<L>>
+  extends (EventEmitter as { new<L extends TypedListeners<L>>(): TypedEmitterDecl<L> })<L> {
 
 }

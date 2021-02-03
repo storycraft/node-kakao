@@ -5,25 +5,22 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { ChannelList } from '../../channel/channel-list';
-import { NormalChannelManageSession, ChannelTemplate } from '../../channel/channel-session';
+import { Channel, ChannelList, ChannelTemplate, NormalChannelManageSession } from '../../channel';
 import { TalkSession } from '../client';
-import { EventContext } from '../../event/event-context';
-import { DefaultRes } from '../../request';
-import { KnownDataStatusCode } from '../../request';
-import { AsyncCommandResult } from '../../request';
+import { EventContext, TypedEmitter } from '../../event';
+import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
 import { NormalChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkNormalChannel } from './talk-normal-channel';
 import { TalkChannelListHandler } from './talk-channel-handler';
 import { TalkChannelManageSession } from './talk-channel-session';
-import { TypedEmitter } from '../../event';
 
 /**
  * Manage session channels
  */
-export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents> implements ChannelList<TalkNormalChannel>, NormalChannelManageSession, Managed<NormalChannelListEvents> {
+export class TalkNormalChannelList
+  extends TypedEmitter<NormalChannelListEvents>
+  implements ChannelList<TalkNormalChannel>, NormalChannelManageSession, Managed<NormalChannelListEvents> {
     private _handler: TalkChannelListHandler;
 
     private _manageSession: TalkChannelManageSession;
@@ -32,7 +29,7 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
 
     /**
      * Construct managed normal channel list
-     * @param session
+     * @param {TalkSession} _session
      */
     constructor(private _session: TalkSession) {
       super();
@@ -47,17 +44,17 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
       this._map = new Map();
     }
 
-    get size() {
+    get size(): number {
       return this._map.size;
     }
 
-    get(channelId: Long) {
+    get(channelId: Long): TalkNormalChannel | undefined {
       const strId = channelId.toString();
 
       return this._map.get(strId);
     }
 
-    all() {
+    all(): IterableIterator<TalkNormalChannel> {
       return this._map.values();
     }
 
@@ -97,7 +94,7 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
       return this.addChannel(res.result);
     }
 
-    async leaveChannel(channel: Channel, block?: boolean) {
+    async leaveChannel(channel: Channel, block?: boolean): Promise<CommandResult<Long>> {
       const res = await this._manageSession.leaveChannel(channel, block);
 
       if (res.success) {
@@ -119,10 +116,13 @@ export class TalkNormalChannelList extends TypedEmitter<NormalChannelListEvents>
 
     /**
      * Initialize TalkChannelList using channelList.
-     * @param session
-     * @param channelList
+     * @param {TalkNormalChannelList} talkChannelList
+     * @param {Channel[]} channelList
      */
-    static async initialize(talkChannelList: TalkNormalChannelList, channelList: Channel[] = []) {
+    static async initialize(
+        talkChannelList: TalkNormalChannelList,
+        channelList: Channel[] = [],
+    ): Promise<TalkNormalChannelList> {
       talkChannelList._map.clear();
       await Promise.all(channelList.map((channel) => talkChannelList.addChannel(channel)));
 

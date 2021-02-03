@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { OpenChannelUserPerm } from '../../openlink/open-link-type';
+import { OpenChannelUserPerm } from '../../openlink';
 
 export interface SyncMemTRes {
 

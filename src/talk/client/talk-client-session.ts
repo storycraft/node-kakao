@@ -5,15 +5,14 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { TalkSession } from '../client';
+import { Channel } from '../../channel';
+import { TalkSession } from './index';
 import { ClientStatus } from '../../client-status';
-import { ClientSession, LoginResult } from '../../client/client-session';
+import { ClientSession, LoginResult } from '../../client';
 import { OAuthCredential } from '../../oauth';
-import { OpenChannel } from '../../openlink/open-channel';
-import { LoginListRes } from '../../packet/chat/login-list';
-import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
-import { CommandResult } from '../../request';
+import { OpenChannel } from '../../openlink';
+import { LoginListRes } from '../../packet/chat';
+import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
 import { ClientConfig } from '../../config';
 
 export class TalkClientSession implements ClientSession {
@@ -28,7 +27,7 @@ export class TalkClientSession implements ClientSession {
       this._lastBlockTk = 0;
     }
 
-    get session() {
+    get session(): TalkSession {
       return this._session;
     }
 
@@ -92,6 +91,9 @@ export class TalkClientSession implements ClientSession {
 
     /**
      * Unknown
+     *
+     * @param {number[]} unknown
+     * @return {AsyncCommandResult<DefaultRes>}
      */
     async getTokens(unknown: number[]): AsyncCommandResult<DefaultRes> {
       const res = await this._session.request('GETTOKEN', { ts: unknown });

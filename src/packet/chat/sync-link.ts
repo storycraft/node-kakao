@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { InformedOpenLinkStruct, OpenLinkStruct } from '../struct/openlink';
+import { InformedOpenLinkStruct } from '../struct';
 
 export interface SyncLinkRes {
 

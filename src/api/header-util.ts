@@ -7,16 +7,16 @@
 import { RequestHeader } from '.';
 import { WebApiConfig } from '../config';
 
-export function fillAHeader(header: RequestHeader, config: WebApiConfig) {
+export function fillAHeader(header: RequestHeader, config: WebApiConfig): void {
   header['A'] = `${config.agent}/${config.version}/${config.language}`;
 }
 
-export function fillBaseHeader(header: RequestHeader, config: WebApiConfig) {
+export function fillBaseHeader(header: RequestHeader, config: WebApiConfig): void {
   header['Accept'] = '*/*';
   header['Accept-Language'] = config.language;
 }
 
-export function getUserAgent(config: WebApiConfig) {
+export function getUserAgent(config: WebApiConfig): string {
   let os = '';
   if (config.agent === 'win32') {
     os = `Wd/${config.osVersion}`;

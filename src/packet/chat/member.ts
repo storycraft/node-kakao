@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { NormalMemberStruct, OpenMemberStruct } from '../struct/user';
+import { NormalMemberStruct, OpenMemberStruct } from '../struct';
 
 export interface MemberRes {
 

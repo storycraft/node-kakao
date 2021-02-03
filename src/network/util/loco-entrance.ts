@@ -6,8 +6,8 @@
 
 import { Long } from 'bson';
 import { BookingConfig, CheckinConfig } from '../../config';
-import { GetConfRes } from '../../packet/booking/get-conf';
-import { CheckinRes } from '../../packet/checkin/checkin';
+import { GetConfRes } from '../../packet/booking';
+import { CheckinRes } from '../../packet/checkin';
 import { KnownDataStatusCode } from '../../request';
 import { AsyncCommandResult } from '../../request';
 import { DefaultLocoSession } from '../request-session';
@@ -17,12 +17,14 @@ import { BiStream } from '../../stream';
  * Do booking process and return result.
  * Official server require tls.
  *
- * @param stream
+ * @param {BiStream} stream
+ * @param {BookingConfig} config
  */
 export async function getBookingData(stream: BiStream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
   const bookingSession = new DefaultLocoSession(stream);
 
   (async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
     for await (const _ of bookingSession.listen()) { }
   })();
 
@@ -42,12 +44,19 @@ export async function getBookingData(stream: BiStream, config: BookingConfig): A
  * Do checkin process and return result.
  * Official server require secure layer.
  *
- * @param stream
+ * @param {BiStream} stream
+ * @param {CheckinConfig} config
+ * @param {Long} userId
  */
-export async function getCheckinData(stream: BiStream, config: CheckinConfig, userId?: Long): AsyncCommandResult<CheckinRes> {
+export async function getCheckinData(
+    stream: BiStream,
+    config: CheckinConfig,
+    userId?: Long,
+): AsyncCommandResult<CheckinRes> {
   const checkinSession = new DefaultLocoSession(stream);
 
   (async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
     for await (const _ of checkinSession.listen()) { }
   })();
 

@@ -5,42 +5,50 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { ChannelMeta } from '../../channel/channel-info';
-import { Chat, Chatlog, ChatLogged, ChatLoggedType } from '../../chat/chat';
-import { ChatType } from '../../chat/chat-type';
+import { Channel, ChannelMeta, SetChannelMeta } from '../../channel';
+import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatLogLinked, ChatType } from '../../chat';
 import { TalkSession } from '../client';
-import { EventContext } from '../../event/event-context';
+import { EventContext, TypedEmitter } from '../../event';
 import { MediaKeyComponent } from '../../media';
-import { OpenChannel } from '../../openlink/open-channel';
-import { OpenChannelInfo } from '../../openlink/open-channel-info';
-import { OpenChannelSession } from '../../openlink/open-channel-session';
-import { OpenChannelUserPerm } from '../../openlink/open-link-type';
-import { CommandResultDone, DefaultRes } from '../../request';
-import { KnownDataStatusCode } from '../../request';
-import { ChannelMetaType, KnownChannelMetaType } from '../../packet/struct/channel';
-import { OpenMemberStruct } from '../../packet/struct/user';
-import { structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from '../../packet/struct/wrap/user';
+import {
+  OpenChannel,
+  OpenChannelInfo,
+  OpenChannelSession,
+  OpenChannelUserPerm, OpenLink, OpenLinkChannelUserInfo, OpenLinkKickedUserInfo,
+  OpenLinkProfiles,
+} from '../../openlink';
+import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
+import {
+  ChannelMetaType,
+  KnownChannelMetaType,
+  OpenMemberStruct,
+  structToOpenChannelUserInfo,
+  structToOpenLinkChannelUserInfo,
+} from '../../packet/struct';
 import { RelayEventType } from '../../relay';
-import { AsyncCommandResult } from '../../request';
-import { ChannelUser } from '../../user/channel-user';
-import { OpenChannelUserInfo } from '../../user/channel-user-info';
-import { TalkChannel } from '../channel';
-import { TalkChannelHandler, ChannelInfoUpdater } from '../channel/talk-channel-handler';
-import { TalkChannelSession } from '../channel/talk-channel-session';
+import { ChannelUser, OpenChannelUserInfo } from '../../user';
+import { ChannelInfoUpdater, sendMultiMedia, TalkChannel, TalkChannelHandler, TalkChannelSession } from '../channel';
 import { TalkOpenChannelSession } from './talk-open-channel-session';
 import { OpenChannelEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannelHandler } from './talk-open-channel-handler';
-import { OpenLinkProfiles } from '../../openlink';
 import { JsonUtil } from '../../util';
-import { PrivilegeMetaContent, ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent, BotMetaContent } from '../../channel/meta';
-import { TypedEmitter } from '../../event';
-import { ChatOnRoomRes } from '../../packet/chat/chat-on-room';
+import {
+  BotMetaContent,
+  GroupMetaContent,
+  LiveTalkCountMetaContent,
+  PrivilegeMetaContent,
+  ProfileMetaContent,
+  TvLiveMetaContent,
+  TvMetaContent,
+} from '../../channel/meta';
+import { ChatOnRoomRes } from '../../packet/chat';
+import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import { MediaUploadTemplate } from '../media/upload';
-import { sendMultiMedia } from '../channel/common';
 
-export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
+export class TalkOpenChannel
+  extends TypedEmitter<OpenChannelEvents>
+  implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
     private _info: OpenChannelInfo;
 
     private _channelSession: TalkChannelSession;
@@ -89,15 +97,15 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       this._userInfoMap = new Map();
     }
 
-    get clientUser() {
+    get clientUser(): Readonly<ChannelUser> {
       return this._channelSession.session.clientUser;
     }
 
-    get channelId() {
+    get channelId(): Long {
       return this._channel.channelId;
     }
 
-    get linkId() {
+    get linkId(): Long {
       return this._info.linkId;
     }
 
@@ -105,16 +113,16 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return this._info;
     }
 
-    get userCount() {
+    get userCount(): number {
       return this._userInfoMap.size;
     }
 
-    getName() {
+    getName(): string {
       const nameMeta = this._info.metaMap[KnownChannelMetaType.TITLE];
       return nameMeta && nameMeta.content || '';
     }
 
-    getDisplayName() {
+    getDisplayName(): string {
       return this.getName() || this._info.openLink?.linkName || '';
     }
 
@@ -122,7 +130,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return this._userInfoMap.get(user.userId.toString());
     }
 
-    getAllUserInfo() {
+    getAllUserInfo(): IterableIterator<OpenChannelUserInfo> {
       return this._userInfoMap.values();
     }
 
@@ -147,17 +155,15 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return list;
     }
 
-    async sendChat(chat: string | Chat) {
-      const res = await this._channelSession.sendChat(chat);
-
-      return res;
+    async sendChat(chat: string | Chat): Promise<CommandResult<ChatLogLinked>> {
+      return await this._channelSession.sendChat(chat);
     }
 
-    forwardChat(chat: Chat) {
+    forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
       return this._channelSession.forwardChat(chat);
     }
 
-    deleteChat(chat: ChatLogged) {
+    deleteChat(chat: ChatLogged): Promise<{success: boolean, status: number}> {
       return this._channelSession.deleteChat(chat);
     }
 
@@ -166,15 +172,15 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
     }
 
-    syncChatList(endLogId: Long, startLogId?: Long) {
+    syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>> {
       return this._channelSession.syncChatList(endLogId, startLogId);
     }
 
-    getChatListFrom(startLogId?: Long) {
+    getChatListFrom(startLogId?: Long): AsyncCommandResult<Chatlog[]> {
       return this._channelSession.getChatListFrom(startLogId);
     }
 
-    async markRead(chat: ChatLogged) {
+    async markRead(chat: ChatLogged): Promise<{success: boolean, status: number}> {
       const res = await this._openChannelSession.markRead(chat);
 
       if (res.success) {
@@ -184,7 +190,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async setMeta(type: ChannelMetaType, meta: string | ChannelMeta) {
+    async setMeta(type: ChannelMetaType, meta: string | ChannelMeta): Promise<CommandResult<SetChannelMeta>> {
       const res = await this._channelSession.setMeta(type, meta);
 
       if (res.success) {
@@ -194,11 +200,11 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async setTitleMeta(title: string) {
+    async setTitleMeta(title: string): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.TITLE, title);
     }
 
-    async setNoticeMeta(notice: string) {
+    async setNoticeMeta(notice: string): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.NOTICE, notice);
     }
 
@@ -206,42 +212,42 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
      * Set privileged settings.
      * Need to be owner of the channel to set.
      *
-     * @param content
+     * @param {PrivilegeMetaContent} content
      */
-    async setPrivilegeMeta(content: PrivilegeMetaContent) {
+    async setPrivilegeMeta(content: PrivilegeMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.PRIVILEGE, JsonUtil.stringifyLoseless(content));
     }
 
-    async setProfileMeta(content: ProfileMetaContent) {
+    async setProfileMeta(content: ProfileMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.PROFILE, JsonUtil.stringifyLoseless(content));
     }
 
-    async setTvMeta(content: TvMetaContent) {
+    async setTvMeta(content: TvMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.TV, JsonUtil.stringifyLoseless(content));
     }
 
-    async setTvLiveMeta(content: TvLiveMetaContent) {
+    async setTvLiveMeta(content: TvLiveMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
     }
 
-    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent) {
+    async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.LIVE_TALK_COUNT, JsonUtil.stringifyLoseless(content));
     }
 
-    async setGroupMeta(content: GroupMetaContent) {
+    async setGroupMeta(content: GroupMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.GROUP, JsonUtil.stringifyLoseless(content));
     }
 
     /**
      * Set bot meta
      *
-     * @param content
+     * @param {BotMetaContent} content
      */
-    async setBotMeta(content: BotMetaContent) {
+    async setBotMeta(content: BotMetaContent): Promise<CommandResult<SetChannelMeta>> {
       return this.setMeta(KnownChannelMetaType.BOT, JsonUtil.stringifyLoseless(content));
     }
 
-    async setPushAlert(flag: boolean) {
+    async setPushAlert(flag: boolean): Promise<CommandResult<void>> {
       const res = await this._channelSession.setPushAlert(flag);
 
       if (res.success) {
@@ -257,7 +263,11 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       if (res.success) {
         const { result } = res;
 
-        if (this._info.type !== result.t || this._info.lastChatLogId !== result.l || this._info.openToken !== result.otk) {
+        if (
+          this._info.type !== result.t ||
+          this._info.lastChatLogId !== result.l ||
+          this._info.openToken !== result.otk
+        ) {
           const newInfo = { ...this._info, type: result.t, lastChatLogId: result.l };
           if (result.otk) {
             newInfo['openToken'] = result.otk;
@@ -301,7 +311,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async getLatestChannelInfo() {
+    async getLatestChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
       const infoRes = await this._openChannelSession.getLatestChannelInfo();
 
       if (infoRes.success) {
@@ -336,7 +346,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return infoRes;
     }
 
-    async getLatestOpenLink() {
+    async getLatestOpenLink(): Promise<CommandResult<OpenLink>> {
       const res = await this._openChannelSession.getLatestOpenLink();
 
       if (res.success) {
@@ -346,19 +356,23 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    createEvent(chat: ChatLoggedType, type: RelayEventType, count: number) {
+    createEvent(
+        chat: ChatLoggedType,
+        type: RelayEventType,
+        count: number,
+    ): Promise<{status: number, success: boolean}> {
       return this._openChannelSession.createEvent(chat, type, count);
     }
 
-    getKickList() {
+    getKickList(): AsyncCommandResult<OpenLinkKickedUserInfo[]> {
       return this._openChannelSession.getKickList();
     }
 
-    removeKicked(user: ChannelUser) {
+    removeKicked(user: ChannelUser): AsyncCommandResult {
       return this._openChannelSession.removeKicked(user);
     }
 
-    async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm) {
+    async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): Promise<CommandResult> {
       const res = await this._openChannelSession.setUserPerm(user, perm);
 
       if (res.success) {
@@ -371,7 +385,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async handoverHost(user: ChannelUser) {
+    async handoverHost(user: ChannelUser): Promise<CommandResult> {
       const res = await this._openChannelSession.handoverHost(user);
 
       if (res.success) {
@@ -386,7 +400,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async kickUser(user: ChannelUser) {
+    async kickUser(user: ChannelUser): Promise<CommandResult> {
       const res = await this._openChannelSession.kickUser(user);
 
       if (res.success) {
@@ -398,19 +412,19 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    async blockUser(user: ChannelUser) {
+    async blockUser(user: ChannelUser): Promise<CommandResult> {
       return this._openChannelSession.blockUser(user);
     }
 
-    react(flag: boolean) {
+    react(flag: boolean): Promise<{status: number, success: boolean}> {
       return this._openChannelSession.react(flag);
     }
 
-    getReaction() {
+    getReaction(): AsyncCommandResult<[number, boolean]> {
       return this._openChannelSession.getReaction();
     }
 
-    async changeProfile(profile: OpenLinkProfiles) {
+    async changeProfile(profile: OpenLinkProfiles): Promise<CommandResult<Readonly<OpenLinkChannelUserInfo> | null>> {
       const res = await this._openChannelSession.changeProfile(profile);
       if (res.success && res.result) {
         const strId = this._channelSession.session.clientUser.userId.toString();
@@ -420,19 +434,19 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
       return res;
     }
 
-    hideChat(chat: ChatLoggedType) {
+    hideChat(chat: ChatLoggedType): AsyncCommandResult {
       return this._openChannelSession.hideChat(chat);
     }
 
-    downloadMedia(media: MediaKeyComponent, type: ChatType) {
+    downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
       return this._channelSession.downloadMedia(media, type);
     }
 
-    uploadMedia(type: ChatType, template: MediaUploadTemplate) {
+    uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {
       return this._channelSession.uploadMedia(type, template);
     }
 
-    uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]) {
+    uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]> {
       return this._channelSession.uploadMultiMedia(type, templates);
     }
 
@@ -458,7 +472,7 @@ export class TalkOpenChannel extends TypedEmitter<OpenChannelEvents> implements 
     }
 
     // Called when broadcast packets are recevied.
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>): void {
       this._handler.pushReceived(method, data, parentCtx);
       this._openHandler.pushReceived(method, data, parentCtx);
     }

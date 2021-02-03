@@ -19,6 +19,7 @@ export interface FriendSearchStruct {
     user?: FriendSearchUserListStruct;
     plus?: FriendSearchUserListStruct;
     categories: string[];
+    // eslint-disable-next-line camelcase
     total_counts: number;
 
 }

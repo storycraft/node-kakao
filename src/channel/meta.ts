@@ -33,15 +33,19 @@ export interface ChannelMetaStruct {
 export interface ChannelClientMetaStruct {
 
     name?: string;
+    // eslint-disable-next-line camelcase
     image_path?: string;
     favorite?: boolean,
+    // eslint-disable-next-line camelcase
     push_sound?: boolean,
+    // eslint-disable-next-line camelcase
     chat_hide?: boolean,
     fullImageUrl?: string;
     imageUrl?: string;
 
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MetaContent {
 
 
@@ -49,6 +53,7 @@ export interface MetaContent {
 
 export interface PrivilegeMetaContent {
 
+    // eslint-disable-next-line camelcase
     pin_notice: boolean;
 
 }
@@ -81,9 +86,13 @@ export interface LiveTalkCountMetaContent {
 
 export interface GroupMetaContent {
 
+    // eslint-disable-next-line camelcase
     group_id: number;
+    // eslint-disable-next-line camelcase
     group_name: string;
+    // eslint-disable-next-line camelcase
     group_profile_thumbnail_url: string;
+    // eslint-disable-next-line camelcase
     group_profile_url: string;
 
 }

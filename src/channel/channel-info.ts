@@ -5,8 +5,8 @@
  */
 
 import { Long } from 'bson';
-import { Chatlog } from '../chat/chat';
-import { DisplayUserInfo } from '../user/channel-user-info';
+import { Chatlog } from '../chat';
+import { DisplayUserInfo } from '../user';
 import { Channel } from './channel';
 import { ChannelType } from './channel-type';
 
@@ -81,6 +81,7 @@ export interface ChannelInfo extends Channel {
 
 }
 
+// eslint-disable-next-line no-redeclare
 export namespace ChannelInfo {
 
     export function createPartial(info: Partial<ChannelInfo>): ChannelInfo {
@@ -119,6 +120,7 @@ export interface NormalChannelInfo extends ChannelInfo {
 
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace,no-redeclare
 export namespace NormalChannelInfo {
 
     export function createPartial(info: Partial<NormalChannelInfo>): NormalChannelInfo {

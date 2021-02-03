@@ -4,8 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { FixedWriteStream } from '../../stream/fixed';
-
 export interface MediaUploadTemplate {
 
     /**

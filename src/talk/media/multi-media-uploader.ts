@@ -6,10 +6,9 @@
 
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
-import { DefaultLocoSession } from '../../network/request-session';
-import { BiStream, FixedWriteStream } from '../../stream';
-import { KnownDataStatusCode } from '../../request';
-import { AsyncCommandResult } from '../../request';
+import { DefaultLocoSession } from '../../network';
+import { BiStream } from '../../stream';
+import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import { ChatType } from '../../chat';
 import { MediaUploadTemplate } from './upload';
 
@@ -26,24 +25,26 @@ export class MultiMediaUploader {
       this._canUpload = true;
     }
 
-    get media() {
+    get media(): MediaKeyComponent {
       return this._media;
     }
 
-    get type() {
+    get type(): number {
       return this._type;
     }
 
     /**
      * Close uploader without uploading
      */
-    close() {
+    close(): void {
       this._stream.close();
       this._canUpload = false;
     }
 
     /**
      * Create data writer with given template and start uploading.
+     *
+     * @return {AsyncCommandResult<MediaKeyComponent>}
      */
     upload(): AsyncCommandResult<MediaKeyComponent> {
       if (!this._canUpload) throw new Error('Upload task already started');

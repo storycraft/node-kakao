@@ -18,23 +18,27 @@ export interface PacketRes {
 export class LocoPacketDispatcher {
     private _codec: LocoPacketCodec;
 
-    private _packetMap: Map<number, [resolve: (value: LocoPacket | PromiseLike<LocoPacket>) => void, reject: (reason?: any) => void]>;
+    private _packetMap: Map<number, [
+      resolve: (value: LocoPacket | PromiseLike<LocoPacket>) => void,
+      reject: (reason?: any) => void
+    ]>;
 
     constructor(stream: BiStream) {
       this._codec = new LocoPacketCodec(stream);
       this._packetMap = new Map();
     }
 
-    get stream() {
+    get stream(): BiStream {
       return this._codec.stream;
     }
 
     /**
      * Send packet.
      *
-     * @return response
+     * @param {LocoPacket} packet
+     * @return {Promise<LocoPacket>} response
      */
-    async sendPacket(packet: LocoPacket) {
+    async sendPacket(packet: LocoPacket): Promise<LocoPacket> {
       if (this._packetMap.has(packet.header.id)) throw new Error(`Packet#${packet.header.id} can conflict`);
 
       const promise = new Promise<LocoPacket>((resolve, reject) => {
@@ -48,8 +52,11 @@ export class LocoPacketDispatcher {
 
     /**
      * Listen and process incoming packets.
+     *
+     * @return {any}
      */
-    listen() {
+    listen(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<PacketRes>>} {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
       const iterator = this._codec.iterate();
 
@@ -66,9 +73,9 @@ export class LocoPacketDispatcher {
           const packet = next.value;
 
           if (instance._packetMap.has(packet.header.id)) {
-                    instance._packetMap.get(packet.header.id)![0](packet);
-                    instance._packetMap.delete(packet.header.id);
-                    return { done: false, value: { push: false, packet } };
+            instance._packetMap.get(packet.header.id)![0](packet);
+            instance._packetMap.delete(packet.header.id);
+            return { done: false, value: { push: false, packet } };
           } else {
             return { done: false, value: { push: true, packet } };
           }

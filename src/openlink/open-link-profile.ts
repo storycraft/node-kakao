@@ -27,6 +27,7 @@ export interface OpenLinkAnonProfile {
 /**
  * Main profile template
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface OpenLinkMainProfile {
 
 }
@@ -37,11 +38,13 @@ export interface OpenLinkMainProfile {
 export type OpenLinkLinkProfile = OpenLinkComponent
 
 export type OpenLinkProfiles = OpenLinkAnonProfile | OpenLinkMainProfile | OpenLinkLinkProfile;
+// eslint-disable-next-line no-redeclare
 export namespace OpenLinkProfiles {
 
     /**
      * Serialize template to packet key / value structure.
-     * @param template
+     * @param {OpenLinkProfiles} template
+     * @return {Record<string, any>}
      */
     export function templateToSerialized(template: OpenLinkProfiles): Record<string, any> {
       if ('linkId' in template) {

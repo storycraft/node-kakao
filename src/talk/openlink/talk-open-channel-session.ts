@@ -4,30 +4,37 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChatLogged, ChatLoggedType } from '../../chat/chat';
+import { ChatLogged, ChatLoggedType } from '../../chat';
 import { TalkSession } from '../client';
-import { OpenChannel } from '../../openlink/open-channel';
-import { OpenChannelInfo } from '../../openlink/open-channel-info';
-import { OpenChannelManageSession, OpenChannelSession } from '../../openlink/open-channel-session';
-import { OpenLink, OpenLinkComponent, OpenLinkProfiles } from '../../openlink';
-import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from '../../openlink/open-link-user-info';
-import { ChatInfoRes } from '../../packet/chat/chat-info';
-import { GetMemRes } from '../../packet/chat/get-mem';
-import { MemberRes } from '../../packet/chat/member';
-import { KnownDataStatusCode } from '../../request';
-import { ChannelInfoStruct, OpenChannelInfoExtra } from '../../packet/struct/channel';
-import { OpenMemberStruct } from '../../packet/struct/user';
-import { structToOpenChannelInfo } from '../../packet/struct/wrap/channel';
-import { structToOpenChannelUserInfo, structToOpenLinkChannelUserInfo } from '../../packet/struct/wrap/user';
-import { AsyncCommandResult } from '../../request';
-import { ChannelUser } from '../../user/channel-user';
-import { OpenChannelUserInfo } from '../../user/channel-user-info';
+import {
+  OpenChannel,
+  OpenChannelInfo,
+  OpenChannelManageSession,
+  OpenChannelSession,
+  OpenChannelUserPerm,
+  OpenLink,
+  OpenLinkChannelUserInfo,
+  OpenLinkComponent,
+  OpenLinkKickedUserInfo,
+  OpenLinkProfiles,
+} from '../../openlink';
+import { ChatInfoRes, GetMemRes, MemberRes } from '../../packet/chat';
+import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
+import {
+  ChannelInfoStruct,
+  OpenChannelInfoExtra,
+  OpenMemberStruct,
+  structToOpenChannelInfo,
+  structToOpenChannelUserInfo,
+  structToOpenLinkChannelUserInfo,
+} from '../../packet/struct';
+import { ChannelUser, OpenChannelUserInfo } from '../../user';
 import { TalkOpenLinkSession } from './talk-openlink-session';
-import { OpenChannelUserPerm } from '../../openlink/open-link-type';
 import { RelayEventType } from '../../relay';
 import { Channel } from '../../channel';
 import { TalkChannelManageSession } from '../channel';
 import { JoinLinkRes } from '../../packet/chat/join-link';
+import { Long } from 'bson';
 
 /**
  * Default OpenChannelSession implementation.
@@ -46,11 +53,11 @@ export class TalkOpenChannelSession implements OpenChannelSession {
       this._linkSession = new TalkOpenLinkSession(session);
     }
 
-    get session() {
+    get session(): TalkSession {
       return this._session;
     }
 
-    async markRead(chat: ChatLogged) {
+    async markRead(chat: ChatLogged): Promise<{success: boolean, status: number}> {
       const status = (await this._session.request(
           'NOTIREAD',
           {
@@ -128,11 +135,11 @@ export class TalkOpenChannelSession implements OpenChannelSession {
       return this._linkSession.removeKicked(this._channel, { ...user, kickedChannelId: this._channel.channelId });
     }
 
-    react(flag: boolean) {
+    react(flag: boolean): Promise<{status: number, success: boolean}> {
       return this._linkSession.react(this._channel, flag);
     }
 
-    getReaction() {
+    getReaction(): AsyncCommandResult<[number, boolean]> {
       return this._linkSession.getReaction(this._channel);
     }
 
@@ -160,7 +167,11 @@ export class TalkOpenChannelSession implements OpenChannelSession {
       return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    async createEvent(chat: ChatLoggedType, type: RelayEventType, count: number) {
+    async createEvent(
+        chat: ChatLoggedType,
+        type: RelayEventType,
+        count: number,
+    ): Promise<{status: number, success: boolean}> {
       const res = await this._session.request(
           'RELAYEVENT',
           {
@@ -257,7 +268,7 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
       this._normalSession = new TalkChannelManageSession(_session);
     }
 
-    leaveChannel(channel: Channel) {
+    leaveChannel(channel: Channel): AsyncCommandResult<Long> {
       return this._normalSession.leaveChannel(channel);
     }
 
@@ -273,7 +284,11 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
       return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    async joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<OpenChannel> {
+    async joinChannel(
+        link: OpenLinkComponent,
+        profile: OpenLinkProfiles,
+        passcode?: string,
+    ): AsyncCommandResult<OpenChannel> {
       let token: string | undefined;
       if (passcode) {
         const tokenRes = await this._session.request(

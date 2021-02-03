@@ -116,15 +116,20 @@ export enum KnownAuthStatusCode {
  * Provides default pc login api which can obtain OAuthCredential
  */
 export class AuthApiClient {
-  constructor(private _client: ApiClient, private _name: string, private _deviceUUID: string, public config: OAuthLoginConfig) {
+  constructor(
+    private _client: ApiClient,
+    private _name: string,
+    private _deviceUUID: string,
+    public config: OAuthLoginConfig,
+  ) {
 
   }
 
-  get name() {
+  get name(): string {
     return this._name;
   }
 
-  get deviceUUID() {
+  get deviceUUID(): string {
     return this._deviceUUID;
   }
 
@@ -150,7 +155,7 @@ export class AuthApiClient {
   /**
      * Login using given data.
      *
-     * @param form
+     * @param {LoginForm} form
      */
   async login(form: LoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
@@ -161,13 +166,17 @@ export class AuthApiClient {
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-    return { status: res.status, success: true, result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID) };
+    return {
+      status: res.status,
+      success: true,
+      result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID),
+    };
   }
 
   /**
      * Login using token.
      *
-     * @param form
+     * @param {TokenLoginForm} form
      */
   async loginToken(form: TokenLoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
@@ -178,14 +187,18 @@ export class AuthApiClient {
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-    return { status: res.status, success: true, result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID) };
+    return {
+      status: res.status,
+      success: true,
+      result: structToLoginData(res as DefaultRes & AccessDataStruct, this._deviceUUID),
+    };
   }
 
   /**
      * Request passcode
      *
-     * @param form
-     * @param permanent If true the device will be registered as permanent
+     * @param {LoginForm} form
+     * @param {boolean} permanent If true the device will be registered as permanent
      */
   async requestPasscode(form: LoginForm, permanent = true): AsyncCommandResult {
     const res = await this._client.request(
@@ -201,8 +214,8 @@ export class AuthApiClient {
   /**
      * Try to register device with passcode
      *
-     * @param form
-     * @param passcode
+     * @param {LoginForm} form
+     * @param {string} passcode
      */
   async registerDevice(form: LoginForm, passcode: string): AsyncCommandResult {
     const res = await this._client.request(
@@ -231,9 +244,15 @@ export class AuthApiClient {
   /**
      * Create default AuthClient using config.
      *
-     * @param config
+     * @param {string} name
+     * @param {string} deviceUUID
+     * @param {Partial<OAuthLoginConfig>} config
      */
-  static async create(name: string, deviceUUID: string, config: Partial<OAuthLoginConfig> = {}): Promise<AuthApiClient> {
+  static async create(
+      name: string,
+      deviceUUID: string,
+      config: Partial<OAuthLoginConfig> = {},
+  ): Promise<AuthApiClient> {
     return new AuthApiClient(
         await createApiClient('https', 'katalk.kakao.com'),
         name,

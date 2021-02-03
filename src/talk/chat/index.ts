@@ -26,9 +26,9 @@ export class TalkChatData {
 
   /**
      * The chat object's type property has the type value bit masked when the chat is deleted.
-     * @return the original chat type
+     * @return {number} the original chat type
      */
-  get originalType() {
+  get originalType(): number {
     return getOriginalType(this._chat.type);
   }
 
@@ -54,26 +54,26 @@ export class TalkChatData {
   /**
      * Forward chat to another channel
      *
-     * @param channel
+     * @param {TalkChannel} channel
      */
-  forwardTo(channel: TalkChannel) {
+  forwardTo(channel: TalkChannel): void {
     channel.forwardChat(this._chat);
   }
 
   /**
-     * @return true when the chat is deleted.
+     * @return {boolean} true when the chat is deleted.
      */
-  isDeleted() {
+  isDeleted(): boolean {
     return isDeletedChat(this._chat.type);
   }
 
   /**
      * Check if any users are mentioned.
      *
-     * @param users Users to find
-     * @return true if anyone is mentioned
+     * @param {ChannelUser[]} users Users to find
+     * @return {boolean} true if anyone is mentioned
      */
-  isMentioned(...users: ChannelUser[]) {
+  isMentioned(...users: ChannelUser[]): boolean {
     const mentions = this.mentions;
     if (mentions.length < 1) return false;
 
@@ -107,6 +107,7 @@ export interface ChatMentionStruct {
     /**
      * Target user id
      */
+    // eslint-disable-next-line camelcase
     user_id: Long | number;
 
 }

@@ -5,17 +5,17 @@
  */
 
 import { TalkSession } from '../client';
-import { InformedOpenLink, OpenLink, OpenLinkComponent } from '../../openlink';
-import { OpenLinkSession } from '../../openlink/open-link-session';
-import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from '../../openlink/open-link-user-info';
-import { JoinInfoRes } from '../../packet/chat/join-info';
-import { KLSyncRes } from '../../packet/chat/kl-sync';
-import { SyncLinkRes } from '../../packet/chat/sync-link';
-import { KnownDataStatusCode } from '../../request';
-import { structToOpenLink, structToOpenLinkInfo } from '../../packet/struct/wrap/openlink';
-import { structToOpenLinkKickedUserInfo } from '../../packet/struct/wrap/user';
-import { AsyncCommandResult } from '../../request';
-import { InfoLinkRes } from '../../packet/chat/info-link';
+import {
+  InformedOpenLink,
+  OpenLink,
+  OpenLinkComponent,
+  OpenLinkKickedUser,
+  OpenLinkKickedUserInfo,
+  OpenLinkSession,
+} from '../../openlink';
+import { InfoLinkRes, JoinInfoRes, KLSyncRes, SyncLinkRes } from '../../packet/chat';
+import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
+import { structToOpenLink, structToOpenLinkInfo, structToOpenLinkKickedUserInfo } from '../../packet/struct';
 
 /**
  * Provides openlink operations
@@ -69,7 +69,11 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       );
       if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
-      return { status: res.status, success: true, result: { openLink: structToOpenLink(res.ol), info: structToOpenLinkInfo(res.ol) } };
+      return {
+        status: res.status,
+        success: true,
+        result: { openLink: structToOpenLink(res.ol), info: structToOpenLinkInfo(res.ol) },
+      };
     }
 
     async getKickList(link: OpenLinkComponent): AsyncCommandResult<OpenLinkKickedUserInfo[]> {
@@ -108,7 +112,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
     }
 
-    async react(link: OpenLinkComponent, flag: boolean) {
+    async react(link: OpenLinkComponent, flag: boolean): Promise<{status: number, success: boolean}> {
       const res = await this._session.request<JoinInfoRes>(
           'REACT',
           {

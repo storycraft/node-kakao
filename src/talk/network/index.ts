@@ -6,12 +6,16 @@
 
 import { BookingConfig, CheckinConfig, SessionConfig } from '../../config';
 import { newCryptoStore } from '../../crypto';
-import { LocoSecureLayer } from '../../network/loco-secure-layer';
-import { DefaultLocoSession, LocoSession, SessionFactory } from '../../network/request-session';
-import { getBookingData, getCheckinData } from '../../network/util/loco-entrance';
-import { AsyncCommandResult } from '../../request';
+import {
+  DefaultLocoSession,
+  getBookingData,
+  getCheckinData,
+  LocoSecureLayer,
+  LocoSession,
+  SessionFactory,
+} from '../../network';
+import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import * as NetSocket from '../../network/socket';
-import { KnownDataStatusCode } from '../../request';
 import { GetConfRes } from '../../packet/booking';
 import { CheckinRes } from '../../packet/checkin';
 
@@ -19,10 +23,6 @@ import { CheckinRes } from '../../packet/checkin';
  * Create loco stream by performing booking and checkin.
  */
 export class TalkSessionFactory implements SessionFactory {
-  constructor() {
-
-  }
-
   async getConf(config: BookingConfig): AsyncCommandResult<GetConfRes> {
     const bookingStream = await NetSocket.createTLSSocket({
       host: config.locoBookingHost,

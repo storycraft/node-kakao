@@ -18,11 +18,11 @@ export class LocoPacketCodec {
       this._stream = stream;
     }
 
-    get stream() {
+    get stream(): BiStream {
       return this._stream;
     }
 
-    send(packet: LocoPacket) {
+    send(packet: LocoPacket): Promise<void> {
       const packetBuffer = new ArrayBuffer(22 + packet.data[1].byteLength);
       const namebuffer = new ArrayBuffer(11);
       const view = new DataView(packetBuffer);
@@ -48,7 +48,8 @@ export class LocoPacketCodec {
       return this._stream.write(packetBuffer);
     }
 
-    iterate() {
+    iterate(): {[Symbol.asyncIterator](): AsyncIterator<LocoPacket>, next(): Promise<IteratorResult<LocoPacket>>} {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
 
       const iterator = this._stream.iterate();
@@ -93,7 +94,7 @@ export class LocoPacketCodec {
           if (headerBuffer.byteLength > 22) {
             packetBufferList.append(headerBuffer.slice(22));
           }
-          headerBufferList.clear();
+          await headerBufferList.clear();
 
           if (packetBufferList.byteLength < dataSize) {
             for await (const data of iterator) {

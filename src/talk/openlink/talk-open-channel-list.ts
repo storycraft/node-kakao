@@ -5,23 +5,21 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { ChannelList } from '../../channel/channel-list';
+import { Channel, ChannelList } from '../../channel';
 import { TalkSession } from '../client';
-import { EventContext } from '../../event/event-context';
-import { OpenChannel } from '../../openlink/open-channel';
-import { DefaultRes } from '../../request';
-import { KnownDataStatusCode, AsyncCommandResult } from '../../request';
-import { ChannelListUpdater, TalkChannelListHandler } from '../channel/talk-channel-handler';
+import { EventContext, TypedEmitter } from '../../event';
+import { OpenChannel, OpenChannelManageSession, OpenLinkComponent, OpenLinkProfiles } from '../../openlink';
+import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
+import { ChannelListUpdater, TalkChannelListHandler } from '../channel';
 import { OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
 import { TalkOpenChannelListHandler } from './talk-open-channel-handler';
-import { OpenChannelManageSession, OpenLinkComponent, OpenLinkProfiles } from '../../openlink';
 import { TalkOpenChannelManageSession } from './talk-open-channel-session';
-import { TypedEmitter } from '../../event';
 
-export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> implements Managed<OpenChannelListEvents>, OpenChannelManageSession, ChannelList<TalkOpenChannel> {
+export class TalkOpenChannelList
+  extends TypedEmitter<OpenChannelListEvents>
+  implements Managed<OpenChannelListEvents>, OpenChannelManageSession, ChannelList<TalkOpenChannel> {
     private _handler: TalkChannelListHandler;
     private _openHandler: TalkOpenChannelListHandler;
 
@@ -45,26 +43,27 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
       this._map = new Map();
     }
 
-    get(channelId: Long) {
+    get(channelId: Long): TalkOpenChannel | undefined {
       return this._map.get(channelId.toString());
     }
 
     /**
      * Find open channel using linkId
      *
-     * @param linkId
+     * @param {Long} linkId
+     * @return {TalkOpenChannel | undefined}
      */
-    getByLinkId(linkId: Long) {
+    getByLinkId(linkId: Long): TalkOpenChannel | undefined {
       for (const channel of this.all()) {
         if (channel.linkId.eq(linkId)) return channel;
       }
     }
 
-    all() {
+    all(): IterableIterator<TalkOpenChannel> {
       return this._map.values();
     }
 
-    get size() {
+    get size(): number {
       return this._map.size;
     }
 
@@ -92,7 +91,7 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
       return this._map.delete(strId);
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
       const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
 
       for (const channel of this._map.values()) {
@@ -103,15 +102,19 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
       this._openHandler.pushReceived(method, data, parentCtx);
     }
 
-    leaveKicked(channel: OpenChannel) {
+    leaveKicked(channel: OpenChannel): AsyncCommandResult {
       return this._manageSession.leaveKicked(channel);
     }
 
-    leaveChannel(channel: Channel) {
+    leaveChannel(channel: Channel): AsyncCommandResult<Long> {
       return this._manageSession.leaveChannel(channel);
     }
 
-    async joinChannel(link: OpenLinkComponent, profile: OpenLinkProfiles, passcode?: string): AsyncCommandResult<TalkOpenChannel> {
+    async joinChannel(
+        link: OpenLinkComponent,
+        profile: OpenLinkProfiles,
+        passcode?: string,
+    ): AsyncCommandResult<TalkOpenChannel> {
       const res = await this._manageSession.joinChannel(link, profile, passcode);
 
       if (!res.success) return res;
@@ -121,10 +124,13 @@ export class TalkOpenChannelList extends TypedEmitter<OpenChannelListEvents> imp
 
     /**
      * Initialize TalkChannelList using channelList.
-     * @param session
-     * @param channelList
+     * @param {TalkOpenChannelList} talkChannelList
+     * @param {OpenChannel[]} channelList
      */
-    static async initialize(talkChannelList: TalkOpenChannelList, channelList: OpenChannel[] = []) {
+    static async initialize(
+        talkChannelList: TalkOpenChannelList,
+        channelList: OpenChannel[] = [],
+    ): Promise<TalkOpenChannelList> {
       talkChannelList._map.clear();
 
       await Promise.all(channelList.map((channel) => talkChannelList.addOpenChannel(channel)));

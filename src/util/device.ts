@@ -6,7 +6,9 @@
 
 /**
  * Create random device uuid
+ *
+ * @return {string} random device UUID
  */
-export function randomDeviceUUID() {
+export function randomDeviceUUID(): string {
   return btoa(String.fromCharCode(...Array.from({ length: 64 }, () => Math.floor(Math.random() * 256))));
 }

@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Chatlog } from '../../../chat/chat';
-import { JsonUtil } from '../../../util/json-util';
+import { Chatlog } from '../../../chat';
+import { JsonUtil } from '../../../util';
 import { ChatlogStruct } from '../chat';
 
 export function structToChatlog(struct: ChatlogStruct): Chatlog {

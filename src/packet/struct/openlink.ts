@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { OpenLinkType } from '../../openlink/open-link-type';
+import { OpenLinkType } from '../../openlink';
 import { OpenLinkChannelUserStruct } from './user';
 
 export interface OpenLinkStruct {
@@ -84,6 +84,7 @@ export interface OpenLinkStruct {
      */
     ex: boolean;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     omt: {};
 
     /**

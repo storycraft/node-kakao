@@ -5,40 +5,49 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from '../../channel/channel-info';
-import { NormalChannelManageSession, ChannelSession, ChannelTemplate } from '../../channel/channel-session';
-import { Chat, Chatlog, ChatLogged, ChatLogLinked } from '../../chat/chat';
-import { ChatType, KnownChatType } from '../../chat/chat-type';
+import {
+  Channel,
+  ChannelMeta,
+  ChannelSession,
+  ChannelTemplate,
+  NormalChannelInfo,
+  NormalChannelManageSession,
+  SetChannelMeta,
+} from '../../channel';
+import { Chat, Chatlog, ChatLogged, ChatLogLinked, ChatType, KnownChatType } from '../../chat';
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
-import { DefaultReq } from '../../request';
-import { ChatInfoRes } from '../../packet/chat/chat-info';
-import { ChatOnRoomRes } from '../../packet/chat/chat-on-room';
-import { CreateRes } from '../../packet/chat/create';
-import { ForwardRes } from '../../packet/chat/forward';
-import { GetMemRes } from '../../packet/chat/get-mem';
-import { MemberRes } from '../../packet/chat/member';
-import { SetMetaRes } from '../../packet/chat/set-meta';
-import { WriteRes } from '../../packet/chat/write';
-import { KnownDataStatusCode } from '../../request';
-import { ChannelInfoStruct, ChannelMetaType, NormalChannelInfoExtra } from '../../packet/struct/channel';
-import { NormalMemberStruct } from '../../packet/struct/user';
-import { structToNormalChannelInfo } from '../../packet/struct/wrap/channel';
-import { structToChatlog } from '../../packet/struct/wrap/chat';
-import { structToChannelUserInfo } from '../../packet/struct/wrap/user';
-import { AsyncCommandResult, CommandResult } from '../../request';
-import { ChannelUser } from '../../user/channel-user';
-import { NormalChannelUserInfo } from '../../user/channel-user-info';
-import { JsonUtil } from '../../util/json-util';
-import { MediaDownloader } from '../media/media-downloader';
+import { AsyncCommandResult, CommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
+import {
+  ChatInfoRes,
+  ChatOnRoomRes,
+  CreateRes,
+  ForwardRes,
+  GetMemRes,
+  GetTrailerRes,
+  MChatlogsRes,
+  MemberRes,
+  MShipRes,
+  SetMetaRes,
+  ShipRes,
+  SyncMsgRes,
+  WriteRes,
+} from '../../packet/chat';
+import {
+  ChannelInfoStruct,
+  ChannelMetaType,
+  NormalChannelInfoExtra,
+  NormalMemberStruct,
+  structToChannelUserInfo,
+  structToChatlog,
+  structToNormalChannelInfo,
+} from '../../packet/struct';
+import { ChannelUser, NormalChannelUserInfo } from '../../user';
+import { JsonUtil } from '../../util';
+import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import * as NetSocket from '../../network/socket';
-import { GetTrailerRes } from '../../packet/chat/get-trailer';
-import { LocoSecureLayer } from '../../network/loco-secure-layer';
+import { LocoSecureLayer } from '../../network';
 import { newCryptoStore } from '../../crypto';
-import { SyncMsgRes } from '../../packet/chat/sync-msg';
-import { MChatlogsRes, MShipRes, ShipRes } from '../../packet/chat';
-import { MediaUploader, MultiMediaUploader } from '../media';
 import { MediaUploadTemplate } from '../media/upload';
 import { sha1 } from 'hash-wasm';
 
@@ -58,7 +67,7 @@ export class TalkChannelSession implements ChannelSession {
       this.currentMsgId = 0;
     }
 
-    get session() {
+    get session(): TalkSession {
       return this._session;
     }
 
@@ -110,7 +119,7 @@ export class TalkChannelSession implements ChannelSession {
       }
     }
 
-    async deleteChat(chat: ChatLogged) {
+    async deleteChat(chat: ChatLogged): Promise<{success: boolean, status: number}> {
       const { status } = (await this._session.request(
           'DELETEMSG',
           {
@@ -125,7 +134,7 @@ export class TalkChannelSession implements ChannelSession {
       };
     }
 
-    async markRead(chat: ChatLogged) {
+    async markRead(chat: ChatLogged): Promise<{success: boolean, status: number}> {
       const { status } = (await this._session.request(
           'NOTIREAD',
           {
@@ -320,7 +329,11 @@ export class TalkChannelSession implements ChannelSession {
           await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
           await newCryptoStore(this._session.configuration.locoPEMPublicKey));
 
-      return { status: res.status, success: true, result: new MediaDownloader(socket, this._session, this._channel, media) };
+      return {
+        status: res.status,
+        success: true,
+        result: new MediaDownloader(socket, this._session, this._channel, media),
+      };
     }
 
     async uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {

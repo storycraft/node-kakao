@@ -5,30 +5,28 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../channel/channel';
-import { ChannelList } from '../channel/channel-list';
+import { Channel, ChannelList } from '../channel';
 import { TalkSession } from './client';
-import { EventContext } from '../event/event-context';
-import { OpenChannel } from '../openlink/open-channel';
+import { EventContext, TypedEmitter } from '../event';
+import { OpenChannel } from '../openlink';
 import { DefaultRes } from '../request';
-import { ChainedIterator } from '../util/chained-iterator';
+import { ChainedIterator } from '../util';
 import { OpenChannelListEvents, TalkChannelListEvents } from './event';
 import { Managed } from './managed';
-import { TalkOpenChannelList } from './openlink/talk-open-channel-list';
-import { TalkChannel } from './channel';
-import { TalkNormalChannelList } from './channel/talk-normal-channel-list';
-import { TypedEmitter } from '../event';
+import { TalkOpenChannel, TalkOpenChannelList } from './openlink';
+import { TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
 
 /**
  * Manage normal channels and open channels
  */
-export class TalkChannelList extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelList<TalkChannel> {
+export class TalkChannelList
+  extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelList<TalkChannel> {
     private _normalList: TalkNormalChannelList;
     private _openList: TalkOpenChannelList;
 
     /**
      * Construct managed channel list
-     * @param session
+     * @param {TalkSession} session
      */
     constructor(session: TalkSession) {
       super();
@@ -37,36 +35,36 @@ export class TalkChannelList extends TypedEmitter<TalkChannelListEvents> impleme
       this._openList = new TalkOpenChannelList(session);
     }
 
-    get size() {
+    get size(): number {
       return this._normalList.size + this._openList.size;
     }
 
     /**
      * Normal channel list
      */
-    get normalList() {
+    get normalList(): TalkNormalChannelList {
       return this._normalList;
     }
 
     /**
      * Open channel list
      */
-    get openList() {
+    get openList(): TalkOpenChannelList {
       return this._openList;
     }
 
-    get(channelId: Long) {
+    get(channelId: Long): TalkNormalChannel | TalkOpenChannel | undefined {
       return this._normalList.get(channelId) || this._openList.get(channelId);
     }
 
-    all() {
+    all(): ChainedIterator<TalkChannel> {
       const normalIter = this._normalList.all();
       const openIter = this._openList.all();
 
       return new ChainedIterator<TalkChannel>(normalIter, openIter);
     }
 
-    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>) {
+    pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
       const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
 
       this._normalList.pushReceived(method, data, ctx);
@@ -75,10 +73,13 @@ export class TalkChannelList extends TypedEmitter<TalkChannelListEvents> impleme
 
     /**
      * Initialize TalkChannelList using channelList.
-     * @param session
-     * @param channelList
+     * @param {TalkChannelList} talkChannelList
+     * @param {(Channel | OpenChannel)[]} channelList
      */
-    static async initialize(talkChannelList: TalkChannelList, channelList: (Channel | OpenChannel)[] = []) {
+    static async initialize(
+        talkChannelList: TalkChannelList,
+        channelList: (Channel | OpenChannel)[] = [],
+    ): Promise<TalkChannelList> {
       const normalList: Channel[] = [];
       const openList: OpenChannel[] = [];
       channelList.forEach((channel) => {

@@ -5,8 +5,8 @@
  */
 
 import { Long } from 'bson';
-import { ChannelType } from '../../channel/channel-type';
-import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from '../struct/user';
+import { ChannelType } from '../../channel';
+import { NormalMemberStruct, OpenLinkChannelUserStruct, OpenMemberStruct } from '../struct';
 
 export interface ChatOnRoomRes {
 

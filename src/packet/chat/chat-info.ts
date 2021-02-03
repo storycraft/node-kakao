@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChannelInfoStruct } from '../struct/channel';
+import { ChannelInfoStruct } from '../struct';
 
 export interface ChatInfoRes {
     chatInfo: ChannelInfoStruct;

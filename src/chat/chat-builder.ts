@@ -23,7 +23,8 @@ export class ChatBuilder<T extends ChatType> {
     /**
      * Append text or chat content
      *
-     * @param content
+     * @param {string | ChatContent} content
+     * @return {this}
      */
     append(content: string | ChatContent): this {
       if (typeof content === 'string') {
@@ -37,6 +38,8 @@ export class ChatBuilder<T extends ChatType> {
 
     /**
      * Build into chat object
+     *
+     * @return {Chat}
      */
     build(): Chat {
       const chat: Chat = {

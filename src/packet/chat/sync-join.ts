@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChatlogStruct } from '../struct/chat';
+import { ChatlogStruct } from '../struct';
 
 export interface SyncJoinRes {
 

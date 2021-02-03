@@ -42,7 +42,12 @@ export interface ApiClient extends HeaderDecorator {
      * @param form
      * @param headers
      */
-    requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
+    requestMultipart(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: RequestHeader
+    ): Promise<DefaultRes>;
 
 }
 
@@ -54,7 +59,7 @@ export class SessionApiClient implements ApiClient {
 
   }
 
-  get url() {
+  get url(): string {
     return this._client.url;
   }
 
@@ -75,7 +80,12 @@ export class SessionApiClient implements ApiClient {
     return this._client.request(method, path, form, this.createSessionHeader(headers));
   }
 
-  requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  requestMultipart(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: Record<string, any>,
+  ): Promise<DefaultRes> {
     return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
   }
 
@@ -96,9 +106,9 @@ export interface HeaderDecorator {
 /**
  * Create api client by platform
  *
- * @param scheme
- * @param host
- * @param decorator
+ * @param {string} scheme
+ * @param {string} host
+ * @param {HeaderDecorator} decorator
  */
 export async function createApiClient(scheme: string, host: string, decorator?: HeaderDecorator): Promise<ApiClient> {
   if (isNode()) {
@@ -112,6 +122,12 @@ export async function createApiClient(scheme: string, host: string, decorator?: 
   }
 }
 
-export async function createSessionApiClient(credential: OAuthCredential, config: WebApiConfig, scheme: string, host: string, decorator?: HeaderDecorator): Promise<SessionApiClient> {
+export async function createSessionApiClient(
+    credential: OAuthCredential,
+    config: WebApiConfig,
+    scheme: string,
+    host: string,
+    decorator?: HeaderDecorator,
+): Promise<SessionApiClient> {
   return new SessionApiClient(await createApiClient(scheme, host, decorator), credential, config);
 }

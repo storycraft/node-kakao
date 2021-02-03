@@ -31,18 +31,18 @@ export class FixedReadStream implements ReadStream, FixedStream {
       this._read = 0;
     }
 
-    get size() {
+    get size(): number {
       return this._size;
     }
 
     /**
      * Read size
      */
-    get read() {
+    get read(): number {
       return this._read;
     }
 
-    get done() {
+    get done(): boolean {
       return this._read >= this._size;
     }
 
@@ -74,7 +74,7 @@ export class FixedReadStream implements ReadStream, FixedStream {
       };
     }
 
-    get ended() {
+    get ended(): boolean {
       return this._stream.ended;
     }
 
@@ -90,28 +90,28 @@ export class FixedWriteStream implements WriteStream, FixedStream {
       this._written = 0;
     }
 
-    get size() {
+    get size(): number {
       return this._size;
     }
 
-    get done() {
+    get done(): boolean {
       return this._written >= this._size;
     }
 
     /**
      * Written size
      */
-    get written() {
+    get written(): number {
       return this._written;
     }
 
-    async write(data: ArrayBuffer) {
+    async write(data: ArrayBuffer): Promise<void> {
       if (this._written + data.byteLength > this._size) throw new Error('Write size exceeded');
       await this._stream.write(data);
       this._written += data.byteLength;
     }
 
-    get ended() {
+    get ended(): boolean {
       return this._stream.ended;
     }
 

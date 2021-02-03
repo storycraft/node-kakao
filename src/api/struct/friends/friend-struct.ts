@@ -42,6 +42,7 @@ export interface FriendStruct {
     fullProfileImageUrl: string;
     originalProfileImageUrl: string;
     userType: ApiUserType;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     ext: FriendExt | {};
     hidden: boolean;
     purged: boolean;

@@ -67,7 +67,7 @@ export interface OpenLinkSession {
      * Delete openlink.
      * Can only delete owned link.
      *
-     * @param component openlink to delete
+     * @param link openlink to delete
      */
     deleteLink(link: OpenLinkComponent): AsyncCommandResult;
 

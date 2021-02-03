@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChannelInfoStruct } from '../struct/channel';
+import { ChannelInfoStruct } from '../struct';
 
 export interface CreateRes {
 

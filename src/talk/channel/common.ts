@@ -14,7 +14,11 @@ import { TalkChannelSession } from './talk-channel-session';
  * Common complex channel methods
  */
 
-export async function sendMultiMedia(channelSession: TalkChannelSession, type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
+export async function sendMultiMedia(
+    channelSession: TalkChannelSession,
+    type: ChatType,
+    templates: MediaUploadTemplate[],
+): AsyncCommandResult<Chatlog> {
   const res = await channelSession.uploadMultiMedia(type, templates);
   if (!res.success) return res;
 

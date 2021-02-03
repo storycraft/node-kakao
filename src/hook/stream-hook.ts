@@ -29,17 +29,18 @@ export class HookedStream implements BiStream {
 
   }
 
-  get ended() {
+  get ended(): boolean {
     return this._stream.ended;
   }
 
-  write(data: ArrayBuffer) {
+  write(data: ArrayBuffer): Promise<void> {
     if (this.hook.onWrite) this.hook.onWrite(data);
 
     return this._stream.write(data);
   }
 
-  iterate() {
+  iterate(): {[Symbol.asyncIterator](): any, next(): Promise<IteratorResult<ArrayBuffer>>} {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const instance = this;
     const iterator = this._stream.iterate();
 

@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChannelInfo } from '../channel/channel-info';
+import { ChannelInfo } from '../channel';
 import { OpenChannel } from './open-channel';
 import { OpenLink, OpenTokenComponent } from '.';
 
@@ -28,6 +28,7 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
 
 }
 
+// eslint-disable-next-line no-redeclare
 export namespace OpenChannelInfo {
 
     export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {

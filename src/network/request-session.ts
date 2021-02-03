@@ -5,9 +5,8 @@
  */
 
 import { SessionConfig } from '../config';
-import { BsonDataCodec } from '../packet/bson-data-codec';
 import { DefaultReq, DefaultRes } from '../request';
-import { LocoPacket } from '../packet';
+import { BsonDataCodec, LocoPacket } from '../packet';
 import { CommandResult } from '../request';
 import { LocoPacketDispatcher } from './loco-packet-dispatcher';
 import { PacketAssembler } from './packet-assembler';
@@ -64,7 +63,7 @@ export class DefaultLocoSession implements LocoSession {
       this._dispatcher = new LocoPacketDispatcher(stream);
     }
 
-    listen() {
+    listen(): {[Symbol.asyncIterator](): AsyncIterator<PacketResData>, next(): Promise<IteratorResult<PacketResData>>} {
       const iterator = this._dispatcher.listen();
       const assembler = this._assembler;
 
@@ -89,14 +88,14 @@ export class DefaultLocoSession implements LocoSession {
       return this._assembler.deconstruct(res) as DefaultRes & T;
     }
 
-    sendPacket(packet: LocoPacket) {
+    sendPacket(packet: LocoPacket): Promise<LocoPacket> {
       return this._dispatcher.sendPacket(packet);
     }
 
     /**
      * Close session
      */
-    close() {
+    close(): void {
       this._dispatcher.stream.close();
     }
 }

@@ -22,8 +22,9 @@ export class PacketAssembler<T, R> {
     /**
      * Construct LocoPacket with given method and data
      *
-     * @param method
-     * @param data
+     * @param {string} method
+     * @param {T} data
+     * @return {LocoPacket}
      */
     construct(method: string, data: T): LocoPacket {
       const packetData = this._dataCodec.encode(data);
@@ -42,7 +43,8 @@ export class PacketAssembler<T, R> {
      * Deconstruct LocoPacket into data.
      * This method can throw error if the type is not supported by codec.
      *
-     * @param packet
+     * @param {LocoPacket} packet
+     * @return {R}
      */
     deconstruct(packet: LocoPacket): R {
       if (!this._dataCodec.canDecode(packet.data[0])) throw new Error(`Cannot decode dataType ${packet.data[0]}`);

@@ -11,7 +11,7 @@ export class ChainedIterator<T> implements IterableIterator<T> {
       this._list = list.reverse();
     }
 
-    [Symbol.iterator]() {
+    [Symbol.iterator](): ChainedIterator<T> {
       return this;
     }
 

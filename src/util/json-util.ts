@@ -8,24 +8,7 @@ import * as LosslessJSON from 'lossless-json';
  */
 
 export namespace JsonUtil {
-
-    export function readLong(value: any): Long {
-      if (value && value.unsigned !== undefined) {
-        return (value as Long);
-      }
-
-      return Long.fromNumber(value);
-    }
-
-    export function parseLoseless(obj: string) {
-      return LosslessJSON.parse(obj, bsonLongRiviver);
-    }
-
-    export function stringifyLoseless(obj: any) {
-      return LosslessJSON.stringify(obj, bsonLongReplacer);
-    }
-
-    function bsonLongRiviver(key: string, value: any) {
+    const bsonLongRiver = (key: string, value: any) => {
       if (value && value.isLosslessNumber) {
         try {
           return value.valueOf();
@@ -35,14 +18,30 @@ export namespace JsonUtil {
       }
 
       return value;
-    }
+    };
 
-    function bsonLongReplacer(key: string, value: any) {
+    const bsonLongReplacer = (key: string, value: any) => {
       if (value && value instanceof Long) {
         return new LosslessJSON.LosslessNumber(value.toString());
       }
 
       return value;
+    };
+
+    export function readLong(value: any): Long {
+      if (value && value.unsigned !== undefined) {
+        return (value as Long);
+      }
+
+      return Long.fromNumber(value);
+    }
+
+    export function parseLoseless(obj: string): any {
+      return LosslessJSON.parse(obj, bsonLongRiver);
+    }
+
+    export function stringifyLoseless(obj: any): string {
+      return LosslessJSON.stringify(obj, bsonLongReplacer);
     }
 
 }

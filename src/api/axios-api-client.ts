@@ -6,7 +6,14 @@
 
 import { AxiosRequestConfig } from 'axios';
 import Axios from 'axios';
-import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, FileRequestData, ApiClient } from './web-api-client';
+import {
+  HeaderDecorator,
+  RequestHeader,
+  RequestMethod,
+  RequestForm,
+  FileRequestData,
+  ApiClient,
+} from './web-api-client';
 import { DefaultRes } from '../request';
 import { JsonUtil } from '../util';
 import FormData from 'form-data';
@@ -19,15 +26,15 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
 
   }
 
-  get url() {
+  get url(): string {
     return `${this.scheme}://${this.host}`;
   }
 
-  toApiURL(path: string) {
+  toApiURL(path: string): string {
     return `${this.url}/${path}`;
   }
 
-  fillHeader(header: RequestHeader) {
+  fillHeader(header: RequestHeader): void {
     header['Host'] = this.host;
     this._decorator?.fillHeader(header);
   }
@@ -54,7 +61,12 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
     return reqData;
   }
 
-  async request(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  async request(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: Record<string, any>,
+  ): Promise<DefaultRes> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);
 
@@ -67,7 +79,12 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
     return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
   }
 
-  async requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  async requestMultipart(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: Record<string, any>,
+  ): Promise<DefaultRes> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);
 

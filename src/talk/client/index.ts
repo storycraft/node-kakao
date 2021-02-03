@@ -4,24 +4,22 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandSession, LocoSession, SessionFactory } from '../../network/request-session';
-import { ChannelUser } from '../../user/channel-user';
-import { DefaultReq, DefaultRes } from '../../request';
+import { CommandSession, LocoSession, SessionFactory } from '../../network';
+import { ChannelUser } from '../../user';
+import { AsyncCommandResult, DefaultReq, DefaultRes } from '../../request';
 import { Managed } from '../managed';
 import { OAuthCredential } from '../../oauth';
-import { AsyncCommandResult } from '../../request';
 import { ClientConfig, DefaultConfiguration } from '../../config';
-import { ClientSession, LoginResult } from '../../client/client-session';
+import { ClientSession, LoginResult } from '../../client';
 import { TalkSessionFactory } from '../network';
-import { TalkClientSession } from '../client/talk-client-session';
-import { KickoutRes } from '../../packet/chat/kickout';
-import { EventContext } from '../../event/event-context';
+import { TalkClientSession } from './talk-client-session';
+import { KickoutRes } from '../../packet/chat';
+import { EventContext, TypedEmitter } from '../../event';
 import { ClientStatus } from '../../client-status';
-import { OpenLinkService } from '../openlink/open-link-service';
+import { OpenLinkService } from '../openlink';
 import { TalkChannelList } from '../talk-channel-list';
 import { ClientEvents } from '../event';
 import { Long } from 'bson';
-import { TypedEmitter } from '../../event';
 import { TalkBlockSession } from '../block';
 
 export * from './talk-client-session';
@@ -41,7 +39,8 @@ export interface TalkSession extends CommandSession {
 /**
  * Simple client implementation.
  */
-export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSession, ClientSession, Managed<ClientEvents> {
+export class TalkClient
+  extends TypedEmitter<ClientEvents> implements CommandSession, ClientSession, Managed<ClientEvents> {
     private _session: LocoSession | null;
 
     /**
@@ -59,7 +58,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private _openLink: OpenLinkService;
 
-    constructor(config: Partial<ClientConfig> = {}, private _sessionFactory: SessionFactory = new TalkSessionFactory()) {
+    constructor(
+        config: Partial<ClientConfig> = {},
+      private _sessionFactory: SessionFactory = new TalkSessionFactory(),
+    ) {
       super();
 
       this.pingInterval = 900000;
@@ -76,33 +78,33 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
       this._openLink = new OpenLinkService(this.createSessionProxy());
     }
 
-    get configuration() {
+    get configuration(): ClientConfig {
       return this._clientSession.configuration;
     }
 
-    set configuration(configuration) {
+    set configuration(configuration: ClientConfig) {
       this._clientSession.configuration = configuration;
     }
 
-    get channelList() {
+    get channelList(): TalkChannelList {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
       return this._channelList!;
     }
 
-    get cilentUser() {
+    get cilentUser(): ChannelUser {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
       return this._cilentUser;
     }
 
-    get blockList() {
+    get blockList(): TalkBlockSession {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
       return this._blockList;
     }
 
-    get openLink() {
+    get openLink(): OpenLinkService {
       if (!this.logon) throw new Error('Cannot access without logging in');
 
       return this._openLink;
@@ -111,7 +113,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
     /**
      * true if session created
      */
-    get logon() {
+    get logon(): boolean {
       return this._session != null;
     }
 
@@ -143,27 +145,27 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
       return { status: loginRes.status, success: true, result: loginRes.result };
     }
 
-    setStatus(status: ClientStatus) {
+    setStatus(status: ClientStatus): AsyncCommandResult {
       return this._clientSession.setStatus(status);
     }
 
-    getTokens(unknown: number[]) {
+    getTokens(unknown: number[]): AsyncCommandResult<DefaultRes> {
       return this._clientSession.getTokens(unknown);
     }
 
     /**
-     * @param user Target user to compare
+     * @param {ChannelUser} user Target user to compare
      *
-     * @return true if client user.
+     * @return {boolean} true if client user.
      */
-    isClientUser(user: ChannelUser) {
+    isClientUser(user: ChannelUser): boolean {
       return user.userId.equals(this._cilentUser.userId);
     }
 
     /**
      * End session
      */
-    close() {
+    close(): void {
       this.session.close();
     }
 
@@ -190,8 +192,11 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     /**
      * Create proxy that can be used safely without exposing client
+     *
+     * @return {TalkSession}
      */
     createSessionProxy(): TalkSession {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const instance = this;
 
       return {

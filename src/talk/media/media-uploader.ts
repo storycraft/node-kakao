@@ -4,13 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Channel } from '../../channel/channel';
+import { Channel } from '../../channel';
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
-import { DefaultLocoSession } from '../../network/request-session';
+import { DefaultLocoSession } from '../../network';
 import { BiStream } from '../../stream';
-import { DefaultReq, KnownDataStatusCode } from '../../request';
-import { AsyncCommandResult } from '../../request';
+import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
 import { Chatlog, ChatType } from '../../chat';
 import { MediaUploadTemplate } from './upload';
 import { structToChatlog } from '../../packet/struct';
@@ -29,18 +28,18 @@ export class MediaUploader {
       this._canUpload = true;
     }
 
-    get media() {
+    get media(): MediaKeyComponent {
       return this._media;
     }
 
-    get type() {
+    get type(): number {
       return this._type;
     }
 
     /**
      * Close uploader without uploading
      */
-    close() {
+    close(): void {
       this._stream.close();
       this._canUpload = false;
     }
@@ -48,6 +47,8 @@ export class MediaUploader {
     /**
      * Create data writer with given template and start uploading.
      * When upload done the server send to channel.
+     *
+     * @return {AsyncCommandResult<Chatlog>}
      */
     upload(): AsyncCommandResult<Chatlog> {
       if (!this._canUpload) throw new Error('Upload task already started');

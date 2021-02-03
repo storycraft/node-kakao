@@ -14,11 +14,11 @@ export class DenoSocket implements BiStream {
       this._ended = false;
     }
 
-    get ended() {
+    get ended(): boolean {
       return this._ended;
     }
 
-    async write(data: ArrayBuffer) {
+    async write(data: ArrayBuffer): Promise<void> {
       await this._conn.write(new Uint8Array(data));
     }
 

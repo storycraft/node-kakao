@@ -11,7 +11,6 @@ import { LoginData } from '..';
  * Raw login data
  */
 export interface AccessDataStruct {
-
     userId: number | Long;
 
     countryIso: string;
@@ -19,14 +18,19 @@ export interface AccessDataStruct {
 
     accountId: number;
 
+    // eslint-disable-next-line camelcase
     server_time: number;
 
     resetUserData: boolean;
 
+    // eslint-disable-next-line camelcase
     story_url: string;
 
+    // eslint-disable-next-line camelcase
     access_token: string;
+    // eslint-disable-next-line camelcase
     refresh_token: string;
+    // eslint-disable-next-line camelcase
     token_type: string;
 
     autoLoginAccountId: string;

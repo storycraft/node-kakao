@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Channel } from '../channel/channel';
+import { Channel } from '../channel';
 import { OpenLinkComponent } from '.';
 
 /**

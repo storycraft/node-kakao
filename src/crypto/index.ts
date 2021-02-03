@@ -24,7 +24,8 @@ export interface CryptoStore {
 
 /**
  * Try to create CryptoStore by platform.
- * @param pubKey
+ *
+ * @param {string} pubKey
  */
 export async function newCryptoStore(pubKey: string): Promise<CryptoStore> {
   if (isNode()) {

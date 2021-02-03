@@ -9,14 +9,14 @@ declare let process: any;
 declare let window: any;
 declare let navigator: any;
 
-export function isNode() {
+export function isNode(): boolean {
   return typeof process !== 'undefined' && process.release && process.release.name === 'node';
 }
 
-export function isDeno() {
+export function isDeno(): boolean {
   return typeof window !== 'undefined' && window.Deno && window.Deno.version && window.Deno.version.deno;
 }
 
-export function isBrowser() {
+export function isBrowser(): boolean {
   return typeof navigator !== 'undefined' && 'userAgent' in navigator;
 }

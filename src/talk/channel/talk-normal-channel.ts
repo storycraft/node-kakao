@@ -4,31 +4,34 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandResultDone, DefaultRes } from '../../request';
-import { Channel } from '../../channel/channel';
-import { ChannelMeta, NormalChannelInfo } from '../../channel/channel-info';
-import { ChannelUser } from '../../user/channel-user';
-import { NormalChannelUserInfo } from '../../user/channel-user-info';
-import { Chat, Chatlog, ChatLogged } from '../../chat/chat';
-import { AsyncCommandResult } from '../../request';
+import { AsyncCommandResult, DefaultRes } from '../../request';
+import { Channel, ChannelMeta, NormalChannelInfo } from '../../channel';
+import { ChannelUser, NormalChannelUserInfo } from '../../user';
+import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
 import { TalkChannelSession } from './talk-channel-session';
-import { ChannelMetaType, KnownChannelMetaType } from '../../packet/struct/channel';
+import {
+  ChannelMetaType,
+  KnownChannelMetaType,
+  NormalMemberStruct,
+  structToChannelUserInfo,
+} from '../../packet/struct';
 import { Managed } from '../managed';
-import { EventContext } from '../../event/event-context';
+import { EventContext, TypedEmitter } from '../../event';
 import { TalkChannelHandler } from './talk-channel-handler';
 import { Long } from 'bson';
-import { NormalMemberStruct } from '../../packet/struct/user';
 import { TalkSession } from '../client';
-import { structToChannelUserInfo } from '../../packet/struct/wrap/user';
 import { MediaKeyComponent } from '../../media';
-import { ChatType } from '../../chat/chat-type';
 import { ChannelEvents } from '../event';
 import { TalkChannel } from '.';
-import { ProfileMetaContent, TvMetaContent, TvLiveMetaContent, LiveTalkCountMetaContent, GroupMetaContent } from '../../channel/meta';
+import {
+  GroupMetaContent,
+  LiveTalkCountMetaContent,
+  ProfileMetaContent,
+  TvLiveMetaContent,
+  TvMetaContent,
+} from '../../channel/meta';
 import { JsonUtil } from '../../util';
-import { TypedEmitter } from '../../event';
-import { ChatOnRoomRes } from '../../packet/chat/chat-on-room';
-import { MediaUploader, MultiMediaUploader } from '../media';
+import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaUploadTemplate } from '../media/upload';
 import { sendMultiMedia } from './common';
 

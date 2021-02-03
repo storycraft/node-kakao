@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChannelInfo, ChannelMetaMap, NormalChannelInfo } from '../../../channel/channel-info';
-import { OpenChannelInfo } from '../../../openlink/open-channel-info';
+import { ChannelInfo, ChannelMetaMap, NormalChannelInfo } from '../../../channel';
+import { OpenChannelInfo } from '../../../openlink';
 import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from '../channel';
 import { structToChatlog } from './chat';
 
@@ -46,22 +46,18 @@ export function structToChannelInfo(struct: ChannelInfoStruct): ChannelInfo {
 }
 
 export function structToNormalChannelInfo(struct: ChannelInfoStruct & NormalChannelInfoExtra): NormalChannelInfo {
-  const info: NormalChannelInfo = {
+  return {
     ...structToChannelInfo(struct),
     joinTime: struct.joinedAtForNewMem,
   };
-
-  return info;
 }
 
 export function structToOpenChannelInfo(struct: ChannelInfoStruct & OpenChannelInfoExtra): OpenChannelInfo {
-  const info: OpenChannelInfo = {
+  return {
     ...structToChannelInfo(struct),
     linkId: struct.li,
     openToken: struct.otk,
     o: struct.o,
     directChannel: struct.directChat,
   };
-
-  return info;
 }

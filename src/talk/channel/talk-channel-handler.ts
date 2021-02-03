@@ -5,25 +5,14 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel/channel';
-import { ChannelInfo, SetChannelMeta } from '../../channel/channel-info';
-import { ChannelList } from '../../channel/channel-list';
-import { KnownChatType } from '../../chat/chat-type';
-import { DeleteAllFeed, feedFromChat } from '../../chat/feed/chat-feed';
-import { KnownFeedType } from '../../chat/feed/feed-type';
-import { EventContext } from '../../event/event-context';
+import { Channel, ChannelInfo, ChannelList, SetChannelMeta } from '../../channel';
+import { DeleteAllFeed, feedFromChat, KnownChatType, KnownFeedType } from '../../chat';
+import { EventContext } from '../../event';
 import { ChannelEvents, ChannelListEvent } from '../event';
-import { DefaultRes } from '../../request';
-import { ChgMetaRes } from '../../packet/chat/chg-meta';
-import { DecunreadRes } from '../../packet/chat/decunread';
-import { LeftRes } from '../../packet/chat/left';
-import { MsgRes } from '../../packet/chat/msg';
-import { SyncJoinRes } from '../../packet/chat/sync-join';
-import { ChatlogStruct } from '../../packet/struct/chat';
-import { structToChatlog } from '../../packet/struct/wrap/chat';
-import { AsyncCommandResult } from '../../request';
-import { ChannelUser } from '../../user/channel-user';
-import { ChannelUserInfo } from '../../user/channel-user-info';
+import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes, SyncJoinRes } from '../../packet/chat';
+import { ChatlogStruct, structToChatlog } from '../../packet/struct';
+import { AsyncCommandResult, DefaultRes } from '../../request';
+import { ChannelUser, ChannelUserInfo } from '../../user';
 import { Managed } from '../managed';
 import { TalkChannel } from '.';
 import { TalkChatData } from '../chat';
@@ -98,12 +87,15 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     return this._channel.info;
   }
 
-  private _callEvent<U extends keyof ChannelEvents>(parentCtx: EventContext<ChannelEvents>, event: U, ...args: Parameters<ChannelEvents[U]>) {
+  private _callEvent<U extends keyof ChannelEvents>(
+      parentCtx: EventContext<ChannelEvents>,
+      event: U, ...args: Parameters<ChannelEvents[U]>
+  ) {
     this._channel.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
     switch (method) {
       case 'MSG': {
         const msgData = data as DefaultRes & MsgRes;
@@ -269,12 +261,15 @@ export class TalkChannelListHandler implements Managed<ChannelListEvent> {
 
   }
 
-  private _callEvent<U extends keyof ChannelListEvent>(parentCtx: EventContext<ChannelListEvent>, event: U, ...args: Parameters<ChannelListEvent[U]>) {
+  private _callEvent<U extends keyof ChannelListEvent>(
+      parentCtx: EventContext<ChannelListEvent>,
+      event: U, ...args: Parameters<ChannelListEvent[U]>
+  ) {
     this._list.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent>) {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent>): void {
     switch (method) {
       case 'LEFT': {
         const leftData = data as DefaultRes & LeftRes;

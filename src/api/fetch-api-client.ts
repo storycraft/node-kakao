@@ -4,7 +4,14 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { HeaderDecorator, RequestHeader, RequestMethod, RequestForm, FileRequestData, ApiClient } from './web-api-client';
+import {
+  ApiClient,
+  FileRequestData,
+  HeaderDecorator,
+  RequestForm,
+  RequestHeader,
+  RequestMethod,
+} from './web-api-client';
 import { DefaultRes } from '../request';
 import { JsonUtil } from '../util';
 
@@ -16,15 +23,15 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
 
   }
 
-  get url() {
+  get url(): string {
     return `${this.scheme}://${this.host}`;
   }
 
-  toApiURL(path: string) {
+  toApiURL(path: string): string {
     return `${this.url}/${path}`;
   }
 
-  fillHeader(header: RequestHeader) {
+  fillHeader(header: RequestHeader): void {
     header['Host'] = this.host;
     this._decorator?.fillHeader(header);
   }
@@ -44,27 +51,33 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
     return reqData;
   }
 
-  async request(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  async request(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: Record<string, any>,
+  ): Promise<DefaultRes> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
 
     if (form) {
-      const formData = this.convertToFormData(form);
-
-      reqData.body = formData;
+      reqData.body = this.convertToFormData(form);
     }
 
     return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
   }
 
-  async requestMultipart(method: RequestMethod, path: string, form?: RequestForm, headers?: Record<string, any>): Promise<DefaultRes> {
+  async requestMultipart(
+      method: RequestMethod,
+      path: string,
+      form?: RequestForm,
+      headers?: Record<string, any>,
+  ): Promise<DefaultRes> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
 
     if (form) {
-      const formData = this.convertToMultipart(form);
-
-      reqData.body = formData;
+      reqData.body = this.convertToMultipart(form);
     }
 
     return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
@@ -76,7 +89,11 @@ export class FetchApiClient implements ApiClient, HeaderDecorator {
     for (const [key, value] of Object.entries(form)) {
       if (value && 'value' in value && 'options' in value) {
         const file = value as FileRequestData;
-        formData.append(key, new Blob([new Uint8Array(file.value)], { type: file.options.contentType }), file.options.filename);
+        formData.append(
+            key,
+            new Blob([new Uint8Array(file.value)], { type: file.options.contentType }),
+            file.options.filename,
+        );
       } else {
         formData.append(key, value + '');
       }
