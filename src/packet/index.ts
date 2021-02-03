@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * as booking from "./booking";
-export * from "./bson-data-codec";
-export * as chat from "./chat";
-export * as checkin from "./checkin";
-export * as struct from "./struct";
+export * as booking from './booking';
+export * from './bson-data-codec';
+export * as chat from './chat';
+export * as checkin from './checkin';
+export * as struct from './struct';
 
 export interface LocoPacket {
 

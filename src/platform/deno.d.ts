@@ -1,7 +1,8 @@
+/* eslint-disable */
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
+// / <reference no-default-lib="true" />
+// / <reference lib="esnext" />
 
 /** Deno provides extra properties on `import.meta`.  These are included here
  * to ensure that these are still available when using the Deno namespace in
@@ -736,7 +737,7 @@ declare namespace Deno {
 
   /** The Deno abstraction for reading and writing files. */
   export class File
-    implements
+  implements
       Reader,
       ReaderSync,
       Writer,
@@ -771,7 +772,7 @@ declare namespace Deno {
      * any write calls on it will overwrite its contents, by default without
      * truncating it. */
     write?: boolean;
-    /**Sets the option for the append mode. This option, when `true`, means that
+    /** Sets the option for the append mode. This option, when `true`, means that
      * writes will append to a file instead of overwriting previous contents.
      * Note that setting `{ write: true, append: true }` has the same effect as
      * setting only `{ append: true }`. */
@@ -1675,13 +1676,13 @@ declare namespace Deno {
   export function truncate(name: string, len?: number): Promise<void>;
 
   export interface NetAddr {
-    transport: "tcp" | "udp";
+    transport: 'tcp' | 'udp';
     hostname: string;
     port: number;
   }
 
   export interface UnixAddr {
-    transport: "unix" | "unixpacket";
+    transport: 'unix' | 'unixpacket';
     path: string;
   }
 
@@ -1734,7 +1735,7 @@ declare namespace Deno {
    *
    * Requires `allow-net` permission. */
   export function listen(
-    options: ListenOptions & { transport?: "tcp" },
+    options: ListenOptions & { transport?: 'tcp' },
   ): Listener;
 
   export interface ListenTlsOptions extends ListenOptions {
@@ -1743,7 +1744,7 @@ declare namespace Deno {
     /** Server public key file. */
     keyFile: string;
 
-    transport?: "tcp";
+    transport?: 'tcp';
   }
 
   /** Listen announces on the local transport address over TLS (transport layer
@@ -1762,7 +1763,7 @@ declare namespace Deno {
     /** A literal IP address or host name that can be resolved to an IP address.
      * If not specified, defaults to `127.0.0.1`. */
     hostname?: string;
-    transport?: "tcp";
+    transport?: 'tcp';
   }
 
   /**
@@ -1874,7 +1875,7 @@ declare namespace Deno {
   export function resources(): ResourceMap;
 
   export interface FsEvent {
-    kind: "any" | "access" | "create" | "modify" | "remove";
+    kind: 'any' | 'access' | 'create' | 'modify' | 'remove';
     paths: string[];
   }
 
@@ -1904,11 +1905,11 @@ declare namespace Deno {
   export class Process<T extends RunOptions = RunOptions> {
     readonly rid: number;
     readonly pid: number;
-    readonly stdin: T["stdin"] extends "piped" ? Writer & Closer
+    readonly stdin: T['stdin'] extends 'piped' ? Writer & Closer
       : (Writer & Closer) | null;
-    readonly stdout: T["stdout"] extends "piped" ? Reader & Closer
+    readonly stdout: T['stdout'] extends 'piped' ? Reader & Closer
       : (Reader & Closer) | null;
-    readonly stderr: T["stderr"] extends "piped" ? Reader & Closer
+    readonly stderr: T['stderr'] extends 'piped' ? Reader & Closer
       : (Reader & Closer) | null;
     /** Resolves to the current status of the process. */
     status(): Promise<ProcessStatus>;
@@ -1955,9 +1956,9 @@ declare namespace Deno {
     env?: {
       [key: string]: string;
     };
-    stdout?: "inherit" | "piped" | "null" | number;
-    stderr?: "inherit" | "piped" | "null" | number;
-    stdin?: "inherit" | "piped" | "null" | number;
+    stdout?: 'inherit' | 'piped' | 'null' | number;
+    stderr?: 'inherit' | 'piped' | 'null' | number;
+    stdin?: 'inherit' | 'piped' | 'null' | number;
   }
 
   /** Spawns new subprocess.  RunOptions must contain at a minimum the `opt.cmd`,
@@ -2010,7 +2011,7 @@ declare namespace Deno {
     sorted?: boolean;
     /** Add a trailing comma for multiline collections. Defaults to false. */
     trailingComma?: boolean;
-    /*** Evaluate the result of calling getters. Defaults to false. */
+    /** * Evaluate the result of calling getters. Defaults to false. */
     getters?: boolean;
   }
 
@@ -2053,9 +2054,9 @@ declare namespace Deno {
     /** The LLVM target triple */
     target: string;
     /** Instruction set architecture */
-    arch: "x86_64";
+    arch: 'x86_64';
     /** Operating system */
-    os: "darwin" | "linux" | "windows";
+    os: 'darwin' | 'linux' | 'windows';
     /** Computer vendor */
     vendor: string;
     /** Optional environment */
@@ -2096,8 +2097,8 @@ declare namespace Deno {
 
 // deno-lint-ignore-file no-explicit-any
 
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
+// / <reference no-default-lib="true" />
+// / <reference lib="esnext" />
 
 declare class DOMException extends Error {
   constructor(message?: string, name?: string);
@@ -2290,7 +2291,7 @@ declare class TextDecoder {
 
 declare class TextEncoder {
   /** Returns "utf-8". */
-  readonly encoding = "utf-8";
+  readonly encoding = 'utf-8';
   /** Returns the result of running UTF-8's encoder. */
   encode(input?: string): Uint8Array;
   encodeInto(
@@ -2349,12 +2350,12 @@ declare var AbortSignal: {
 };
 
 interface FileReaderEventMap {
-  "abort": ProgressEvent<FileReader>;
-  "error": ProgressEvent<FileReader>;
-  "load": ProgressEvent<FileReader>;
-  "loadend": ProgressEvent<FileReader>;
-  "loadstart": ProgressEvent<FileReader>;
-  "progress": ProgressEvent<FileReader>;
+  'abort': ProgressEvent<FileReader>;
+  'error': ProgressEvent<FileReader>;
+  'load': ProgressEvent<FileReader>;
+  'loadend': ProgressEvent<FileReader>;
+  'loadstart': ProgressEvent<FileReader>;
+  'progress': ProgressEvent<FileReader>;
 }
 
 /** Lets web applications asynchronously read the contents of files (or raw data buffers) stored on the user's computer, using File or Blob objects to specify the file or data to read. */
@@ -2412,8 +2413,8 @@ declare var FileReader: {
 
 // deno-lint-ignore-file no-explicit-any
 
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
+// / <reference no-default-lib="true" />
+// / <reference lib="esnext" />
 
 interface DomIterable<K, V> {
   keys(): IterableIterator<K>;
@@ -2472,7 +2473,7 @@ interface UnderlyingByteSource {
   cancel?: ReadableStreamErrorCallback;
   pull?: ReadableByteStreamControllerCallback;
   start?: ReadableByteStreamControllerCallback;
-  type: "bytes";
+  type: 'bytes';
 }
 
 interface UnderlyingSink<W = any> {
@@ -2548,7 +2549,7 @@ declare class CountQueuingStrategy implements QueuingStrategy {
 }
 
 declare class ByteLengthQueuingStrategy
-  implements QueuingStrategy<ArrayBufferView> {
+implements QueuingStrategy<ArrayBufferView> {
   constructor(options: { highWaterMark: number });
   highWaterMark: number;
   size(chunk: ArrayBufferView): number;
@@ -2701,7 +2702,7 @@ type BlobPart = BufferSource | Blob | string;
 
 interface BlobPropertyBag {
   type?: string;
-  ending?: "transparent" | "native";
+  ending?: 'transparent' | 'native';
 }
 
 /** A file-like object of immutable, raw data. Blobs represent data that isn't necessarily in a JavaScript-native format. The File interface is based on Blob, inheriting blob functionality and expanding it to support files on the user's system. */
@@ -2856,25 +2857,25 @@ declare class Headers implements DomIterable<string, string> {
 
 type RequestInfo = Request | string;
 type RequestCache =
-  | "default"
-  | "force-cache"
-  | "no-cache"
-  | "no-store"
-  | "only-if-cached"
-  | "reload";
-type RequestCredentials = "include" | "omit" | "same-origin";
-type RequestMode = "cors" | "navigate" | "no-cors" | "same-origin";
-type RequestRedirect = "error" | "follow" | "manual";
+  | 'default'
+  | 'force-cache'
+  | 'no-cache'
+  | 'no-store'
+  | 'only-if-cached'
+  | 'reload';
+type RequestCredentials = 'include' | 'omit' | 'same-origin';
+type RequestMode = 'cors' | 'navigate' | 'no-cors' | 'same-origin';
+type RequestRedirect = 'error' | 'follow' | 'manual';
 type ReferrerPolicy =
-  | ""
-  | "no-referrer"
-  | "no-referrer-when-downgrade"
-  | "origin"
-  | "origin-when-cross-origin"
-  | "same-origin"
-  | "strict-origin"
-  | "strict-origin-when-cross-origin"
-  | "unsafe-url";
+  | ''
+  | 'no-referrer'
+  | 'no-referrer-when-downgrade'
+  | 'origin'
+  | 'origin-when-cross-origin'
+  | 'same-origin'
+  | 'strict-origin'
+  | 'strict-origin-when-cross-origin'
+  | 'unsafe-url';
 type BodyInit =
   | Blob
   | BufferSource
@@ -2883,24 +2884,24 @@ type BodyInit =
   | ReadableStream<Uint8Array>
   | string;
 type RequestDestination =
-  | ""
-  | "audio"
-  | "audioworklet"
-  | "document"
-  | "embed"
-  | "font"
-  | "image"
-  | "manifest"
-  | "object"
-  | "paintworklet"
-  | "report"
-  | "script"
-  | "sharedworker"
-  | "style"
-  | "track"
-  | "video"
-  | "worker"
-  | "xslt";
+  | ''
+  | 'audio'
+  | 'audioworklet'
+  | 'document'
+  | 'embed'
+  | 'font'
+  | 'image'
+  | 'manifest'
+  | 'object'
+  | 'paintworklet'
+  | 'report'
+  | 'script'
+  | 'sharedworker'
+  | 'style'
+  | 'track'
+  | 'video'
+  | 'worker'
+  | 'xslt';
 
 interface RequestInit {
   /**
@@ -3089,12 +3090,12 @@ interface ResponseInit {
 }
 
 type ResponseType =
-  | "basic"
-  | "cors"
-  | "default"
-  | "error"
-  | "opaque"
-  | "opaqueredirect";
+  | 'basic'
+  | 'cors'
+  | 'default'
+  | 'error'
+  | 'opaque'
+  | 'opaqueredirect';
 
 /** This Fetch API interface represents the response to a request. */
 declare class Response implements Body {
@@ -3157,8 +3158,8 @@ declare function fetch(
 
 // deno-lint-ignore-file no-explicit-any
 
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
+// / <reference no-default-lib="true" />
+// / <reference lib="esnext" />
 
 interface CloseEventInit extends EventInit {
   code?: number;
@@ -3264,18 +3265,18 @@ declare class WebSocket extends EventTarget {
   ): void;
 }
 
-type BinaryType = "arraybuffer" | "blob";
+type BinaryType = 'arraybuffer' | 'blob';
 
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
 // Documentation partially adapted from [MDN](https://developer.mozilla.org/),
 // by Mozilla Contributors, which is licensed under CC-BY-SA 2.5.
 
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
-/// <reference lib="deno.web" />
-/// <reference lib="deno.fetch" />
-/// <reference lib="deno.websocket" />
+// / <reference no-default-lib="true" />
+// / <reference lib="esnext" />
+// / <reference lib="deno.web" />
+// / <reference lib="deno.fetch" />
+// / <reference lib="deno.websocket" />
 
 declare namespace WebAssembly {
   /**
@@ -3468,9 +3469,9 @@ declare namespace WebAssembly {
     module: Module;
   }
 
-  export type ImportExportKind = "function" | "global" | "memory" | "table";
-  export type TableKind = "anyfunc";
-  export type ValueType = "f32" | "f64" | "i32" | "i64";
+  export type ImportExportKind = 'function' | 'global' | 'memory' | 'table';
+  export type TableKind = 'anyfunc';
+  export type ValueType = 'f32' | 'f64' | 'i32' | 'i64';
   export type ExportValue = Function | Global | Memory | Table;
   export type Exports = Record<string, ExportValue>;
   export type ImportValue = ExportValue | number;
@@ -3611,7 +3612,7 @@ interface VoidFunction {
  */
 declare function queueMicrotask(func: VoidFunction): void;
 
-declare var crypto: Crypto;
+declare let crypto: Crypto;
 
 /** Registers an event listener in the global scope, which will be called
  * synchronously whenever the event `type` is dispatched.
@@ -3682,7 +3683,7 @@ declare interface Console {
   warn(...data: any[]): void;
 }
 
-declare var console: Console;
+declare let console: Console;
 
 declare interface Crypto {
   readonly subtle: null;
@@ -3913,16 +3914,16 @@ interface PostMessageOptions {
 }
 
 interface AbstractWorkerEventMap {
-  "error": ErrorEvent;
+  'error': ErrorEvent;
 }
 
 interface WorkerEventMap extends AbstractWorkerEventMap {
-  "message": MessageEvent;
-  "messageerror": MessageEvent;
+  'message': MessageEvent;
+  'messageerror': MessageEvent;
 }
 
 interface WorkerOptions {
-  type?: "classic" | "module";
+  type?: 'classic' | 'module';
   name?: string;
   /** UNSTABLE: New API.
    *
@@ -3984,9 +3985,9 @@ interface WorkerOptions {
   deno?: true | {
     namespace?: boolean;
     /** Set to `"none"` to disable all the permissions in the worker. */
-    permissions?: "inherit" | "none" | {
-      env?: "inherit" | boolean;
-      hrtime?: "inherit" | boolean;
+    permissions?: 'inherit' | 'none' | {
+      env?: 'inherit' | boolean;
+      hrtime?: 'inherit' | boolean;
       /** The format of the net access list must be `hostname[:port]`
        * in order to be resolved.
        *
@@ -3994,11 +3995,11 @@ interface WorkerOptions {
        * net: ["https://deno.land", "localhost:8080"],
        * ```
        * */
-      net?: "inherit" | boolean | string[];
-      plugin?: "inherit" | boolean;
-      read?: "inherit" | boolean | Array<string | URL>;
-      run?: "inherit" | boolean;
-      write?: "inherit" | boolean | Array<string | URL>;
+      net?: 'inherit' | boolean | string[];
+      plugin?: 'inherit' | boolean;
+      read?: 'inherit' | boolean | Array<string | URL>;
+      run?: 'inherit' | boolean;
+      write?: 'inherit' | boolean | Array<string | URL>;
     };
   };
 }
@@ -4080,7 +4081,7 @@ declare class Performance {
   now(): number;
 }
 
-declare var performance: Performance;
+declare let performance: Performance;
 
 declare interface PerformanceMarkOptions {
   /** Metadata to be included in the mark. */
@@ -4123,7 +4124,7 @@ declare class PerformanceEntry {
  * performance timeline. */
 declare class PerformanceMark extends PerformanceEntry {
   readonly detail: any;
-  readonly entryType: "mark";
+  readonly entryType: 'mark';
   constructor(name: string, options?: PerformanceMarkOptions);
 }
 
@@ -4133,7 +4134,7 @@ declare class PerformanceMark extends PerformanceEntry {
  * between two marks to the performance timeline. */
 declare class PerformanceMeasure extends PerformanceEntry {
   readonly detail: any;
-  readonly entryType: "measure";
+  readonly entryType: 'measure';
 }
 
 declare interface CustomEventInit<T = any> extends EventInit {
@@ -4157,10 +4158,10 @@ interface ErrorConstructor {
 
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
-/// <reference no-default-lib="true" />
-/// <reference lib="deno.ns" />
-/// <reference lib="deno.shared_globals" />
-/// <reference lib="esnext" />
+// / <reference no-default-lib="true" />
+// / <reference lib="deno.ns" />
+// / <reference lib="deno.shared_globals" />
+// / <reference lib="esnext" />
 
 declare class Window extends EventTarget {
   new(): Window;
@@ -4176,10 +4177,10 @@ declare class Window extends EventTarget {
   Deno: typeof Deno;
 }
 
-declare var window: Window & typeof globalThis;
-declare var self: Window & typeof globalThis;
-declare var onload: ((this: Window, ev: Event) => any) | null;
-declare var onunload: ((this: Window, ev: Event) => any) | null;
+declare let window: Window & typeof globalThis;
+declare let self: Window & typeof globalThis;
+declare let onload: ((this: Window, ev: Event) => any) | null;
+declare let onunload: ((this: Window, ev: Event) => any) | null;
 
 /**
  * Shows the given message and waits for the enter key pressed.
@@ -4277,4 +4278,4 @@ declare class Location {
 
 // TODO(nayeemrmn): Move this to `op_crates/web` where its implementation is.
 // The types there must first be split into window, worker and global types.
-declare var location: Location;
+declare let location: Location;

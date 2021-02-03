@@ -4,6 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./chained-iterator";
-export * from "./json-util";
-export * from "./device";
+export * from './chained-iterator';
+export * from './json-util';
+export * from './device';

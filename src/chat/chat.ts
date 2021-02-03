@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelUser } from "../user/channel-user";
-import { ChatType } from "./chat-type";
+import { Long } from 'bson';
+import { ChannelUser } from '../user/channel-user';
+import { ChatType } from './chat-type';
 
 /**
  * Chat interface

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
+import { Long } from 'bson';
 
 /*
  * Created on Sun Nov 03 2019
@@ -85,8 +85,11 @@ export interface LessSettingsStruct {
     kakaoAutoLoginDomain: string[];
     daumSsoDomain: string[];
     googleMapsApi: { key: string, signature: string };
+    // eslint-disable-next-line camelcase
     chat_report_limit: { chat: number, open_chat: number, plus_chat: number };
+    // eslint-disable-next-line @typescript-eslint/ban-types
     externalApiList: {},
+    // eslint-disable-next-line camelcase
     birthday_friends: { landing_url: string };
     messageDeleteTime: number;
     voiceTalk: { groupCallMaxParticipants: number };

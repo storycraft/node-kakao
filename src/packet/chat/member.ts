@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { NormalMemberStruct, OpenMemberStruct } from "../struct/user";
+import { Long } from 'bson';
+import { NormalMemberStruct, OpenMemberStruct } from '../struct';
 
 export interface MemberRes {
 

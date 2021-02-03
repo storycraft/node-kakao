@@ -4,11 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { LinkPrivilegeMask } from "../../openlink";
-import { OpenChannelUserPerm, OpenProfileType } from "../../openlink/open-link-type";
-import { ChannelUser } from "../../user/channel-user";
-import { UserType } from "../../user/user-type";
+import { Long } from 'bson';
+import { LinkPrivilegeMask } from '../../openlink';
+import { OpenChannelUserPerm, OpenProfileType } from '../../openlink';
+import { UserType } from '../../user';
 
 /**
  * Member struct for normal channel

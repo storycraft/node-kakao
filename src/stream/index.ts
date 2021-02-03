@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./fixed";
+export * from './fixed';
 
 /**
  * Stream instance holds specific input or output resource

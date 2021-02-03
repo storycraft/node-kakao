@@ -4,4 +4,4 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from "./voip-type";
+export * from './voip-type';

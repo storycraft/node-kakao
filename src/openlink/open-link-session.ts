@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AsyncCommandResult } from "../request";
-import { InformedOpenLink, OpenLinkComponent, OpenLink } from ".";
-import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from "./open-link-user-info";
+import { AsyncCommandResult } from '../request';
+import { InformedOpenLink, OpenLinkComponent, OpenLink } from '.';
+import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from './open-link-user-info';
 
 export interface OpenLinkSession {
 
@@ -67,7 +67,7 @@ export interface OpenLinkSession {
      * Delete openlink.
      * Can only delete owned link.
      *
-     * @param component openlink to delete
+     * @param link openlink to delete
      */
     deleteLink(link: OpenLinkComponent): AsyncCommandResult;
 

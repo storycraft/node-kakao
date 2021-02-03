@@ -4,10 +4,10 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelInfo } from "../channel/channel-info";
-import { OpenChannel } from "./open-channel";
-import { OpenLink, OpenTokenComponent } from ".";
+import { Long } from 'bson';
+import { ChannelInfo } from '../channel';
+import { OpenChannel } from './open-channel';
+import { OpenLink, OpenTokenComponent } from '.';
 
 /**
  * Open channel info
@@ -28,20 +28,21 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
 
 }
 
+// eslint-disable-next-line no-redeclare
 export namespace OpenChannelInfo {
 
     export function createPartial(info: Partial<OpenChannelInfo>): OpenChannelInfo {
-        return Object.assign({
-            ...ChannelInfo.createPartial(info),
-            linkId: Long.ZERO,
-            openToken: 0,
+      return Object.assign({
+        ...ChannelInfo.createPartial(info),
+        linkId: Long.ZERO,
+        openToken: 0,
 
-            directChannel: false,
+        directChannel: false,
 
-            openLink: null,
+        openLink: null,
 
-            o: Long.ZERO
-        }, info);
+        o: Long.ZERO,
+      }, info);
     }
 
 }

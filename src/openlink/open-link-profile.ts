@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkComponent } from ".";
-import { OpenProfileType } from "./open-link-type";
+import { OpenLinkComponent } from '.';
+import { OpenProfileType } from './open-link-type';
 
 /**
  * Anon profile template
@@ -27,6 +27,7 @@ export interface OpenLinkAnonProfile {
 /**
  * Main profile template
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface OpenLinkMainProfile {
 
 }
@@ -34,25 +35,25 @@ export interface OpenLinkMainProfile {
 /**
  * Link profile template
  */
-export interface OpenLinkLinkProfile extends OpenLinkComponent {
-
-}
+export type OpenLinkLinkProfile = OpenLinkComponent
 
 export type OpenLinkProfiles = OpenLinkAnonProfile | OpenLinkMainProfile | OpenLinkLinkProfile;
+// eslint-disable-next-line no-redeclare
 export namespace OpenLinkProfiles {
 
     /**
      * Serialize template to packet key / value structure.
-     * @param template
+     * @param {OpenLinkProfiles} template
+     * @return {Record<string, any>}
      */
     export function templateToSerialized(template: OpenLinkProfiles): Record<string, any> {
-        if ('linkId' in template) {
-            return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
-        } else if ('nickname' in template) {
-            return { ptp: OpenProfileType.KAKAO_ANON, nn: template.nickname, pp: template.profilePath };
-        } else {
-            return { ptp: OpenProfileType.MAIN };
-        }
+      if ('linkId' in template) {
+        return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
+      } else if ('nickname' in template) {
+        return { ptp: OpenProfileType.KAKAO_ANON, nn: template.nickname, pp: template.profilePath };
+      } else {
+        return { ptp: OpenProfileType.MAIN };
+      }
     }
 
 }

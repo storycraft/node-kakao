@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { isNode } from "../util/platform";
+import { isNode } from '../util/platform';
 
 /**
  * Stores keys and implement cipher / decipher
@@ -24,12 +24,13 @@ export interface CryptoStore {
 
 /**
  * Try to create CryptoStore by platform.
- * @param pubKey
+ *
+ * @param {string} pubKey
  */
 export async function newCryptoStore(pubKey: string): Promise<CryptoStore> {
-    if (isNode()) {
-        return (await import('./node-crypto-store')).createNodeCrypto(pubKey);
-    } else {
-        return (await import('./forge-crypto-store')).createForgeCrypto(pubKey);
-    }
+  if (isNode()) {
+    return (await import('./node-crypto-store')).createNodeCrypto(pubKey);
+  } else {
+    return (await import('./forge-crypto-store')).createForgeCrypto(pubKey);
+  }
 }

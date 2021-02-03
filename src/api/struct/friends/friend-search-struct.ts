@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { FriendStruct } from "./friend-struct";
+import { FriendStruct } from './friend-struct';
 
 export interface FriendSearchUserListStruct {
 
@@ -19,6 +19,7 @@ export interface FriendSearchStruct {
     user?: FriendSearchUserListStruct;
     plus?: FriendSearchUserListStruct;
     categories: string[];
+    // eslint-disable-next-line camelcase
     total_counts: number;
 
 }

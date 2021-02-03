@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { OpenLinkChannelUserStruct } from "../struct/user";
+import { Long } from 'bson';
+import { OpenLinkChannelUserStruct } from '../struct';
 
 export interface SyncLinkPfRes {
 

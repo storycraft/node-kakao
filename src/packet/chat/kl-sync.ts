@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkKickedMemberStruct } from "../struct/user";
+import { OpenLinkKickedMemberStruct } from '../struct';
 
 export interface KLSyncRes {
 

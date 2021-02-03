@@ -4,19 +4,19 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChannelManageSession } from "../channel/channel-session";
-import { ChatLogged, ChatLoggedType } from "../chat/chat";
-import { RelayEventType } from "../relay";
-import { AsyncCommandResult } from "../request";
-import { ChannelUser } from "../user/channel-user";
-import { OpenChannelUserInfo } from "../user/channel-user-info";
-import { OpenChannelInfo } from "./open-channel-info";
-import { OpenLink, OpenLinkProfiles } from ".";
-import { OpenChannelUserPerm } from "./open-link-type";
-import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from "./open-link-user-info";
-import { Channel } from "../channel";
-import { OpenLinkComponent } from "..";
-import { OpenChannel } from "./open-channel";
+import { ChannelManageSession } from '../channel/channel-session';
+import { ChatLogged, ChatLoggedType } from '../chat/chat';
+import { RelayEventType } from '../relay';
+import { AsyncCommandResult } from '../request';
+import { ChannelUser } from '../user/channel-user';
+import { OpenChannelUserInfo } from '../user/channel-user-info';
+import { OpenChannelInfo } from './open-channel-info';
+import { OpenLink, OpenLinkProfiles } from '.';
+import { OpenChannelUserPerm } from './open-link-type';
+import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from './open-link-user-info';
+import { Channel } from '../channel';
+import { OpenLinkComponent } from '..';
+import { OpenChannel } from './open-channel';
 
 
 /**

@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelMetaType } from "../packet/struct";
+import { Long } from 'bson';
+import { ChannelMetaType } from '../packet/struct';
 
 export enum ChannelClientMetaType {
-    
+
     UNDEFINED = 'undefined',
     NAME = 'name',
     IMAGE_PATH = 'image_path',
@@ -33,23 +33,27 @@ export interface ChannelMetaStruct {
 export interface ChannelClientMetaStruct {
 
     name?: string;
+    // eslint-disable-next-line camelcase
     image_path?: string;
     favorite?: boolean,
+    // eslint-disable-next-line camelcase
     push_sound?: boolean,
+    // eslint-disable-next-line camelcase
     chat_hide?: boolean,
     fullImageUrl?: string;
     imageUrl?: string;
 
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MetaContent {
-
 
 
 }
 
 export interface PrivilegeMetaContent {
 
+    // eslint-disable-next-line camelcase
     pin_notice: boolean;
 
 }
@@ -70,7 +74,7 @@ export interface TvMetaContent {
 export interface TvLiveMetaContent {
 
     url: string;
-    live?: "on";
+    live?: 'on';
 
 }
 
@@ -82,9 +86,13 @@ export interface LiveTalkCountMetaContent {
 
 export interface GroupMetaContent {
 
+    // eslint-disable-next-line camelcase
     group_id: number;
+    // eslint-disable-next-line camelcase
     group_name: string;
+    // eslint-disable-next-line camelcase
     group_profile_thumbnail_url: string;
+    // eslint-disable-next-line camelcase
     group_profile_url: string;
 
 }
@@ -105,9 +113,7 @@ export interface BotAddCommandStruct extends BotCommandStruct {
 
 }
 
-export interface BotDelCommandStruct extends BotCommandStruct {
-
-}
+export type BotDelCommandStruct = BotCommandStruct
 
 export interface BotMetaContent {
 

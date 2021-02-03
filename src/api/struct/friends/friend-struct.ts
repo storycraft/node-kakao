@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
+import { Long } from 'bson';
 
 export enum ApiUserType {
 
@@ -42,6 +42,7 @@ export interface FriendStruct {
     fullProfileImageUrl: string;
     originalProfileImageUrl: string;
     userType: ApiUserType;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     ext: FriendExt | {};
     hidden: boolean;
     purged: boolean;

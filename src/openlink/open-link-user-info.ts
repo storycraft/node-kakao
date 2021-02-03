@@ -4,11 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelUser } from "../user/channel-user";
-import { DisplayUserInfo, OpenChannelUserInfo } from "../user/channel-user-info";
-import { OpenLinkComponent, OpenPrivilegeComponent, OpenTokenComponent } from ".";
-import { OpenChannelUserPerm, OpenProfileType } from "./open-link-type";
+import { Long } from 'bson';
+import { ChannelUser } from '../user/channel-user';
+import { DisplayUserInfo, OpenChannelUserInfo } from '../user/channel-user-info';
+import { OpenLinkComponent, OpenPrivilegeComponent, OpenTokenComponent } from '.';
+import { OpenChannelUserPerm, OpenProfileType } from './open-link-type';
 
 export interface OpenLinkKickedUser extends ChannelUser {
 
@@ -20,7 +20,6 @@ export interface OpenLinkKickedUser extends ChannelUser {
 }
 
 export interface OpenLinkKickedUserInfo extends OpenLinkKickedUser, DisplayUserInfo {
-
 
 
 }

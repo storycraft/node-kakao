@@ -4,9 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from "bson";
-import { ChannelType } from "../../channel/channel-type";
-import { ChatlogStruct } from "./chat";
+import { Long } from 'bson';
+import { ChannelType } from '../../channel';
+import { ChatlogStruct } from './chat';
 
 export enum KnownChannelMetaType {
 
@@ -45,9 +45,12 @@ export interface ChannelMetaStruct {
 export interface ChannelClientMetaStruct {
 
     name?: string;
+    // eslint-disable-next-line camelcase
     image_path?: string;
     favorite?: boolean,
+    // eslint-disable-next-line camelcase
     push_sound?: boolean,
+    // eslint-disable-next-line camelcase
     chat_hide?: boolean,
     fullImageUrl?: string;
     imageUrl?: string;

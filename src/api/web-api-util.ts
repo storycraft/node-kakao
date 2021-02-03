@@ -4,32 +4,32 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export function getUploadedFileKey(uploadPath: string) {
-    return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
+export function getUploadedFileKey(uploadPath: string): string {
+  return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
 }
 
-export function getEmoticonHeader(screenWidth: number = 1080, screenHeight: number = 1920) {
-    return {
-        'RESOLUTION': `${screenWidth}x${screenHeight}`,
-    };
+export function getEmoticonHeader(screenWidth = 1080, screenHeight = 1920): { RESOLUTION: string } {
+  return {
+    RESOLUTION: `${screenWidth}x${screenHeight}`,
+  };
 }
 
-export function getEmoticonURL(lang: string = 'kr') {
-    return `http://item-${lang}.talk.kakao.co.kr/dw`;
+export function getEmoticonURL(lang = 'kr'): string {
+  return `http://item-${lang}.talk.kakao.co.kr/dw`;
 }
 
-export function getEmoticonImageURL(path: string, lang: string = 'kr') {
-    return `${getEmoticonURL(lang)}/${path}`;
+export function getEmoticonImageURL(path: string, lang = 'kr'): string {
+  return `${getEmoticonURL(lang)}/${path}`;
 }
 
-export function getEmoticonTitleURL(id: string, type: string = 'png', lang: string = 'kr') {
-    return `${getEmoticonURL(lang)}/${id}.title.${type}`;
+export function getEmoticonTitleURL(id: string, type = 'png', lang = 'kr'): string {
+  return `${getEmoticonURL(lang)}/${id}.title.${type}`;
 }
 
-export function getEmoticonPackURL(id: string, lang: string = 'kr') {
-    return `${getEmoticonURL(lang)}/${id}.file_pack.zip`;
+export function getEmoticonPackURL(id: string, lang = 'kr'): string {
+  return `${getEmoticonURL(lang)}/${id}.file_pack.zip`;
 }
 
-export function getEmoticonThumbnailPackURL(id: string, lang: string = 'kr') {
-    return `${getEmoticonURL(lang)}/${id}.thum_pack.zip`;
+export function getEmoticonThumbnailPackURL(id: string, lang = 'kr'): string {
+  return `${getEmoticonURL(lang)}/${id}.thum_pack.zip`;
 }

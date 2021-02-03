@@ -4,20 +4,16 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Chat, Chatlog, ChatLogged, ChatLogLinked } from "../chat/chat";
-import { Channel } from "./channel";
-import { AsyncCommandResult, CommandResult } from "../request";
-import { Long } from "..";
-import { ChannelUser } from "../user/channel-user";
-import { ChannelInfo, ChannelMeta, NormalChannelInfo, SetChannelMeta } from "./channel-info";
-import { ChannelMetaType } from "../packet/struct/channel";
-import { ChannelUserInfo } from "../user/channel-user-info";
-import { ChatOnRoomRes } from "../packet/chat/chat-on-room";
-import { MediaDownloader } from "../talk/media/media-downloader";
-import { MediaKeyComponent } from "../media";
-import { ChatType } from "../chat/chat-type";
-import { MediaUploader, MultiMediaUploader } from "../talk";
-import { MediaUploadTemplate } from "../talk/media/upload";
+import { Chat, Chatlog, ChatLogged, ChatLogLinked, ChatType } from '../chat';
+import { Channel } from './channel';
+import { AsyncCommandResult, CommandResult } from '../request';
+import { Long } from '..';
+import { ChannelUser, ChannelUserInfo } from '../user';
+import { ChannelInfo, ChannelMeta, SetChannelMeta } from './channel-info';
+import { ChannelMetaType } from '../packet/struct';
+import { ChatOnRoomRes } from '../packet/chat';
+import { MediaDownloader, MediaUploader, MultiMediaUploader, MediaUploadTemplate } from '../talk';
+import { MediaKeyComponent } from '../media';
 
 export interface ChannelTemplate {
 
@@ -73,7 +69,7 @@ export interface ChannelSession {
      * Set channel meta content
      *
      * @param type
-     * @param content
+     * @param meta
      */
     setMeta(type: ChannelMetaType, meta: ChannelMeta | string): AsyncCommandResult<SetChannelMeta>;
 
@@ -85,7 +81,7 @@ export interface ChannelSession {
     /**
      * Get latest detailed user info.
      *
-     * @param channelUser
+     * @param channelUsers
      */
     getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]>;
 
@@ -140,6 +136,7 @@ export interface ChannelSession {
      * Create media uploader.
      *
      * @param type
+     * @param template
      */
     uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader>;
 
@@ -147,6 +144,7 @@ export interface ChannelSession {
      * Create multi media uploader.
      *
      * @param type Media type. Currently works only with MULTIPHOTO.
+     * @param templates
      */
     uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]>;
 
@@ -176,7 +174,7 @@ export interface NormalChannelManageSession extends ChannelManageSession {
      * Create channel.
      * Perform CREATE command.
      *
-     * @param userList Users to be included.
+     * @param template
      */
     createChannel(template: ChannelTemplate): AsyncCommandResult<Channel>;
 

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { OpenLinkStruct } from "../struct/openlink";
+import { OpenLinkStruct } from '../struct';
 
 export interface InfoLinkRes {
 

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ChannelInfoStruct, ChatlogStruct, OpenLinkChannelUserStruct, OpenLinkStruct } from "../struct";
+import { ChannelInfoStruct, ChatlogStruct, OpenLinkChannelUserStruct, OpenLinkStruct } from '../struct';
 
 export interface JoinLinkRes {
 
