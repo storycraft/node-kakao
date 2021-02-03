@@ -87,8 +87,7 @@ export interface LessSettingsStruct {
     googleMapsApi: { key: string, signature: string };
     // eslint-disable-next-line camelcase
     chat_report_limit: { chat: number, open_chat: number, plus_chat: number };
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    externalApiList: {},
+    externalApiList: unknown,
     // eslint-disable-next-line camelcase
     birthday_friends: { landing_url: string };
     messageDeleteTime: number;

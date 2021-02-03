@@ -84,8 +84,7 @@ export interface OpenLinkStruct {
      */
     ex: boolean;
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    omt: {};
+    omt: unknown;
 
     /**
      * Link creation time

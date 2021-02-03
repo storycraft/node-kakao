@@ -21,8 +21,7 @@ export interface ProfileFeed {
     permission: number;
     type: number;
     isCurrent: boolean;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    extra: {};
+    extra: unknown;
 
 }
 

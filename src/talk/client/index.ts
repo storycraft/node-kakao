@@ -218,7 +218,7 @@ export class TalkClient
     private listenEnd() {
       if (this._session) this._session = null;
       if (this._pingTask) {
-        clearTimeout(this._pingTask as any);
+        clearTimeout(this._pingTask);
       }
     }
 
@@ -247,7 +247,7 @@ export class TalkClient
         if (!this.logon) return;
 
         this.session.request('PING', {});
-        this._pingTask = setTimeout(pingHandler, this.pingInterval) as unknown as number;
+        this._pingTask = setTimeout(pingHandler, this.pingInterval);
       };
       pingHandler();
     }
