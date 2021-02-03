@@ -53,7 +53,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
     private _clientSession: TalkClientSession;
 
-    private _cilentUser: ChannelUser;
+    private _clientUser: ChannelUser;
     private _blockList: TalkBlockSession;
 
     private _channelList: TalkChannelList;
@@ -71,7 +71,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         this._channelList = new TalkChannelList(this.createSessionProxy());
 
-        this._cilentUser = { userId: Long.ZERO };
+        this._clientUser = { userId: Long.ZERO };
         this._blockList = new TalkBlockSession(this.createSessionProxy());
 
         this._openLink = new OpenLinkService(this.createSessionProxy());
@@ -91,10 +91,10 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
         return this._channelList!;
     }
 
-    get cilentUser() {
+    get clientUser() {
         if (!this.logon) throw new Error('Cannot access without logging in');
 
-        return this._cilentUser;
+        return this._clientUser;
     }
 
     get blockList() {
@@ -136,7 +136,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
 
         this.addPingHandler();
 
-        this._cilentUser = { userId: loginRes.result.userId };
+        this._clientUser = { userId: loginRes.result.userId };
 
         await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
         await OpenLinkService.initialize(this._openLink);
@@ -158,7 +158,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
      * @returns true if client user.
      */
     isClientUser(user: ChannelUser) {
-        return user.userId.equals(this._cilentUser.userId);
+        return user.userId.equals(this._clientUser.userId);
     }
 
     /**
@@ -201,7 +201,7 @@ export class TalkClient extends TypedEmitter<ClientEvents> implements CommandSes
             request: (method, data) => this.request(method, data),
 
             get clientUser() {
-                return instance.cilentUser;
+                return instance.clientUser;
             },
 
             get configuration() {
