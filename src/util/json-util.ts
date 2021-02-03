@@ -20,7 +20,7 @@ export namespace JsonUtil {
       return value;
     };
 
-    const bsonLongReplacer = (key: string, value: any) => {
+    const bsonLongReplacer = (key: string, value: unknown) => {
       if (value && value instanceof Long) {
         return new LosslessJSON.LosslessNumber(value.toString());
       }

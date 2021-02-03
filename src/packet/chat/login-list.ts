@@ -15,13 +15,13 @@ export interface ChannelDataStruct {
     t: string;
     a: number;
     n: number;
-    s: any;
+    s: unknown;
     l: ChatlogStruct;
-    i: any[];
+    i: unknown[];
     k: string[];
-    m?: any;
-    mmr: any;
-    ll: any;
+    m?: unknown;
+    mmr: unknown;
+    ll: unknown;
     o: number;
     jn: number;
     p: boolean;
@@ -36,7 +36,7 @@ export interface LoginListRes {
     lastTokenId: Long;
     mcmRevision: number;
     delChatIds: number[];
-    kc: any[];
+    kc: unknown[];
     ltk: Long;
     lbk: number;
     eof: boolean;

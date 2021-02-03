@@ -141,7 +141,7 @@ export interface ClientEvent {
 
     // 클라이언트 처리 에러.
     // 핸들링 되지 않을시 클라이언트 세션이 종료됨.
-    'error': (error: any) => void;
+    'error': (error: unknown) => void;
 
 }
 

@@ -41,7 +41,7 @@ export interface MoreSettingsStruct {
     daumMediaPollingInterval: number;
     lessSettingsPollingInterval: number;
 
-    moreApps: { recommend: any[], all: any[] };
+    moreApps: { recommend: unknown[], all: unknown[] };
     shortcuts: { [menu: string]: number }[],
 
     seasonProfileRev: number,

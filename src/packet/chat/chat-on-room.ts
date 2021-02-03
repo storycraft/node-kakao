@@ -88,7 +88,7 @@ export interface ChatOnRoomRes {
     /**
      * Unknown
      */
-    pct: any;
+    pct: unknown;
 
     /**
      * Unknown (normal chat)

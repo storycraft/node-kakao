@@ -8,10 +8,10 @@ import EventEmitter from 'eventemitter3';
 
 // https://github.com/binier/tiny-typed-emitter
 export type TypedListeners<L> = {
-    [E in keyof L]: (...args: any[]) => any;
+    [E in keyof L]: (...args: any[]) => unknown;
 };
 
-export type DefaultListeners = Record<string | symbol, (...args: any[]) => any>;
+export type DefaultListeners = Record<string | symbol, (...args: unknown[]) => unknown>;
 
 declare class TypedEmitterDecl<L extends TypedListeners<L> = DefaultListeners> {
   addListener<U extends keyof L>(event: U, listener: L[U]): this;

@@ -99,12 +99,12 @@ export interface ChannelInfoStruct extends Partial<NormalChannelInfoExtra>, Part
     /**
      * Unknown
      */
-    lastUpdatedAt?: any;
+    lastUpdatedAt?: unknown;
 
     /**
      * Unknown
      */
-    lastMessage?: any;
+    lastMessage?: unknown;
 
     /**
      * Last chat log id
