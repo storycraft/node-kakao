@@ -5,18 +5,18 @@
  */
 
 
-declare let process: any;
-declare let window: any;
-declare let navigator: any;
+declare let process: { release?: { name?: string } } & Record<string, unknown> | undefined;
+declare let window: { Deno?: { version?: { deno?: string } } } & Record<string, unknown> | undefined;
+declare let navigator: Record<string, unknown>;
 
 export function isNode(): boolean {
-  return typeof process !== 'undefined' && process.release && process.release.name === 'node';
+  return !!(process && process.release && process.release.name === 'node');
 }
 
 export function isDeno(): boolean {
-  return typeof window !== 'undefined' && window.Deno && window.Deno.version && window.Deno.version.deno;
+  return !!(window && window.Deno && window.Deno.version && window.Deno.version);
 }
 
 export function isBrowser(): boolean {
-  return typeof navigator !== 'undefined' && 'userAgent' in navigator;
+  return navigator && 'userAgent' in navigator;
 }

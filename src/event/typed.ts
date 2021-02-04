@@ -8,8 +8,7 @@ import EventEmitter from 'eventemitter3';
 
 // https://github.com/binier/tiny-typed-emitter
 export type TypedListeners<L> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [E in keyof L]: (...args: any[]) => unknown;
+  [E in keyof L]: (...args: unknown[]) => unknown;
 };
 
 export type DefaultListeners = Record<string | symbol, (...args: unknown[]) => unknown>;
