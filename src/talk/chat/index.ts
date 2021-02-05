@@ -6,6 +6,7 @@
 
 import { Long } from 'bson';
 import { Chatlog, getOriginalType, isDeletedChat } from '../../chat';
+import { MediaKeyComponent } from '../../media';
 import { ChannelUser } from '../../user';
 import { TalkChannel } from '../channel';
 
@@ -18,24 +19,24 @@ export class TalkChatData {
   }
 
   /**
-     * Get chatlog object
-     */
+   * Chatlog object
+   */
   get chat(): Readonly<Chatlog> {
     return this._chat;
   }
 
   /**
-     * The chat object's type property has the type value bit masked when the chat is deleted.
-     * @return {number} the original chat type
-     */
+   * The chat object's type property has the type value bit masked when the chat is deleted.
+   * @return {number} the original chat type
+   */
   get originalType(): number {
     return getOriginalType(this._chat.type);
   }
 
   /**
-     * Get url list in chat. Can be used to generate url preview.
-     * It is not for detecting urls.
-     */
+   * Get url list in chat. Can be used to generate url preview.
+   * It is not for detecting urls.
+   */
   get urls(): string[] {
     if (!this._chat.attachment || !Array.isArray(this._chat.attachment['urls'])) return [];
 
@@ -43,8 +44,8 @@ export class TalkChatData {
   }
 
   /**
-     * Get mention list
-     */
+   * Get mention list
+   */
   get mentions(): ChatMentionStruct[] {
     if (!this._chat.attachment || !Array.isArray(this._chat.attachment.mentions)) return [];
 
@@ -52,27 +53,44 @@ export class TalkChatData {
   }
 
   /**
-     * Forward chat to another channel
-     *
-     * @param {TalkChannel} channel
-     */
+   * Get medias on chat.
+   */
+  get medias(): MediaKeyComponent[] {
+    if (!this._chat.attachment) return [];
+
+    if (this._chat.attachment['kl']) {
+      return (this._chat.attachment['kl'] as string[]).map((key) => {
+        return { key } as MediaKeyComponent;
+      });
+    } else if (this._chat.attachment['k']) {
+      return [{ key: this._chat.attachment['k'] as string }];
+    }
+
+    return [];
+  }
+
+  /**
+   * Forward chat to another channel
+   *
+   * @param {TalkChannel} channel
+   */
   forwardTo(channel: TalkChannel): void {
     channel.forwardChat(this._chat);
   }
 
   /**
-     * @return {boolean} true when the chat is deleted.
-     */
+   * @return {boolean} true when the chat is deleted.
+   */
   isDeleted(): boolean {
     return isDeletedChat(this._chat.type);
   }
 
   /**
-     * Check if any users are mentioned.
-     *
-     * @param {ChannelUser[]} users Users to find
-     * @return {boolean} true if anyone is mentioned
-     */
+   * Check if any users are mentioned.
+   *
+   * @param {ChannelUser[]} users Users to find
+   * @return {boolean} true if anyone is mentioned
+   */
   isMentioned(...users: ChannelUser[]): boolean {
     const mentions = this.mentions;
     if (mentions.length < 1) return false;
