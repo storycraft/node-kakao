@@ -6,6 +6,7 @@
 
 export * from './attachment';
 export * from './mention';
+export * from './reply';
 
 import { Chat } from '../chat';
 

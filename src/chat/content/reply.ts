@@ -44,7 +44,7 @@ export class ReplyContent implements ChatContent {
 
     if (this.attach) {
       attachment.attach_type = this.attach.type;
-      Object.assign(chat.attachment, this.chat.attachment);
+      Object.assign(chat.attachment, this.attach.attachment);
     }
 
     attachment.src_logId = this.chat.logId;

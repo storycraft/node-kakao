@@ -33,7 +33,7 @@ export class MentionContent implements ChatContent {
       mentions.push(map);
     }
 
-    chat.text += `@${this._user.nickname}`;
     map.at.push(chat.text.length + 1);
+    chat.text += `@${this._user.nickname}`;
   }
 }

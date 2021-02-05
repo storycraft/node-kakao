@@ -247,7 +247,8 @@ export class TalkClient
       if (!this.logon) return;
 
       this.session.request('PING', {});
-      this._pingTask = setTimeout(pingHandler, this.pingInterval);
+      // Fix weird nodejs typing
+      this._pingTask = setTimeout(pingHandler, this.pingInterval) as unknown as number;
     };
     pingHandler();
   }
