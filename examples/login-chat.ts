@@ -5,10 +5,10 @@
  */
 
 /*
- * Following this example will make automatic response at text "안녕하세요".
+ * Following this example will make automatic reply at text "안녕하세요" with mention.
  */
 
-import { AuthApiClient, TalkClient } from 'node-kakao';
+import { AuthApiClient, ChatBuilder, KnownChatType, MentionContent, ReplyContent, TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
@@ -20,8 +20,20 @@ const PASSWORD = process.env['accountPwd'] as string;
 const CLIENT = new TalkClient();
 
 CLIENT.on('chat', (data, channel) => {
+  const sender = channel.getUserInfo(data.chat.sender);
+  if (!sender) return;
+
   if (data.chat.text === '안녕하세요') {
-    channel.sendChat('안녕하세요');
+    // 답장 형식
+    // 안녕하세요 @xxx
+    channel.sendChat(
+      new ChatBuilder().
+      append(new ReplyContent(data.chat)).
+      append('안녕하세요 ').
+      append(new MentionContent(sender)).
+      build(KnownChatType.REPLY));
+    // 일반 텍스트
+    // channel.sendChat('안녕하세요');
   }
 });
 
