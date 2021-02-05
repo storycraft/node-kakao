@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ChatMentionStruct | NodeKakao - v4.0.0-alpha.7</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.7">
+	<title>MentionAttachment | NodeKakao - v4.0.0-beta.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.7</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,34 +50,27 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-alpha.7</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.0</a>
 				</li>
 				<li>
-					<a href="../modules/talk_chat.html">talk/chat</a>
+					<a href="../modules/chat.html">chat</a>
 				</li>
 				<li>
-					<a href="talk_chat.chatmentionstruct.html">ChatMentionStruct</a>
+					<a href="chat.mentionattachment.html">MentionAttachment</a>
 				</li>
 			</ul>
-			<h1>Interface ChatMentionStruct</h1>
+			<h1>Interface MentionAttachment</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Raw chat mention typings</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ChatMentionStruct</span>
+						<span class="target">MentionAttachment</span>
 					</li>
 				</ul>
 			</section>
@@ -88,9 +81,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="talk_chat.chatmentionstruct.html#at" class="tsd-kind-icon">at</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="talk_chat.chatmentionstruct.html#len" class="tsd-kind-icon">len</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="talk_chat.chatmentionstruct.html#user_id" class="tsd-kind-icon">user_<wbr>id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="chat.mentionattachment.html#mentions" class="tsd-kind-icon">mentions</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,49 +90,14 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="at" class="tsd-anchor"></a>
-					<h3>at</h3>
-					<div class="tsd-signature tsd-kind-icon">at<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="mentions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mentions</h3>
+					<div class="tsd-signature tsd-kind-icon">mentions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="chat_attachment.mentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">MentionStruct</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L102">talk/chat/index.ts:102</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/chat/attachment/mention.ts#L11">chat/attachment/mention.ts:11</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Index list</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="len" class="tsd-anchor"></a>
-					<h3>len</h3>
-					<div class="tsd-signature tsd-kind-icon">len<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L107">talk/chat/index.ts:107</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Mention text length, except @ prefix.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="user_id" class="tsd-anchor"></a>
-					<h3>user_<wbr>id</h3>
-					<div class="tsd-signature tsd-kind-icon">user_<wbr>id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Long</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L112">talk/chat/index.ts:112</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Target user id</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -152,28 +108,24 @@
 						<a href="../modules.html">Exports</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/talk_chat.html">talk/chat</a>
+						<a href="../modules/chat.html">chat</a>
+						<ul>
+							<li class=" tsd-kind-namespace tsd-parent-kind-module">
+								<a href="../modules/chat.feedfragment.html">Feed<wbr>Fragment</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/talk_chat.talkchatdata.html" class="tsd-kind-icon">Talk<wbr>Chat<wbr>Data</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="talk_chat.chatmentionstruct.html" class="tsd-kind-icon">Chat<wbr>Mention<wbr>Struct</a>
+						<a href="chat.mentionattachment.html" class="tsd-kind-icon">Mention<wbr>Attachment</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="talk_chat.chatmentionstruct.html#at" class="tsd-kind-icon">at</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="talk_chat.chatmentionstruct.html#len" class="tsd-kind-icon">len</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="talk_chat.chatmentionstruct.html#user_id" class="tsd-kind-icon">user_<wbr>id</a>
+								<a href="chat.mentionattachment.html#mentions" class="tsd-kind-icon">mentions</a>
 							</li>
 						</ul>
 					</li>

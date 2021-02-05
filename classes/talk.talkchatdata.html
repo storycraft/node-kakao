@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkChatData | NodeKakao - v4.0.0-alpha.7</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-alpha.7">
+	<title>TalkChatData | NodeKakao - v4.0.0-beta.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-alpha.7</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-alpha.7</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.0</a>
 				</li>
 				<li>
 					<a href="../modules/talk.html">talk</a>
@@ -95,6 +95,8 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#chat" class="tsd-kind-icon">chat</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#isshout" class="tsd-kind-icon">is<wbr>Shout</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#medias" class="tsd-kind-icon">medias</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#mentions" class="tsd-kind-icon">mentions</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#originaltype" class="tsd-kind-icon">original<wbr>Type</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="talk.talkchatdata.html#urls" class="tsd-kind-icon">urls</a></li>
@@ -103,6 +105,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="talk.talkchatdata.html#attachment" class="tsd-kind-icon">attachment</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.talkchatdata.html#forwardto" class="tsd-kind-icon">forward<wbr>To</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.talkchatdata.html#isdeleted" class="tsd-kind-icon">is<wbr>Deleted</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk.talkchatdata.html#ismentioned" class="tsd-kind-icon">is<wbr>Mentioned</a></li>
@@ -123,7 +126,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L15">talk/chat/index.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L16">talk/chat/index.ts:16</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,12 +152,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L24">talk/chat/index.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L24">talk/chat/index.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get chatlog object</p>
+									<p>Chatlog object</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/chat.chatlog.html" class="tsd-signature-type" data-tsd-kind="Interface">Chatlog</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -162,16 +165,56 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="mentions" class="tsd-anchor"></a>
-					<h3>mentions</h3>
+					<a name="isshout" class="tsd-anchor"></a>
+					<h3>is<wbr>Shout</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> mentions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_chat.chatmentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatMentionStruct</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> isShout<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L49">talk/chat/index.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L58">talk/chat/index.ts:58</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if chat has shout option</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="medias" class="tsd-anchor"></a>
+					<h3>medias</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> medias<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_chat.talkchatmedia.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkChatMedia</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L67">talk/chat/index.ts:67</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get medias on chat.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/talk_chat.talkchatmedia.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkChatMedia</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="mentions" class="tsd-anchor"></a>
+					<h3>mentions</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> mentions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/chat_attachment.mentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">MentionStruct</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L49">talk/chat/index.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -179,7 +222,7 @@
 									<p>Get mention list</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/talk_chat.chatmentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatMentionStruct</a><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/chat_attachment.mentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">MentionStruct</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -193,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L32">talk/chat/index.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L32">talk/chat/index.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -216,7 +259,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L40">talk/chat/index.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L40">talk/chat/index.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -232,6 +275,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="attachment" class="tsd-anchor"></a>
+					<h3>attachment</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">attachment&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L109">talk/chat/index.ts:109</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Almost same as chat.attachment but supports typing and null safe.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>non null attachment object</p>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="forwardto" class="tsd-anchor"></a>
 					<h3>forward<wbr>To</h3>
@@ -242,7 +314,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L60">talk/chat/index.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L120">talk/chat/index.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L67">talk/chat/index.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L127">talk/chat/index.ts:127</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -290,7 +362,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0384ea8/src/talk/chat/index.ts#L77">talk/chat/index.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/chat/index.ts#L137">talk/chat/index.ts:137</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -375,6 +447,12 @@
 								<a href="talk.talkchatdata.html#chat" class="tsd-kind-icon">chat</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="talk.talkchatdata.html#isshout" class="tsd-kind-icon">is<wbr>Shout</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="talk.talkchatdata.html#medias" class="tsd-kind-icon">medias</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="talk.talkchatdata.html#mentions" class="tsd-kind-icon">mentions</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -382,6 +460,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="talk.talkchatdata.html#urls" class="tsd-kind-icon">urls</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="talk.talkchatdata.html#attachment" class="tsd-kind-icon">attachment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk.talkchatdata.html#forwardto" class="tsd-kind-icon">forward<wbr>To</a>
@@ -438,9 +519,6 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/talk.channellistupdater.html" class="tsd-kind-icon">Channel<wbr>List<wbr>Updater</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/talk.chatmentionstruct.html" class="tsd-kind-icon">Chat<wbr>Mention<wbr>Struct</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/talk.managed.html" class="tsd-kind-icon">Managed</a>
 					</li>
@@ -449,6 +527,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/talk.talkchannel.html" class="tsd-kind-icon">Talk<wbr>Channel</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/talk.talkchatmedia.html" class="tsd-kind-icon">Talk<wbr>Chat<wbr>Media</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/talk.talksession.html" class="tsd-kind-icon">Talk<wbr>Session</a>
