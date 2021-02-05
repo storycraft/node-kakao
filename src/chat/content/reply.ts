@@ -5,9 +5,8 @@
  */
 
 import { ChatContent } from '.';
-import { ReplyAttachment } from '../attachment';
+import { MentionStruct, ReplyAttachment } from '../attachment';
 import { Chat, Chatlog } from '../chat';
-import { MentionStruct } from '../struct';
 
 /**
  * Set reply chat

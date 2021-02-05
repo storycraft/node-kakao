@@ -6,8 +6,8 @@
 
 import { ChatContent } from '.';
 import { DisplayUserInfo } from '../../user';
+import { MentionStruct } from '../attachment';
 import { Chat } from '../chat';
-import { MentionStruct } from '../struct';
 
 /**
  * Mentions user
