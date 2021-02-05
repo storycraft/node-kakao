@@ -21,7 +21,7 @@ export namespace JsonUtil {
   };
 
   const bsonLongReplacer = (key: string, value: unknown) => {
-    if (value && value instanceof Long) {
+    if (typeof value === 'bigint' || Long.isLong(value)) {
       return new LosslessJSON.LosslessNumber(value.toString());
     }
 
