@@ -55,15 +55,38 @@ export class TalkChatData {
   /**
    * Get medias on chat.
    */
-  get medias(): MediaKeyComponent[] {
-    if (!this._chat.attachment) return [];
+  get medias(): TalkChatMedia[] {
+    const attachment = this._chat.attachment;
+    if (!attachment) return [];
 
-    if (this._chat.attachment['kl']) {
-      return (this._chat.attachment['kl'] as string[]).map((key) => {
-        return { key } as MediaKeyComponent;
+    if (
+      Array.isArray(attachment['kl']) &&
+      Array.isArray(attachment['sl']) &&
+      Array.isArray(attachment['imageUrls'])
+    ) {
+      // Multi photo
+      const keyList = attachment['kl'] as string[];
+      const sizeList = attachment['sl'] as number[];
+      const urlList = attachment['imageUrls'] as string[];
+
+      return keyList.map((key, index) => {
+        return {
+          key,
+          size: sizeList[index],
+          url: urlList[index],
+        };
       });
-    } else if (this._chat.attachment['k']) {
-      return [{ key: this._chat.attachment['k'] as string }];
+    } else if (attachment['k'] || attachment['tk']) {
+      // Photo, file, audio, video
+      const size = (attachment['s'] || attachment['size']) as number;
+      const url = attachment['url'] as string;
+      return [
+        {
+          key: (attachment['k'] || attachment['tk']) as string,
+          size,
+          url,
+        },
+      ];
     }
 
     return [];
@@ -105,6 +128,17 @@ export class TalkChatData {
 
     return false;
   }
+}
+
+export interface TalkChatMedia extends MediaKeyComponent {
+  /**
+   * Media size
+   */
+  size: number;
+  /**
+   * Media url
+   */
+  url: string;
 }
 
 /**
