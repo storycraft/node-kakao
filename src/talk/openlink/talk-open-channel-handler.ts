@@ -43,119 +43,124 @@ export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>): void {
-    switch (method) {
-      case 'SYNCMEMT': {
-        const memTData = data as DefaultRes & SyncMemTRes;
-        if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) break;
+  private _hostHandoverHandler(memTData: DefaultRes & SyncMemTRes, parentCtx: EventContext<OpenChannelEvents>) {
+    if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
 
-        const len = memTData.mids.length;
-        for (let i = 0; i < len; i++) {
-          const user = { userId: memTData.mids[i] };
-          const perm = memTData.mts[i];
+    const len = memTData.mids.length;
+    for (let i = 0; i < len; i++) {
+      const user = { userId: memTData.mids[i] };
+      const perm = memTData.mts[i];
 
-          if (!perm) continue;
+      if (!perm) continue;
 
-          const lastInfo = this._channel.getUserInfo(user);
-          this._updater.updateUserInfo(user, { perm });
-          const info = this._channel.getUserInfo(user);
-          if (lastInfo && info) {
-            if (perm === OpenChannelUserPerm.OWNER) {
-              const lastLink = this._channel.info.openLink;
-              if (lastLink) {
-                this._channel.getLatestOpenLink().then((res) => {
-                  if (!res.success) return;
+      const lastInfo = this._channel.getUserInfo(user);
+      this._updater.updateUserInfo(user, { perm });
+      const info = this._channel.getUserInfo(user);
+      if (lastInfo && info) {
+        if (perm === OpenChannelUserPerm.OWNER) {
+          const lastLink = this._channel.info.openLink;
+          if (lastLink) {
+            this._channel.getLatestOpenLink().then((res) => {
+              if (!res.success) return;
 
-                  this._callEvent(parentCtx, 'host_handover', this._channel, lastLink, res.result);
-                });
-              }
-            }
-
-            this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
+              this._callEvent(parentCtx, 'host_handover', this._channel, lastLink, res.result);
+            });
           }
         }
 
-        break;
+        this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
       }
+    }
+  }
 
-      case 'SYNCLINKPF': {
-        const pfData = data as DefaultRes & SyncLinkPfRes;
-        if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) break;
+  private _profileChangedHandler(pfData: DefaultRes & SyncLinkPfRes, parentCtx: EventContext<OpenChannelEvents>) {
+    if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) return;
 
-        const updated = structToOpenLinkChannelUserInfo(pfData.olu);
-        const last = this._channel.getUserInfo(updated);
-        if (!last) break;
+    const updated = structToOpenLinkChannelUserInfo(pfData.olu);
+    const last = this._channel.getUserInfo(updated);
+    if (!last) return;
 
-        this._updater.updateUserInfo(updated, updated);
+    this._updater.updateUserInfo(updated, updated);
 
-        this._callEvent(
-            parentCtx,
-            'profile_changed',
-            this._channel,
-            last,
-            updated,
-        );
+    this._callEvent(
+        parentCtx,
+        'profile_changed',
+        this._channel,
+        last,
+        updated,
+    );
+  }
+
+  private _msgHiddenHandler(data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
+    const struct = data['chatLog'] as ChatlogStruct;
+    if (!this._channel.channelId.eq(struct.chatId)) return;
+
+    const chatLog = structToChatlog(struct);
+    if (chatLog.type !== KnownChatType.FEED) return;
+    const feed = feedFromChat(chatLog);
+    if (feed.feedType !== KnownFeedType.OPENLINK_REWRITE_FEED) return;
+
+    this._callEvent(
+        parentCtx,
+        'message_hidden',
+        chatLog,
+        this._channel,
+        feed as OpenRewriteFeed,
+    );
+  }
+
+  private _chatEventHandler(syncEventData: DefaultRes & SyncEventRes, parentCtx: EventContext<OpenChannelEvents>) {
+    if (!this._channel.channelId.eq(syncEventData.c) && !this._channel.linkId.eq(syncEventData.li)) return;
+
+    const user = this._channel.getUserInfo({ userId: syncEventData.authorId });
+    if (!user) return;
+
+    this._callEvent(
+        parentCtx,
+        'chat_event',
+        this._channel,
+        user,
+        syncEventData.et,
+        syncEventData.ec,
+        { logId: syncEventData.logId, type: syncEventData.t },
+    );
+  }
+
+  private _channelLinkDeletedHandler(data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>) {
+    if (!this._channel.linkId.eq(data['li'] as Long)) return;
+    const struct = data['chatLog'] as ChatlogStruct;
+
+    const chatLog = structToChatlog(struct);
+    if (chatLog.type !== KnownChatType.FEED) return;
+    const feed = feedFromChat(chatLog);
+    if (feed.feedType !== KnownFeedType.OPENLINK_DELETE_LINK) return;
+
+    this._callEvent(
+        parentCtx,
+        'channel_link_deleted',
+        chatLog,
+        this._channel,
+        feed,
+    );
+  }
+
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>): void {
+    switch (method) {
+      case 'SYNCMEMT':
+        this._hostHandoverHandler(data as DefaultRes & SyncMemTRes, parentCtx);
         break;
-      }
-
-      case 'SYNCREWR': {
-        const struct = data['chatLog'] as ChatlogStruct;
-        if (!this._channel.channelId.eq(struct.chatId)) break;
-
-        const chatLog = structToChatlog(struct);
-        if (chatLog.type !== KnownChatType.FEED) break;
-        const feed = feedFromChat(chatLog);
-        if (feed.feedType !== KnownFeedType.OPENLINK_REWRITE_FEED) break;
-
-        this._callEvent(
-            parentCtx,
-            'message_hidden',
-            chatLog,
-            this._channel,
-                    feed as OpenRewriteFeed,
-        );
+      case 'SYNCLINKPF':
+        this._profileChangedHandler(data as DefaultRes & SyncLinkPfRes, parentCtx);
         break;
-      }
-
-      case 'SYNCEVENT': {
-        const syncEventData = data as DefaultRes & SyncEventRes;
-        if (!this._channel.channelId.eq(syncEventData.c) && !this._channel.linkId.eq(syncEventData.li)) break;
-
-        const user = this._channel.getUserInfo({ userId: syncEventData.authorId });
-        if (!user) break;
-
-        this._callEvent(
-            parentCtx,
-            'chat_event',
-            this._channel,
-            user,
-            syncEventData.et,
-            syncEventData.ec,
-            { logId: syncEventData.logId, type: syncEventData.t },
-        );
+      case 'SYNCREWR':
+        this._msgHiddenHandler(data, parentCtx);
         break;
-      }
-
-      case 'LNKDELETED': {
-        if (!this._channel.linkId.eq(data['li'] as Long)) break;
-        const struct = data['chatLog'] as ChatlogStruct;
-
-        const chatLog = structToChatlog(struct);
-        if (chatLog.type !== KnownChatType.FEED) break;
-        const feed = feedFromChat(chatLog);
-        if (feed.feedType !== KnownFeedType.OPENLINK_DELETE_LINK) break;
-
-        this._callEvent(
-            parentCtx,
-            'channel_link_deleted',
-            chatLog,
-            this._channel,
-            feed,
-        );
+      case 'SYNCEVENT':
+        this._chatEventHandler(data as DefaultRes & SyncEventRes, parentCtx);
         break;
-      }
-
-      default: break;
+      case 'LNKDELETED':
+        this._channelLinkDeletedHandler(data, parentCtx);
+        break;
     }
   }
 }

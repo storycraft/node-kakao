@@ -95,163 +95,168 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     parentCtx.emit(event, ...args);
   }
 
+  private _msgHandler(msgData: DefaultRes & MsgRes, parentCtx: EventContext<ChannelEvents>) {
+    if (!this._channel.channelId.equals(msgData.chatId)) return;
+
+    const chatLog = structToChatlog(msgData.chatLog);
+
+    this._callEvent(
+        parentCtx,
+        'chat',
+        new TalkChatData(chatLog),
+        this._channel,
+    );
+
+    this._updater.updateInfo({
+      lastChatLogId: msgData.logId,
+      lastChatLog: chatLog,
+    });
+  }
+
+  private _feedHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+    const channelId = data['c'] as Long;
+    if (!this._channel.channelId.equals(channelId)) return;
+
+    const chatLog = structToChatlog(data['chatLog'] as ChatlogStruct);
+    this._callEvent(
+        parentCtx,
+        'chat',
+        new TalkChatData(chatLog),
+        this._channel,
+    );
+
+    this._updater.updateInfo({
+      lastChatLogId: chatLog.logId,
+      lastChatLog: chatLog,
+    });
+  }
+
+  private _chatReadHandler(readData: DefaultRes & DecunreadRes, parentCtx: EventContext<ChannelEvents>) {
+    if (!this._channel.channelId.equals(readData.chatId)) return;
+
+    const reader = this._channel.getUserInfo({ userId: readData.userId });
+
+    this._updater.updateWatermark(readData.userId, readData.watermark);
+
+    this._callEvent(
+        parentCtx,
+        'chat_read',
+        { logId: readData.watermark },
+        this._channel,
+        reader,
+    );
+  }
+
+  private _metaChangeHandler(metaData: DefaultRes & ChgMetaRes, parentCtx: EventContext<ChannelEvents>) {
+    if (!this._channel.channelId.equals(metaData.chatId)) return;
+
+    const metaType = metaData.meta.type;
+    const meta = metaData.meta as SetChannelMeta;
+
+    this._callEvent(
+        parentCtx,
+        'meta_change',
+        this._channel,
+        metaType,
+        meta,
+    );
+
+    const metaMap = { ...this.info.metaMap };
+    metaMap[metaType] = meta;
+
+    this._updater.updateInfo({
+      metaMap,
+    });
+  }
+
+  private _userLeftHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+    const struct = data['chatLog'] as ChatlogStruct;
+    if (!this._channel.channelId.eq(struct.chatId)) return;
+
+    const chatLog = structToChatlog(struct);
+    const user = this._channel.getUserInfo(chatLog.sender);
+    if (!user) return;
+
+    this._updater.updateUserInfo(chatLog.sender);
+
+    if (chatLog.type !== KnownChatType.FEED) return;
+    const feed = feedFromChat(chatLog);
+
+    this._callEvent(
+        parentCtx,
+        'user_left',
+        chatLog,
+        this._channel,
+        user,
+        feed,
+    );
+    return;
+  }
+
+  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+    const struct = data['chatLog'] as ChatlogStruct;
+    if (!this._channel.channelId.eq(struct.chatId)) return;
+
+    const chatLog = structToChatlog(struct);
+    if (chatLog.type !== KnownChatType.FEED) return;
+
+    this._updater.addUsers(chatLog.sender).then((usersRes) => {
+      if (!usersRes.success) return;
+
+      const feed = feedFromChat(chatLog);
+
+      this._callEvent(
+          parentCtx,
+          'user_join',
+          chatLog,
+          this._channel,
+          usersRes.result[0],
+          feed,
+      );
+    });
+  }
+
+  private _msgDeleteHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+    const struct = data['chatLog'] as ChatlogStruct;
+    if (!this._channel.channelId.eq(struct.chatId)) return;
+
+    const chatLog = structToChatlog(struct);
+    if (chatLog.type !== KnownChatType.FEED) return;
+    const feed = feedFromChat(chatLog);
+    if (feed.feedType !== KnownFeedType.DELETE_TO_ALL) return;
+
+    this._callEvent(
+        parentCtx,
+        'chat_deleted',
+        chatLog,
+        this._channel,
+        feed as DeleteAllFeed,
+    );
+  }
+
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
     switch (method) {
-      case 'MSG': {
-        const msgData = data as DefaultRes & MsgRes;
-
-        if (!this._channel.channelId.equals(msgData.chatId)) break;
-
-        const chatLog = structToChatlog(msgData.chatLog);
-
-        this._callEvent(
-            parentCtx,
-            'chat',
-            new TalkChatData(chatLog),
-            this._channel,
-        );
-
-        this._updater.updateInfo({
-          lastChatLogId: msgData.logId,
-          lastChatLog: chatLog,
-        });
-
+      case 'MSG':
+        this._msgHandler(data as DefaultRes & MsgRes, parentCtx);
         break;
-      }
-
-      case 'FEED': {
-        const channelId = data['c'] as Long;
-        if (!this._channel.channelId.equals(channelId)) break;
-
-        const chatLog = structToChatlog(data['chatLog'] as ChatlogStruct);
-        this._callEvent(
-            parentCtx,
-            'chat',
-            new TalkChatData(chatLog),
-            this._channel,
-        );
-
-        this._updater.updateInfo({
-          lastChatLogId: chatLog.logId,
-          lastChatLog: chatLog,
-        });
+      case 'FEED':
+        this._feedHandler(data, parentCtx);
         break;
-      }
-
-      case 'DECUNREAD': {
-        const readData = data as DefaultRes & DecunreadRes;
-
-        if (!this._channel.channelId.equals(readData.chatId)) break;
-
-        const reader = this._channel.getUserInfo({ userId: readData.userId });
-
-        this._updater.updateWatermark(readData.userId, readData.watermark);
-
-        this._callEvent(
-            parentCtx,
-            'chat_read',
-            { logId: readData.watermark },
-            this._channel,
-            reader,
-        );
-
+      case 'DECUNREAD':
+        this._chatReadHandler(data as DefaultRes & DecunreadRes, parentCtx);
         break;
-      }
-
-      case 'CHGMETA': {
-        const metaData = data as DefaultRes & ChgMetaRes;
-
-        if (!this._channel.channelId.equals(metaData.chatId)) break;
-
-        const metaType = metaData.meta.type;
-        const meta = metaData.meta as SetChannelMeta;
-
-        this._callEvent(
-            parentCtx,
-            'meta_change',
-            this._channel,
-            metaType,
-            meta,
-        );
-
-        const metaMap = { ...this.info.metaMap };
-        metaMap[metaType] = meta;
-
-        this._updater.updateInfo({
-          metaMap,
-        });
-
+      case 'CHGMETA':
+        this._metaChangeHandler(data as DefaultRes & ChgMetaRes, parentCtx);
         break;
-      }
-
-      case 'DELMEM': {
-        const struct = data['chatLog'] as ChatlogStruct;
-        if (!this._channel.channelId.eq(struct.chatId)) break;
-
-        const chatLog = structToChatlog(struct);
-        const user = this._channel.getUserInfo(chatLog.sender);
-        if (!user) return;
-
-        this._updater.updateUserInfo(chatLog.sender);
-
-        if (chatLog.type !== KnownChatType.FEED) break;
-        const feed = feedFromChat(chatLog);
-
-        this._callEvent(
-            parentCtx,
-            'user_left',
-            chatLog,
-            this._channel,
-            user,
-            feed,
-        );
+      case 'DELMEM':
+        this._userLeftHandler(data, parentCtx);
         break;
-      }
-
-      case 'NEWMEM': {
-        const struct = data['chatLog'] as ChatlogStruct;
-        if (!this._channel.channelId.eq(struct.chatId)) break;
-
-        const chatLog = structToChatlog(struct);
-        if (chatLog.type !== KnownChatType.FEED) break;
-
-        this._updater.addUsers(chatLog.sender).then((usersRes) => {
-          if (!usersRes.success) return;
-
-          const feed = feedFromChat(chatLog);
-
-          this._callEvent(
-              parentCtx,
-              'user_join',
-              chatLog,
-              this._channel,
-              usersRes.result[0],
-              feed,
-          );
-        });
+      case 'NEWMEM':
+        this._userJoinHandler(data, parentCtx);
         break;
-      }
-
-      case 'SYNCDLMSG': {
-        const struct = data['chatLog'] as ChatlogStruct;
-        if (!this._channel.channelId.eq(struct.chatId)) break;
-
-        const chatLog = structToChatlog(struct);
-        if (chatLog.type !== KnownChatType.FEED) break;
-        const feed = feedFromChat(chatLog);
-        if (feed.feedType !== KnownFeedType.DELETE_TO_ALL) break;
-
-        this._callEvent(
-            parentCtx,
-            'chat_deleted',
-            chatLog,
-            this._channel,
-                    feed as DeleteAllFeed,
-        );
+      case 'SYNCDLMSG':
+        this._msgDeleteHandler(data, parentCtx);
         break;
-      }
-
-      default: break;
     }
   }
 }
