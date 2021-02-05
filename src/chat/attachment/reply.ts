@@ -6,6 +6,7 @@
 
 import { Long } from 'bson';
 import { ChatType } from '../chat-type';
+import { MentionStruct } from './mention';
 
 export interface ReplyAttachment {
 
@@ -14,14 +15,13 @@ export interface ReplyAttachment {
   // eslint-disable-next-line camelcase
   attach_type: number;
 
-  // mentions: any[];
-
   // eslint-disable-next-line camelcase
   src_linkId?: Long;
   // eslint-disable-next-line camelcase
   src_logId: Long;
 
-  // src_mentions: any[];
+  // eslint-disable-next-line camelcase
+  src_mentions: MentionStruct[];
   // eslint-disable-next-line camelcase
   src_message: string;
   // eslint-disable-next-line camelcase

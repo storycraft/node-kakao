@@ -4,8 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from 'bson';
 import { Chatlog, getOriginalType, isDeletedChat } from '../../chat';
+import { MentionStruct } from '../../chat/attachment';
 import { MediaKeyComponent } from '../../media';
 import { ChannelUser } from '../../user';
 import { TalkChannel } from '../channel';
@@ -46,10 +46,19 @@ export class TalkChatData {
   /**
    * Get mention list
    */
-  get mentions(): ChatMentionStruct[] {
-    if (!this._chat.attachment || !Array.isArray(this._chat.attachment.mentions)) return [];
+  get mentions(): MentionStruct[] {
+    if (!this._chat.attachment || !Array.isArray(this._chat.attachment['mentions'])) return [];
 
     return this._chat.attachment.mentions;
+  }
+
+  /**
+   * @return {boolean} true if chat has shout option
+   */
+  get isShout(): boolean {
+    if (!this._chat.attachment) return false;
+
+    return !!this._chat.attachment['shout'];
   }
 
   /**
@@ -90,6 +99,17 @@ export class TalkChatData {
     }
 
     return [];
+  }
+
+  /**
+   * Almost same as chat.attachment but supports typing and null safe.
+   *
+   * @return {Partial<T>} non null attachment object
+   */
+  attachment<T>(): Partial<T> {
+    if (!this._chat.attachment) return {};
+
+    return this._chat.attachment as Partial<T>;
   }
 
   /**
@@ -139,27 +159,4 @@ export interface TalkChatMedia extends MediaKeyComponent {
    * Media url
    */
   url: string;
-}
-
-/**
- * Raw chat mention typings
- */
-export interface ChatMentionStruct {
-
-  /**
-   * Index list
-   */
-  at: number[];
-
-  /**
-   * Mention text length, except @ prefix.
-   */
-  len: number;
-
-  /**
-   * Target user id
-   */
-  // eslint-disable-next-line camelcase
-  user_id: Long | number;
-
 }

@@ -4,8 +4,18 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export * from './attachment';
+export * from './mention';
+
+import { Chat } from '../chat';
+
 export interface ChatContent {
 
+  /**
+   * Append content to chat
+   *
+   * @param {Chat} chat
+   */
+  append(chat: Chat): void;
 
 }
