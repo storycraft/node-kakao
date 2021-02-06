@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkChannelList | NodeKakao - v4.0.0-beta.0</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.0">
+	<title>TalkChannelList | NodeKakao - v4.0.0-beta.2</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.0</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-beta.0</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.2</a>
 				</li>
 				<li>
 					<a href="../modules/talk.html">talk</a>
@@ -128,6 +128,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="talk.talkchannellist.html#removealllisteners" class="tsd-kind-icon">remove<wbr>All<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="talk.talkchannellist.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="talk.talkchannellist.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="talk.talkchannellist.html#mapchannellist" class="tsd-kind-icon">map<wbr>Channel<wbr>List</a></li>
 							</ul>
 						</section>
 					</div>
@@ -139,14 +140,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Channel<wbr>List<span class="tsd-signature-symbol">(</span>session<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.talkchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Channel<wbr>List<span class="tsd-signature-symbol">(</span>session<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a>, normalList<span class="tsd-signature-symbol">?: </span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">[]</span>, openList<span class="tsd-signature-symbol">?: </span><a href="index.talkopenchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkOpenChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.talkchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L25">talk/talk-channel-list.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L25">talk/talk-channel-list.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -158,6 +159,12 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>session: <a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a></h5>
+								</li>
+								<li>
+									<h5>normalList: <a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5>openList: <a href="index.talkopenchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkOpenChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -179,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L45">talk/talk-channel-list.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L51">talk/talk-channel-list.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L52">talk/talk-channel-list.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L58">talk/talk-channel-list.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,7 +230,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L38">talk/talk-channel-list.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L44">talk/talk-channel-list.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -244,7 +251,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L18">event/typed.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L18">event/typed.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -277,7 +284,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L60">talk/talk-channel-list.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L66">talk/talk-channel-list.ts:66</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="util.chainediterator.html" class="tsd-signature-type" data-tsd-kind="Class">ChainedIterator</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_channel.talkchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -296,7 +303,7 @@
 								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#emit">emit</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L24">event/typed.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L24">event/typed.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -330,7 +337,7 @@
 								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#eventnames">eventNames</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L25">event/typed.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L25">event/typed.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -354,7 +361,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#get">get</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L56">talk/talk-channel-list.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L62">talk/talk-channel-list.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +385,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listenercount">listenerCount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L26">event/typed.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L26">event/typed.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -403,7 +410,7 @@
 								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#listeners">listeners</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listeners">listeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L27">event/typed.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L27">event/typed.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -433,7 +440,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L23">event/typed.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L23">event/typed.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -466,7 +473,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L22">event/typed.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L22">event/typed.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -499,7 +506,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L21">event/typed.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L21">event/typed.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -532,7 +539,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/talk.managed.html">Managed</a>.<a href="../interfaces/talk.managed.html#pushreceived">pushReceived</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L67">talk/talk-channel-list.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L73">talk/talk-channel-list.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -562,7 +569,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removealllisteners">removeAllListeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L20">event/typed.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L20">event/typed.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -586,7 +593,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removelistener">removeListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/event/typed.ts#L19">event/typed.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/event/typed.ts#L19">event/typed.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -618,7 +625,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0d73d05/src/talk/talk-channel-list.ts#L79">talk/talk-channel-list.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L85">talk/talk-channel-list.ts:85</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -638,6 +645,34 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="talk.talkchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelList</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="mapchannellist" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> map<wbr>Channel<wbr>List</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">map<wbr>Channel<wbr>List<span class="tsd-signature-symbol">(</span>channelList<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/talk-channel-list.ts#L105">talk/talk-channel-list.ts:105</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Split normal channel and open channel</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>channelList: <span class="tsd-signature-symbol">(</span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -738,6 +773,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="talk.talkchannellist.html#initialize" class="tsd-kind-icon">initialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="talk.talkchannellist.html#mapchannellist" class="tsd-kind-icon">map<wbr>Channel<wbr>List</a>
 							</li>
 						</ul>
 					</li>
