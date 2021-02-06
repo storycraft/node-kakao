@@ -20,10 +20,10 @@ const PASSWORD = process.env['accountPwd'] as string;
 const CLIENT = new TalkClient();
 
 CLIENT.on('chat', (data, channel) => {
-  const sender = channel.getUserInfo(data.chat.sender);
+  const sender = data.getSenderInfo(channel);
   if (!sender) return;
 
-  if (data.chat.text === '안녕하세요') {
+  if (data.text === '안녕하세요') {
     // 답장 형식
     // 안녕하세요 @xxx
     channel.sendChat(
