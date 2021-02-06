@@ -27,7 +27,10 @@ export class TalkOpenChannelList
 
     private _map: Map<string, TalkOpenChannel>;
 
-    constructor(private _session: TalkSession) {
+    constructor(
+      private _session: TalkSession,
+      list: TalkOpenChannel[],
+    ) {
       super();
 
       const infoUpdater: ChannelListUpdater<TalkOpenChannel> = {
@@ -41,6 +44,9 @@ export class TalkOpenChannelList
       this._openHandler = new TalkOpenChannelListHandler(this, infoUpdater);
 
       this._map = new Map();
+      if (list.length > 0) {
+        list.forEach((channel) => this._map.set(channel.channelId.toString(), channel));
+      }
     }
 
     get(channelId: Long): TalkOpenChannel | undefined {

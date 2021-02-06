@@ -14,7 +14,7 @@ import {
   NormalChannelManageSession,
   SetChannelMeta,
 } from '../../channel';
-import { Chat, Chatlog, ChatLogged, ChatLogLinked, ChatType, KnownChatType } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatType, KnownChatType } from '../../chat';
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
 import { AsyncCommandResult, CommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
@@ -71,7 +71,7 @@ export class TalkChannelSession implements ChannelSession {
       return this._session;
     }
 
-    async sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked> {
+    async sendChat(chat: Chat | string): AsyncCommandResult<Chatlog> {
       if (typeof chat === 'string') {
         chat = { type: KnownChatType.TEXT, text: chat } as Chat;
       }
@@ -91,7 +91,20 @@ export class TalkChannelSession implements ChannelSession {
       const res = await this._session.request<WriteRes>('WRITE', data);
 
       if (res.status === KnownDataStatusCode.SUCCESS) {
-        return { status: res.status, success: true, result: { logId: res.logId, prevLogId: res.prevId } };
+        let chatlog: Chatlog;
+        if (res.chatLog) {
+          chatlog = structToChatlog(res.chatLog);
+        } else {
+          chatlog = {
+            ...chat,
+            logId: res.logId,
+            prevLogId: res.prevId,
+            sendAt: res.sendAt,
+            sender: this._session.clientUser,
+            messageId: res.msgId,
+          };
+        }
+        return { status: res.status, success: true, result: chatlog };
       } else {
         return { status: res.status, success: false };
       }

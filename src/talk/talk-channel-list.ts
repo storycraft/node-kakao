@@ -27,12 +27,18 @@ export class TalkChannelList
   /**
    * Construct managed channel list
    * @param {TalkSession} session
+   * @param {TalkNormalChannel[]} normalList
+   * @param {TalkOpenChannel[]} openList
    */
-  constructor(session: TalkSession) {
+  constructor(
+    session: TalkSession,
+    normalList: TalkNormalChannel[] = [],
+    openList: TalkOpenChannel[] = [],
+  ) {
     super();
 
-    this._normalList = new TalkNormalChannelList(session);
-    this._openList = new TalkOpenChannelList(session);
+    this._normalList = new TalkNormalChannelList(session, normalList);
+    this._openList = new TalkOpenChannelList(session, openList);
   }
 
   get size(): number {
@@ -80,6 +86,23 @@ export class TalkChannelList
     talkChannelList: TalkChannelList,
     channelList: (Channel | OpenChannel)[] = [],
   ): Promise<TalkChannelList> {
+    const [normalList, openList] = TalkChannelList.mapChannelList(channelList);
+
+    await Promise.all([
+      TalkNormalChannelList.initialize(talkChannelList._normalList, normalList),
+      TalkOpenChannelList.initialize(talkChannelList._openList, openList),
+    ]);
+
+    return talkChannelList;
+  }
+
+  /**
+   * Split normal channel and open channel
+   *
+   * @param {(Channel | OpenChannel)[]} channelList
+   * @return {[Channel[], OpenChannel[]]}
+   */
+  static mapChannelList(channelList: (Channel | OpenChannel)[]): [Channel[], OpenChannel[]] {
     const normalList: Channel[] = [];
     const openList: OpenChannel[] = [];
     channelList.forEach((channel) => {
@@ -90,11 +113,6 @@ export class TalkChannelList
       }
     });
 
-    await Promise.all([
-      TalkNormalChannelList.initialize(talkChannelList._normalList, normalList),
-      TalkOpenChannelList.initialize(talkChannelList._openList, openList),
-    ]);
-
-    return talkChannelList;
+    return [normalList, openList];
   }
 }

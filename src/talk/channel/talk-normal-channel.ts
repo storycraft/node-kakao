@@ -7,7 +7,7 @@
 import { AsyncCommandResult, CommandResult, DefaultRes } from '../../request';
 import { Channel, ChannelMeta, NormalChannelInfo, SetChannelMeta } from '../../channel';
 import { ChannelUser, NormalChannelUserInfo } from '../../user';
-import { Chat, Chatlog, ChatLogged, ChatLogLinked, ChatType } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
 import { TalkChannelSession } from './talk-channel-session';
 import {
   ChannelMetaType,
@@ -42,14 +42,14 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
   private _channelSession: TalkChannelSession;
   private _handler: TalkChannelHandler;
 
-  private _userInfoMap: Map<string, NormalChannelUserInfo>;
-  private _watermarkMap: Map<string, Long>;
-
-  constructor(private _channel: Channel, session: TalkSession, info: Partial<NormalChannelInfo> = {}) {
+  constructor(
+    private _channel: Channel,
+    session: TalkSession,
+    info: Partial<NormalChannelInfo> = {},
+    private _userInfoMap: Map<string, NormalChannelUserInfo> = new Map(),
+    private _watermarkMap: Map<string, Long> = new Map(),
+  ) {
     super();
-
-    this._userInfoMap = new Map();
-    this._watermarkMap = new Map();
 
     this._channelSession = new TalkChannelSession(this, session);
     this._handler = new TalkChannelHandler(this, {
@@ -139,7 +139,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
     return list;
   }
 
-  sendChat(chat: string | Chat): AsyncCommandResult<ChatLogLinked> {
+  sendChat(chat: string | Chat): AsyncCommandResult<Chatlog> {
     return this._channelSession.sendChat(chat);
   }
 

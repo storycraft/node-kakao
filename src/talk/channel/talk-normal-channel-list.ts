@@ -30,8 +30,12 @@ export class TalkNormalChannelList
     /**
      * Construct managed normal channel list
      * @param {TalkSession} _session
+     * @param {TalkNormalChannel[]} list
      */
-    constructor(private _session: TalkSession) {
+    constructor(
+      private _session: TalkSession,
+      list: TalkNormalChannel[],
+    ) {
       super();
 
       this._handler = new TalkChannelListHandler(this, {
@@ -42,6 +46,9 @@ export class TalkNormalChannelList
       this._manageSession = new TalkChannelManageSession(_session);
 
       this._map = new Map();
+      if (list.length > 0) {
+        list.forEach((channel) => this._map.set(channel.channelId.toString(), channel));
+      }
     }
 
     get size(): number {

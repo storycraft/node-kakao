@@ -7,7 +7,7 @@
 import { Chatlog, getOriginalType, isDeletedChat } from '../../chat';
 import { MentionStruct } from '../../chat/attachment';
 import { MediaKeyComponent } from '../../media';
-import { ChannelUser } from '../../user';
+import { ChannelUser, ChannelUserInfo } from '../../user';
 import { TalkChannel } from '../channel';
 
 /**
@@ -16,6 +16,14 @@ import { TalkChannel } from '../channel';
 export class TalkChatData {
   constructor(private _chat: Chatlog) {
 
+  }
+
+  get text(): string {
+    return this._chat.text;
+  }
+
+  get sendAt(): Date {
+    return new Date(this._chat.sendAt);
   }
 
   /**
@@ -99,6 +107,17 @@ export class TalkChatData {
     }
 
     return [];
+  }
+
+  /**
+   * Get channel user info from channel.
+   * this is equivalent of calling channel.getUserInfo(data.chat.sender);
+   *
+   * @param {TalkChannel} channel
+   * @return {ChannelUserInfo | undefined}
+   */
+  getSenderInfo(channel: TalkChannel): ChannelUserInfo | undefined {
+    return channel.getUserInfo(this._chat.sender);
   }
 
   /**

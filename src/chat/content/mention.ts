@@ -17,7 +17,6 @@ export class MentionContent implements ChatContent {
 
   }
 
-
   append(chat: Chat): void {
     if (!chat.attachment) return;
     if (!chat.attachment['mentions']) chat.attachment['mentions'] = [];

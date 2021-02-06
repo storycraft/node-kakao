@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Chat, Chatlog, ChatLogged, ChatLogLinked, ChatType } from '../chat';
+import { Chat, Chatlog, ChatLogged, ChatType } from '../chat';
 import { Channel } from './channel';
 import { AsyncCommandResult, CommandResult } from '../request';
 import { Long } from '..';
@@ -35,7 +35,7 @@ export interface ChannelSession {
   *
   * @param chat
    */
-  sendChat(chat: Chat | string): AsyncCommandResult<ChatLogLinked>;
+  sendChat(chat: Chat | string): AsyncCommandResult<Chatlog>;
 
   /**
    * Forward chat to channel.

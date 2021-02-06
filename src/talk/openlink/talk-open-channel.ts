@@ -6,7 +6,7 @@
 
 import { Long } from 'bson';
 import { Channel, ChannelMeta, SetChannelMeta } from '../../channel';
-import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatLogLinked, ChatType } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatType } from '../../chat';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import { MediaKeyComponent } from '../../media';
@@ -57,15 +57,16 @@ export class TalkOpenChannel
     private _handler: TalkChannelHandler;
     private _openHandler: TalkOpenChannelHandler;
 
-    private _userInfoMap: Map<string, OpenChannelUserInfo>;
-    private _watermarkMap: Map<string, Long>;
-
-    constructor(private _channel: Channel, session: TalkSession, info: Partial<OpenChannelInfo> = {}) {
+    constructor(
+      private _channel: Channel,
+      session: TalkSession,
+      info: Partial<OpenChannelInfo> = {},
+      private _userInfoMap: Map<string, OpenChannelUserInfo> = new Map(),
+      private _watermarkMap: Map<string, Long> = new Map(),
+    ) {
       super();
 
       this._info = OpenChannelInfo.createPartial(info);
-      this._watermarkMap = new Map();
-
       this._channelSession = new TalkChannelSession(this, session);
       this._openChannelSession = new TalkOpenChannelSession(this, session);
 
@@ -93,8 +94,6 @@ export class TalkOpenChannel
 
       this._handler = new TalkChannelHandler(this, infoUpdater);
       this._openHandler = new TalkOpenChannelHandler(this, infoUpdater);
-
-      this._userInfoMap = new Map();
     }
 
     get clientUser(): Readonly<ChannelUser> {
@@ -155,7 +154,7 @@ export class TalkOpenChannel
       return list;
     }
 
-    async sendChat(chat: string | Chat): Promise<CommandResult<ChatLogLinked>> {
+    async sendChat(chat: string | Chat): Promise<CommandResult<Chatlog>> {
       return await this._channelSession.sendChat(chat);
     }
 
