@@ -13,7 +13,7 @@ import { Chat } from '../chat';
  * Mentions user
  */
 export class MentionContent implements ChatContent {
-  constructor(private _user: DisplayUserInfo) {
+  constructor(public user: DisplayUserInfo) {
 
   }
 
@@ -24,17 +24,17 @@ export class MentionContent implements ChatContent {
     const mentions = chat.attachment['mentions'] as MentionStruct[];
     const lastAt = Math.max(...mentions.map((value) => Math.max(...value.at)));
 
-    let map = mentions.find((value) => this._user.userId.eq(value.user_id));
-    if (!map || map.len !== this._user.nickname.length) {
+    let map = mentions.find((value) => this.user.userId.eq(value.user_id));
+    if (!map || map.len !== this.user.nickname.length) {
       map = {
-        user_id: this._user.userId,
-        len: this._user.nickname.length,
+        user_id: this.user.userId,
+        len: this.user.nickname.length,
         at: [],
       };
       mentions.push(map);
     }
 
     map.at.push(lastAt + 1);
-    chat.text += `@${this._user.nickname}`;
+    chat.text += `@${this.user.nickname}`;
   }
 }

@@ -6,7 +6,7 @@
 
 import { Chat } from './chat';
 import { ChatType } from './chat-type';
-import { ChatContent } from './content';
+import { AttachmentContent, ChatContent } from './content';
 
 /**
  * Build Chat object from existing chat or create new.
@@ -23,6 +23,17 @@ export class ChatBuilder {
   constructor() {
     this._contents = [];
     this.options = {};
+  }
+
+  /**
+   * Append attachment.
+   * this is equivalent of calling builder.append(new AttachmentContent(attachment));
+   *
+   * @param {Record<string, unknown>} attachment
+   * @return {this}
+   */
+  attachment(attachment: Record<string, unknown>): this {
+    return this.append(new AttachmentContent(attachment));
   }
 
   /**
