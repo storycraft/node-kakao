@@ -23,7 +23,7 @@ CLIENT.on('chat', (data, channel) => {
   const sender = data.getSenderInfo(channel);
   if (!sender) return;
 
-  if (data.originalType === KnownChatType.REPLY && data.text === '*readers') {
+  if (data.originalType === KnownChatType.REPLY && data.text === '!readers') {
     const reply = data.attachment<ReplyAttachment>();
     const logId = reply.src_logId;
     if (logId) {
