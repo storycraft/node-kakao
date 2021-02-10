@@ -18,79 +18,79 @@ import { AccessDataStruct, structToLoginData } from './struct';
  */
 export interface LoginData extends OAuthCredential {
 
-    /**
-     * User id
-     */
-    userId: number | Long;
+  /**
+   * User id
+   */
+  userId: number | Long;
 
-    /**
-     * Country iso
-     */
-    countryIso: string;
+  /**
+   * Country iso
+   */
+  countryIso: string;
 
-    /**
-     * Country code
-     */
-    countryCode: string;
+  /**
+   * Country code
+   */
+  countryCode: string;
 
-    /**
-     * Account id
-     */
-    accountId: number;
+  /**
+   * Account id
+   */
+  accountId: number;
 
-    /**
-     * Login server time
-     */
-    serverTime: number;
+  /**
+   * Login server time
+   */
+  serverTime: number;
 
-    /**
-     * true if user data should be reset
-     */
-    resetUserData: boolean;
+  /**
+   * true if user data should be reset
+   */
+  resetUserData: boolean;
 
-    /**
-     * Story URL
-     */
-    storyURL: string;
+  /**
+   * Story URL
+   */
+  storyURL: string;
 
-    /**
-     * OAuth token type
-     */
-    tokenType: string;
+  /**
+   * OAuth token type
+   */
+  tokenType: string;
 
-    /**
-     * Auto login account id
-     */
-    autoLoginAccountId: string;
+  /**
+   * Auto login account id
+   */
+  autoLoginAccountId: string;
 
-    /**
-     * Displayed account id
-     */
-    displayAccountId: string;
+  /**
+   * Displayed account id
+   */
+  displayAccountId: string;
 
-    /**
-     * Main device agent
-     */
-    mainDeviceAgentName: string;
+  /**
+   * Main device agent
+   */
+  mainDeviceAgentName: string;
 
-    /**
-     * Main device app version
-     */
-    mainDeviceAppVersion: string;
+  /**
+   * Main device app version
+   */
+  mainDeviceAppVersion: string;
 }
 
 export interface LoginForm {
 
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 
-    forced?: boolean;
+  forced?: boolean;
 
 }
 
 export interface TokenLoginForm extends LoginForm {
 
-    autowithlock: boolean;
+  autowithlock: boolean;
 
 }
 
@@ -99,16 +99,16 @@ export interface TokenLoginForm extends LoginForm {
  */
 export enum KnownAuthStatusCode {
 
-    LOGIN_FAILED_REASON = 12,
-    LOGIN_FAILED = 30,
-    MOBILE_UNREGISTERED = 32,
-    DEVICE_NOT_REGISTERED = -100,
-    ANOTHER_LOGON = -101,
-    DEVICE_REGISTER_FAILED = -102,
-    INVALID_DEVICE_REGISTER = -110,
-    INCORRECT_PASSCODE = -111,
-    PASSCODE_REQUEST_FAILED = -112,
-    ACCOUNT_RESTRICTED = -997
+  LOGIN_FAILED_REASON = 12,
+  LOGIN_FAILED = 30,
+  MOBILE_UNREGISTERED = 32,
+  DEVICE_NOT_REGISTERED = -100,
+  ANOTHER_LOGON = -101,
+  DEVICE_REGISTER_FAILED = -102,
+  INVALID_DEVICE_REGISTER = -110,
+  INCORRECT_PASSCODE = -111,
+  PASSCODE_REQUEST_FAILED = -112,
+  ACCOUNT_RESTRICTED = -997
 
 }
 
@@ -159,10 +159,10 @@ export class AuthApiClient {
      */
   async login(form: LoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
-        'POST',
-        this.getApiPath('login.json'),
-        this.fillAuthForm({ ...form }),
-        await this.createAuthHeader(form),
+      'POST',
+      this.getApiPath('login.json'),
+      this.fillAuthForm({ ...form }),
+      await this.createAuthHeader(form),
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
@@ -180,10 +180,10 @@ export class AuthApiClient {
      */
   async loginToken(form: TokenLoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
-        'POST',
-        this.getApiPath('login.json'),
-        this.fillAuthForm({ ...form, auto_login: true }),
-        await this.createAuthHeader(form),
+      'POST',
+      this.getApiPath('login.json'),
+      this.fillAuthForm({ ...form, auto_login: true }),
+      await this.createAuthHeader(form),
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
@@ -202,10 +202,10 @@ export class AuthApiClient {
      */
   async requestPasscode(form: LoginForm, permanent = true): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getApiPath('request_passcode.json'),
-        this.fillAuthForm({ ...form, permanent }),
-        await this.createAuthHeader(form),
+      'POST',
+      this.getApiPath('request_passcode.json'),
+      this.fillAuthForm({ ...form, permanent }),
+      await this.createAuthHeader(form),
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -219,10 +219,10 @@ export class AuthApiClient {
      */
   async registerDevice(form: LoginForm, passcode: string): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getApiPath('register_device.json'),
-        this.fillAuthForm({ ...form, passcode }),
-        await this.createAuthHeader(form),
+      'POST',
+      this.getApiPath('register_device.json'),
+      this.fillAuthForm({ ...form, passcode }),
+      await this.createAuthHeader(form),
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -249,15 +249,15 @@ export class AuthApiClient {
      * @param {Partial<OAuthLoginConfig>} config
      */
   static async create(
-      name: string,
-      deviceUUID: string,
-      config: Partial<OAuthLoginConfig> = {},
+    name: string,
+    deviceUUID: string,
+    config: Partial<OAuthLoginConfig> = {},
   ): Promise<AuthApiClient> {
     return new AuthApiClient(
-        await createApiClient('https', 'katalk.kakao.com'),
-        name,
-        deviceUUID,
-        Object.assign(config, DefaultConfiguration),
+      await createApiClient('https', 'katalk.kakao.com'),
+      name,
+      deviceUUID,
+      Object.assign(config, DefaultConfiguration),
     );
   }
 }

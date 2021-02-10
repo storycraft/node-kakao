@@ -38,15 +38,15 @@ export interface OpenLinkMainProfile {
 export type OpenLinkLinkProfile = OpenLinkComponent
 
 export type OpenLinkProfiles = OpenLinkAnonProfile | OpenLinkMainProfile | OpenLinkLinkProfile;
-// eslint-disable-next-line no-redeclare
-export namespace OpenLinkProfiles {
+
+export namespace OpenLinkProfile {
 
   /**
    * Serialize template to packet key / value structure.
    * @param {OpenLinkProfiles} template
    * @return {Record<string, unknown>}
    */
-  export function templateToSerialized(template: OpenLinkProfiles): Record<string, unknown> {
+  export function serializeLinkProfile(template: OpenLinkProfiles): Record<string, unknown> {
     if ('linkId' in template) {
       return { ptp: OpenProfileType.OPEN_PROFILE, pli: template.linkId };
     } else if ('nickname' in template) {
@@ -57,4 +57,3 @@ export namespace OpenLinkProfiles {
   }
 
 }
-

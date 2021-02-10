@@ -10,7 +10,8 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "eslint:recommended",
-    "google"
+    "google",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 2020,

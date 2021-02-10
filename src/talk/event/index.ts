@@ -145,11 +145,11 @@ export interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & TalkChannelListEvents & OpenLinkEvent;
+export type ClientEvents = ClientEvent & TalkChannelListEvents;
 export type TalkChannelListEvents = OpenChannelListEvents & NormalChannelListEvents;
 
 export type NormalChannelListEvents = ChannelListEvent & ChannelEvents;
-export type OpenChannelListEvents = ChannelListEvent & OpenChannelEvents & OpenChannelListEvent;
+export type OpenChannelListEvents = OpenLinkEvent & ChannelListEvent & OpenChannelEvents & OpenChannelListEvent;
 
 export type ChannelEvents = ChannelEvent & ChatEvent;
 export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;

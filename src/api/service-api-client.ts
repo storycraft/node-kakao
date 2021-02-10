@@ -39,15 +39,15 @@ export class ServiceApiClient {
   // account
 
   /**
-     * Request more settings. Official client sends this after login
-     *
-     * @param {any} since Unknown
-     */
+   * Request more settings. Official client sends this after login
+   *
+   * @param {any} since Unknown
+   */
   async requestMoreSettings(since = 0): AsyncCommandResult<MoreSettingsStruct> {
     const res = await this._client.request(
-        'GET',
-        // eslint-disable-next-line max-len
-        `${this.getAccountApiPath('more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(this.config.language)}`,
+      'GET',
+      // eslint-disable-next-line max-len
+      `${this.getAccountApiPath('more_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(this.config.language)}`,
     );
 
     return {
@@ -58,15 +58,15 @@ export class ServiceApiClient {
   }
 
   /**
-     * Request simplified settings. Official client sends this after login
-     *
-     * @param {any} since Unknown
-     */
+   * Request simplified settings. Official client sends this after login
+   *
+   * @param {any} since Unknown
+   */
   async requestLessSettings(since = 0): AsyncCommandResult<LessSettingsStruct> {
     const res = await this._client.request(
-        'GET',
-        // eslint-disable-next-line max-len
-        `${this.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(this.config.language)}`,
+      'GET',
+      // eslint-disable-next-line max-len
+      `${this.getAccountApiPath('less_settings.json')}?since=${encodeURIComponent(since)}&lang=${encodeURIComponent(this.config.language)}`,
     );
 
     return {
@@ -83,10 +83,10 @@ export class ServiceApiClient {
   }
 
   /**
-     * Get one time web login token.
-     *
-     * Use @method requestSessionURL to get complete url.
-     */
+   * Get one time web login token.
+   *
+   * Use @method requestSessionURL to get complete url.
+   */
   async requestWebLoginToken(): AsyncCommandResult<LoginTokenStruct> {
     const res = await this._client.request('GET', this.getAccountApiPath('login_token.json'));
 
@@ -98,10 +98,10 @@ export class ServiceApiClient {
   }
 
   /**
-     * Create session url. Redirect to redirectURL with session info included.
-     *
-     * @param {string} redirectURL
-     */
+   * Create session url. Redirect to redirectURL with session info included.
+   *
+   * @param {string} redirectURL
+   */
   async requestSessionURL(redirectURL: string): AsyncCommandResult<string> {
     const res = await this.requestWebLoginToken();
 
@@ -130,8 +130,8 @@ export class ServiceApiClient {
 
   async addFriend(id: Long, pa = ''): AsyncCommandResult<FriendReqStruct> {
     const res = await this._client.request(
-        'GET',
-        `${this.getFriendsApiPath('add')}/${encodeURIComponent(id.toString())}.json?pa=${encodeURIComponent(pa)}`,
+      'GET',
+      `${this.getFriendsApiPath('add')}/${encodeURIComponent(id.toString())}.json?pa=${encodeURIComponent(pa)}`,
     );
 
     return {
@@ -142,20 +142,20 @@ export class ServiceApiClient {
   }
 
   async addFriendWithPhoneNumber(
-      nickname: string,
-      countryIso: string,
-      countryCode: string,
-      phoneNumber: string,
+    nickname: string,
+    countryIso: string,
+    countryCode: string,
+    phoneNumber: string,
   ): AsyncCommandResult<FriendReqPhoneNumberStruct> {
     const res = await this._client.request(
-        'POST',
-        this.getFriendsApiPath('add_by_phonenumber.json'),
-        {
-          nickname: nickname,
-          country_iso: countryIso,
-          country_code: countryCode,
-          phonenumber: phoneNumber,
-        },
+      'POST',
+      this.getFriendsApiPath('add_by_phonenumber.json'),
+      {
+        nickname: nickname,
+        country_iso: countryIso,
+        country_code: countryCode,
+        phonenumber: phoneNumber,
+      },
     );
 
     return {
@@ -177,9 +177,9 @@ export class ServiceApiClient {
 
   async removeFriendList(idList: Long[]): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getFriendsApiPath('delete.json'),
-        { ids: JsonUtil.stringifyLoseless(idList) },
+      'POST',
+      this.getFriendsApiPath('delete.json'),
+      { ids: JsonUtil.stringifyLoseless(idList) },
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -201,9 +201,9 @@ export class ServiceApiClient {
     let res;
     if (pageNum && pageSize) {
       res = await this._client.request(
-          'GET',
-          this.getFriendsApiPath('search.json'),
-          { query: query, page_num: pageNum, page_size: pageSize },
+        'GET',
+        this.getFriendsApiPath('search.json'),
+        { query: query, page_num: pageNum, page_size: pageSize },
       );
     } else {
       res = await this._client.request('GET', this.getFriendsApiPath('search.json'), { query });
@@ -237,14 +237,14 @@ export class ServiceApiClient {
   }
 
   async requestFriendList(
-      types: string[] = ['plus', 'normal'],
-      eventTypes: string[] = ['create'],
-      token: Long = Long.ZERO,
+    types: string[] = ['plus', 'normal'],
+    eventTypes: string[] = ['create'],
+    token: Long = Long.ZERO,
   ): AsyncCommandResult<FriendListStruct> {
     const res = await this._client.request(
-        'GET',
-        `${this.getFriendsApiPath('list.json')}`,
-        { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token },
+      'GET',
+      `${this.getFriendsApiPath('list.json')}`,
+      { type: JSON.stringify(types), event_types: JSON.stringify(eventTypes), token },
     );
 
     return {
@@ -256,9 +256,9 @@ export class ServiceApiClient {
 
   async setNickname(id: Long, nickname: string): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getFriendsApiPath('nickname.json'),
-        { id: id.toString(), nickname: nickname },
+      'POST',
+      this.getFriendsApiPath('nickname.json'),
+      { id: id.toString(), nickname: nickname },
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -266,9 +266,9 @@ export class ServiceApiClient {
 
   async addFavoriteFriends(idList: Long[]): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getFriendsApiPath('add_favorite.json'),
-        { ids: JsonUtil.stringifyLoseless(idList) },
+      'POST',
+      this.getFriendsApiPath('add_favorite.json'),
+      { ids: JsonUtil.stringifyLoseless(idList) },
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -276,9 +276,9 @@ export class ServiceApiClient {
 
   async removeFavoriteFriend(id: Long): AsyncCommandResult {
     const res = await this._client.request(
-        'POST',
-        this.getFriendsApiPath('remove_favorite.json'),
-        { id: id.toString() },
+      'POST',
+      this.getFriendsApiPath('remove_favorite.json'),
+      { id: id.toString() },
     );
 
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
@@ -304,14 +304,15 @@ export class ServiceApiClient {
 
   async requestProfile(id: Long): AsyncCommandResult<ProfileReqStruct> {
     const res = await this._client.request(
-        'GET',
-        `${this.getProfile3ApiPath('friend_info.json')}?id=${encodeURIComponent(id.toString())}`,
+      'GET',
+      `${this.getProfile3ApiPath('friend_info.json')}?id=${encodeURIComponent(id.toString())}`,
     );
 
     return {
       status: res.status,
       success: res.status === KnownDataStatusCode.SUCCESS,
-      result: res as DefaultRes & ProfileReqStruct };
+      result: res as DefaultRes & ProfileReqStruct
+    };
   }
 
   // scrap
@@ -350,12 +351,12 @@ export class ServiceApiClient {
      */
   static async create(credential: OAuthCredential, config: Partial<WebApiConfig> = {}): Promise<ServiceApiClient> {
     return new ServiceApiClient(
-        await createSessionApiClient(
-            credential,
-            Object.assign(config, DefaultConfiguration),
-            'https',
-            'katalk.kakao.com',
-        ),
+      await createSessionApiClient(
+        credential,
+        Object.assign(config, DefaultConfiguration),
+        'https',
+        'katalk.kakao.com',
+      ),
     );
   }
 

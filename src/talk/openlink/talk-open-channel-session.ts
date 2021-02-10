@@ -17,6 +17,7 @@ import {
   OpenLinkComponent,
   OpenLinkKickedUserInfo,
   OpenLinkProfiles,
+  OpenLinkProfile,
 } from '../../openlink';
 import { ChatInfoRes, GetMemRes, MemberRes } from '../../packet/chat';
 import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
@@ -30,7 +31,7 @@ import {
   structToOpenLinkChannelUserInfo,
 } from '../../packet/struct';
 import { ChannelUser, OpenChannelUserInfo } from '../../user';
-import { TalkOpenLinkSession } from './talk-openlink-session';
+import { TalkOpenLinkSession } from './talk-open-link-session';
 import { RelayEventType } from '../../relay';
 import { Channel } from '../../channel';
 import { TalkChannelManageSession } from '../channel';
@@ -235,7 +236,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
           'UPLINKPROF',
           {
             'li': this._channel.linkId,
-            ...OpenLinkProfiles.templateToSerialized(profile),
+            ...OpenLinkProfile.serializeLinkProfile(profile),
           },
       );
       if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
@@ -312,7 +313,7 @@ export class TalkOpenChannelManageSession implements OpenChannelManageSession {
       const reqData: DefaultReq = {
         'li': link.linkId,
         'ref': 'EW:',
-        ...OpenLinkProfiles.templateToSerialized(profile),
+        ...OpenLinkProfile.serializeLinkProfile(profile),
       };
 
       if (token) reqData['tk'] = token;

@@ -16,7 +16,6 @@ import { TalkClientSession } from './talk-client-session';
 import { KickoutRes } from '../../packet/chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { ClientStatus } from '../../client-status';
-import { OpenLinkService } from '../openlink';
 import { TalkChannelList } from '../talk-channel-list';
 import { ClientEvents } from '../event';
 import { Long } from 'bson';
@@ -56,8 +55,6 @@ export class TalkClient
 
   private _channelList: TalkChannelList;
 
-  private _openLink: OpenLinkService;
-
   constructor(
     config: Partial<ClientConfig> = {},
     private _sessionFactory: SessionFactory = new TalkSessionFactory(),
@@ -73,8 +70,6 @@ export class TalkClient
     this._channelList = new TalkChannelList(this.createSessionProxy());
     this._clientUser = { userId: Long.ZERO };
     this._blockList = new TalkBlockSession(this.createSessionProxy());
-
-    this._openLink = new OpenLinkService(this.createSessionProxy());
   }
 
   get configuration(): ClientConfig {
@@ -102,12 +97,6 @@ export class TalkClient
     if (!this.logon) throw new Error('Cannot access without logging in');
 
     return this._blockList;
-  }
-
-  get openLink(): OpenLinkService {
-    if (!this.logon) throw new Error('Cannot access without logging in');
-
-    return this._openLink;
   }
 
   /**
@@ -139,7 +128,6 @@ export class TalkClient
     this._clientUser = { userId: loginRes.result.userId };
 
     await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
-    await OpenLinkService.initialize(this._openLink);
 
     return { status: loginRes.status, success: true, result: loginRes.result };
   }
@@ -170,8 +158,6 @@ export class TalkClient
 
   pushReceived(method: string, data: DefaultRes): void {
     const ctx = new EventContext<ClientEvents>(this);
-
-    this._openLink.pushReceived(method, data, ctx);
 
     this._channelList.pushReceived(method, data, ctx);
 

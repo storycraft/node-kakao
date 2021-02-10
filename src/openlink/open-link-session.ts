@@ -5,8 +5,17 @@
  */
 
 import { AsyncCommandResult } from '../request';
-import { InformedOpenLink, OpenLinkComponent, OpenLink } from '.';
+import {
+  InformedOpenLink,
+  OpenLinkComponent,
+  OpenLink,
+  OpenLinkChannelTemplate,
+  OpenLinkProfileTemplate,
+  OpenLinkCreateTemplate,
+  OpenLinkUpdateTemplate,
+} from '.';
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from './open-link-user-info';
+import { OpenChannel } from './open-channel';
 
 export interface OpenLinkSession {
 
@@ -46,6 +55,33 @@ export interface OpenLinkSession {
    */
   removeKicked(link: OpenLinkComponent, kickedUser: OpenLinkKickedUser): AsyncCommandResult;
 
+  /**
+   * Create open channel using template.
+   *
+   * @param template
+   */
+  createOpenChannel(
+    template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
+    profile: OpenLinkProfileTemplate
+  ): AsyncCommandResult<OpenChannel>;
+
+  /**
+   * Create open profile using template.
+   *
+   * @param template
+   */
+  createOpenProfile(template: OpenLinkProfileTemplate & OpenLinkCreateTemplate): AsyncCommandResult<InformedOpenLink>;
+
+  /**
+   * Update openlink settings
+   *
+   * @param link
+   * @param settings
+   */
+  updateOpenLink(
+    link: OpenLinkComponent,
+    settings: (OpenLinkChannelTemplate | OpenLinkProfileTemplate) & OpenLinkUpdateTemplate
+  ): AsyncCommandResult<InformedOpenLink>;
 
   /**
    * React(Like) to link.

@@ -33,3 +33,5 @@ export * from './sync-mem-t';
 export * from './sync-msg';
 export * from './write';
 export * from './invoice';
+export * from './create-openlink';
+export * from './update-openlink';

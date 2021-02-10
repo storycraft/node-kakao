@@ -30,6 +30,6 @@ export function structToOpenLink(struct: OpenLinkStruct): OpenLink {
 export function structToOpenLinkInfo(struct: OpenLinkInfoStruct): OpenLinkInfo {
   return {
     directLimit: struct.dcl || 0,
-    channelLimit: struct.ml || 0,
+    userLimit: struct.ml || 0,
   };
 }

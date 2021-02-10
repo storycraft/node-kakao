@@ -8,7 +8,7 @@ import { Long } from 'bson';
 import { Channel, ChannelList } from '../channel';
 import { TalkSession } from './client';
 import { EventContext, TypedEmitter } from '../event';
-import { OpenChannel } from '../openlink';
+import { InformedOpenLink, OpenChannel } from '../openlink';
 import { DefaultRes } from '../request';
 import { ChainedIterator } from '../util';
 import { OpenChannelListEvents, TalkChannelListEvents } from './event';
@@ -34,11 +34,12 @@ export class TalkChannelList
     session: TalkSession,
     normalList: TalkNormalChannel[] = [],
     openList: TalkOpenChannel[] = [],
+    clientLinkList: InformedOpenLink[] = [],
   ) {
     super();
 
     this._normalList = new TalkNormalChannelList(session, normalList);
-    this._openList = new TalkOpenChannelList(session, openList);
+    this._openList = new TalkOpenChannelList(session, openList, clientLinkList);
   }
 
   get size(): number {

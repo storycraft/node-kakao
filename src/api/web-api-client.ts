@@ -21,34 +21,34 @@ export type RequestForm = { [key: string]: FileRequestData | number | string | u
  */
 export interface ApiClient extends HeaderDecorator {
 
-    /**
-     * Returns url
-     */
-    readonly url: string;
+  /**
+   * Returns url
+   */
+  readonly url: string;
 
-    /**
-     * Request with optional form and header overrides
-     * @param method
-     * @param path
-     * @param form
-     * @param headers
-     */
-    request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
+  /**
+   * Request with optional form and header overrides
+   * @param method
+   * @param path
+   * @param form
+   * @param headers
+   */
+  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
 
-    /**
-     * Request multipart form
-     *
-     * @param method
-     * @param path
-     * @param form
-     * @param headers
-     */
-    requestMultipart(
-      method: RequestMethod,
-      path: string,
-      form?: RequestForm,
-      headers?: RequestHeader
-    ): Promise<DefaultRes>;
+  /**
+   * Request multipart form
+   *
+   * @param method
+   * @param path
+   * @param form
+   * @param headers
+   */
+  requestMultipart(
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader
+  ): Promise<DefaultRes>;
 
 }
 
@@ -82,10 +82,10 @@ export class SessionApiClient implements ApiClient {
   }
 
   requestMultipart(
-      method: RequestMethod,
-      path: string,
-      form?: RequestForm,
-      headers?: RequestHeader,
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader,
   ): Promise<DefaultRes> {
     return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
   }
@@ -100,7 +100,7 @@ export class SessionApiClient implements ApiClient {
  */
 export interface HeaderDecorator {
 
-    fillHeader(header: RequestHeader): void;
+  fillHeader(header: RequestHeader): void;
 
 }
 
@@ -124,11 +124,11 @@ export async function createApiClient(scheme: string, host: string, decorator?: 
 }
 
 export async function createSessionApiClient(
-    credential: OAuthCredential,
-    config: WebApiConfig,
-    scheme: string,
-    host: string,
-    decorator?: HeaderDecorator,
+  credential: OAuthCredential,
+  config: WebApiConfig,
+  scheme: string,
+  host: string,
+  decorator?: HeaderDecorator,
 ): Promise<SessionApiClient> {
   return new SessionApiClient(await createApiClient(scheme, host, decorator), credential, config);
 }

@@ -223,7 +223,7 @@ export class TalkOpenChannelListHandler implements Managed<OpenChannelListEvents
       case 'SYNCLINKDL': {
         const linkId = data['li'] as Long;
 
-        const channel = this._list.getByLinkId(linkId);
+        const channel = this._list.getChannelByLinkId(linkId);
         if (!channel) return;
 
         this._updater.removeChannel(channel);

@@ -11,6 +11,7 @@ export * from './open-link-profile';
 export * from './open-link-session';
 export * from './open-link-type';
 export * from './open-link-user-info';
+export * from './open-link-service';
 
 import { Long } from 'bson';
 import { OpenLinkType } from './open-link-type';
@@ -43,15 +44,7 @@ export interface OpenPrivilegeComponent {
 
 }
 
-/**
- * Contains openlink information
- */
-export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPrivilegeComponent {
-
-  /**
-   * Link type
-   */
-  type: OpenLinkType;
+export interface OpenLinkSettings {
 
   /**
    * Link name
@@ -59,9 +52,30 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
   linkName: string;
 
   /**
-   * Open token (Last update time)
+   * Cover image url
    */
-  openToken: number;
+  linkCoverURL?: string;
+
+  /**
+   * Link description
+   */
+  description: string;
+
+  searchable: boolean;
+
+  activated: boolean;
+
+}
+
+/**
+ * Contains openlink information
+ */
+export interface OpenLink
+  extends OpenLinkSettings, OpenLinkComponent, OpenTokenComponent, OpenPrivilegeComponent {
+  /**
+   * Link type
+   */
+  type: OpenLinkType;
 
   /**
    * OpenLink url
@@ -69,9 +83,9 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
   linkURL: string;
 
   /**
-   * Cover image url
+   * Open token (Last update time)
    */
-  linkCoverURL: string;
+  openToken: number;
 
   /**
    * Owner info
@@ -79,37 +93,36 @@ export interface OpenLink extends OpenLinkComponent, OpenTokenComponent, OpenPri
   linkOwner: OpenLinkUserInfo;
 
   /**
-   * Link description
-   */
-  description: string;
-
-  /**
    * Profile tag list
    */
   profileTagList: string[];
 
-  searchable: boolean;
-
   createdAt: number;
-
-  activated: boolean;
 
 }
 
-/**
- * Extra openlink info
- */
-export interface OpenLinkInfo {
+export interface OpenLinkChannelInfo {
+
+  /**
+   * Open channel user limit
+   */
+  userLimit: number;
+
+}
+
+export interface OpenLinkProfileInfo {
 
   /**
    * Open profile dm limit
    */
   directLimit: number;
 
-  /**
-   * Open channel user limit
-   */
-  channelLimit: number;
+}
+
+/**
+ * Extra openlink info
+ */
+export interface OpenLinkInfo extends OpenLinkChannelInfo, OpenLinkProfileInfo {
 
 }
 
@@ -137,3 +150,32 @@ export enum KnownLinkPrivilegeMask {
 }
 
 export type LinkPrivilegeMask = KnownLinkPrivilegeMask | number;
+
+export interface OpenLinkUpdateTemplate {
+  /**
+   * link passcode
+   */
+  passcode?: string;
+}
+
+export interface OpenLinkCreateTemplate {
+  /**
+   * true if anon profile disabled.
+   * Unchangable after creating openlink.
+   */
+  mainProfileOnly?: boolean;
+}
+
+/**
+ * Openlink profile template
+ */
+export interface OpenLinkProfileTemplate extends OpenLinkSettings, OpenLinkProfileInfo {
+
+}
+
+/**
+ * Openlink channel template
+ */
+export interface OpenLinkChannelTemplate extends OpenLinkSettings, OpenLinkChannelInfo {
+
+}
