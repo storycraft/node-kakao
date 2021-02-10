@@ -153,10 +153,10 @@ export class AuthApiClient {
   }
 
   /**
-     * Login using given data.
-     *
-     * @param {LoginForm} form
-     */
+   * Login using given data.
+   *
+   * @param {LoginForm} form
+   */
   async login(form: LoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
       'POST',
@@ -174,10 +174,10 @@ export class AuthApiClient {
   }
 
   /**
-     * Login using token.
-     *
-     * @param {TokenLoginForm} form
-     */
+   * Login using token.
+   *
+   * @param {TokenLoginForm} form
+   */
   async loginToken(form: TokenLoginForm): AsyncCommandResult<LoginData> {
     const res = await this._client.request(
       'POST',
@@ -195,16 +195,15 @@ export class AuthApiClient {
   }
 
   /**
-     * Request passcode
-     *
-     * @param {LoginForm} form
-     * @param {boolean} permanent If true the device will be registered as permanent
-     */
-  async requestPasscode(form: LoginForm, permanent = true): AsyncCommandResult {
+   * Request passcode
+   *
+   * @param {LoginForm} form
+   */
+  async requestPasscode(form: LoginForm): AsyncCommandResult {
     const res = await this._client.request(
       'POST',
       this.getApiPath('request_passcode.json'),
-      this.fillAuthForm({ ...form, permanent }),
+      this.fillAuthForm({ ...form }),
       await this.createAuthHeader(form),
     );
 
@@ -212,16 +211,17 @@ export class AuthApiClient {
   }
 
   /**
-     * Try to register device with passcode
-     *
-     * @param {LoginForm} form
-     * @param {string} passcode
-     */
-  async registerDevice(form: LoginForm, passcode: string): AsyncCommandResult {
+   * Try to register device with passcode
+   *
+   * @param {LoginForm} form
+   * @param {string} passcode
+   * @param {boolean} permanent If true the device will be registered as permanent
+   */
+  async registerDevice(form: LoginForm, passcode: string, permanent = true): AsyncCommandResult {
     const res = await this._client.request(
       'POST',
       this.getApiPath('register_device.json'),
-      this.fillAuthForm({ ...form, passcode }),
+      this.fillAuthForm({ ...form, passcode, permanent }),
       await this.createAuthHeader(form),
     );
 
@@ -242,12 +242,12 @@ export class AuthApiClient {
   }
 
   /**
-     * Create default AuthClient using config.
-     *
-     * @param {string} name
-     * @param {string} deviceUUID
-     * @param {Partial<OAuthLoginConfig>} config
-     */
+   * Create default AuthClient using config.
+   *
+   * @param {string} name
+   * @param {string} deviceUUID
+   * @param {Partial<OAuthLoginConfig>} config
+   */
   static async create(
     name: string,
     deviceUUID: string,
