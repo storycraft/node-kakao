@@ -29,6 +29,7 @@ export class TalkChannelList
    * @param {TalkSession} session
    * @param {TalkNormalChannel[]} normalList
    * @param {TalkOpenChannel[]} openList
+   * @param {InformedOpenLink[]} clientLinkList
    */
   constructor(
     session: TalkSession,
