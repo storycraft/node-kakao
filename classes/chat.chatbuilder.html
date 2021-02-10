@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ChatBuilder | NodeKakao - v4.0.0-beta.2</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.2">
+	<title>ChatBuilder | NodeKakao - v4.0.0-beta.3</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.2</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.3</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-beta.2</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.3</a>
 				</li>
 				<li>
 					<a href="../modules/chat.html">chat</a>
@@ -101,6 +101,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="chat.chatbuilder.html#append" class="tsd-kind-icon">append</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="chat.chatbuilder.html#attachment" class="tsd-kind-icon">attachment</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="chat.chatbuilder.html#build" class="tsd-kind-icon">build</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="chat.chatbuilder.html#shout" class="tsd-kind-icon">shout</a></li>
 							</ul>
@@ -120,7 +121,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/chat/chat-builder.ts#L21">chat/chat-builder.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L21">chat/chat-builder.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="chat.chatbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">ChatBuilder</a></h4>
@@ -136,7 +137,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/chat/chat-builder.ts#L21">chat/chat-builder.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L21">chat/chat-builder.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,7 +160,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/chat/chat-builder.ts#L34">chat/chat-builder.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L45">chat/chat-builder.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -178,6 +179,35 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="attachment" class="tsd-anchor"></a>
+					<h3>attachment</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">attachment<span class="tsd-signature-symbol">(</span>attachment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="chat.chatbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">ChatBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L35">chat/chat-builder.ts:35</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Append attachment.
+									this is equivalent of calling builder.append(new AttachmentContent(attachment));</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>attachment: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="chat.chatbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">ChatBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="build" class="tsd-anchor"></a>
 					<h3>build</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -187,7 +217,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/chat/chat-builder.ts#L57">chat/chat-builder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L68">chat/chat-builder.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -215,7 +245,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/chat/chat-builder.ts#L46">chat/chat-builder.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/chat/chat-builder.ts#L57">chat/chat-builder.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,6 +297,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="chat.chatbuilder.html#append" class="tsd-kind-icon">append</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="chat.chatbuilder.html#attachment" class="tsd-kind-icon">attachment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="chat.chatbuilder.html#build" class="tsd-kind-icon">build</a>

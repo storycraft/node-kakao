@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkOpenLinkSession | NodeKakao - v4.0.0-beta.2</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.2">
+	<title>TalkOpenLinkSession | NodeKakao - v4.0.0-beta.3</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.2</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.3</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-beta.2</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.3</a>
 				</li>
 				<li>
 					<a href="../modules/talk_openlink.html">talk/openlink</a>
@@ -100,6 +100,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#createopenchannel" class="tsd-kind-icon">create<wbr>Open<wbr>Channel</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#createopenprofile" class="tsd-kind-icon">create<wbr>Open<wbr>Profile</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#deletelink" class="tsd-kind-icon">delete<wbr>Link</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#getjoininfo" class="tsd-kind-icon">get<wbr>Join<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#getkicklist" class="tsd-kind-icon">get<wbr>Kick<wbr>List</a></li>
@@ -108,6 +110,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#getreaction" class="tsd-kind-icon">get<wbr>Reaction</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#react" class="tsd-kind-icon">react</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#removekicked" class="tsd-kind-icon">remove<wbr>Kicked</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="talk_openlink.talkopenlinksession.html#updateopenlink" class="tsd-kind-icon">update<wbr>Open<wbr>Link</a></li>
 							</ul>
 						</section>
 					</div>
@@ -125,7 +128,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L24">talk/openlink/talk-openlink-session.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L38">talk/openlink/talk-open-link-session.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -142,6 +145,67 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createopenchannel" class="tsd-anchor"></a>
+					<h3>create<wbr>Open<wbr>Channel</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Open<wbr>Channel<span class="tsd-signature-symbol">(</span>template<span class="tsd-signature-symbol">: </span><a href="../interfaces/openlink.openlinkchanneltemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkChannelTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkcreatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkCreateTemplate</a>, profile<span class="tsd-signature-symbol">: </span><a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#createopenchannel">createOpenChannel</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L157">talk/openlink/talk-open-link-session.ts:157</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create open channel using template.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>template: <a href="../interfaces/openlink.openlinkchanneltemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkChannelTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkcreatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkCreateTemplate</a></h5>
+								</li>
+								<li>
+									<h5>profile: <a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createopenprofile" class="tsd-anchor"></a>
+					<h3>create<wbr>Open<wbr>Profile</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Open<wbr>Profile<span class="tsd-signature-symbol">(</span>template<span class="tsd-signature-symbol">: </span><a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkcreatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkCreateTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#createopenprofile">createOpenProfile</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L183">talk/openlink/talk-open-link-session.ts:183</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create open profile using template.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>template: <a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkcreatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkCreateTemplate</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="deletelink" class="tsd-anchor"></a>
 					<h3>delete<wbr>Link</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -152,9 +216,15 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#deletelink">deleteLink</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L104">talk/openlink/talk-openlink-session.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L118">talk/openlink/talk-open-link-session.ts:118</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Delete openlink.
+									Can only delete owned link.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -176,9 +246,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getjoininfo">getJoinInfo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L62">talk/openlink/talk-openlink-session.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L76">talk/openlink/talk-open-link-session.ts:76</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get openlink from link url. This returns more information than getOpenLink method.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -203,9 +278,15 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getkicklist">getKickList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L79">talk/openlink/talk-openlink-session.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L93">talk/openlink/talk-open-link-session.ts:93</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get kicklist of this openlink.
+									Require manage permission otherwise the request fail.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -227,9 +308,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getlatestlinklist">getLatestLinkList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L30">talk/openlink/talk-openlink-session.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L44">talk/openlink/talk-open-link-session.ts:44</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get latest client link list</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -245,9 +331,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getopenlink">getOpenLink</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L48">talk/openlink/talk-openlink-session.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L62">talk/openlink/talk-open-link-session.ts:62</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get openlink from link id.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -269,9 +360,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#getreaction">getReaction</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L127">talk/openlink/talk-openlink-session.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L141">talk/openlink/talk-open-link-session.ts:141</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get reaction info</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -293,9 +389,14 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#react">react</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L115">talk/openlink/talk-openlink-session.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L129">talk/openlink/talk-open-link-session.ts:129</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>React(Like) to link.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -320,9 +421,15 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#removekicked">removeKicked</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/1b5d71d/src/talk/openlink/talk-openlink-session.ts#L91">talk/openlink/talk-openlink-session.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L105">talk/openlink/talk-open-link-session.ts:105</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove user from kick list.
+									Require manage permission otherwise the request fail.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -333,6 +440,38 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="updateopenlink" class="tsd-anchor"></a>
+					<h3>update<wbr>Open<wbr>Link</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Open<wbr>Link<span class="tsd-signature-symbol">(</span>link<span class="tsd-signature-symbol">: </span><a href="../interfaces/openlink.openlinkcomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkComponent</a>, settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkupdatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdateTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><a href="../interfaces/openlink.openlinkchanneltemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkChannelTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkupdatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdateTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/index.openlinksession.html">OpenLinkSession</a>.<a href="../interfaces/index.openlinksession.html#updateopenlink">updateOpenLink</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/963a10b/src/talk/openlink/talk-open-link-session.ts#L210">talk/openlink/talk-open-link-session.ts:210</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Update openlink settings</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>link: <a href="../interfaces/openlink.openlinkcomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkComponent</a></h5>
+								</li>
+								<li>
+									<h5>settings: <span class="tsd-signature-symbol">(</span><a href="../interfaces/openlink.openlinkprofiletemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkProfileTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkupdatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdateTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><a href="../interfaces/openlink.openlinkchanneltemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkChannelTemplate</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/openlink.openlinkupdatetemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdateTemplate</a><span class="tsd-signature-symbol">)</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/openlink.informedopenlink.html" class="tsd-signature-type" data-tsd-kind="Interface">InformedOpenLink</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -352,9 +491,6 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="talk_openlink.openlinkservice.html" class="tsd-kind-icon">Open<wbr>Link<wbr>Service</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk_openlink.talkopenchannel.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -372,6 +508,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk_openlink.talkopenchannelsession.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel<wbr>Session</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk_openlink.talkopenlinkhandler.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Link<wbr>Handler</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
@@ -379,6 +518,12 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="talk_openlink.talkopenlinksession.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="talk_openlink.talkopenlinksession.html#createopenchannel" class="tsd-kind-icon">create<wbr>Open<wbr>Channel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="talk_openlink.talkopenlinksession.html#createopenprofile" class="tsd-kind-icon">create<wbr>Open<wbr>Profile</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk_openlink.talkopenlinksession.html#deletelink" class="tsd-kind-icon">delete<wbr>Link</a>
@@ -404,10 +549,16 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="talk_openlink.talkopenlinksession.html#removekicked" class="tsd-kind-icon">remove<wbr>Kicked</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="talk_openlink.talkopenlinksession.html#updateopenlink" class="tsd-kind-icon">update<wbr>Open<wbr>Link</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/talk_openlink.openlinkupdater.html" class="tsd-kind-icon">Open<wbr>Link<wbr>Updater</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
