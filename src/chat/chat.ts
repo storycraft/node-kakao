@@ -9,15 +9,19 @@ import { ChannelUser } from '../user/channel-user';
 import { Attachment } from './attachment';
 import { ChatType } from './chat-type';
 
-/**
- * Chat interface
- */
-export interface Chat {
+export interface ChatTypeComponent<T extends ChatType = ChatType> {
 
   /**
    * Chat type
    */
-  type: ChatType;
+  type: T;
+
+}
+
+/**
+ * Chat interface
+ */
+export interface Chat extends ChatTypeComponent {
 
   /**
    * Chat text.
@@ -37,7 +41,7 @@ export interface Chat {
 
 }
 
-export type TypedChat<T extends ChatType> = Chat & { type: T };
+export type TypedChat<T extends ChatType> = Chat & ChatTypeComponent<T>;
 
 export interface ChatLogged {
 
