@@ -5,6 +5,7 @@
  */
 
 import { SetChannelMeta } from '../../channel';
+import { ChannelMetaType } from '../../channel/meta';
 import {
   ChatFeeds,
   ChatLogged,
@@ -18,7 +19,6 @@ import {
 } from '../../chat';
 import { InformedOpenLink, OpenLink, OpenLinkChannelUserInfo } from '../../openlink';
 import { KickoutType } from '../../packet/chat';
-import { ChannelMetaType } from '../../packet/struct';
 import { RelayEventType } from '../../relay';
 import { ChannelUserInfo, OpenChannelUserInfo } from '../../user';
 import { TalkChannel } from '../channel';

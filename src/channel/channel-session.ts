@@ -10,10 +10,10 @@ import { AsyncCommandResult, CommandResult } from '../request';
 import { Long } from '..';
 import { ChannelUser, ChannelUserInfo } from '../user';
 import { ChannelInfo, ChannelMeta, SetChannelMeta } from './channel-info';
-import { ChannelMetaType } from '../packet/struct';
 import { ChatOnRoomRes } from '../packet/chat';
 import { MediaDownloader, MediaUploader, MultiMediaUploader, MediaUploadTemplate } from '../talk';
 import { MediaKeyComponent } from '../media';
+import { ChannelMetaType } from './meta';
 
 export interface ChannelTemplate {
 

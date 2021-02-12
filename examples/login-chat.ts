@@ -29,7 +29,7 @@ CLIENT.on('chat', (data, channel) => {
     channel.sendChat(
       new ChatBuilder().
       append(new ReplyContent(data.chat)).
-      append('안녕하세요 ').
+      text('안녕하세요 ').
       append(new MentionContent(sender)).
       build(KnownChatType.REPLY));
     // 일반 텍스트
