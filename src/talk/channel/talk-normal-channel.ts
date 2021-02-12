@@ -10,8 +10,6 @@ import { ChannelUser, NormalChannelUserInfo } from '../../user';
 import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
 import { TalkChannelSession } from './talk-channel-session';
 import {
-  ChannelMetaType,
-  KnownChannelMetaType,
   NormalMemberStruct,
   structToChannelUserInfo,
 } from '../../packet/struct';
@@ -24,8 +22,11 @@ import { MediaKeyComponent } from '../../media';
 import { ChannelEvents } from '../event';
 import { TalkChannel } from '.';
 import {
+  ChannelMetaType,
   GroupMetaContent,
+  KnownChannelMetaType,
   LiveTalkCountMetaContent,
+  LiveTalkInfoMetaContent,
   ProfileMetaContent,
   TvLiveMetaContent,
   TvMetaContent,
@@ -189,6 +190,10 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
 
   async setTvLiveMeta(content: TvLiveMetaContent): Promise<CommandResult<SetChannelMeta>> {
     return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
+  }
+
+  async setLiveTalkInfoMeta(content: LiveTalkInfoMetaContent): Promise<CommandResult<SetChannelMeta>> {
+    return this.setMeta(KnownChannelMetaType.LIVE_TALK_INFO, JsonUtil.stringifyLoseless(content));
   }
 
   async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<CommandResult<SetChannelMeta>> {

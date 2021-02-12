@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from './attachment';
+export * from './default';
 export * from './mention';
 export * from './reply';
 

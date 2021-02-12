@@ -8,3 +8,6 @@ export * from './reply';
 export * from './mention';
 export * from './media';
 export * from './emoticon';
+export * from './voip';
+export * from './contact';
+export * from './map';

@@ -6,23 +6,27 @@
 
 import { Chat } from './chat';
 import { ChatType } from './chat-type';
-import { AttachmentContent, ChatContent } from './content';
+import { AttachmentContent, ChatContent, TextContent } from './content';
 
 /**
  * Build Chat object from existing chat or create new.
  */
 export class ChatBuilder {
-  private _contents: (string | ChatContent)[];
-
-  /**
-   * Set chat options (shout, inapp)
-   * This can be overridden by ChatContents.
-   */
-  public options: Record<string, unknown>;
+  private _contents: ChatContent[];
 
   constructor() {
     this._contents = [];
-    this.options = {};
+  }
+
+  /**
+   * Append text.
+   * this is equivalent of calling builder.append(new TextContent(text));
+   *
+   * @param {string} text
+   * @return {this}
+   */
+  text(text: string): this {
+    return this.append(new TextContent(text));
   }
 
   /**
@@ -37,12 +41,12 @@ export class ChatBuilder {
   }
 
   /**
-   * Append text or chat content.
+   * Append chat content.
    *
-   * @param {string | ChatContent} content
+   * @param {ChatContent} content
    * @return {this}
    */
-  append(content: string | ChatContent): this {
+  append(content: ChatContent): this {
     this._contents.push(content);
     return this;
   }
@@ -55,8 +59,7 @@ export class ChatBuilder {
    * @return {this}
    */
   shout(flag: boolean): this {
-    this.options['shout'] = flag;
-    return this;
+    return this.attachment({ shout: flag });
   }
 
   /**
@@ -81,14 +84,8 @@ export class ChatBuilder {
 
     if (!chat.attachment) chat.attachment = {};
 
-    chat.attachment = Object.assign(chat.attachment, this.options);
-
     for (const content of this._contents) {
-      if (typeof content === 'string') {
-        chat.text += content;
-      } else {
-        content.append(chat);
-      }
+      content.append(chat);
     }
 
     return chat;

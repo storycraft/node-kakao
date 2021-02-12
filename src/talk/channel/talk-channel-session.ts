@@ -35,7 +35,6 @@ import {
 } from '../../packet/chat';
 import {
   ChannelInfoStruct,
-  ChannelMetaType,
   NormalChannelInfoExtra,
   NormalMemberStruct,
   structToChannelUserInfo,
@@ -50,6 +49,7 @@ import { LocoSecureLayer } from '../../network';
 import { newCryptoStore } from '../../crypto';
 import { MediaUploadTemplate } from '../media/upload';
 import { sha1 } from 'hash-wasm';
+import { ChannelMetaType } from '../../channel/meta';
 
 /**
  * Default ChannelSession implementation

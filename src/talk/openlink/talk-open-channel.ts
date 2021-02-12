@@ -19,8 +19,6 @@ import {
 } from '../../openlink';
 import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
 import {
-  ChannelMetaType,
-  KnownChannelMetaType,
   OpenMemberStruct,
   structToOpenChannelUserInfo,
   structToOpenLinkChannelUserInfo,
@@ -35,8 +33,11 @@ import { TalkOpenChannelHandler } from './talk-open-channel-handler';
 import { JsonUtil } from '../../util';
 import {
   BotMetaContent,
+  ChannelMetaType,
   GroupMetaContent,
+  KnownChannelMetaType,
   LiveTalkCountMetaContent,
+  LiveTalkInfoMetaContent,
   PrivilegeMetaContent,
   ProfileMetaContent,
   TvLiveMetaContent,
@@ -227,6 +228,10 @@ export class TalkOpenChannel
 
   async setTvLiveMeta(content: TvLiveMetaContent): Promise<CommandResult<SetChannelMeta>> {
     return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
+  }
+
+  async setLiveTalkInfoMeta(content: LiveTalkInfoMetaContent): Promise<CommandResult<SetChannelMeta>> {
+    return this.setMeta(KnownChannelMetaType.LIVE_TALK_INFO, JsonUtil.stringifyLoseless(content));
   }
 
   async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<CommandResult<SetChannelMeta>> {

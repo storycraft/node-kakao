@@ -6,27 +6,8 @@
 
 import { Long } from 'bson';
 import { ChannelType } from '../../channel';
+import { ChannelMetaType } from '../../channel/meta';
 import { ChatlogStruct } from './chat';
-
-export enum KnownChannelMetaType {
-
-  UNDEFINED = 0,
-  NOTICE = 1,
-  GROUP = 2,
-  TITLE = 3,
-  PROFILE = 4,
-  TV = 5,
-  PRIVILEGE = 6,
-  TV_LIVE = 7,
-  PLUS_BACKGROUND = 8,
-  LIVE_TALK_INFO = 11,
-  LIVE_TALK_COUNT = 12,
-  OPEN_CHANNEL_CHAT = 13,
-  BOT = 14,
-
-}
-
-export type ChannelMetaType = KnownChannelMetaType | number;
 
 export interface ChannelMetaStruct {
 

@@ -5,7 +5,26 @@
  */
 
 import { Long } from 'bson';
-import { ChannelMetaType } from '../packet/struct';
+
+export enum KnownChannelMetaType {
+
+  UNDEFINED = 0,
+  NOTICE = 1,
+  GROUP = 2,
+  TITLE = 3,
+  PROFILE = 4,
+  TV = 5,
+  PRIVILEGE = 6,
+  TV_LIVE = 7,
+  PLUS_BACKGROUND = 8,
+  LIVE_TALK_INFO = 11,
+  LIVE_TALK_COUNT = 12,
+  OPEN_CHANNEL_CHAT = 13,
+  BOT = 14,
+
+}
+
+export type ChannelMetaType = KnownChannelMetaType | number;
 
 export enum ChannelClientMetaType {
 
@@ -77,6 +96,23 @@ export interface TvLiveMetaContent {
   live?: 'on';
 
 }
+
+export interface LiveTalkInfoOnMetaContent {
+  liveon: boolean;
+  title: string;
+  startTime: number;
+  userId: number | Long;
+  csIP: string;
+  csIP6: string;
+  csPort: number;
+  callId: string;
+}
+
+export interface LiveTalkInfoOffMetaContent extends Partial<LiveTalkInfoOnMetaContent> {
+  liveon: false;
+}
+
+export type LiveTalkInfoMetaContent = LiveTalkInfoOnMetaContent | LiveTalkInfoOffMetaContent;
 
 export interface LiveTalkCountMetaContent {
 

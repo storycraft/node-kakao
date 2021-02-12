@@ -14,6 +14,7 @@ export type CallVoipType = 'invite'
   | 'busy'
   | 'add'
   | 'transferred';
-export type VideoCallVoipType = 'v_invite' | 'v_canceled' | 'v_bye' | 'v_noanswer' | 'v_deny' | 'v_busy';
+export type VCallVoipType = 'v_invite' | 'v_canceled' | 'v_bye' | 'v_noanswer' | 'v_deny' | 'v_busy';
+export type LiveTalkType = 'linvite';
 
-export type VoipType = CallVoipType | VideoCallVoipType;
+export type VoipType = CallVoipType | VCallVoipType | LiveTalkType;

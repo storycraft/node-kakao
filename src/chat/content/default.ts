@@ -5,7 +5,20 @@
  */
 
 import { Chat } from '../chat';
-import { ChatContent } from '../content';
+import { ChatContent } from '.';
+
+/**
+ * Append text
+ */
+export class TextContent implements ChatContent {
+  constructor(public text: string) {
+
+  }
+  
+  append(chat: Chat): void {
+    chat.text += this.text;
+  }
+}
 
 /**
  * Append attachment

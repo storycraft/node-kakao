@@ -18,6 +18,7 @@ import { ChannelEvents } from '../event';
 import {
   GroupMetaContent,
   LiveTalkCountMetaContent,
+  LiveTalkInfoMetaContent,
   ProfileMetaContent,
   TvLiveMetaContent,
   TvMetaContent,
@@ -130,6 +131,13 @@ export interface TalkChannel extends Channel, ChannelSession, TypedEmitter<Chann
    * @param content
    */
   setLiveTalkCountMeta(content: LiveTalkCountMetaContent): AsyncCommandResult;
+
+  /**
+   * Set live talk info meta
+   *
+   * @param content
+   */
+  setLiveTalkInfoMeta(content: LiveTalkInfoMetaContent): AsyncCommandResult;
 
   /**
    * Set group profile meta
