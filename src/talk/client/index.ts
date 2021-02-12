@@ -113,7 +113,7 @@ export class TalkClient
   }
 
   async login(credential: OAuthCredential): AsyncCommandResult<LoginResult> {
-    if (this.logon) throw new Error('Already logon');
+    if (this.logon) this.close();
 
     // Create session
     const sessionRes = await this._sessionFactory.createSession(this.configuration);
