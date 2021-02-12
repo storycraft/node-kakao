@@ -42,8 +42,9 @@ export enum KnownChatType {
   PLUSFRIEND = 81,
   PLUSEVENT = 82,
   PLUSFRIENDVIRAL = 83,
-  OPENVOTE = 97,
-  OPENPOST = 98,
+  OPEN_SCHEDULE = 96,
+  OPEN_VOTE = 97,
+  OPEN_POST = 98,
 
 }
 

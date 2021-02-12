@@ -4,12 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Attachment } from '.';
 import { VoipType } from '../../voip';
 
 /**
  * Voip attachment
  */
-export interface VoipAttachment {
+export interface VoipAttachment extends Attachment {
 
   /**
    * Call type

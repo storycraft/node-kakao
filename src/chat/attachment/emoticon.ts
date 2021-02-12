@@ -4,7 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface EmoticonAttachment {
+import { Attachment } from '.';
+
+export interface EmoticonAttachment extends Attachment {
 
   /**
    * Emoticon path

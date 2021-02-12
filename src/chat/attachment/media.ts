@@ -4,7 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface PhotoAttachment {
+import { Attachment } from '.';
+
+export interface PhotoAttachment extends Attachment {
 
   /**
    * Fallback url
@@ -48,7 +50,7 @@ export interface PhotoAttachment {
 
 }
 
-export interface MultiPhotoAttachment {
+export interface MultiPhotoAttachment extends Record<string, unknown> {
   /**
    * Key list
    */
@@ -85,7 +87,7 @@ export interface MultiPhotoAttachment {
   sl: number;
 }
 
-export interface VideoAttachment {
+export interface VideoAttachment extends Record<string, unknown> {
 
   /**
    * Fallback url
@@ -124,7 +126,7 @@ export interface VideoAttachment {
 
 }
 
-export interface FileAttachment {
+export interface FileAttachment extends Record<string, unknown> {
 
   /**
    * File name
@@ -163,7 +165,7 @@ export interface FileAttachment {
 
 }
 
-export interface AudioAttachment {
+export interface AudioAttachment extends Record<string, unknown> {
   /**
    * Fallback url
    */
@@ -190,7 +192,7 @@ export interface AudioAttachment {
   expire: number;
 }
 
-export interface LongTextAttachment {
+export interface LongTextAttachment extends Record<string, unknown> {
   /**
    * Text path
    */

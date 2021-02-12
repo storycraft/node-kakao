@@ -6,6 +6,7 @@
 
 import { Long } from 'bson';
 import { ChannelUser } from '../user/channel-user';
+import { Attachment } from './attachment';
 import { ChatType } from './chat-type';
 
 /**
@@ -19,14 +20,14 @@ export interface Chat {
   type: ChatType;
 
   /**
-   * Chat text. Can be empty string
+   * Chat text.
    */
-  text: string;
+  text?: string;
 
   /**
    * Optional attachment json
    */
-  attachment?: Record<string, unknown>;
+  attachment?: Attachment;
 
   /**
    * Optional supplement json.

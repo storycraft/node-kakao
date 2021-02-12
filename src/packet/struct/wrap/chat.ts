@@ -11,13 +11,16 @@ import { ChatlogStruct } from '../chat';
 export function structToChatlog(struct: ChatlogStruct): Chatlog {
   const chat: Chatlog = {
     type: struct.type,
-    text: struct.message,
     logId: struct.logId,
     prevLogId: struct.prevId,
     sender: { userId: struct.authorId },
     sendAt: struct.sendAt * 1000,
     messageId: struct.msgId,
   };
+
+  if (struct.message) {
+    chat['text'] = struct.message;
+  }
 
   if (struct.attachment) {
     chat['attachment'] = JsonUtil.parseLoseless(struct.attachment);

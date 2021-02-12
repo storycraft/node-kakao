@@ -11,3 +11,20 @@ export * from './emoticon';
 export * from './voip';
 export * from './contact';
 export * from './map';
+export * from './post';
+export * from './openlink';
+export * from './search';
+export * from './custom';
+
+import { MentionStruct } from './mention';
+
+/**
+ * Generic attachment interface
+ */
+export interface Attachment extends Record<string, unknown> {
+  shout?: boolean;
+  mentions?: MentionStruct[];
+  
+  urls?: string[];
+
+}

@@ -101,7 +101,10 @@ export type ChatFeeds = KnownChatFeeds | Record<string, unknown> & ChatFeed;
 export function feedFromChat(chat: TypedChat<KnownChatType.FEED>): ChatFeeds {
   let feed: ChatFeeds = { feedType: -999999 };
   try {
-    feed = { ...feed, ...JsonUtil.parseLoseless(chat.text) };
+    feed = { ...feed };
+    if (chat.text) {
+      Object.assign(feed, JsonUtil.parseLoseless(chat.text));
+    }
     return feed;
   } catch (e) {
     return feed;

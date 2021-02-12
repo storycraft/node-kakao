@@ -4,7 +4,9 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface MapAttachment {
+import { Attachment } from '.';
+
+export interface MapAttachment extends Attachment {
 
   /**
    * Latitude (multiplied by 10000000000)

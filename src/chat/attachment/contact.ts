@@ -5,11 +5,12 @@
  */
 
 import { Long } from 'bson';
+import { Attachment } from '.';
 
 /**
  * KakaoTalk profile attachment
  */
-export interface ProfileAttachment {
+export interface ProfileAttachment extends Attachment {
 
   /**
    * Profile user id

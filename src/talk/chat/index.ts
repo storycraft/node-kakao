@@ -18,8 +18,11 @@ export class TalkChatData {
 
   }
 
+  /**
+   * Chat text. Empty string if value is nullish.
+   */
   get text(): string {
-    return this._chat.text;
+    return this._chat.text || '';
   }
 
   get sendAt(): Date {
@@ -66,7 +69,7 @@ export class TalkChatData {
   get isShout(): boolean {
     if (!this._chat.attachment) return false;
 
-    return !!this._chat.attachment['shout'];
+    return !!this._chat.attachment.shout;
   }
 
   /**

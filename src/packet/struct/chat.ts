@@ -44,7 +44,7 @@ export interface ChatlogStruct {
   /**
    * Message content
    */
-  message: string;
+  message?: string;
 
   /**
    * Message sent time. (multiply by 1000 to convert to js Date timestamp)

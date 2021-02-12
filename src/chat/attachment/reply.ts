@@ -5,10 +5,11 @@
  */
 
 import { Long } from 'bson';
+import { Attachment } from '.';
 import { ChatType } from '../chat-type';
 import { MentionStruct } from './mention';
 
-export interface ReplyAttachment {
+export interface ReplyAttachment extends Attachment {
 
   // eslint-disable-next-line camelcase
   attach_only: boolean;

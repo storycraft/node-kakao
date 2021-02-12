@@ -6,12 +6,6 @@
 
 import { Long } from 'bson';
 
-export interface MentionAttachment {
-
-  mentions?: MentionStruct[];
-
-}
-
 /**
  * Raw chat mention typings
  */
