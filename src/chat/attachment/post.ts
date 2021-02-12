@@ -6,15 +6,20 @@
 
 import { Long } from 'bson';
 import { Attachment } from '.';
+import { EmoticonAttachment } from './emoticon';
 
 export enum KnownPostItemType {
 
   TEXT = 1,
   FOOTER = 2,
   HEADER = 3,
+  EMOTICON = 4,
   IMAGE = 5,
+  VIDEO = 6,
   FILE = 7,
-  SUB = 9,
+  SCHEDULE = 8,
+  VOTE = 9,
+  SCRAP = 10,
 
 }
 
@@ -82,6 +87,11 @@ export namespace PostItem {
     t: KnownPostItemType.IMAGE;
 
     /**
+     * Title
+     */
+    tt?: string;
+
+    /**
      * Thumbnail url list
      */
     th: string[];
@@ -92,8 +102,17 @@ export namespace PostItem {
     g?: boolean;
   }
 
-  export interface Sub extends Unknown {
-    t: KnownPostItemType.SUB;
+  export interface Emoticon extends Unknown {
+    t: KnownPostItemType.EMOTICON;
+
+    /**
+     * Emoticon attachment
+     */
+    ct: EmoticonAttachment;
+  }
+
+  export interface Vote extends Unknown {
+    t: KnownPostItemType.VOTE;
 
     /**
      * Item style (unknown)
@@ -115,6 +134,15 @@ export namespace PostItem {
      */
     its: Record<string, unknown>[];
 
+  }
+
+  export interface Video extends Unknown {
+    t: KnownPostItemType.VIDEO;
+
+    /**
+     * Thumbnail url
+     */
+    th: string;
   }
 
   export interface File extends Unknown {
@@ -155,7 +183,7 @@ export interface PostAttachment extends Attachment {
   subtype?: PostSubItemType;
 
   /**
-   * Post item list
+   * Post item object list
    */
   os: PostItem.Unknown[];
 }
