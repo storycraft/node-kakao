@@ -13,6 +13,7 @@ import {
   OpenLinkProfileTemplate,
   OpenLinkCreateTemplate,
   OpenLinkUpdateTemplate,
+  OpenLinkProfiles,
 } from '.';
 import { OpenLinkKickedUser, OpenLinkKickedUserInfo } from './open-link-user-info';
 import { OpenChannel } from './open-channel';
@@ -62,8 +63,19 @@ export interface OpenLinkSession {
    */
   createOpenChannel(
     template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
-    profile: OpenLinkProfileTemplate
+    profile: OpenLinkProfiles
   ): AsyncCommandResult<OpenChannel>;
+
+  /**
+   * Create open direct profile using template.
+   *
+   * @param template
+   * @param profile
+   */
+  createOpenDirectProfile(
+    template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
+    profile: OpenLinkProfiles
+  ): AsyncCommandResult<InformedOpenLink>;
 
   /**
    * Create open profile using template.

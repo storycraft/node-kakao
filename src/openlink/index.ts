@@ -149,7 +149,7 @@ export enum KnownLinkPrivilegeMask {
 
 }
 
-export type LinkPrivilegeMask = KnownLinkPrivilegeMask | number;
+export type LinkPrivilegeMask = KnownLinkPrivilegeMask | number | Long;
 
 export interface OpenLinkUpdateTemplate {
   /**
@@ -170,6 +170,11 @@ export interface OpenLinkCreateTemplate {
  * Openlink profile template
  */
 export interface OpenLinkProfileTemplate extends OpenLinkSettings, OpenLinkProfileInfo {
+
+  /**
+   * # tag list
+   */
+  tags: string;
 
 }
 

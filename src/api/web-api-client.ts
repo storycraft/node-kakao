@@ -9,7 +9,7 @@ import { WebApiConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { DefaultRes } from '../request';
 import { isNode, isDeno, isBrowser } from '../util/platform';
-import { fillAHeader, fillBaseHeader, getUserAgent } from './header-util';
+import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
 
 export type RequestHeader = Record<string, string>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
@@ -60,6 +60,10 @@ export class SessionApiClient implements ApiClient {
 
   }
 
+  fillHeader(header: Record<string, string>): void {
+    fillCredential(header, this._credential);
+  }
+
   get url(): string {
     return this._client.url;
   }
@@ -88,10 +92,6 @@ export class SessionApiClient implements ApiClient {
     headers?: RequestHeader,
   ): Promise<DefaultRes> {
     return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
-  }
-
-  fillHeader(header: RequestHeader): void {
-    header['Authorization'] = `${this._credential.accessToken}-${this._credential.deviceUUID}`;
   }
 }
 

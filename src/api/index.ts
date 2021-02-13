@@ -8,5 +8,6 @@ export * from './web-api-client';
 export * as struct from './struct';
 export * from './auth-api-client';
 export * from './service-api-client';
+export * from './oauth-api-client';
 export * as webApiUtil from './web-api-util';
 export * as headerUtil from './header-util';

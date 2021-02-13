@@ -20,8 +20,7 @@ export function structToOpenLink(struct: OpenLinkStruct): OpenLink {
     createdAt: struct.ca,
     description: struct.desc,
     activated: struct.ac,
-    // WARN: some privilege omitted
-    privilege: struct.pv.toNumber(),
+    privilege: struct.pv,
     profileTagList: struct.op && struct.op.tags || [],
     linkOwner: structToOpenLinkChannelUserInfo(struct.olu),
   };

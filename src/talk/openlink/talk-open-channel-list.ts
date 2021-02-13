@@ -215,12 +215,26 @@ export class TalkOpenChannelList
 
   async createOpenChannel(
     template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
-    profile: OpenLinkProfileTemplate
+    profile: OpenLinkProfiles
   ): AsyncCommandResult<TalkOpenChannel> {
     const res = await this._linkSession.createOpenChannel(template, profile);
     if (!res.success) return res;
 
     return this.addOpenChannel(res.result);
+  }
+
+  async createOpenDirectProfile(
+    template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
+    profile: OpenLinkProfiles
+  ): AsyncCommandResult<InformedOpenLink> {
+    const res = await this._linkSession.createOpenDirectProfile(template, profile);
+
+    if (res.success) {
+      const link = res.result;
+      this._clientMap.set(link.openLink.linkId.toString(), link);
+    }
+
+    return res;
   }
 
   async createOpenProfile(

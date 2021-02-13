@@ -13,6 +13,21 @@ export interface OAuthCredential {
 
 }
 
+export interface OAuthInfo {
+
+  /**
+   * Token type
+   */
+  type: string;
+
+  credential: OAuthCredential;
+
+  /**
+   * OAuth token expires (secs)
+   */
+  expiresIn: number;
+}
+
 /**
  * Provides oauth credential data
  */

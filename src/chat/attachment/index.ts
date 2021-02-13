@@ -24,7 +24,7 @@ import { MentionStruct } from './mention';
 export interface Attachment extends Record<string, unknown> {
   shout?: boolean;
   mentions?: MentionStruct[];
-  
+
   urls?: string[];
 
 }

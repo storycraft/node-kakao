@@ -15,10 +15,11 @@ import {
   OpenLinkKickedUser,
   OpenLinkKickedUserInfo,
   OpenLinkProfile,
+  OpenLinkProfiles,
   OpenLinkProfileTemplate,
   OpenLinkSession,
   OpenLinkType,
-  OpenLinkUpdateTemplate,
+  OpenLinkUpdateTemplate
 } from '../../openlink';
 import {
   CreateOpenLinkRes,
@@ -30,6 +31,7 @@ import {
 } from '../../packet/chat';
 import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import { structToOpenLink, structToOpenLinkInfo, structToOpenLinkKickedUserInfo } from '../../packet/struct';
+import { Long } from 'bson';
 
 /**
  * Provides openlink operations
@@ -156,7 +158,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
 
   async createOpenChannel(
     template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
-    profile: OpenLinkProfileTemplate
+    profile: OpenLinkProfiles
   ): AsyncCommandResult<OpenChannel> {
     const reqData: Record<string, unknown> = {
       'lt': OpenLinkType.CHANNEL,
@@ -164,7 +166,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       'aptp': !template.mainProfileOnly,
       'ln': template.linkName,
       'pa': template.activated,
-      'ri': Math.floor(Date.now() / 1000),
+      'ri': Long.fromNumber(Date.now()),
       'ml': template.userLimit,
       'desc': template.description,
       'sc': template.searchable,
@@ -180,6 +182,35 @@ export class TalkOpenLinkSession implements OpenLinkSession {
     return { success: true, status: res.status, result: { channelId: res.chatRoom.chatId, linkId: res.ol.li } };
   }
 
+  async createOpenDirectProfile(
+    template: OpenLinkChannelTemplate & OpenLinkCreateTemplate,
+    profile: OpenLinkProfiles
+  ): AsyncCommandResult<InformedOpenLink> {
+    const reqData: Record<string, unknown> = {
+      'lt': OpenLinkType.PROFILE,
+      'lip': template.linkCoverURL || '',
+      'aptp': !template.mainProfileOnly,
+      'ln': template.linkName,
+      'pa': template.activated,
+      'ri': Long.fromNumber(Date.now()),
+      'dcl': template.userLimit,
+      'desc': template.description,
+      'sc': template.searchable,
+      ...OpenLinkProfile.serializeLinkProfile(profile)
+    };
+
+    const res = await this._session.request<CreateOpenLinkRes>(
+      'CREATELINK',
+      reqData,
+    );
+    if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
+
+    return {
+      success: true, status: res.status,
+      result: { openLink: structToOpenLink(res.ol), info: structToOpenLinkInfo(res.ol) }
+    };
+  }
+
   async createOpenProfile(
     template: OpenLinkProfileTemplate & OpenLinkCreateTemplate
   ): AsyncCommandResult<InformedOpenLink> {
@@ -189,17 +220,25 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       'aptp': !template.mainProfileOnly,
       'ln': template.linkName,
       'pa': template.activated,
-      'ri': Math.floor(Date.now() / 1000),
+      'ri': Long.fromNumber(Date.now()),
+      'did': Long.fromNumber(40),
+      ...OpenLinkProfile.serializeLinkProfile({
+        nickname: template.linkName,
+        profilePath: ''
+      }),
       'dcl': template.directLimit,
-      'desc': template.description,
       'sc': template.searchable,
+      'pfc': JSON.stringify({
+        description: template.description,
+        tags: template.tags
+      })
     };
 
     const res = await this._session.request<CreateOpenLinkRes>(
       'CREATELINK',
       reqData,
     );
-    if (res.status !== KnownDataStatusCode.SUCCESS || !res.chatRoom) return { status: res.status, success: false };
+    if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
     return {
       success: true, status: res.status,
