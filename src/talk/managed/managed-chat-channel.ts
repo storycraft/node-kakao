@@ -533,7 +533,7 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
     }
 
     canManageChannelId(userId: Long) {
-        return this.isManagerId(userId) || userId.equals(this.openLink.LinkOwnerInfo.Id);
+        return this.isManagerId(userId) || this.getMemberTypeId(userId) === OpenMemberType.OWNER;
     }
 
     isManager(user: ChatUser) {
