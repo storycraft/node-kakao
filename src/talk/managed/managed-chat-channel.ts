@@ -533,7 +533,7 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
     }
 
     canManageChannelId(userId: Long) {
-        return this.isManagerId(userId) || userId.equals(this.openLink.LinkOwnerInfo.Id);
+        return this.isManagerId(userId) || this.getMemberTypeId(userId) === OpenMemberType.OWNER;
     }
 
     isManager(user: ChatUser) {
@@ -541,7 +541,7 @@ export class ManagedOpenChatChannel extends ManagedChatChannel implements OpenCh
     }
 
     isManagerId(userId: Long) {
-        return this.getMemberTypeId(userId) === OpenMemberType.MANAGER || this.getMemberTypeId(userId) === OpenMemberType.OWNER;
+        return this.getMemberTypeId(userId) === OpenMemberType.MANAGER;
     }
 
     async kickMember(user: ChatUser): Promise<RequestResult<boolean>> {
