@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MapAttachment | NodeKakao - v4.0.0-beta.4</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.4">
+	<title>MapAttachment | NodeKakao - v4.0.0-beta.5</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-beta.5">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.4</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-beta.5</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-beta.4</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-beta.5</a>
 				</li>
 				<li>
 					<a href="../modules/chat_attachment.html">chat/attachment</a>
@@ -70,7 +70,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MapAttachment</span>
+						<a href="chat_attachment.attachment.html" class="tsd-signature-type" data-tsd-kind="Interface">Attachment</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">MapAttachment</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -85,6 +90,9 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="chat_attachment.mapattachment.html#c" class="tsd-kind-icon">c</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="chat_attachment.mapattachment.html#lat" class="tsd-kind-icon">lat</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="chat_attachment.mapattachment.html#lng" class="tsd-kind-icon">lng</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="chat_attachment.mapattachment.html#mentions" class="tsd-kind-icon">mentions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="chat_attachment.mapattachment.html#shout" class="tsd-kind-icon">shout</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="chat_attachment.mapattachment.html#urls" class="tsd-kind-icon">urls</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,7 +106,7 @@
 					<div class="tsd-signature tsd-kind-icon">a<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0fee602/src/chat/attachment/map.ts#L22">chat/attachment/map.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/map.ts#L24">chat/attachment/map.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -113,7 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">c<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0fee602/src/chat/attachment/map.ts#L27">chat/attachment/map.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/map.ts#L29">chat/attachment/map.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -128,7 +136,7 @@
 					<div class="tsd-signature tsd-kind-icon">lat<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0fee602/src/chat/attachment/map.ts#L12">chat/attachment/map.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/map.ts#L14">chat/attachment/map.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -143,7 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">lng<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/0fee602/src/chat/attachment/map.ts#L17">chat/attachment/map.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/map.ts#L19">chat/attachment/map.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -151,6 +159,39 @@
 							<p>Longitude (multiplied by 10000000000)</p>
 						</div>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="mentions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mentions</h3>
+					<div class="tsd-signature tsd-kind-icon">mentions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="chat_attachment.mentionstruct.html" class="tsd-signature-type" data-tsd-kind="Interface">MentionStruct</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="chat_attachment.attachment.html">Attachment</a>.<a href="chat_attachment.attachment.html#mentions">mentions</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/index.ts#L26">chat/attachment/index.ts:26</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="shout" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> shout</h3>
+					<div class="tsd-signature tsd-kind-icon">shout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="chat_attachment.attachment.html">Attachment</a>.<a href="chat_attachment.attachment.html#shout">shout</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/index.ts#L25">chat/attachment/index.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="urls" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> urls</h3>
+					<div class="tsd-signature tsd-kind-icon">urls<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="chat_attachment.attachment.html">Attachment</a>.<a href="chat_attachment.attachment.html#urls">urls</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/10c55f4/src/chat/attachment/index.ts#L28">chat/attachment/index.ts:28</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -162,16 +203,36 @@
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="../modules/chat_attachment.html">chat/attachment</a>
+						<ul>
+							<li class=" tsd-kind-namespace tsd-parent-kind-module">
+								<a href="../modules/chat_attachment.postitem.html">Post<wbr>Item</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/chat_attachment.knownpostfooterstyle.html" class="tsd-kind-icon">Known<wbr>Post<wbr>Footer<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/chat_attachment.knownpostitemtype.html" class="tsd-kind-icon">Known<wbr>Post<wbr>Item<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/chat_attachment.knownpostsubitemtype.html" class="tsd-kind-icon">Known<wbr>Post<wbr>Sub<wbr>Item<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.attachment.html" class="tsd-kind-icon">Attachment</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.audioattachment.html" class="tsd-kind-icon">Audio<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.contactattachment.html" class="tsd-kind-icon">Contact<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.customattachment.html" class="tsd-kind-icon">Custom<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.emoticonattachment.html" class="tsd-kind-icon">Emoticon<wbr>Attachment</a>
@@ -199,13 +260,19 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="chat_attachment.mapattachment.html#lng" class="tsd-kind-icon">lng</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="chat_attachment.mapattachment.html#mentions" class="tsd-kind-icon">mentions</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="chat_attachment.mapattachment.html#shout" class="tsd-kind-icon">shout</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="chat_attachment.mapattachment.html#urls" class="tsd-kind-icon">urls</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="chat_attachment.mentionattachment.html" class="tsd-kind-icon">Mention<wbr>Attachment</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.mentionstruct.html" class="tsd-kind-icon">Mention<wbr>Struct</a>
 					</li>
@@ -213,7 +280,13 @@
 						<a href="chat_attachment.multiphotoattachment.html" class="tsd-kind-icon">Multi<wbr>Photo<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.openscheduleattachment.html" class="tsd-kind-icon">Open<wbr>Schedule<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.photoattachment.html" class="tsd-kind-icon">Photo<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.postattachment.html" class="tsd-kind-icon">Post<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.profileattachment.html" class="tsd-kind-icon">Profile<wbr>Attachment</a>
@@ -222,10 +295,25 @@
 						<a href="chat_attachment.replyattachment.html" class="tsd-kind-icon">Reply<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.sharpattachment.html" class="tsd-kind-icon">Sharp<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.videoattachment.html" class="tsd-kind-icon">Video<wbr>Attachment</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="chat_attachment.voipattachment.html" class="tsd-kind-icon">Voip<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="chat_attachment.voteattachment.html" class="tsd-kind-icon">Vote<wbr>Attachment</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/chat_attachment.html#postfooterstyle" class="tsd-kind-icon">Post<wbr>Footer<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/chat_attachment.html#postitemtype" class="tsd-kind-icon">Post<wbr>Item<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/chat_attachment.html#postsubitemtype" class="tsd-kind-icon">Post<wbr>Sub<wbr>Item<wbr>Type</a>
 					</li>
 				</ul>
 			</nav>
