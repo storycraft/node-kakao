@@ -301,8 +301,10 @@ export class TalkOpenChannelList
     channelList: OpenChannel[] = [],
   ): Promise<TalkOpenChannelList> {
     talkChannelList._map.clear();
+    talkChannelList._clientMap.clear();
 
     await Promise.all(channelList.map((channel) => talkChannelList.addOpenChannel(channel)));
+    await talkChannelList.getLatestLinkList();
 
     return talkChannelList;
   }

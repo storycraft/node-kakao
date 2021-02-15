@@ -21,8 +21,8 @@ import { TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel
  */
 export class TalkChannelList
   extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelList<TalkChannel> {
-  private _normalList: TalkNormalChannelList;
-  private _openList: TalkOpenChannelList;
+  private _normal: TalkNormalChannelList;
+  private _open: TalkOpenChannelList;
 
   /**
    * Construct managed channel list
@@ -39,35 +39,35 @@ export class TalkChannelList
   ) {
     super();
 
-    this._normalList = new TalkNormalChannelList(session, normalList);
-    this._openList = new TalkOpenChannelList(session, openList, clientLinkList);
+    this._normal = new TalkNormalChannelList(session, normalList);
+    this._open = new TalkOpenChannelList(session, openList, clientLinkList);
   }
 
   get size(): number {
-    return this._normalList.size + this._openList.size;
+    return this._normal.size + this._open.size;
   }
 
   /**
    * Normal channel list
    */
-  get normalList(): TalkNormalChannelList {
-    return this._normalList;
+  get normal(): TalkNormalChannelList {
+    return this._normal;
   }
 
   /**
    * Open channel list
    */
-  get openList(): TalkOpenChannelList {
-    return this._openList;
+  get open(): TalkOpenChannelList {
+    return this._open;
   }
 
   get(channelId: Long): TalkNormalChannel | TalkOpenChannel | undefined {
-    return this._normalList.get(channelId) || this._openList.get(channelId);
+    return this._normal.get(channelId) || this._open.get(channelId);
   }
 
   all(): ChainedIterator<TalkChannel> {
-    const normalIter = this._normalList.all();
-    const openIter = this._openList.all();
+    const normalIter = this._normal.all();
+    const openIter = this._open.all();
 
     return new ChainedIterator<TalkChannel>(normalIter, openIter);
   }
@@ -75,8 +75,8 @@ export class TalkChannelList
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
     const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
 
-    this._normalList.pushReceived(method, data, ctx);
-    this._openList.pushReceived(method, data, ctx);
+    this._normal.pushReceived(method, data, ctx);
+    this._open.pushReceived(method, data, ctx);
   }
 
   /**
@@ -91,8 +91,8 @@ export class TalkChannelList
     const [normalList, openList] = TalkChannelList.mapChannelList(channelList);
 
     await Promise.all([
-      TalkNormalChannelList.initialize(talkChannelList._normalList, normalList),
-      TalkOpenChannelList.initialize(talkChannelList._openList, openList),
+      TalkNormalChannelList.initialize(talkChannelList._normal, normalList),
+      TalkOpenChannelList.initialize(talkChannelList._open, openList),
     ]);
 
     return talkChannelList;

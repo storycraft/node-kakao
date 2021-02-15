@@ -1,6 +1,6 @@
 {
   "name": "node-kakao",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.5",
   "description": "Loco protocol compatible library",
   "main": "./dist/index.js",
   "exports": {
@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
-    "locotest": "./node_modules/.bin/ts-node loco-test.ts",
+    "locotest": "node --tls-min-v1.0 -r ts-node/register loco-test.ts",
     "build": "npm run build:node & npm run build:esm",
     "build:node": "./node_modules/.bin/tsc",
     "build:esm": "./node_modules/.bin/rollup -c",

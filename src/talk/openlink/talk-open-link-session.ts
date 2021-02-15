@@ -166,7 +166,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       'aptp': !template.mainProfileOnly,
       'ln': template.linkName,
       'pa': template.activated,
-      'ri': Long.fromNumber(Date.now()),
+      'ri': Long.fromInt(Date.now() / 1000),
       'ml': template.userLimit,
       'desc': template.description,
       'sc': template.searchable,
@@ -192,7 +192,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
       'aptp': !template.mainProfileOnly,
       'ln': template.linkName,
       'pa': template.activated,
-      'ri': Long.fromNumber(Date.now()),
+      'ri': Long.fromInt(Date.now() / 1000),
       'dcl': template.userLimit,
       'desc': template.description,
       'sc': template.searchable,
@@ -211,22 +211,24 @@ export class TalkOpenLinkSession implements OpenLinkSession {
     };
   }
 
+  // TODO::
   async createOpenProfile(
     template: OpenLinkProfileTemplate & OpenLinkCreateTemplate
   ): AsyncCommandResult<InformedOpenLink> {
     const reqData: Record<string, unknown> = {
       'lt': OpenLinkType.PROFILE,
-      'lip': template.linkCoverURL || '',
+      'lip': '',
       'aptp': !template.mainProfileOnly,
       'ln': template.linkName,
       'pa': template.activated,
-      'ri': Long.fromNumber(Date.now()),
+      'ri': Long.fromInt(Date.now() / 1000),
       'did': Long.fromNumber(40),
       ...OpenLinkProfile.serializeLinkProfile({
         nickname: template.linkName,
-        profilePath: ''
+        profilePath: template.linkCoverURL
       }),
       'dcl': template.directLimit,
+      'desc': null,
       'sc': template.searchable,
       'pfc': JSON.stringify({
         description: template.description,

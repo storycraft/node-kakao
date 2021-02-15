@@ -59,7 +59,7 @@ export interface OpenLinkSettings {
   /**
    * Link description
    */
-  description: string;
+  description?: string;
 
   searchable: boolean;
 
