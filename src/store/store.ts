@@ -136,7 +136,7 @@ export abstract class IdInstanceStore<V> extends IdStore<V> {
 
 export abstract class AsyncIdInstanceStore<V> extends AsyncIdStore<V> {
 
-    protected abstract async createInstanceFor(key: Long): Promise<V>;
+    protected abstract createInstanceFor(key: Long): Promise<V>;
 
     async get(key: Long): Promise<V | null> {
         let val = await super.get(key);
