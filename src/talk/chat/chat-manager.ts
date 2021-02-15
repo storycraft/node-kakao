@@ -150,7 +150,7 @@ export class ChatManager {
 
         const TypedChat = TypeMap.getChatConstructor(chatLog.type);
 
-        return new TypedChat(channel, sender, chatLog.messageId, chatLog.logId, chatLog.prevLogId, chatLog.sendTime, chatLog.text, chatLog.rawAttachment);
+        return new TypedChat(channel, sender, chatLog.messageId, chatLog.type, chatLog.logId, chatLog.prevLogId, chatLog.sendTime, chatLog.text, chatLog.rawAttachment);
     }
 
     async deleteChat(channelId: Long, logId: Long): Promise<RequestResult<boolean>> {

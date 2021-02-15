@@ -3,3 +3,4 @@ node_modules/
 tests/
 tsconfig.json
 loco-test.ts
+deno-test.ts

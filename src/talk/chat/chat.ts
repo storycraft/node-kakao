@@ -2,7 +2,7 @@ import { ChatType } from "./chat-type";
 import { Long, EJSON } from "bson";
 import { ChatChannel, OpenChatChannel } from "../channel/chat-channel";
 import { ChatUser } from "../user/chat-user";
-import { ChatAttachment, PhotoAttachment, MessageTemplate, MediaTemplates } from "../..";
+import { ChatAttachment, PhotoAttachment, MessageTemplate, MediaTemplates, FileAttachment } from "../..";
 import { EmoticonAttachment, LongTextAttachment, VideoAttachment, MentionContentList, ChatMention, MapAttachment, ReplyAttachment } from "./attachment/chat-attachment";
 import { SharpAttachment } from "./attachment/sharp-attachment";
 import { JsonUtil } from "../../util/json-util";
@@ -24,6 +24,8 @@ export abstract class Chat {
     private prevLogId: Long;
     private logId: Long;
 
+    private originalType: ChatType;
+
     private channel: ChatChannel;
     private sender: ChatUser;
 
@@ -38,9 +40,11 @@ export abstract class Chat {
 
     private sendTime: number;
 
-    constructor(channel: ChatChannel, sender: ChatUser, messageId: number, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string = '{}') {
+    constructor(channel: ChatChannel, sender: ChatUser, originalType: ChatType, messageId: number, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string = '{}') {
         this.channel = channel;
         this.sender = sender;
+
+        this.originalType = originalType;
 
         this.logId = logId;
         this.prevLogId = prevLogId;
@@ -65,6 +69,10 @@ export abstract class Chat {
 
     get PrevLogId() {
         return this.prevLogId;
+    }
+
+    get OriginalType() {
+        return this.originalType;
     }
 
     get LogId() {
@@ -388,6 +396,26 @@ export class VideoChat extends Chat {
 
 }
 
+export class FileChat extends Chat {
+
+    get Type() {
+        return ChatType.File;
+    }
+
+    get Map(): FileAttachment {
+        return this.AttachmentList[0] as FileAttachment;
+    }
+
+    protected readAttachment(attachmentJson: any, attachmentList: ChatAttachment[]) {
+        let attachment = new FileAttachment();
+
+        attachment.readAttachment(attachmentJson);
+
+        attachmentList.push(attachment);
+    }
+
+}
+
 export class SharpSearchChat extends Chat {
     
     get Type() {
@@ -452,7 +480,7 @@ export class ReplyChat extends Chat {
         attachmentList.push(replyAttachment);
 
         if (attachmentJson['attach_type']) {
-            let contentChat = new (TypeMap.getChatConstructor(attachmentJson['attach_type']))(this.Channel, this.Sender, this.MessageId, this.LogId, this.PrevLogId, this.SendTime, this.Text, attachmentJson['attach_content']);
+            let contentChat = new (TypeMap.getChatConstructor(attachmentJson['attach_type']))(this.Channel, this.Sender, attachmentJson['attach_type'], this.MessageId, this.LogId, this.PrevLogId, this.SendTime, this.Text, attachmentJson['attach_content']);
             attachmentList.push(...contentChat.AttachmentList);
         }
 
@@ -483,7 +511,7 @@ export class CustomChat extends Chat {
 
 export namespace TypeMap {
 
-    export type ChatConstructor = new (channel: ChatChannel, sender: ChatUser, messageId: number, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string | undefined) => Chat;
+    export type ChatConstructor = new (channel: ChatChannel, sender: ChatUser, originalType: ChatType, messageId: number, logId: Long, prevLogId: Long, sendTime: number, text: string, rawAttachment: string | undefined) => Chat;
 
     let typeMap: Map<ChatType, ChatConstructor> = new Map();
 
@@ -501,6 +529,7 @@ export namespace TypeMap {
     typeMap.set(ChatType.Text, TextChat);
     typeMap.set(ChatType.Photo, SinglePhotoChat);
     typeMap.set(ChatType.MultiPhoto, MultiPhotoChat);
+    typeMap.set(ChatType.File, FileChat);
     typeMap.set(ChatType.Video, VideoChat);
     typeMap.set(ChatType.Sticker, StaticEmoticonChat);
     typeMap.set(ChatType.StickerAni, AnimatedEmoticonChat);
