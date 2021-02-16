@@ -4,11 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+const BASE64_LIST = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
 /**
  * Create random device uuid
  *
  * @return {string} random device UUID
  */
 export function randomDeviceUUID(): string {
-  return btoa(String.fromCharCode(...Array.from({ length: 64 }, () => Math.floor(Math.random() * 256))));
+  return Array.from({ length: 86 }, () => BASE64_LIST[~~(Math.random() * 64)]).join('') + '==';
 }

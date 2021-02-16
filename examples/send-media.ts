@@ -9,14 +9,12 @@
  */
 
 import { readFileSync } from 'fs';
-import { AuthApiClient, KnownChatType, TalkClient } from 'node-kakao';
+import { KnownChatType, TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
-const DEVICE_NAME = process.env['deviceName'] as string;
-
-const EMAIL = process.env['accountEmail'] as string;
-const PASSWORD = process.env['accountPwd'] as string;
+const ACCESS_TOKEN = process.env['accessToken'] as string;
+const REFRESH_TOKEN = process.env['refreshToken'] as string;
 
 const CLIENT = new TalkClient();
 
@@ -36,15 +34,11 @@ CLIENT.on('chat', (data, channel) => {
 });
 
 async function main() {
-  const api = await AuthApiClient.create(DEVICE_NAME, DEVICE_UUID);
-  const loginRes = await api.login({
-    email: EMAIL,
-    password: PASSWORD,
-    forced: true,
+  const res = await CLIENT.login({
+    deviceUUID: DEVICE_UUID,
+    accessToken: ACCESS_TOKEN,
+    refreshToken: REFRESH_TOKEN
   });
-  if (!loginRes.success) throw new Error(`Web login failed with status: ${loginRes.status}`);
-
-  const res = await CLIENT.login(loginRes.result);
   if (!res.success) throw new Error(`Login failed with status: ${res.status}`);
 
   console.log('Login success');

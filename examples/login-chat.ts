@@ -5,6 +5,7 @@
  */
 
 /*
+ * Login using email, password using AuthApiClient.
  * Following this example will make automatic reply at text "안녕하세요" with mention.
  */
 
