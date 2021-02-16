@@ -355,7 +355,7 @@ export class TalkChannelSession implements ChannelSession {
           {
             'c': this._channel.channelId,
             't': type,
-            's': template.data.byteLength,
+            's': Long.fromNumber(template.data.byteLength),
             'cs': await sha1(new Uint8Array(template.data)),
             'e': template.ext || '',
           },
