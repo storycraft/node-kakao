@@ -8,7 +8,7 @@
  * This example contains listening various type of events.
  */
 
-import { TalkClient } from '../src';
+import { TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
