@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SessionApiClient | NodeKakao - v4.0.0-rc.1</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.1">
+	<title>SessionWebClient | NodeKakao - v4.0.0-rc.2</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,16 +50,16 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-rc.2</a>
 				</li>
 				<li>
 					<a href="../modules/api.html">api</a>
 				</li>
 				<li>
-					<a href="api.sessionapiclient.html">SessionApiClient</a>
+					<a href="api.sessionwebclient.html">SessionWebClient</a>
 				</li>
 			</ul>
-			<h1>Class SessionApiClient</h1>
+			<h1>Class SessionWebClient</h1>
 		</div>
 	</div>
 </header>
@@ -77,14 +77,14 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">SessionApiClient</span>
+						<span class="target">SessionWebClient</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a></li>
+					<li><a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -94,27 +94,27 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="api.sessionapiclient.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="api.sessionwebclient.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="api.sessionapiclient.html#config" class="tsd-kind-icon">config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="api.sessionwebclient.html#config" class="tsd-kind-icon">config</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="api.sessionapiclient.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="api.sessionwebclient.html#url" class="tsd-kind-icon">url</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionapiclient.html#fillheader" class="tsd-kind-icon">fill<wbr>Header</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionapiclient.html#request" class="tsd-kind-icon">request</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionapiclient.html#requestmultipart" class="tsd-kind-icon">request<wbr>Multipart</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionwebclient.html#fillheader" class="tsd-kind-icon">fill<wbr>Header</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionwebclient.html#request" class="tsd-kind-icon">request</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="api.sessionwebclient.html#requestmultipart" class="tsd-kind-icon">request<wbr>Multipart</a></li>
 							</ul>
 						</section>
 					</div>
@@ -126,19 +126,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Session<wbr>Api<wbr>Client<span class="tsd-signature-symbol">(</span>_client<span class="tsd-signature-symbol">: </span><a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a>, _credential<span class="tsd-signature-symbol">: </span><a href="../interfaces/oauth.oauthcredential.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthCredential</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.webapiconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">WebApiConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="api.sessionapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionApiClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Session<wbr>Web<wbr>Client<span class="tsd-signature-symbol">(</span>_client<span class="tsd-signature-symbol">: </span><a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a>, _credential<span class="tsd-signature-symbol">: </span><a href="../interfaces/oauth.oauthcredential.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthCredential</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.webapiconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">WebApiConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="api.sessionwebclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionWebClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L58">api/web-api-client.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L58">api/web-client.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>_client: <a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a></h5>
+									<h5>_client: <a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a></h5>
 								</li>
 								<li>
 									<h5>_credential: <a href="../interfaces/oauth.oauthcredential.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthCredential</a></h5>
@@ -147,7 +147,7 @@
 									<h5>config: <a href="../interfaces/config.webapiconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">WebApiConfig</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="api.sessionapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionApiClient</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="api.sessionwebclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionWebClient</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -173,9 +173,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/api.apiclient.html">ApiClient</a>.<a href="../interfaces/api.apiclient.html#url">url</a></p>
+								<p>Implementation of <a href="../interfaces/api.webclient.html">WebClient</a>.<a href="../interfaces/api.webclient.html#url">url</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L67">api/web-api-client.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L67">api/web-client.ts:67</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,9 +199,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/api.apiclient.html">ApiClient</a>.<a href="../interfaces/api.apiclient.html#fillheader">fillHeader</a></p>
+								<p>Implementation of <a href="../interfaces/api.webclient.html">WebClient</a>.<a href="../interfaces/api.webclient.html#fillheader">fillHeader</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L63">api/web-api-client.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L63">api/web-client.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -223,9 +223,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/api.apiclient.html">ApiClient</a>.<a href="../interfaces/api.apiclient.html#request">request</a></p>
+								<p>Implementation of <a href="../interfaces/api.webclient.html">WebClient</a>.<a href="../interfaces/api.webclient.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L84">api/web-api-client.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L84">api/web-client.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -261,9 +261,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/api.apiclient.html">ApiClient</a>.<a href="../interfaces/api.apiclient.html#requestmultipart">requestMultipart</a></p>
+								<p>Implementation of <a href="../interfaces/api.webclient.html">WebClient</a>.<a href="../interfaces/api.webclient.html#requestmultipart">requestMultipart</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L88">api/web-api-client.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L88">api/web-client.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -307,6 +307,9 @@
 							<li class=" tsd-kind-namespace tsd-parent-kind-module">
 								<a href="../modules/api.webapiutil.html">web<wbr>Api<wbr>Util</a>
 							</li>
+							<li class=" tsd-kind-namespace tsd-parent-kind-module">
+								<a href="../modules/api.xvc.html">xvc</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -331,33 +334,30 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="api.sessionapiclient.html" class="tsd-kind-icon">Session<wbr>Api<wbr>Client</a>
+						<a href="api.sessionwebclient.html" class="tsd-kind-icon">Session<wbr>Web<wbr>Client</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="api.sessionwebclient.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#config" class="tsd-kind-icon">config</a>
+								<a href="api.sessionwebclient.html#config" class="tsd-kind-icon">config</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#url" class="tsd-kind-icon">url</a>
+								<a href="api.sessionwebclient.html#url" class="tsd-kind-icon">url</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#fillheader" class="tsd-kind-icon">fill<wbr>Header</a>
+								<a href="api.sessionwebclient.html#fillheader" class="tsd-kind-icon">fill<wbr>Header</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#request" class="tsd-kind-icon">request</a>
+								<a href="api.sessionwebclient.html#request" class="tsd-kind-icon">request</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="api.sessionapiclient.html#requestmultipart" class="tsd-kind-icon">request<wbr>Multipart</a>
+								<a href="api.sessionwebclient.html#requestmultipart" class="tsd-kind-icon">request<wbr>Multipart</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/api.apiclient.html" class="tsd-kind-icon">Api<wbr>Client</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/api.headerdecorator.html" class="tsd-kind-icon">Header<wbr>Decorator</a>
 					</li>
@@ -369,6 +369,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/api.tokenloginform.html" class="tsd-kind-icon">Token<wbr>Login<wbr>Form</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/api.webclient.html" class="tsd-kind-icon">Web<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../modules/api.html#filerequestdata" class="tsd-kind-icon">File<wbr>Request<wbr>Data</a>
@@ -383,10 +386,10 @@
 						<a href="../modules/api.html#requestmethod" class="tsd-kind-icon">Request<wbr>Method</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/api.html#createapiclient" class="tsd-kind-icon">create<wbr>Api<wbr>Client</a>
+						<a href="../modules/api.html#createsessionwebclient" class="tsd-kind-icon">create<wbr>Session<wbr>Web<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/api.html#createsessionapiclient" class="tsd-kind-icon">create<wbr>Session<wbr>Api<wbr>Client</a>
+						<a href="../modules/api.html#createwebclient" class="tsd-kind-icon">create<wbr>Web<wbr>Client</a>
 					</li>
 				</ul>
 			</nav>

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>api | NodeKakao - v4.0.0-rc.1</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.1">
+	<title>api | NodeKakao - v4.0.0-rc.2</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-rc.2</a>
 				</li>
 				<li>
 					<a href="api.html">api</a>
@@ -78,6 +78,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="api.headerutil.html" class="tsd-kind-icon">header<wbr>Util</a></li>
 								<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="api.webapiutil.html" class="tsd-kind-icon">web<wbr>Api<wbr>Util</a></li>
+								<li class="tsd-kind-namespace tsd-parent-kind-module"><a href="api.xvc.html" class="tsd-kind-icon">xvc</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -92,17 +93,17 @@
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/api.authapiclient.html" class="tsd-kind-icon">Auth<wbr>Api<wbr>Client</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/api.oauthapiclient.html" class="tsd-kind-icon">OAuth<wbr>Api<wbr>Client</a></li>
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/api.serviceapiclient.html" class="tsd-kind-icon">Service<wbr>Api<wbr>Client</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/api.sessionapiclient.html" class="tsd-kind-icon">Session<wbr>Api<wbr>Client</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/api.sessionwebclient.html" class="tsd-kind-icon">Session<wbr>Web<wbr>Client</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.apiclient.html" class="tsd-kind-icon">Api<wbr>Client</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.headerdecorator.html" class="tsd-kind-icon">Header<wbr>Decorator</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.logindata.html" class="tsd-kind-icon">Login<wbr>Data</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.loginform.html" class="tsd-kind-icon">Login<wbr>Form</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.tokenloginform.html" class="tsd-kind-icon">Token<wbr>Login<wbr>Form</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/api.webclient.html" class="tsd-kind-icon">Web<wbr>Client</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -117,8 +118,8 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="api.html#createapiclient" class="tsd-kind-icon">create<wbr>Api<wbr>Client</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-module"><a href="api.html#createsessionapiclient" class="tsd-kind-icon">create<wbr>Session<wbr>Api<wbr>Client</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="api.html#createsessionwebclient" class="tsd-kind-icon">create<wbr>Session<wbr>Web<wbr>Client</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="api.html#createwebclient" class="tsd-kind-icon">create<wbr>Web<wbr>Client</a></li>
 							</ul>
 						</section>
 					</div>
@@ -140,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">File<wbr>Request<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>contentType<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L16">api/web-api-client.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L16">api/web-client.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -169,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">Request<wbr>Form<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L17">api/web-api-client.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L17">api/web-client.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -187,7 +188,7 @@
 					<div class="tsd-signature tsd-kind-icon">Request<wbr>Header<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L14">api/web-api-client.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L14">api/web-client.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -197,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">Request<wbr>Method<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;GET&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;DELETE&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;HEAD&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;OPTIONS&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;POST&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;PUT&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;PATCH&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;LINK&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;UNLINK&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L15">api/web-api-client.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L15">api/web-client.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -205,52 +206,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-					<a name="createapiclient" class="tsd-anchor"></a>
-					<h3>create<wbr>Api<wbr>Client</h3>
+					<a name="createsessionwebclient" class="tsd-anchor"></a>
+					<h3>create<wbr>Session<wbr>Web<wbr>Client</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Api<wbr>Client<span class="tsd-signature-symbol">(</span>scheme<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, decorator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Session<wbr>Web<wbr>Client<span class="tsd-signature-symbol">(</span>credential<span class="tsd-signature-symbol">: </span><a href="../interfaces/oauth.oauthcredential.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthCredential</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.webapiconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">WebApiConfig</a>, scheme<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, decorator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/api.sessionwebclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionWebClient</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L114">api/web-api-client.ts:114</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Create api client by platform</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>scheme: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>host: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> decorator: <a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-					<a name="createsessionapiclient" class="tsd-anchor"></a>
-					<h3>create<wbr>Session<wbr>Api<wbr>Client</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Session<wbr>Api<wbr>Client<span class="tsd-signature-symbol">(</span>credential<span class="tsd-signature-symbol">: </span><a href="../interfaces/oauth.oauthcredential.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthCredential</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.webapiconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">WebApiConfig</a>, scheme<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, decorator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/api.sessionapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionApiClient</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/web-api-client.ts#L126">api/web-api-client.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L126">api/web-client.ts:126</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -271,7 +236,43 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> decorator: <a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/api.sessionapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionApiClient</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/api.sessionwebclient.html" class="tsd-signature-type" data-tsd-kind="Class">SessionWebClient</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="createwebclient" class="tsd-anchor"></a>
+					<h3>create<wbr>Web<wbr>Client</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Web<wbr>Client<span class="tsd-signature-symbol">(</span>scheme<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, decorator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/web-client.ts#L114">api/web-client.ts:114</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create web client by platform</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>scheme: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>host: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> decorator: <a href="../interfaces/api.headerdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">HeaderDecorator</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -291,6 +292,9 @@
 							</li>
 							<li class=" tsd-kind-namespace tsd-parent-kind-module">
 								<a href="api.webapiutil.html">web<wbr>Api<wbr>Util</a>
+							</li>
+							<li class=" tsd-kind-namespace tsd-parent-kind-module">
+								<a href="api.xvc.html">xvc</a>
 							</li>
 						</ul>
 					</li>
@@ -314,10 +318,7 @@
 						<a href="../classes/api.serviceapiclient.html" class="tsd-kind-icon">Service<wbr>Api<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/api.sessionapiclient.html" class="tsd-kind-icon">Session<wbr>Api<wbr>Client</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/api.apiclient.html" class="tsd-kind-icon">Api<wbr>Client</a>
+						<a href="../classes/api.sessionwebclient.html" class="tsd-kind-icon">Session<wbr>Web<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/api.headerdecorator.html" class="tsd-kind-icon">Header<wbr>Decorator</a>
@@ -330,6 +331,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/api.tokenloginform.html" class="tsd-kind-icon">Token<wbr>Login<wbr>Form</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/api.webclient.html" class="tsd-kind-icon">Web<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="api.html#filerequestdata" class="tsd-kind-icon">File<wbr>Request<wbr>Data</a>
@@ -344,10 +348,10 @@
 						<a href="api.html#requestmethod" class="tsd-kind-icon">Request<wbr>Method</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="api.html#createapiclient" class="tsd-kind-icon">create<wbr>Api<wbr>Client</a>
+						<a href="api.html#createsessionwebclient" class="tsd-kind-icon">create<wbr>Session<wbr>Web<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="api.html#createsessionapiclient" class="tsd-kind-icon">create<wbr>Session<wbr>Api<wbr>Client</a>
+						<a href="api.html#createwebclient" class="tsd-kind-icon">create<wbr>Web<wbr>Client</a>
 					</li>
 				</ul>
 			</nav>

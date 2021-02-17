@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AuthApiClient | NodeKakao - v4.0.0-rc.1</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.1">
+	<title>AuthApiClient | NodeKakao - v4.0.0-rc.2</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.0-rc.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.0-rc.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.0-rc.1</a>
+					<a href="../modules.html">NodeKakao - v4.0.0-rc.2</a>
 				</li>
 				<li>
 					<a href="../modules/index.html">index</a>
@@ -95,6 +95,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="index.authapiclient.html#config" class="tsd-kind-icon">config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="index.authapiclient.html#xvcprovider" class="tsd-kind-icon">xvc<wbr>Provider</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -107,8 +108,6 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.authapiclient.html#calculatefullxvckey" class="tsd-kind-icon">calculate<wbr>FullXVCKey</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.authapiclient.html#calculatexvckey" class="tsd-kind-icon">calculateXVCKey</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.authapiclient.html#login" class="tsd-kind-icon">login</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.authapiclient.html#logintoken" class="tsd-kind-icon">login<wbr>Token</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.authapiclient.html#registerdevice" class="tsd-kind-icon">register<wbr>Device</a></li>
@@ -125,19 +124,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Auth<wbr>Api<wbr>Client<span class="tsd-signature-symbol">(</span>_client<span class="tsd-signature-symbol">: </span><a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a>, _name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, _deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Auth<wbr>Api<wbr>Client<span class="tsd-signature-symbol">(</span>_client<span class="tsd-signature-symbol">: </span><a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a>, _name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, _deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a>, xvcProvider<span class="tsd-signature-symbol">: </span><a href="../interfaces/api.xvc.xvcprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">XVCProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L118">api/auth-api-client.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L118">api/auth-api-client.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>_client: <a href="../interfaces/api.apiclient.html" class="tsd-signature-type" data-tsd-kind="Interface">ApiClient</a></h5>
+									<h5>_client: <a href="../interfaces/api.webclient.html" class="tsd-signature-type" data-tsd-kind="Interface">WebClient</a></h5>
 								</li>
 								<li>
 									<h5>_name: <span class="tsd-signature-type">string</span></h5>
@@ -147,6 +146,9 @@
 								</li>
 								<li>
 									<h5>config: <a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a></h5>
+								</li>
+								<li>
+									<h5>xvcProvider: <a href="../interfaces/api.xvc.xvcprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">XVCProvider</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a></h4>
@@ -163,6 +165,13 @@
 					<aside class="tsd-sources">
 					</aside>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="xvcprovider" class="tsd-anchor"></a>
+					<h3>xvc<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">xvc<wbr>Provider<span class="tsd-signature-symbol">:</span> <a href="../interfaces/api.xvc.xvcprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">XVCProvider</a></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
@@ -176,7 +185,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L132">api/auth-api-client.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L133">api/auth-api-client.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -193,7 +202,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L128">api/auth-api-client.ts:128</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L129">api/auth-api-client.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -204,64 +213,6 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="calculatefullxvckey" class="tsd-anchor"></a>
-					<h3>calculate<wbr>FullXVCKey</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">calculate<wbr>FullXVCKey<span class="tsd-signature-symbol">(</span>deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userAgent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, email<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L235">api/auth-api-client.ts:235</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>deviceUUID: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>userAgent: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>email: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="calculatexvckey" class="tsd-anchor"></a>
-					<h3>calculateXVCKey</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">calculateXVCKey<span class="tsd-signature-symbol">(</span>deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userAgent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, email<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L231">api/auth-api-client.ts:231</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>deviceUUID: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>userAgent: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>email: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="login" class="tsd-anchor"></a>
 					<h3>login</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -271,7 +222,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L160">api/auth-api-client.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L165">api/auth-api-client.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -301,7 +252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L181">api/auth-api-client.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L186">api/auth-api-client.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +282,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L220">api/auth-api-client.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L225">api/auth-api-client.ts:225</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -349,9 +300,6 @@
 								</li>
 								<li>
 									<h5>permanent: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>If true the device will be registered as permanent</p>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -368,7 +316,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L202">api/auth-api-client.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L207">api/auth-api-client.ts:207</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -392,13 +340,13 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> create</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, config<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, deviceUUID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, config<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a><span class="tsd-signature-symbol">&gt;</span>, xvcProvider<span class="tsd-signature-symbol">?: </span><a href="../interfaces/api.xvc.xvcprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">XVCProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/09c0480/src/api/auth-api-client.ts#L251">api/auth-api-client.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/a9625db/src/api/auth-api-client.ts#L252">api/auth-api-client.ts:252</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -416,8 +364,9 @@
 								</li>
 								<li>
 									<h5>config: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> xvcProvider: <a href="../interfaces/api.xvc.xvcprovider.html" class="tsd-signature-type" data-tsd-kind="Interface">XVCProvider</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="api.authapiclient.html" class="tsd-signature-type" data-tsd-kind="Class">AuthApiClient</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -470,17 +419,14 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="index.authapiclient.html#config" class="tsd-kind-icon">config</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="index.authapiclient.html#xvcprovider" class="tsd-kind-icon">xvc<wbr>Provider</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="index.authapiclient.html#deviceuuid" class="tsd-kind-icon">deviceUUID</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="index.authapiclient.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="index.authapiclient.html#calculatefullxvckey" class="tsd-kind-icon">calculate<wbr>FullXVCKey</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="index.authapiclient.html#calculatexvckey" class="tsd-kind-icon">calculateXVCKey</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="index.authapiclient.html#login" class="tsd-kind-icon">login</a>
