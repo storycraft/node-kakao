@@ -61,7 +61,7 @@ export class TalkClient
   ) {
     super();
 
-    this.pingInterval = 900000;
+    this.pingInterval = 300000;
     this._pingTask = null;
 
     this._session = null;

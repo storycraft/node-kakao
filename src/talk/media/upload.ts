@@ -27,7 +27,7 @@ export interface MediaUploadTemplate {
   height?: number;
 
   /**
-   * File extension (optional?)
+   * File extension (Optional. Required when sending file)
    */
   ext?: string;
 

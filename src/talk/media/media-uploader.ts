@@ -13,6 +13,7 @@ import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../reque
 import { Chatlog, ChatType } from '../../chat';
 import { MediaUploadTemplate } from './upload';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
+import { Long } from 'bson';
 
 export class MediaUploader {
   private _canUpload: boolean;
@@ -40,7 +41,7 @@ export class MediaUploader {
    * Close uploader without uploading
    */
   close(): void {
-    this._stream.close();
+    if (!this._stream.ended) this._stream.close();
     this._canUpload = false;
   }
 
@@ -76,11 +77,12 @@ export class MediaUploader {
 
       const reqData: DefaultReq = {
         'k': this._media.key,
-        's': this._template.data.byteLength,
+        's': Long.fromNumber(this._template.data.byteLength),
+        'f': this._template.name,
         't': this._type,
 
         'c': this._channel.channelId,
-        'mid': Math.floor(Math.random() * 1000000),
+        'mid': Long.ONE,
         'ns': true,
 
         'u': this._talkSession.clientUser.userId,

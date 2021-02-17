@@ -37,7 +37,7 @@ export class MultiMediaUploader {
    * Close uploader without uploading
    */
   close(): void {
-    this._stream.close();
+    if (!this._stream.ended) this._stream.close();
     this._canUpload = false;
   }
 
