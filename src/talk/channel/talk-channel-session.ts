@@ -431,7 +431,7 @@ export class TalkChannelManageSession implements NormalChannelManageSession {
         'memberIds': template.userList.map((user) => user.userId),
       };
 
-      if (template.name) data['nickname'] = template.name;
+      if (template.name) data['nickName'] = template.name;
       if (template.profileURL) data['profileImageUrl'] = template.profileURL;
 
       const res = await this._session.request<CreateRes>('CREATE', data);
@@ -441,7 +441,7 @@ export class TalkChannelManageSession implements NormalChannelManageSession {
     }
 
     async createMemoChannel(): AsyncCommandResult<Channel> {
-      const res = await this._session.request<CreateRes>('CREATE', { 'memoChat': true });
+      const res = await this._session.request<CreateRes>('CREATE', { 'memberIds': [], 'memoChat': true });
       if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
 
       return { status: res.status, success: true, result: { channelId: res.chatId } };

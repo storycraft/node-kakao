@@ -344,11 +344,11 @@ export class ServiceApiClient {
   }
 
   /**
-     * Create default AccountClient using credential and config.
-     *
-     * @param {OAuthCredential} credential
-     * @param {Partial<WebApiConfig>} config
-     */
+   * Create default AccountClient using credential and config.
+   *
+   * @param {OAuthCredential} credential
+   * @param {Partial<WebApiConfig>} config
+   */
   static async create(credential: OAuthCredential, config: Partial<WebApiConfig> = {}): Promise<ServiceApiClient> {
     return new ServiceApiClient(
       await createSessionApiClient(

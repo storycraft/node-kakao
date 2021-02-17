@@ -16,7 +16,6 @@ export interface NetSocketOptions {
 
 }
 
-
 /**
  * Create TCP net stream using options.
  * This detect environment automatically.

@@ -13,8 +13,6 @@ export * from './contact';
 export * from './map';
 export * from './post';
 export * from './openlink';
-export * from './search';
-export * from './custom';
 
 import { MentionStruct } from './mention';
 
