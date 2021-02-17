@@ -22,7 +22,7 @@ export class MentionContent implements ChatContent {
     if (!chat.attachment['mentions']) chat.attachment['mentions'] = [];
 
     const mentions = chat.attachment['mentions'] as MentionStruct[];
-    const lastAt = Math.max(...mentions.map((value) => Math.max(...value.at)));
+    const lastAt = Math.max(0, ...mentions.map((value) => Math.max(0, ...value.at)));
 
     let map = mentions.find((value) => this.user.userId.eq(value.user_id));
     if (!map || map.len !== this.user.nickname.length) {
@@ -35,6 +35,7 @@ export class MentionContent implements ChatContent {
     }
 
     map.at.push(lastAt + 1);
+    console.log(chat.attachment);
     chat.text += `@${this.user.nickname}`;
   }
 }
