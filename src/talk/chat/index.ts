@@ -140,7 +140,7 @@ export class TalkChatData {
    * @param {TalkChannel} channel
    */
   forwardTo(channel: TalkChannel): void {
-    channel.forwardChat(this._chat);
+    channel.sendChat(this._chat);
   }
 
   /**

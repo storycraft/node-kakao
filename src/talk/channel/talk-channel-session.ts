@@ -79,10 +79,13 @@ export class TalkChannelSession implements ChannelSession {
       const data: DefaultReq = {
         'chatId': this._channel.channelId,
         'msgId': ++this.currentMsgId,
-        'msg': chat.text,
         'type': chat.type,
         'noSeen': true,
       };
+
+      if (chat.text) {
+        data['msg'] = chat.text;
+      }
 
       if (chat.attachment) {
         data['extra'] = JsonUtil.stringifyLoseless(chat.attachment);
@@ -114,10 +117,13 @@ export class TalkChannelSession implements ChannelSession {
       const data: DefaultReq = {
         'chatId': this._channel.channelId,
         'msgId': ++this.currentMsgId,
-        'msg': chat.text,
         'type': chat.type,
         'noSeen': true,
       };
+
+      if (chat.text) {
+        data['msg'] = chat.text;
+      }
 
       if (chat.attachment) {
         data['extra'] = JsonUtil.stringifyLoseless(chat.attachment);

@@ -6,7 +6,32 @@
 
 import { Attachment } from '.';
 
-export interface PhotoAttachment extends Attachment {
+/**
+ * Media template can be used to send attachment uploaded via web api.
+ * You should provide additional datas using attachment typings below.
+ */
+export interface MediaPathAttachment extends Attachment {
+  /**
+   * Media path (Uploaded via web api)
+   */
+  path: string;
+
+  /**
+   * Media size
+   */
+  s: number;
+
+}
+
+/**
+ * A complete media attachment with its media key.
+ * There can be more data by types. Mix with attachment typings below.
+ */
+export interface MediaKeyAttachment extends Attachment {
+  /**
+   * Media key (Uploaded via media uploader)
+   */
+  k: string;
 
   /**
    * Fallback url
@@ -14,9 +39,13 @@ export interface PhotoAttachment extends Attachment {
   url: string;
 
   /**
-   * Media key
+   * Size
    */
-  k: string;
+  s: number;
+
+}
+
+export interface PhotoAttachment extends Attachment {
 
   /**
    * Width
@@ -39,18 +68,13 @@ export interface PhotoAttachment extends Attachment {
   cs: string;
 
   /**
-   * Size
-   */
-  s: number;
-
-  /**
    * Media type
    */
   mt: string;
 
 }
 
-export interface MultiPhotoAttachment extends Record<string, unknown> {
+export interface MultiPhotoAttachment extends Attachment {
   /**
    * Key list
    */
@@ -87,13 +111,7 @@ export interface MultiPhotoAttachment extends Record<string, unknown> {
   sl: number;
 }
 
-export interface VideoAttachment extends Record<string, unknown> {
-
-  /**
-   * Fallback url
-   */
-  url: string;
-
+export interface VideoAttachment extends Attachment {
   /**
    * Media key
    */
@@ -119,14 +137,9 @@ export interface VideoAttachment extends Record<string, unknown> {
    */
   d: number;
 
-  /**
-   * Size
-   */
-  s: number;
-
 }
 
-export interface FileAttachment extends Record<string, unknown> {
+export interface FileAttachment extends Attachment {
 
   /**
    * File name
@@ -134,24 +147,9 @@ export interface FileAttachment extends Record<string, unknown> {
   name: string;
 
   /**
-   * Fallback url
-   */
-  url: string;
-
-  /**
-   * Media key
-   */
-  k: string;
-
-  /**
    * File size
    */
   size: number;
-
-  /**
-   * File size. Same as @field size
-   */
-  s: number;
 
   /**
    * Expire time
@@ -165,34 +163,19 @@ export interface FileAttachment extends Record<string, unknown> {
 
 }
 
-export interface AudioAttachment extends Record<string, unknown> {
-  /**
-   * Fallback url
-   */
-  url: string;
-
-  /**
-   * Media key
-   */
-  k: string;
-
+export interface AudioAttachment extends Attachment {
   /**
    * Duration (in milliseconds)
    */
   d: number;
 
   /**
-   * Size
-   */
-  s: number;
-
-  /**
    * Expire time
    */
-  expire: number;
+  expire?: number;
 }
 
-export interface LongTextAttachment extends Record<string, unknown> {
+export interface LongTextAttachment extends Attachment {
   /**
    * Text path
    */

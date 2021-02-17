@@ -38,7 +38,9 @@ export interface ChannelSession {
   sendChat(chat: Chat | string): AsyncCommandResult<Chatlog>;
 
   /**
-   * Forward chat to channel.
+   * Forward media chat to channel.
+   * This command is not intended for chat forwarding.
+   *
    * Perform FORWARD command.
    *
    * @param chat
