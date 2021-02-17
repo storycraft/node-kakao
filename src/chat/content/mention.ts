@@ -35,7 +35,6 @@ export class MentionContent implements ChatContent {
     }
 
     map.at.push(lastAt + 1);
-    console.log(chat.attachment);
     chat.text += `@${this.user.nickname}`;
   }
 }
