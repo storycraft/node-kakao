@@ -8,11 +8,11 @@ import { WebApiConfig, DefaultConfiguration } from '..';
 import { OAuthCredential, OAuthInfo } from '../oauth';
 import { AsyncCommandResult, KnownDataStatusCode } from '../request';
 import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
-import { ApiClient, createApiClient, RequestHeader } from './web-api-client';
+import { WebClient, createWebClient, RequestHeader } from './web-client';
 
 export class OAuthApiClient {
   constructor(
-    private _client: ApiClient,
+    private _client: WebClient,
     public config: WebApiConfig,
   ) {
   
@@ -73,11 +73,11 @@ export class OAuthApiClient {
    */
     static async create(config: Partial<WebApiConfig> = {}): Promise<OAuthApiClient> {
       return new OAuthApiClient(
-        await createApiClient(
+        await createWebClient(
           'https',
           'katalk.kakao.com',
         ),
-        Object.assign(config, DefaultConfiguration),
+        Object.assign({ ...DefaultConfiguration }, config),
       );
     }
 }

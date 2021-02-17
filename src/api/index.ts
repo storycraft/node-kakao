@@ -4,7 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from './web-api-client';
+export * from './web-client';
+export * as xvc from './xvc';
 export * as struct from './struct';
 export * from './auth-api-client';
 export * from './service-api-client';

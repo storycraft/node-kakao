@@ -19,9 +19,9 @@ export const DefaultConfiguration: OAuthLoginConfig & ClientConfig = {
 
   osVersion: '10.0',
 
-  // sub(pc)
+  // 2 == sub, 1 == main
   deviceType: 2,
-  // wired
+  // 0 == wired(WIFI), 3 == cellular
   netType: 0,
   // 999: pc
   mccmnc: '999',
@@ -32,7 +32,6 @@ export const DefaultConfiguration: OAuthLoginConfig & ClientConfig = {
   subDevice: true,
   deviceModel: '',
 
-  xvcSeedList: ['HEATH', 'DEMIAN'],
   loginTokenSeedList: ['PITT', 'INORAN'],
 
 };
@@ -44,6 +43,7 @@ export interface BookingConfig {
 
   agent: string;
   mccmnc: string;
+
   deviceModel: string;
 
 }
@@ -69,14 +69,15 @@ export interface WebApiConfig {
   agent: string;
 
   version: string;
-
   osVersion: string;
 
   language: string;
+  
+  deviceModel: string;
 
 }
 
-export type SessionConfig = CheckinConfig
+export type SessionConfig = CheckinConfig;
 
 export interface ClientConfig extends SessionConfig, WebApiConfig {
 
@@ -86,7 +87,6 @@ export interface ClientConfig extends SessionConfig, WebApiConfig {
 
 export interface OAuthLoginConfig extends WebApiConfig {
 
-  xvcSeedList: [string, string];
   loginTokenSeedList: [string, string];
 
 }

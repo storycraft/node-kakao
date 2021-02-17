@@ -21,8 +21,9 @@ export function getUserAgent(config: WebApiConfig): string {
   let os = '';
   if (config.agent === 'win32') {
     os = `Wd/${config.osVersion}`;
+  } else if (config.agent === 'android') {
+    os = `An/${config.osVersion}`;
   } else {
-    // TODO
     os = `Wd/${config.osVersion}`;
   }
 

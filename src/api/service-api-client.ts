@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { createSessionApiClient, SessionApiClient } from './web-api-client';
+import { createSessionWebClient, SessionWebClient } from './web-client';
 import { DefaultConfiguration, WebApiConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../request';
@@ -24,7 +24,7 @@ import {
 } from './struct';
 
 export class ServiceApiClient {
-  constructor(private _client: SessionApiClient) {
+  constructor(private _client: SessionWebClient) {
 
   }
 
@@ -351,9 +351,9 @@ export class ServiceApiClient {
    */
   static async create(credential: OAuthCredential, config: Partial<WebApiConfig> = {}): Promise<ServiceApiClient> {
     return new ServiceApiClient(
-      await createSessionApiClient(
+      await createSessionWebClient(
         credential,
-        Object.assign(config, DefaultConfiguration),
+        Object.assign({ ...DefaultConfiguration }, config),
         'https',
         'katalk.kakao.com',
       ),

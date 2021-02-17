@@ -19,7 +19,7 @@ export type RequestForm = { [key: string]: FileRequestData | number | string | u
 /**
  * Provides various web request api
  */
-export interface ApiClient extends HeaderDecorator {
+export interface WebClient extends HeaderDecorator {
 
   /**
    * Returns url
@@ -55,8 +55,8 @@ export interface ApiClient extends HeaderDecorator {
 /**
  * Api client with credential
  */
-export class SessionApiClient implements ApiClient {
-  constructor(private _client: ApiClient, private _credential: OAuthCredential, public config: WebApiConfig) {
+export class SessionWebClient implements WebClient {
+  constructor(private _client: WebClient, private _credential: OAuthCredential, public config: WebApiConfig) {
 
   }
 
@@ -105,30 +105,30 @@ export interface HeaderDecorator {
 }
 
 /**
- * Create api client by platform
+ * Create web client by platform
  *
  * @param {string} scheme
  * @param {string} host
  * @param {HeaderDecorator} decorator
  */
-export async function createApiClient(scheme: string, host: string, decorator?: HeaderDecorator): Promise<ApiClient> {
+export async function createWebClient(scheme: string, host: string, decorator?: HeaderDecorator): Promise<WebClient> {
   if (isNode()) {
-    return new (await import('./axios-api-client')).AxiosApiClient(scheme, host, decorator);
+    return new (await import('./axios-web-client')).AxiosWebClient(scheme, host, decorator);
   } else if (isDeno()) {
-    return new (await import('./fetch-api-client')).FetchApiClient(scheme, host, decorator);
+    return new (await import('./fetch-web-client')).FetchWebClient(scheme, host, decorator);
   } else if (isBrowser()) {
-    return new (await import('./fetch-api-client')).FetchApiClient(scheme, host, decorator);
+    return new (await import('./fetch-web-client')).FetchWebClient(scheme, host, decorator);
   } else {
     throw new Error('Unknown environment');
   }
 }
 
-export async function createSessionApiClient(
+export async function createSessionWebClient(
   credential: OAuthCredential,
   config: WebApiConfig,
   scheme: string,
   host: string,
   decorator?: HeaderDecorator,
-): Promise<SessionApiClient> {
-  return new SessionApiClient(await createApiClient(scheme, host, decorator), credential, config);
+): Promise<SessionWebClient> {
+  return new SessionWebClient(await createWebClient(scheme, host, decorator), credential, config);
 }

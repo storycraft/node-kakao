@@ -4,24 +4,21 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { AxiosRequestConfig } from 'axios';
-import Axios from 'axios';
 import {
+  WebClient,
+  FileRequestData,
   HeaderDecorator,
+  RequestForm,
   RequestHeader,
   RequestMethod,
-  RequestForm,
-  FileRequestData,
-  ApiClient,
-} from './web-api-client';
+} from './web-client';
 import { DefaultRes } from '../request';
 import { JsonUtil } from '../util';
-import FormData from 'form-data';
 
 /**
- * ApiClient implementation wrapped with axios
+ * WebClient implementation wrapped with fetch api
  */
-export class AxiosApiClient implements ApiClient, HeaderDecorator {
+export class FetchWebClient implements WebClient, HeaderDecorator {
   constructor(public scheme: string, public host: string, private _decorator?: HeaderDecorator) {
 
   }
@@ -39,24 +36,17 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
     this._decorator?.fillHeader(header);
   }
 
-  private buildAxiosReqData(method: RequestMethod, header?: RequestHeader): AxiosRequestConfig {
+  private buildFetchReqData(method: RequestMethod, header?: RequestHeader): RequestInit {
     const headers: RequestHeader = {};
 
     this.fillHeader(headers);
 
-    const reqData: AxiosRequestConfig = {
-      headers,
-
-      method,
-
-      // https://github.com/axios/axios/issues/811
-      // https://github.com/axios/axios/issues/907
-      transformResponse: (data) => data,
-
-      responseType: 'text',
-    };
-
     if (header) Object.assign(headers, header);
+
+    const reqData: RequestInit = {
+      headers,
+      method,
+    };
 
     return reqData;
   }
@@ -67,16 +57,14 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
       form?: RequestForm,
       headers?: RequestHeader,
   ): Promise<DefaultRes> {
-    const reqData = this.buildAxiosReqData(method, headers);
-    reqData.url = this.toApiURL(path);
+    const reqData = this.buildFetchReqData(method, headers);
+    const url = this.toApiURL(path);
 
     if (form) {
-      const formData = this.convertToFormData(form);
-
-      reqData.data = formData.toString();
+      reqData.body = this.convertToFormData(form);
     }
 
-    return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
+    return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
   }
 
   async requestMultipart(
@@ -85,31 +73,27 @@ export class AxiosApiClient implements ApiClient, HeaderDecorator {
       form?: RequestForm,
       headers?: RequestHeader,
   ): Promise<DefaultRes> {
-    const reqData = this.buildAxiosReqData(method, headers);
-    reqData.url = this.toApiURL(path);
+    const reqData = this.buildFetchReqData(method, headers);
+    const url = this.toApiURL(path);
 
     if (form) {
-      const formData = this.convertToMultipart(form);
-
-      Object.assign(reqData.headers, formData.getHeaders());
-
-      reqData.data = formData.toString();
+      reqData.body = this.convertToMultipart(form);
     }
 
-    return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
+    return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
   }
 
   protected convertToMultipart(form: RequestForm): FormData {
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(form)) {
-      if (value && (value as FileRequestData).value && (value as FileRequestData).options) {
+      if (typeof value === 'object' && value && 'value' in value && 'options' in value) {
         const file = value as FileRequestData;
-        const options: FormData.AppendOptions = { filename: file.options.filename };
-
-        if (file.options.contentType) options.contentType = file.options.contentType;
-
-        formData.append(key, file.value, options);
+        formData.append(
+            key,
+            new Blob([new Uint8Array(file.value)], { type: file.options.contentType }),
+            file.options.filename,
+        );
       } else {
         formData.append(key, value + '');
       }

@@ -5,13 +5,13 @@
  */
 
 import { Long } from 'bson';
-import { sha512 } from 'hash-wasm';
-import { ApiClient, createApiClient, RequestForm, RequestHeader } from './web-api-client';
+import { WebClient, createWebClient, RequestForm, RequestHeader } from './web-client';
 import { DefaultConfiguration, OAuthLoginConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../request';
 import { fillAHeader, fillBaseHeader, getUserAgent } from './header-util';
 import { AccessDataStruct, structToLoginData } from './struct';
+import { Win32XVCProvider, XVCProvider } from './xvc';
 
 /**
  * Login data
@@ -117,10 +117,11 @@ export enum KnownAuthStatusCode {
  */
 export class AuthApiClient {
   constructor(
-    private _client: ApiClient,
+    private _client: WebClient,
     private _name: string,
     private _deviceUUID: string,
     public config: OAuthLoginConfig,
+    public xvcProvider: XVCProvider
   ) {
 
   }
@@ -148,6 +149,10 @@ export class AuthApiClient {
   private fillAuthForm(form: RequestForm): RequestForm {
     form['device_uuid'] = this._deviceUUID;
     form['device_name'] = this._name;
+
+    if (this.config.deviceModel) {
+      form['model_name'] = this.config.deviceModel;
+    }
 
     return form;
   }
@@ -215,7 +220,7 @@ export class AuthApiClient {
    *
    * @param {LoginForm} form
    * @param {string} passcode
-   * @param {boolean} permanent If true the device will be registered as permanent
+   * @param {boolean} [permanent=true] If true the device will be registered as permanent
    */
   async registerDevice(form: LoginForm, passcode: string, permanent = true): AsyncCommandResult {
     const res = await this._client.request(
@@ -228,13 +233,8 @@ export class AuthApiClient {
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
   }
 
-  async calculateXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
-    return (await this.calculateFullXVCKey(deviceUUID, userAgent, email)).substring(0, 16);
-  }
-
-  async calculateFullXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
-    const source = `${this.config.xvcSeedList[0]}|${userAgent}|${this.config.xvcSeedList[1]}|${email}|${deviceUUID}`;
-    return sha512(source);
+  private async calculateXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
+    return (await this.xvcProvider.toFullXVCKey(deviceUUID, userAgent, email)).substring(0, 16);
   }
 
   private getApiPath(api: string) {
@@ -247,17 +247,20 @@ export class AuthApiClient {
    * @param {string} name
    * @param {string} deviceUUID
    * @param {Partial<OAuthLoginConfig>} config
+   * @param {XVCProvider} [xvcProvider]
    */
   static async create(
     name: string,
     deviceUUID: string,
     config: Partial<OAuthLoginConfig> = {},
+    xvcProvider?: XVCProvider
   ): Promise<AuthApiClient> {
     return new AuthApiClient(
-      await createApiClient('https', 'katalk.kakao.com'),
+      await createWebClient('https', 'katalk.kakao.com'),
       name,
       deviceUUID,
-      Object.assign(config, DefaultConfiguration),
+      Object.assign({ ...DefaultConfiguration }, config),
+      xvcProvider ? xvcProvider : Win32XVCProvider
     );
   }
 }
