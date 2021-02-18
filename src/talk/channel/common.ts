@@ -60,7 +60,7 @@ export async function initNormalUserList(
     const userRes = await session.getLatestUserInfo(...userList.slice(i, i + 300));
     if (!userRes.success) return userRes;
 
-    infoList.push(...userRes.result as NormalChannelUserInfo[]);
+    infoList.push(...userRes.result);
   }
 
   return {
