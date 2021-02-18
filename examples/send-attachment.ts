@@ -10,8 +10,7 @@
  */
 
 import { readFileSync } from 'fs';
-import { AttachmentApi, AudioAttachment, ChatBuilder, KnownChatType, TalkClient } from 'node-kakao';
-import { ContactAttachment } from '../src';
+import { AttachmentApi, AudioAttachment, ChatBuilder, ContactAttachment, KnownChatType, TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
