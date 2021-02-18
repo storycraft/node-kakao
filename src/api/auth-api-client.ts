@@ -100,6 +100,7 @@ export interface TokenLoginForm extends LoginForm {
 export enum KnownAuthStatusCode {
 
   LOGIN_FAILED_REASON = 12,
+  TOO_MANY_TRY_LOGIN = 13,
   LOGIN_FAILED = 30,
   MOBILE_UNREGISTERED = 32,
   DEVICE_NOT_REGISTERED = -100,
