@@ -42,7 +42,7 @@ export class TalkClient
   private _session: LocoSession | null;
 
   /**
-   * Ping request interval. (Default = 900000 (15 min))
+   * Ping request interval. (Default = 300000 (5 min))
    */
   public pingInterval: number;
   private _pingTask: number | null;
