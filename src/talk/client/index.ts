@@ -42,7 +42,7 @@ export class TalkClient
   private _session: LocoSession | null;
 
   /**
-   * Ping request interval. (Default = 900000 (15 min))
+   * Ping request interval. (Default Win32 = 180000 (3 min), Default Android = 30000 (30 sec))
    */
   public pingInterval: number;
   private _pingTask: number | null;
@@ -60,7 +60,7 @@ export class TalkClient
   ) {
     super();
 
-    this.pingInterval = 300000;
+    this.pingInterval = config.agent === "android"? 30000: 180000;
     this._pingTask = null;
 
     this._session = null;
