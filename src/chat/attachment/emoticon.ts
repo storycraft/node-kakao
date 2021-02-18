@@ -31,7 +31,7 @@ export interface EmoticonAttachment extends Attachment {
   /**
    * Stop position
    */
-  s: number;
+  s?: number;
 
   /**
    * Emoticon sound url

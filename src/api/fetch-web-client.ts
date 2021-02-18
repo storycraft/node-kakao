@@ -6,14 +6,13 @@
 
 import {
   WebClient,
-  FileRequestData,
   HeaderDecorator,
   RequestForm,
   RequestHeader,
   RequestMethod,
+  FileRequestData,
 } from './web-client';
-import { DefaultRes } from '../request';
-import { JsonUtil } from '../util';
+import { convertToFormData } from './web-api-util';
 
 /**
  * WebClient implementation wrapped with fetch api
@@ -52,27 +51,33 @@ export class FetchWebClient implements WebClient, HeaderDecorator {
   }
 
   async request(
-      method: RequestMethod,
-      path: string,
-      form?: RequestForm,
-      headers?: RequestHeader,
-  ): Promise<DefaultRes> {
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader,
+  ): Promise<ArrayBuffer> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
 
     if (form) {
-      reqData.body = this.convertToFormData(form);
+      reqData.body = convertToFormData(form);
     }
 
-    return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
+    const res = await fetch(url, reqData);
+
+    if (!res.ok) {
+      throw new Error(`Web request failed with status ${res.status} ${res.statusText}`);
+    }
+
+    return await res.arrayBuffer();
   }
 
   async requestMultipart(
-      method: RequestMethod,
-      path: string,
-      form?: RequestForm,
-      headers?: RequestHeader,
-  ): Promise<DefaultRes> {
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader,
+  ): Promise<ArrayBuffer> {
     const reqData = this.buildFetchReqData(method, headers);
     const url = this.toApiURL(path);
 
@@ -80,34 +85,33 @@ export class FetchWebClient implements WebClient, HeaderDecorator {
       reqData.body = this.convertToMultipart(form);
     }
 
-    return JsonUtil.parseLoseless(await (await fetch(url, reqData)).text());
+    const res = await fetch(url, reqData);
+
+    if (!res.ok) {
+      throw new Error(`Web request failed with status ${res.status} ${res.statusText}`);
+    }
+
+    return await res.arrayBuffer();
   }
 
   protected convertToMultipart(form: RequestForm): FormData {
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(form)) {
-      if (typeof value === 'object' && value && 'value' in value && 'options' in value) {
+      if (value && (value as FileRequestData).value && (value as FileRequestData).options) {
         const file = value as FileRequestData;
+
         formData.append(
-            key,
-            new Blob([new Uint8Array(file.value)], { type: file.options.contentType }),
+          key,
+          new File(
+            [new Blob([file.value])],
             file.options.filename,
+            { type: file.options.contentType }
+          )
         );
       } else {
         formData.append(key, value + '');
       }
-    }
-
-    return formData;
-  }
-
-  protected convertToFormData(form: RequestForm): URLSearchParams {
-    const formData = new URLSearchParams();
-
-    for (const [key, value] of Object.entries(form)) {
-      // hax for undefined, null values
-      formData.append(key, value + '');
     }
 
     return formData;

@@ -7,23 +7,6 @@
 import { Attachment } from '.';
 
 /**
- * Media template can be used to send attachment uploaded via web api.
- * You should provide additional datas using attachment typings below.
- */
-export interface MediaPathAttachment extends Attachment {
-  /**
-   * Media path (Uploaded via web api)
-   */
-  path: string;
-
-  /**
-   * Media size
-   */
-  s: number;
-
-}
-
-/**
  * A complete media attachment with its media key.
  * There can be more data by types. Mix with attachment typings below.
  */

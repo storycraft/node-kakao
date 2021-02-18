@@ -8,14 +8,16 @@ import { WebApiConfig, DefaultConfiguration } from '..';
 import { OAuthCredential, OAuthInfo } from '../oauth';
 import { AsyncCommandResult, KnownDataStatusCode } from '../request';
 import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
-import { WebClient, createWebClient, RequestHeader } from './web-client';
+import { WebClient, createWebClient, RequestHeader, DataWebRequest } from './web-client';
 
 export class OAuthApiClient {
+  private _client: DataWebRequest;
+
   constructor(
-    private _client: WebClient,
+    client: WebClient,
     public config: WebApiConfig,
   ) {
-  
+    this._client = new DataWebRequest(client);
   }
 
   private createOAuthHeader(credential: OAuthCredential): RequestHeader {
@@ -36,7 +38,7 @@ export class OAuthApiClient {
    * @param {OAuthCredential} credential
    */
   async renew(credential: OAuthCredential): AsyncCommandResult<OAuthInfo> {
-    const res = await this._client.request(
+    const res = await this._client.requestData(
       'POST',
       `${this.config.agent}/account/oauth2_token.json`,
       {

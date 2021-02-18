@@ -4,32 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export function getUploadedFileKey(uploadPath: string): string {
-  return uploadPath.replace(/\/talk(m|p|gp|v|a)/, '');
-}
+import { RequestForm } from './web-client';
 
-export function getEmoticonHeader(screenWidth = 1080, screenHeight = 1920): { RESOLUTION: string } {
-  return {
-    RESOLUTION: `${screenWidth}x${screenHeight}`,
-  };
-}
+export function convertToFormData(form: RequestForm): URLSearchParams {
+  const formData = new URLSearchParams();
 
-export function getEmoticonURL(lang = 'kr'): string {
-  return `http://item-${lang}.talk.kakao.co.kr/dw`;
-}
+  for (const [key, value] of Object.entries(form)) {
+    // hax for undefined, null values
+    formData.append(key, value + '');
+  }
 
-export function getEmoticonImageURL(path: string, lang = 'kr'): string {
-  return `${getEmoticonURL(lang)}/${path}`;
-}
-
-export function getEmoticonTitleURL(id: string, type = 'png', lang = 'kr'): string {
-  return `${getEmoticonURL(lang)}/${id}.title.${type}`;
-}
-
-export function getEmoticonPackURL(id: string, lang = 'kr'): string {
-  return `${getEmoticonURL(lang)}/${id}.file_pack.zip`;
-}
-
-export function getEmoticonThumbnailPackURL(id: string, lang = 'kr'): string {
-  return `${getEmoticonURL(lang)}/${id}.thum_pack.zip`;
+  return formData;
 }

@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { WebClient, createWebClient, RequestForm, RequestHeader } from './web-client';
+import { WebClient, createWebClient, RequestForm, RequestHeader, DataWebRequest } from './web-client';
 import { DefaultConfiguration, OAuthLoginConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../request';
@@ -116,14 +116,16 @@ export enum KnownAuthStatusCode {
  * Provides default pc login api which can obtain OAuthCredential
  */
 export class AuthApiClient {
+  private _client: DataWebRequest;
+
   constructor(
-    private _client: WebClient,
+    client: WebClient,
     private _name: string,
     private _deviceUUID: string,
     public config: OAuthLoginConfig,
     public xvcProvider: XVCProvider
   ) {
-
+    this._client = new DataWebRequest(client);
   }
 
   get name(): string {
@@ -163,7 +165,7 @@ export class AuthApiClient {
    * @param {LoginForm} form
    */
   async login(form: LoginForm): AsyncCommandResult<LoginData> {
-    const res = await this._client.request(
+    const res = await this._client.requestData(
       'POST',
       this.getApiPath('login.json'),
       this.fillAuthForm({ ...form }),
@@ -184,7 +186,7 @@ export class AuthApiClient {
    * @param {TokenLoginForm} form
    */
   async loginToken(form: TokenLoginForm): AsyncCommandResult<LoginData> {
-    const res = await this._client.request(
+    const res = await this._client.requestData(
       'POST',
       this.getApiPath('login.json'),
       this.fillAuthForm({ ...form, auto_login: true }),
@@ -205,7 +207,7 @@ export class AuthApiClient {
    * @param {LoginForm} form
    */
   async requestPasscode(form: LoginForm): AsyncCommandResult {
-    const res = await this._client.request(
+    const res = await this._client.requestData(
       'POST',
       this.getApiPath('request_passcode.json'),
       this.fillAuthForm({ ...form }),
@@ -223,7 +225,7 @@ export class AuthApiClient {
    * @param {boolean} [permanent=true] If true the device will be registered as permanent
    */
   async registerDevice(form: LoginForm, passcode: string, permanent = true): AsyncCommandResult {
-    const res = await this._client.request(
+    const res = await this._client.requestData(
       'POST',
       this.getApiPath('register_device.json'),
       this.fillAuthForm({ ...form, passcode, permanent }),

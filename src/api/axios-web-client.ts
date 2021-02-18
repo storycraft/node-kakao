@@ -11,11 +11,10 @@ import {
   RequestHeader,
   RequestMethod,
   RequestForm,
-  FileRequestData,
   WebClient,
+  FileRequestData,
 } from './web-client';
-import { DefaultRes } from '../request';
-import { JsonUtil } from '../util';
+import { convertToFormData } from './web-api-util';
 import FormData from 'form-data';
 
 /**
@@ -53,7 +52,7 @@ export class AxiosWebClient implements WebClient, HeaderDecorator {
       // https://github.com/axios/axios/issues/907
       transformResponse: (data) => data,
 
-      responseType: 'text',
+      responseType: 'arraybuffer',
     };
 
     if (header) Object.assign(headers, header);
@@ -62,21 +61,27 @@ export class AxiosWebClient implements WebClient, HeaderDecorator {
   }
 
   async request(
-      method: RequestMethod,
-      path: string,
-      form?: RequestForm,
-      headers?: RequestHeader,
-  ): Promise<DefaultRes> {
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader,
+  ): Promise<ArrayBuffer> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);
 
     if (form) {
-      const formData = this.convertToFormData(form);
+      const formData = convertToFormData(form);
 
       reqData.data = formData.toString();
     }
 
-    return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
+    const res = await Axios.request(reqData);
+
+    if (res.status !== 200) {
+      throw new Error(`Web request failed with status ${res.status} ${res.statusText}`);
+    }
+
+    return res.data;
   }
 
   async requestMultipart(
@@ -84,19 +89,23 @@ export class AxiosWebClient implements WebClient, HeaderDecorator {
       path: string,
       form?: RequestForm,
       headers?: RequestHeader,
-  ): Promise<DefaultRes> {
+  ): Promise<ArrayBuffer> {
     const reqData = this.buildAxiosReqData(method, headers);
     reqData.url = this.toApiURL(path);
 
     if (form) {
       const formData = this.convertToMultipart(form);
-
       Object.assign(reqData.headers, formData.getHeaders());
-
-      reqData.data = formData.toString();
+      reqData.data = formData.getBuffer();
     }
 
-    return JsonUtil.parseLoseless((await Axios.request(reqData)).data);
+    const res = await Axios.request(reqData);
+
+    if (res.status !== 200) {
+      throw new Error(`Web request failed with status ${res.status} ${res.statusText}`);
+    }
+
+    return res.data;
   }
 
   protected convertToMultipart(form: RequestForm): FormData {
@@ -105,25 +114,11 @@ export class AxiosWebClient implements WebClient, HeaderDecorator {
     for (const [key, value] of Object.entries(form)) {
       if (value && (value as FileRequestData).value && (value as FileRequestData).options) {
         const file = value as FileRequestData;
-        const options: FormData.AppendOptions = { filename: file.options.filename };
 
-        if (file.options.contentType) options.contentType = file.options.contentType;
-
-        formData.append(key, file.value, options);
+        formData.append(key, Buffer.from(file.value), file.options);
       } else {
         formData.append(key, value + '');
       }
-    }
-
-    return formData;
-  }
-
-  protected convertToFormData(form: RequestForm): URLSearchParams {
-    const formData = new URLSearchParams();
-
-    for (const [key, value] of Object.entries(form)) {
-      // hax for undefined, null values
-      formData.append(key, value + '');
     }
 
     return formData;

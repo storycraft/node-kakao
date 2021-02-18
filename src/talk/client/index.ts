@@ -23,7 +23,6 @@ import { TalkBlockSession } from '../block';
 
 export * from './talk-client-session';
 
-
 /**
  * Talk client session with client user
  */

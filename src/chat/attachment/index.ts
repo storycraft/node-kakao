@@ -26,3 +26,20 @@ export interface Attachment extends Record<string, unknown> {
   urls?: string[];
 
 }
+
+/**
+ * Can be used to send attachment uploaded via web api.
+ * You should provide additional data to send properly.
+ */
+export interface PathAttachment extends Attachment {
+  /**
+   * Attachment path (Uploaded via web api)
+   */
+  path: string;
+
+  /**
+   * Attachment size
+   */
+  s: number;
+
+}

@@ -8,6 +8,7 @@ import { Long } from 'bson';
 import { WebApiConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { DefaultRes } from '../request';
+import { JsonUtil } from '../util';
 import { isNode, isDeno, isBrowser } from '../util/platform';
 import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
 
@@ -33,7 +34,7 @@ export interface WebClient extends HeaderDecorator {
    * @param form
    * @param headers
    */
-  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes>;
+  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<ArrayBuffer>;
 
   /**
    * Request multipart form
@@ -48,7 +49,74 @@ export interface WebClient extends HeaderDecorator {
     path: string,
     form?: RequestForm,
     headers?: RequestHeader
-  ): Promise<DefaultRes>;
+  ): Promise<ArrayBuffer>;
+}
+
+export class TextWebRequest<T extends WebClient = WebClient> {
+  constructor(private _client: T) {
+
+  }
+
+  get client(): T {
+    return this._client;
+  }
+
+  async requestText(
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: Record<string, string>
+  ): Promise<string> {
+    const res = await this._client.request(method, path, form, headers);
+
+    return new TextDecoder('utf-8').decode(res);
+  }
+
+  async requestMultipartText(
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: RequestHeader
+  ): Promise<string> {
+    const res = await this._client.requestMultipart(method, path, form, headers);
+
+    return new TextDecoder('utf-8').decode(res);
+  }
+
+}
+
+export class DataWebRequest<T extends WebClient = WebClient> {
+  private _client: TextWebRequest<T>;
+
+  constructor(client: T) {
+    this._client = new TextWebRequest(client);
+  }
+
+  get client(): T {
+    return this._client.client;
+  }
+
+  async requestData(
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: Record<string, string>
+  ): Promise<DefaultRes> {
+    const res = await this._client.requestText(method, path, form, headers);
+
+    return JsonUtil.parseLoseless(res);
+  }
+
+  async requestMultipartData(
+    method: RequestMethod,
+    path: string,
+    form?: RequestForm,
+    headers?: Record<string, string>
+  ): Promise<DefaultRes> {
+    const res = await this._client.requestMultipartText(method, path, form, headers);
+
+    return JsonUtil.parseLoseless(res);
+  }
 
 }
 
@@ -81,7 +149,7 @@ export class SessionWebClient implements WebClient {
     return credentialHeader;
   }
 
-  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<DefaultRes> {
+  request(method: RequestMethod, path: string, form?: RequestForm, headers?: RequestHeader): Promise<ArrayBuffer> {
     return this._client.request(method, path, form, this.createSessionHeader(headers));
   }
 
@@ -90,7 +158,7 @@ export class SessionWebClient implements WebClient {
     path: string,
     form?: RequestForm,
     headers?: RequestHeader,
-  ): Promise<DefaultRes> {
+  ): Promise<ArrayBuffer> {
     return this._client.requestMultipart(method, path, form, this.createSessionHeader(headers));
   }
 }
