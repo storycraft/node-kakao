@@ -34,7 +34,7 @@ import {
 import { JsonUtil } from '../../util';
 import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaUploadTemplate } from '../media/upload';
-import { sendMultiMedia } from './common';
+import { initNormalUserList, sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
@@ -265,8 +265,6 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
         });
 
         this._userInfoMap = userInfoMap;
-      } else if (result.mi) {
-        await this.getAllLatestUserInfo();
       }
     }
 
@@ -335,7 +333,22 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
     const infoRes = await this.getLatestChannelInfo();
     if (!infoRes.success) return infoRes;
 
-    return this.chatON();
+    const chatONRes = await this.chatON();
+    if (!chatONRes.success) return chatONRes;
+
+    if (chatONRes.result.mi) {
+      const userInitres = await initNormalUserList(this._channelSession, chatONRes.result.mi);
+
+      if (!userInitres.success) return userInitres;
+
+      const userInfoMap = new Map();
+      for (const info of userInitres.result) {
+        userInfoMap.set(info.userId.toString(), info);
+      }
+      this._userInfoMap = userInfoMap;
+    }
+
+    return chatONRes;
   }
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {

@@ -25,7 +25,14 @@ import {
 } from '../../packet/struct';
 import { RelayEventType } from '../../relay';
 import { ChannelUser, OpenChannelUserInfo } from '../../user';
-import { ChannelInfoUpdater, sendMultiMedia, TalkChannel, TalkChannelHandler, TalkChannelSession } from '../channel';
+import {
+  ChannelInfoUpdater,
+  initOpenUserList,
+  sendMultiMedia,
+  TalkChannel,
+  TalkChannelHandler,
+  TalkChannelSession
+} from '../channel';
 import { TalkOpenChannelSession } from './talk-open-channel-session';
 import { OpenChannelEvents } from '../event';
 import { Managed } from '../managed';
@@ -302,8 +309,6 @@ export class TalkOpenChannel
         });
 
         this._userInfoMap = userInfoMap;
-      } else if (result.mi) {
-        await this.getAllLatestUserInfo();
       }
 
       if (result.olu) {
@@ -472,7 +477,22 @@ export class TalkOpenChannel
     const linkRes = await this.getLatestOpenLink();
     if (!linkRes.success) return linkRes;
 
-    return this.chatON();
+    const chatONRes = await this.chatON();
+    if (!chatONRes.success) return chatONRes;
+
+    if (chatONRes.result.mi) {
+      const userInitres = await initOpenUserList(this._openChannelSession, chatONRes.result.mi);
+
+      if (!userInitres.success) return userInitres;
+
+      const userInfoMap = new Map();
+      for (const info of userInitres.result) {
+        userInfoMap.set(info.userId.toString(), info);
+      }
+      this._userInfoMap = userInfoMap;
+    }
+
+    return chatONRes;
   }
 
   // Called when broadcast packets are recevied.

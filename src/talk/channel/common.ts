@@ -4,9 +4,12 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from 'bson';
 import { Chatlog, ChatType } from '../../chat';
 import { MediaKeyComponent } from '../../media';
-import { AsyncCommandResult, CommandResultDone } from '../../request';
+import { OpenChannelSession } from '../../openlink';
+import { AsyncCommandResult, CommandResultDone, KnownDataStatusCode } from '../../request';
+import { NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
 import { MediaUploadTemplate } from '../media/upload';
 import { TalkChannelSession } from './talk-channel-session';
 
@@ -40,4 +43,54 @@ export async function sendMultiMedia(
       thumbnailWidths: [], thumbnailHeights: [],
     },
   });
+}
+
+export async function initNormalUserList(
+  session: TalkChannelSession,
+  userIdList: Long[]
+): AsyncCommandResult<NormalChannelUserInfo[]> {
+  const userList = userIdList.map(userId => {
+    return { userId };
+  });
+
+  const infoList: NormalChannelUserInfo[] = [];
+
+  const len = userList.length;
+  for (let i = 0; i < len; i += 300) {
+    const userRes = await session.getLatestUserInfo(...userList.slice(i, i + 300));
+    if (!userRes.success) return userRes;
+
+    infoList.push(...userRes.result as NormalChannelUserInfo[]);
+  }
+
+  return {
+    success: true,
+    status: KnownDataStatusCode.SUCCESS,
+    result: infoList
+  };
+}
+
+export async function initOpenUserList(
+  session: OpenChannelSession,
+  userIdList: Long[]
+): AsyncCommandResult<OpenChannelUserInfo[]> {
+  const userList = userIdList.map(userId => {
+    return { userId };
+  });
+
+  const infoList: OpenChannelUserInfo[] = [];
+
+  const len = userList.length;
+  for (let i = 0; i < len; i += 300) {
+    const userRes = await session.getLatestUserInfo(...userList.slice(i, i + 300));
+    if (!userRes.success) return userRes;
+
+    infoList.push(...userRes.result);
+  }
+
+  return {
+    success: true,
+    status: KnownDataStatusCode.SUCCESS,
+    result: infoList
+  };
 }
