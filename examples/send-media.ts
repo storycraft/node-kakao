@@ -5,11 +5,11 @@
  */
 
 /*
- * This example sends a photo when user types the "!example" command
+ * This example sends a photo when user types the "!example" command.
  */
 
 import { readFileSync } from 'fs';
-import { KnownChatType, TalkClient } from 'node-kakao';
+import { KnownChatType, TalkClient } from '../src';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;

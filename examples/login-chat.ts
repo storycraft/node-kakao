@@ -28,11 +28,11 @@ CLIENT.on('chat', (data, channel) => {
     // 답장 형식
     // 안녕하세요 @xxx
     channel.sendChat(
-      new ChatBuilder().
-      append(new ReplyContent(data.chat)).
-      text('안녕하세요 ').
-      append(new MentionContent(sender)).
-      build(KnownChatType.REPLY));
+      new ChatBuilder()
+      .append(new ReplyContent(data.chat))
+      .text('안녕하세요 ')
+      .append(new MentionContent(sender))
+      .build(KnownChatType.REPLY));
     // 일반 텍스트
     // channel.sendChat('안녕하세요');
   }

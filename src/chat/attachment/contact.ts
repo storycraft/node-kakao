@@ -42,7 +42,7 @@ export interface ProfileAttachment extends Attachment {
 /**
  * Call Contact attachment
  */
-export interface ContactAttachment {
+export interface ContactAttachment extends Attachment {
 
   /**
    * Contact name

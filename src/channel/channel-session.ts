@@ -137,7 +137,7 @@ export interface ChannelSession {
   /**
    * Create media uploader.
    *
-   * @param type
+   * @param type Media type. Supports PHOTO, VIDEO, TEXT, FILE type.
    * @param template
    */
   uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader>;

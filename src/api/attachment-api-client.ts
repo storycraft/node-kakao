@@ -12,7 +12,7 @@ import { fillBaseHeader, getUserAgent } from './header-util';
 import { createWebClient, TextWebRequest } from './web-client';
 
 /**
- * Upload attachment via web api
+ * Web attachment upload api
  */
 export class AttachmentApiClient {
   private _mediaClient: TextWebRequest;
