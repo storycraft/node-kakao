@@ -60,8 +60,11 @@ typings/
 # next.js build output
 .next
 
+docs/
 dist/
+dist_esm/
 loco-test.ts
+deno-test.ts
 
-# vim swp file 
+# vim swp file
 *.swp

@@ -1,8 +1,12 @@
 {
-    "out": "docs",
-    "excludeExternals": true,
-    "excludeProtected": false,
-    "excludePrivate": false,
-    "name": "NodeKakao",
-    "includeVersion": true
+  "out": "docs",
+  "excludeExternals": true,
+  "excludeProtected": true,
+  "entryPoints": [
+    "./src/"
+  ],
+  "exclude": "**/!(index).ts",
+  "excludePrivate": true,
+  "name": "NodeKakao",
+  "includeVersion": true
 }

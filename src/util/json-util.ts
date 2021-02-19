@@ -1,6 +1,5 @@
-import { Long } from "bson";
-import { TypeConverter } from "json-proxy-mapper";
-const LosslessJSON = require('lossless-json');
+import { Long } from 'bson';
+import * as LosslessJSON from 'lossless-json';
 
 /*
  * Created on Wed Oct 30 2019
@@ -9,48 +8,34 @@ const LosslessJSON = require('lossless-json');
  */
 
 export namespace JsonUtil {
-
-    export function readLong(value: any): Long {
-        if (value && value.unsigned !== undefined) {
-            return (value as Long);
-        }
-
-        return Long.fromNumber(value);
+  const bsonLongReviver = (key: string, value: unknown) => {
+    if (typeof value === 'object' && value && 'isLosslessNumber' in value) {
+      try {
+        return value.valueOf();
+      } catch (e) {
+        return Long.fromString(value.toString());
+      }
     }
 
-    export function parseLoseless(obj: string) {
-        return LosslessJSON.parse(obj, bsonLongRiviver);
-    }
-    
-    export function stringifyLoseless(obj: any) {
-        return LosslessJSON.stringify(obj, bsonLongReplacer);
-    }
+    return value;
+  };
 
-    function bsonLongRiviver(key: string, value: any) {
-        if (value && value.isLosslessNumber) {
-            try {
-                return value.valueOf();
-            } catch (e) {
-                return Long.fromString(value.toString());
-            }
-        }
-        
-        return value;
+  const bsonLongReplacer = (key: string, value: unknown) => {
+    if (typeof value === 'bigint' || Long.isLong(value)) {
+      return new LosslessJSON.LosslessNumber(value.toString());
     }
 
-    function bsonLongReplacer(key: string, value: any) {
-        if (value && value instanceof Long) {
-            return new LosslessJSON.LosslessNumber(value.toString());
-        }
+    return value;
+  };
 
-        return value;
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export function parseLoseless(obj: string): any {
+    return LosslessJSON.parse(obj, bsonLongReviver);
+  }
 
-    export const LongConverter: TypeConverter<Long> = {
-
-        getFromRaw: (target: any, rawKey: PropertyKey, receiver?: any): Long => JsonUtil.readLong(Reflect.get(target, rawKey, receiver)),
-        setToRaw: (target: any, rawKey: PropertyKey, value: Long, receiver?: any): boolean => Reflect.set(target, rawKey, value)
-
-    }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  export function stringifyLoseless(obj: unknown): string {
+    return LosslessJSON.stringify(obj, bsonLongReplacer);
+  }
 
 }
