@@ -24,7 +24,7 @@ Check `examples` folder. Examples are written in typescript.
 [TypeDoc](https://storycraft.github.io/node-kakao/)
 
 ## Migrating from v3
-todo
+See `migration-v3.md`
 
 ## License
 node-kakao is following MIT License.  
