@@ -15,7 +15,7 @@ export interface XVCProvider {
 export const Win32XVCProvider: XVCProvider = {
 
   toFullXVCKey(deviceUUID: string, userAgent: string, email: string): Promise<string> {
-    const source = `HEATH|${userAgent}|DEMIAN|${email}|${deviceUUID}`;
+    const source = `JAYDEN|${userAgent}|JAYMOND|${email}|${deviceUUID}`;
     return sha512(source);
   }
 
