@@ -34,7 +34,7 @@ import {
 import { JsonUtil } from '../../util';
 import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaUploadTemplate } from '../media/upload';
-import { initNormalUserList, sendMultiMedia } from './common';
+import { initWatermarkMap, initNormalUserList, sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
@@ -243,29 +243,39 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
       }
 
       if (result.a && result.w) {
-        const watermarkMap = new Map();
-        const userLen = result.a.length;
-        for (let i = 0; i < userLen; i++) {
-          const userId = result.a[i];
-          const watermark = result.w[i];
-
-          watermarkMap.set(userId.toString(), watermark);
-        }
-        this._watermarkMap = watermarkMap;
+        this._watermarkMap = initWatermarkMap(result.a, result.w);
       }
 
+      const userInfoMap = new Map();
       if (result.m) {
-        const userInfoMap = new Map();
-
         const structList = result.m as NormalMemberStruct[];
-        structList.forEach((struct) => {
+
+        for (const struct of structList) {
           const wrapped = structToChannelUserInfo(struct);
-
           userInfoMap.set(wrapped.userId.toString(), wrapped);
-        });
+        }
+      } else if (result.mi) {
+        const userInitres = await initNormalUserList(this._channelSession, result.mi);
+  
+        if (!userInitres.success) return userInitres;
+  
+        for (const info of userInitres.result) {
+          userInfoMap.set(info.userId.toString(), info);
+        }
 
-        this._userInfoMap = userInfoMap;
+        const channelSession = this._channelSession;
+        const clientUser = channelSession.session.clientUser;
+        if (!userInfoMap.has(clientUser.userId.toString())) {
+          const clientRes = await channelSession.getLatestUserInfo(clientUser);
+          if (!clientRes.success) return clientRes;
+  
+          for (const user of clientRes.result) {
+            userInfoMap.set(user.userId.toString(), user);
+          }
+        }
       }
+
+      if (userInfoMap.size > 0) this._userInfoMap = userInfoMap;
     }
 
     return res;
@@ -333,22 +343,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements Ta
     const infoRes = await this.getLatestChannelInfo();
     if (!infoRes.success) return infoRes;
 
-    const chatONRes = await this.chatON();
-    if (!chatONRes.success) return chatONRes;
-
-    if (chatONRes.result.mi) {
-      const userInitres = await initNormalUserList(this._channelSession, chatONRes.result.mi);
-
-      if (!userInitres.success) return userInitres;
-
-      const userInfoMap = new Map();
-      for (const info of userInitres.result) {
-        userInfoMap.set(info.userId.toString(), info);
-      }
-      this._userInfoMap = userInfoMap;
-    }
-
-    return chatONRes;
+    return this.chatON();
   }
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {

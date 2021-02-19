@@ -45,6 +45,22 @@ export async function sendMultiMedia(
   });
 }
 
+export function initWatermarkMap(
+  idList: Long[],
+  watermarkList: Long[]
+): Map<string, Long> {
+  const watermarkMap: Map<string, Long> = new Map();
+  const userLen = idList.length;
+  for (let i = 0; i < userLen; i++) {
+    const userId = idList[i];
+    const watermark = watermarkList[i];
+
+    watermarkMap.set(userId.toString(), watermark);
+  }
+  
+  return watermarkMap;
+}
+
 export async function initNormalUserList(
   session: TalkChannelSession,
   userIdList: Long[]
