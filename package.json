@@ -52,7 +52,7 @@
     "chai": "^4.2.0",
     "eslint": "^7.19.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.0.0",
     "mocha": "^8.3.0",
     "rollup": "^2.38.1",
     "rollup-plugin-node-polyfills": "^0.2.1",
