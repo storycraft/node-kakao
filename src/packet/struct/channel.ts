@@ -110,12 +110,12 @@ export interface ChannelInfoStruct extends Partial<NormalChannelInfoExtra>, Part
   /**
    * Channel metas
    */
-  chatMetas: ChannelMetaStruct[];
+  chatMetas?: ChannelMetaStruct[];
 
   /**
    * Display user list
    */
-  displayMembers: DisplayUserStruct[];
+  displayMembers?: DisplayUserStruct[];
 
   /**
    * push alert setting

@@ -10,7 +10,7 @@ import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from 
 import { structToChatlog } from './chat';
 
 export function structToChannelInfo(struct: ChannelInfoStruct): ChannelInfo {
-  const displayUserList = struct.displayMembers.map(
+  const displayUserList = struct.displayMembers ? struct.displayMembers.map(
     (userStruct) => {
       return {
         userId: userStruct.userId,
@@ -19,11 +19,11 @@ export function structToChannelInfo(struct: ChannelInfoStruct): ChannelInfo {
         profileURL: userStruct.profileImageUrl,
       };
     },
-  );
+  ) : [];
 
   const metaMap: ChannelMetaMap = {};
 
-  struct.chatMetas.forEach((meta) => metaMap[meta.type] = { ...meta });
+  struct.chatMetas?.forEach((meta) => metaMap[meta.type] = { ...meta });
 
   const info: ChannelInfo = {
     channelId: struct.chatId,
