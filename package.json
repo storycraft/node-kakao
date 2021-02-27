@@ -4,9 +4,10 @@
   "description": "Loco protocol compatible library",
   "main": "./dist/index.js",
   "exports": {
-    "require": "./dist/index.js",
-    "import": "./dist_esm/index.js",
-    "default": "./dist_esm/index.js"
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist_esm/index.js"
+    }
   },
   "types": "dist/index.d.ts",
   "files": [
@@ -40,7 +41,6 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
-    "@skypack/package-check": "^0.2.2",
     "@types/bson": "^4.0.0",
     "@types/chai": "^4.2.3",
     "@types/lossless-json": "^1.0.0",
