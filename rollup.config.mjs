@@ -11,10 +11,12 @@ import typescript from '@rollup/plugin-typescript';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default () => {
   const plugins = [
-    nodeResolve({
-      preferBuiltins: true
+    commonjs({
+      include: 'node_modules/**'
     }),
-    commonjs(),
+    nodeResolve({
+      preferBuiltins: false
+    }),
     typescript({
       module: 'ESNext',
       declaration: false,
