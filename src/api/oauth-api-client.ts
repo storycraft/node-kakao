@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { WebApiConfig, DefaultConfiguration } from '..';
+import { WebApiConfig, DefaultConfiguration } from '../config';
 import { OAuthCredential, OAuthInfo } from '../oauth';
 import { AsyncCommandResult, KnownDataStatusCode } from '../request';
 import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
