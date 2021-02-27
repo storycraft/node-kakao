@@ -5,9 +5,8 @@
  */
 
 import { Long } from 'bson';
-import { InformedOpenLink } from '../..';
 import { EventContext } from '../../event';
-import { OpenLinkService } from '../../openlink';
+import { OpenLinkService, InformedOpenLink } from '../../openlink';
 import { InformedOpenLinkStruct, structToOpenLink, structToOpenLinkInfo } from '../../packet/struct';
 import { DefaultRes } from '../../request';
 import { OpenLinkEvent } from '../event';
