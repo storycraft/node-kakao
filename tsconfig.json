@@ -10,9 +10,7 @@
     "noImplicitAny": true,
     "removeComments": false,
     "strict": true,
-    "pretty": true,
-    "outDir": "dist",
-    "declaration": true,
+    "pretty": false,
     "sourceMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true
