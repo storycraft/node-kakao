@@ -50,13 +50,13 @@ async function main() {
 
   // Giving permanent value to false will allow to login only once.
   const registerRes = await api.registerDevice(form, passcode, true);
-  if (!registerRes.success) throw new Error(`Device registration failed with status: ${passcodeRes.status}`);
+  if (!registerRes.success) throw new Error(`Device registration failed with status: ${registerRes.status}`);
 
   console.log(`Device ${DEVICE_UUID} has been registered`);
 
   // Login after registering devices
   const loginAfterRes = await api.login(form);
-  if (!loginAfterRes.success) throw new Error(`Web login failed with status: ${passcodeRes.status}`);
+  if (!loginAfterRes.success) throw new Error(`Web login failed with status: ${loginAfterRes.status}`);
   console.log(`Client logon successfully`);
 }
 main().then();
