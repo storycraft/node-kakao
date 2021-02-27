@@ -10,7 +10,7 @@ declare let window: { Deno?: { version?: { deno?: string } } } & Record<string, 
 declare let navigator: Record<string, unknown>;
 
 export function isNode(): boolean {
-  return !!(process && process.release);
+  return !!(process && process.release && process.release.name === 'node');
 }
 
 export function isDeno(): boolean {

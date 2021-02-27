@@ -5,46 +5,41 @@
  */
 
 import nodeResolve from '@rollup/plugin-node-resolve';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default () => {
-  const plugins = [
-    commonjs({
-      include: 'node_modules/**'
-    }),
-    nodePolyfills(),
-    nodeResolve(),
-    typescript({
-      module: 'ESNext',
-      declaration: false,
-      removeComments: true,
-    })
-  ];
+const plugins = [
+  nodeResolve({
+    preferBuiltins: true,
+    browser: true
+  }),
+  commonjs(),
+  typescript({
+    module: 'ESNext',
+    declaration: false,
+    removeComments: true,
+  }),
+];
 
-  return [
+/** @type {import('rollup').InputOptions} */
+const opts = {
+  input: 'src/index.ts',
+  external: [
+    // Excluded
+    'axios',
+    'form-data',
+  ],
+  shimMissingExports: true,
+  output: [
     {
-      input: 'src/index.ts',
-      external: [
-        // Excluded
-        'axios',
-        'form-data',
-      ],
-      shimMissingExports: true,
-      output: [
-        {
-          dir: 'dist_esm',
-          format: 'esm',
-          sourcemap: true,
-          /*
-          preserveModules: true,
-          preserveModulesRoot: 'src'
-          */
-        },
-      ],
-      plugins,
+      dir: 'dist_esm',
+      format: 'esm',
+      sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: 'src'
     },
-  ];
+  ],
+  plugins,
 };
+
+export default opts;

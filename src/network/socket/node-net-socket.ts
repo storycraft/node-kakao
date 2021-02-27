@@ -7,7 +7,6 @@
 import { BiStream } from '../../stream';
 import * as net from 'net';
 import * as tls from 'tls';
-import * as util from 'util';
 import { NetSocketOptions } from '.';
 
 export class NodeSocket implements BiStream {
@@ -43,7 +42,13 @@ export class NodeSocket implements BiStream {
   write(data: ArrayBuffer): Promise<void> {
     if (this._ended) throw new Error('Tried to send data from closed socket');
 
-    return util.promisify(this._socket.write.bind(this._socket))(new Uint8Array(data));
+    return new Promise(
+      (resolve, reject) => this._socket.write(
+        new Uint8Array(data),
+        (err) => {
+          if (err) reject(err); else resolve();
+        })
+      );
   }
 
   close(): void {
