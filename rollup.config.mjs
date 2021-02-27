@@ -5,6 +5,7 @@
  */
 
 import nodeResolve from '@rollup/plugin-node-resolve';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 
@@ -14,9 +15,8 @@ export default () => {
     commonjs({
       include: 'node_modules/**'
     }),
-    nodeResolve({
-      preferBuiltins: false
-    }),
+    nodePolyfills(),
+    nodeResolve(),
     typescript({
       module: 'ESNext',
       declaration: false,
@@ -38,8 +38,10 @@ export default () => {
           dir: 'dist_esm',
           format: 'esm',
           sourcemap: true,
+          /*
           preserveModules: true,
           preserveModulesRoot: 'src'
+          */
         },
       ],
       plugins,
