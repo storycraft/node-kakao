@@ -24,7 +24,8 @@ export class LocoPacketCodec {
 
   send(packet: LocoPacket): Promise<void> {
     const packetBuffer = new ArrayBuffer(22 + packet.data[1].byteLength);
-    const namebuffer = new ArrayBuffer(11);
+    const packetArray = new Uint8Array(packetBuffer);
+    const namebuffer = new Uint8Array(11);
     const view = new DataView(packetBuffer);
 
     view.setUint32(0, packet.header.id, true);
@@ -33,26 +34,25 @@ export class LocoPacketCodec {
     view.setUint32(18, packet.data[1].byteLength, true);
 
     const nameLen = Math.min(packet.header.method.length, 11);
-    const nameView = new DataView(namebuffer);
+    const nameList: number[] = [];
     for (let i = 0; i < nameLen; i++) {
       const code = packet.header.method.charCodeAt(i);
 
       if (code > 0xff) throw new Error('Invalid ASCII code at method string');
-      nameView.setUint8(i, code);
+      nameList.push(code);
     }
+    namebuffer.set(nameList, 0);
 
-    const packetArray = new Uint8Array(packetBuffer);
-    packetArray.set(new Uint8Array(namebuffer), 6);
-    packetArray.set(new Uint8Array(packet.data[1]), 22);
+    packetArray.set(namebuffer, 6);
+    packetArray.set(packet.data[1], 22);
 
-    return this._stream.write(packetBuffer);
+    return this._stream.write(packetArray);
   }
 
   iterate(): { [Symbol.asyncIterator](): AsyncIterator<LocoPacket>, next(): Promise<IteratorResult<LocoPacket>> } {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const instance = this;
+    const stream = this._stream;
 
-    const iterator = this._stream.iterate();
+    const iterator = stream.iterate();
 
     const headerBufferList = new ChunkedArrayBufferList();
     const packetBufferList = new ChunkedArrayBufferList();
@@ -63,7 +63,7 @@ export class LocoPacketCodec {
       },
 
       async next(): Promise<IteratorResult<LocoPacket>> {
-        if (instance._stream.ended) {
+        if (stream.ended) {
           return { done: true, value: null };
         }
 
@@ -74,18 +74,19 @@ export class LocoPacketCodec {
             if (headerBufferList.byteLength >= 22) break;
           }
 
-          if (instance._stream.ended) {
+          if (stream.ended) {
             return { done: true, value: null };
           }
         }
 
         const headerBuffer = headerBufferList.toBuffer();
+        const headerArray = new Uint8Array(headerBuffer);
         const headerView = new DataView(headerBuffer);
 
         const header: LocoPacketHeader = {
           id: headerView.getUint32(0, true),
           status: headerView.getUint16(4, true),
-          method: String.fromCharCode(...new Uint8Array(headerBuffer.slice(6, 17))).replace(/\0/g, ''),
+          method: String.fromCharCode(...headerArray.slice(6, 17)).replace(/\0/g, ''),
         };
 
         const dataType = headerView.getUint8(17);
@@ -103,12 +104,13 @@ export class LocoPacketCodec {
             if (packetBufferList.byteLength >= dataSize) break;
           }
 
-          if (instance._stream.ended && packetBufferList.byteLength < dataSize) {
+          if (stream.ended && packetBufferList.byteLength < dataSize) {
             return { done: true, value: null };
           }
         }
 
         const dataBuffer = packetBufferList.toBuffer();
+        const data = new Uint8Array(dataBuffer);
 
         if (dataBuffer.byteLength > dataSize) {
           headerBufferList.append(dataBuffer.slice(dataSize));
@@ -119,7 +121,7 @@ export class LocoPacketCodec {
           done: false,
           value: {
             header: header,
-            data: [dataType, dataBuffer.slice(0, dataSize)],
+            data: [dataType, data.slice(0, dataSize)],
           },
         };
       },

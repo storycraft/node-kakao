@@ -4,7 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export * from './api';
+export * as api from './api';
+export {
+  AuthApiClient,
+  KnownAuthStatusCode,
+  ServiceApiClient,
+  OAuthApiClient,
+  AttachmentApiClient,
+  AttachmentApi
+} from './api';
 export * from './channel';
 export * from './chat';
 export * from './client';

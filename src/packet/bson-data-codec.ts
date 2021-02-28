@@ -14,13 +14,13 @@ export const BsonDataCodec: LocoPacketDataCodec<DefaultReq, DefaultRes> = {
     return dataType == 0 || dataType == 8;
   },
 
-  decode(data: ArrayBuffer): DefaultRes {
+  decode(data: Uint8Array): DefaultRes {
     return Bson.deserialize(Buffer.from(data), {
       promoteLongs: false,
     }) as DefaultRes;
   },
 
-  encode(data: DefaultReq): [number, ArrayBuffer] {
+  encode(data: DefaultReq): [number, Uint8Array] {
     const buf = Bson.serialize(data);
 
     return [0, buf];

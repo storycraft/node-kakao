@@ -14,7 +14,7 @@ export interface MediaUploadTemplate {
   /**
    * File data
    */
-  data: ArrayBuffer;
+  data: Uint8Array;
 
   /**
    * Media width (only photo, video)

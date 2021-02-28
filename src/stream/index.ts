@@ -32,7 +32,7 @@ export interface ReadStream extends Stream {
   /**
    * Try to read data from stream
    */
-  iterate(): AsyncIterableIterator<ArrayBuffer>;
+  iterate(): AsyncIterableIterator<Uint8Array>;
 
 }
 
@@ -46,7 +46,7 @@ export interface WriteStream extends Stream {
    * Write data
    * @param data
    */
-  write(data: ArrayBuffer): Promise<void>;
+  write(data: Uint8Array): Promise<void>;
 
 }
 

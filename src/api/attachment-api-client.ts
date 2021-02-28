@@ -40,7 +40,7 @@ export class AttachmentApiClient {
     return header;
   }
 
-  async upload(type: ChatType, filename: string, data: ArrayBuffer): AsyncCommandResult<PathAttachment> {
+  async upload(type: ChatType, filename: string, data: Uint8Array): AsyncCommandResult<PathAttachment> {
     const client = this.getReqClient(type);
 
     const mimeType = this.getMimeType(type);
@@ -126,7 +126,7 @@ export namespace AttachmentApi {
   export async function upload(
     type: ChatType,
     filename: string,
-    data: ArrayBuffer
+    data: Uint8Array
   ): AsyncCommandResult<PathAttachment> {
     if (!client) client = await AttachmentApiClient.create();
     return client.upload(type, filename, data);

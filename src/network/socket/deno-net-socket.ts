@@ -18,11 +18,11 @@ export class DenoSocket implements BiStream {
     return this._ended;
   }
 
-  async write(data: ArrayBuffer): Promise<void> {
-    await this._conn.write(new Uint8Array(data));
+  async write(data: Uint8Array): Promise<void> {
+    await this._conn.write(data);
   }
 
-  iterate(): AsyncIterableIterator<ArrayBuffer> {
+  iterate(): AsyncIterableIterator<Uint8Array> {
     const iter = Deno.iter(this._conn);
 
     return {

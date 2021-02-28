@@ -12,13 +12,13 @@ export interface StreamHook {
    * Hook data write
    * @param data
    */
-  onWrite(data: ArrayBuffer): void;
+  onWrite(data: Uint8Array): void;
 
   /**
    * Hook data read
    * @param buf
    */
-  onRead(buf: ArrayBuffer): void;
+  onRead(buf: Uint8Array): void;
 
   onClose(): void;
 
@@ -33,13 +33,13 @@ export class HookedStream implements BiStream {
     return this._stream.ended;
   }
 
-  write(data: ArrayBuffer): Promise<void> {
+  write(data: Uint8Array): Promise<void> {
     if (this.hook.onWrite) this.hook.onWrite(data);
 
     return this._stream.write(data);
   }
 
-  iterate(): AsyncIterableIterator<ArrayBuffer> {
+  iterate(): AsyncIterableIterator<Uint8Array> {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const instance = this;
     const iterator = this._stream.iterate();
@@ -49,7 +49,7 @@ export class HookedStream implements BiStream {
         return this;
       },
 
-      async next(): Promise<IteratorResult<ArrayBuffer>> {
+      async next(): Promise<IteratorResult<Uint8Array>> {
         for await (const data of iterator) {
           if (instance.hook.onRead) instance.hook.onRead(data);
           return { done: false, value: data };

@@ -46,7 +46,7 @@ export class FixedReadStream implements ReadStream, FixedStream {
     return this._read >= this._size;
   }
 
-  iterate(): AsyncIterableIterator<ArrayBuffer> {
+  iterate(): AsyncIterableIterator<Uint8Array> {
     const iterable = this._stream.iterate();
     return {
       [Symbol.asyncIterator]() {
@@ -105,7 +105,7 @@ export class FixedWriteStream implements WriteStream, FixedStream {
     return this._written;
   }
 
-  async write(data: ArrayBuffer): Promise<void> {
+  async write(data: Uint8Array): Promise<void> {
     if (this._written + data.byteLength > this._size) throw new Error('Write size exceeded');
     await this._stream.write(data);
     this._written += data.byteLength;

@@ -56,8 +56,7 @@ export class LocoPacketDispatcher {
    * @return {AsyncIterableIterator<PacketRes>}
    */
   listen(): AsyncIterableIterator<PacketRes> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const instance = this;
+    const packetMap = this._packetMap;
     const iterator = this._codec.iterate();
 
     return {
@@ -72,11 +71,11 @@ export class LocoPacketDispatcher {
 
         const packet = next.value;
 
-        if (instance._packetMap.has(packet.header.id)) {
-          const resolver = instance._packetMap.get(packet.header.id);
+        if (packetMap.has(packet.header.id)) {
+          const resolver = packetMap.get(packet.header.id);
           if (resolver) {
             resolver[0](packet);
-            instance._packetMap.delete(packet.header.id);
+            packetMap.delete(packet.header.id);
           }
           return { done: false, value: { push: false, packet } };
         } else {

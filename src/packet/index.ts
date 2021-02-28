@@ -20,7 +20,7 @@ export interface LocoPacket {
   /**
    * [dataType, data buffer]
    */
-  data: [number, ArrayBuffer];
+  data: [number, Uint8Array];
 
 }
 
@@ -45,12 +45,12 @@ export interface LocoPacketDataCodec<T, R = T> {
    * Decode packet data buffer to data
    * @param data
    */
-  decode(data: ArrayBuffer): R;
+  decode(data: Uint8Array): R;
 
   /**
    * Encode data to packet data
    * @param data
    */
-  encode(data: T): [number, ArrayBuffer];
+  encode(data: T): [number, Uint8Array];
 
 }

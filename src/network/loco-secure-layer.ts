@@ -24,10 +24,10 @@ export class LocoSecureLayer implements BiStream {
     this._handshaked = false;
   }
 
-  iterate(): AsyncIterableIterator<ArrayBuffer> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const instance = this;
-    const iterator = instance._stream.iterate();
+  iterate(): AsyncIterableIterator<Uint8Array> {
+    const stream = this._stream;
+    const crypto = this._crypto;
+    const iterator = stream.iterate();
 
     const headerBufferList = new ChunkedArrayBufferList();
     const packetBufferList = new ChunkedArrayBufferList();
@@ -37,8 +37,8 @@ export class LocoSecureLayer implements BiStream {
         return this;
       },
 
-      async next(): Promise<IteratorResult<ArrayBuffer>> {
-        if (instance._stream.ended) {
+      async next(): Promise<IteratorResult<Uint8Array>> {
+        if (stream.ended) {
           return { done: true, value: null };
         }
 
@@ -49,18 +49,19 @@ export class LocoSecureLayer implements BiStream {
             if (headerBufferList.byteLength >= 20) break;
           }
 
-          if (instance._stream.ended) {
+          if (stream.ended) {
             return { done: true, value: null };
           }
         }
 
         const headerBuffer = headerBufferList.toBuffer();
+        const headerArray = new Uint8Array(headerBuffer);
 
         const dataSize = new DataView(headerBuffer).getUint32(0, true) - 16;
-        const iv = headerBuffer.slice(4, 20);
+        const iv = headerArray.slice(4, 20);
 
         if (headerBuffer.byteLength > 20) {
-          packetBufferList.append(headerBuffer.slice(20));
+          packetBufferList.append(headerArray.slice(20));
         }
         headerBufferList.clear();
 
@@ -71,18 +72,19 @@ export class LocoSecureLayer implements BiStream {
             if (packetBufferList.byteLength >= dataSize) break;
           }
 
-          if (instance._stream.ended && packetBufferList.byteLength < dataSize) {
+          if (stream.ended && packetBufferList.byteLength < dataSize) {
             return { done: true, value: null };
           }
         }
 
         const dataBuffer = packetBufferList.toBuffer();
+        const data = new Uint8Array(dataBuffer);
         if (dataBuffer.byteLength > dataSize) {
           headerBufferList.append(dataBuffer.slice(dataSize));
         }
         packetBufferList.clear();
 
-        return { done: false, value: instance._crypto.toAESDecrypted(dataBuffer.slice(0, dataSize), iv) };
+        return { done: false, value: crypto.toAESDecrypted(data.slice(0, dataSize), iv) };
       },
     };
   }
@@ -109,7 +111,7 @@ export class LocoSecureLayer implements BiStream {
     return this._handshaked;
   }
 
-  async write(data: ArrayBuffer): Promise<void> {
+  async write(data: Uint8Array): Promise<void> {
     if (!this._handshaked) {
       await this.sendHandshake();
       this._handshaked = true;
@@ -118,27 +120,28 @@ export class LocoSecureLayer implements BiStream {
     const iv = this._crypto.randomCipherIV();
     const encrypted = this._crypto.toAESEncrypted(data, iv);
 
-    const packet = new ArrayBuffer(encrypted.byteLength + 20);
+    const packetBuffer = new ArrayBuffer(encrypted.byteLength + 20);
+    const packet = new Uint8Array(packetBuffer);
 
-    new DataView(packet).setUint32(0, encrypted.byteLength + 16, true);
+    new DataView(packetBuffer).setUint32(0, encrypted.byteLength + 16, true);
 
-    const packetArr = new Uint8Array(packet);
-    packetArr.set(new Uint8Array(iv), 4);
-    packetArr.set(new Uint8Array(encrypted), 20);
+    packet.set(iv, 4);
+    packet.set(encrypted, 20);
 
     return this._stream.write(packet);
   }
 
   protected async sendHandshake(): Promise<void> {
     const encryptedKey = this._crypto.getRSAEncryptedKey();
-    const handshakePacket = new ArrayBuffer(12 + encryptedKey.byteLength);
+    const handshakeBuffer = new ArrayBuffer(12 + encryptedKey.byteLength);
+    const handshakePacket = new Uint8Array(handshakeBuffer);
 
-    const view = new DataView(handshakePacket);
+    const view = new DataView(handshakeBuffer);
 
     view.setUint32(0, encryptedKey.byteLength, true);
     view.setUint32(4, 12, true); // RSA OAEP SHA1 MGF1 SHA1
     view.setUint32(8, 2, true); // AES_CFB128 NOPADDING
-    new Uint8Array(handshakePacket).set(new Uint8Array(encryptedKey), 12);
+    handshakePacket.set(encryptedKey, 12);
 
     await this._stream.write(handshakePacket);
   }

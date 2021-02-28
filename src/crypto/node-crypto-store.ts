@@ -17,10 +17,10 @@ export async function createNodeCrypto(pubKey: string): Promise<CryptoStore> {
   const key = crypto.randomBytes(16);
 
   const store = {
-    toAESEncrypted(buffer: ArrayBuffer, iv: ArrayBuffer) {
-      const cipher = crypto.createCipheriv('aes-128-cfb', key, new Uint8Array(iv));
+    toAESEncrypted(buffer: Uint8Array, iv: Uint8Array) {
+      const cipher = crypto.createCipheriv('aes-128-cfb', key, iv);
 
-      const encrypted = cipher.update(new Uint8Array(buffer));
+      const encrypted = cipher.update(buffer);
       const final = cipher.final();
 
       const res = new Uint8Array(encrypted.byteLength + final.byteLength);
@@ -30,10 +30,10 @@ export async function createNodeCrypto(pubKey: string): Promise<CryptoStore> {
 
       return res;
     },
-    toAESDecrypted(buffer: ArrayBuffer, iv: ArrayBuffer) {
-      const cipher = crypto.createDecipheriv('aes-128-cfb', key, new Uint8Array(iv));
+    toAESDecrypted(buffer: Uint8Array, iv: Uint8Array) {
+      const cipher = crypto.createDecipheriv('aes-128-cfb', key, iv);
 
-      const decrypted = cipher.update(new Uint8Array(buffer));
+      const decrypted = cipher.update(buffer);
       const final = cipher.final();
 
       const res = new Uint8Array(decrypted.byteLength + final.byteLength);
@@ -44,8 +44,8 @@ export async function createNodeCrypto(pubKey: string): Promise<CryptoStore> {
       return res;
     },
 
-    toRSAEncrypted(buffer: ArrayBuffer) {
-      return crypto.publicEncrypt(pubKey, new Uint8Array(buffer));
+    toRSAEncrypted(buffer: Uint8Array) {
+      return crypto.publicEncrypt(pubKey, buffer);
     },
 
     randomCipherIV() {
