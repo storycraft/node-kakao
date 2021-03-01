@@ -1,6 +1,6 @@
 {
   "name": "node-kakao",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "Loco protocol compatible library",
   "main": "./dist/index.js",
   "exports": {
@@ -24,6 +24,7 @@
     "build:node": "./node_modules/.bin/tsc --outDir dist --declarationDir dist --declaration true",
     "build:esm": "./node_modules/.bin/rollup -c",
     "docs": "./node_modules/.bin/typedoc src",
+    "fix": "./node_modules/.bin/eslint --fix ./src/**/*",
     "prepublishOnly": "npm run test && npm run build"
   },
   "keywords": [
@@ -73,9 +74,5 @@
     "hash-wasm": "^4.4.1",
     "lossless-json": "^1.0.3",
     "node-forge": "^0.10.0"
-  },
-  "map": {
-    "form-data": "@empty",
-    "axios": "@empty"
   }
 }

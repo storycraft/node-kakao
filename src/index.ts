@@ -11,7 +11,8 @@ export {
   ServiceApiClient,
   OAuthApiClient,
   AttachmentApiClient,
-  AttachmentApi
+  AttachmentApi,
+  xvc
 } from './api';
 export * from './channel';
 export * from './chat';
