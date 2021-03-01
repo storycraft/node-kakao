@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LoginResult | NodeKakao - v4.0.5</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.5">
+	<title>LoginResult | NodeKakao - v4.0.6</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.5</a>
+					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.5</a>
+					<a href="../modules.html">NodeKakao - v4.0.6</a>
 				</li>
 				<li>
 					<a href="../modules/index.html">index</a>
@@ -82,6 +82,13 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#channellist" class="tsd-kind-icon">channel<wbr>List</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#lastchannelid" class="tsd-kind-icon">last<wbr>Channel<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#lasttokenid" class="tsd-kind-icon">last<wbr>Token<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#mcmrevision" class="tsd-kind-icon">mcm<wbr>Revision</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#minlogid" class="tsd-kind-icon">min<wbr>Log<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#removedchannelidlist" class="tsd-kind-icon">removed<wbr>Channel<wbr>IdList</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#revision" class="tsd-kind-icon">revision</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#revisioninfo" class="tsd-kind-icon">revision<wbr>Info</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="index.loginresult.html#userid" class="tsd-kind-icon">user<wbr>Id</a></li>
 							</ul>
 						</section>
@@ -93,10 +100,95 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="channellist" class="tsd-anchor"></a>
 					<h3>channel<wbr>List</h3>
-					<div class="tsd-signature tsd-kind-icon">channel<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol"> | </span><a href="index.openchannel.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">channel<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="channel.normalchanneldata.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelData</a><span class="tsd-signature-symbol"> | </span><a href="index.openchanneldata.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenChannelData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in client/client-session.ts:16</li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L16">client/client-session.ts:16</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="lastchannelid" class="tsd-anchor"></a>
+					<h3>last<wbr>Channel<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">last<wbr>Channel<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L26">client/client-session.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Last channel id</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="lasttokenid" class="tsd-anchor"></a>
+					<h3>last<wbr>Token<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">last<wbr>Token<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L28">client/client-session.ts:28</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="mcmrevision" class="tsd-anchor"></a>
+					<h3>mcm<wbr>Revision</h3>
+					<div class="tsd-signature tsd-kind-icon">mcm<wbr>Revision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L29">client/client-session.ts:29</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="minlogid" class="tsd-anchor"></a>
+					<h3>min<wbr>Log<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">min<wbr>Log<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L42">client/client-session.ts:42</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Minimum log id</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="removedchannelidlist" class="tsd-anchor"></a>
+					<h3>removed<wbr>Channel<wbr>IdList</h3>
+					<div class="tsd-signature tsd-kind-icon">removed<wbr>Channel<wbr>IdList<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L34">client/client-session.ts:34</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Removed channel id list</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="revision" class="tsd-anchor"></a>
+					<h3>revision</h3>
+					<div class="tsd-signature tsd-kind-icon">revision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L36">client/client-session.ts:36</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="revisioninfo" class="tsd-anchor"></a>
+					<h3>revision<wbr>Info</h3>
+					<div class="tsd-signature tsd-kind-icon">revision<wbr>Info<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L37">client/client-session.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -106,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Long</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in client/client-session.ts:21</li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/client/client-session.ts#L21">client/client-session.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -157,6 +249,27 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="index.loginresult.html#channellist" class="tsd-kind-icon">channel<wbr>List</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#lastchannelid" class="tsd-kind-icon">last<wbr>Channel<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#lasttokenid" class="tsd-kind-icon">last<wbr>Token<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#mcmrevision" class="tsd-kind-icon">mcm<wbr>Revision</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#minlogid" class="tsd-kind-icon">min<wbr>Log<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#removedchannelidlist" class="tsd-kind-icon">removed<wbr>Channel<wbr>IdList</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#revision" class="tsd-kind-icon">revision</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="index.loginresult.html#revisioninfo" class="tsd-kind-icon">revision<wbr>Info</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="index.loginresult.html#userid" class="tsd-kind-icon">user<wbr>Id</a>
