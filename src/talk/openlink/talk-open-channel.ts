@@ -12,6 +12,7 @@ import { EventContext, TypedEmitter } from '../../event';
 import { MediaKeyComponent } from '../../media';
 import {
   OpenChannel,
+  OpenChannelData,
   OpenChannelInfo,
   OpenChannelSession,
   OpenChannelUserPerm, OpenLink, OpenLinkChannelUserInfo, OpenLinkKickedUserInfo,
@@ -57,7 +58,7 @@ import { MediaUploadTemplate } from '../media/upload';
 
 export class TalkOpenChannel
   extends TypedEmitter<OpenChannelEvents>
-  implements OpenChannel, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
+  implements OpenChannel, OpenChannelData, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
   private _info: OpenChannelInfo;
 
   private _channelSession: TalkChannelSession;

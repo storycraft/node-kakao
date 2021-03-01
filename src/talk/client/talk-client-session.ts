@@ -5,15 +5,16 @@
  */
 
 import { Long } from 'bson';
-import { Channel } from '../../channel';
+import { NormalChannelData } from '../../channel';
 import { TalkSession } from './index';
 import { ClientStatus } from '../../client-status';
 import { ClientSession, LoginResult } from '../../client';
 import { OAuthCredential } from '../../oauth';
-import { OpenChannel } from '../../openlink';
+import { OpenChannelData } from '../../openlink';
 import { LoginListRes } from '../../packet/chat';
 import { AsyncCommandResult, CommandResult, DefaultReq, DefaultRes, KnownDataStatusCode } from '../../request';
 import { ClientConfig } from '../../config';
+import { dataStructToNormalChannelInfo, dataStructToOpenChannelInfo } from '../../packet/struct'
 
 export class TalkClientSession implements ClientSession {
   private _lastLoginRev: number;
@@ -61,13 +62,21 @@ export class TalkClientSession implements ClientSession {
     this._lastTokenId = loginRes.lastTokenId;
     this._lastBlockTk = loginRes.lbk;
 
-    const channelList: (Channel | OpenChannel)[] = [];
+    const channelList: (NormalChannelData | OpenChannelData)[] = [];
     for (const channelData of loginRes.chatDatas) {
-      let channel: (Channel | OpenChannel);
+      let channel: (NormalChannelData | OpenChannelData);
+
       if (channelData.li) {
-        channel = { channelId: channelData.c, linkId: channelData.li };
+        channel = {
+          channelId: channelData.c,
+          linkId: channelData.li,
+          info: dataStructToOpenChannelInfo(channelData)
+        };
       } else {
-        channel = { channelId: channelData.c };
+        channel = {
+          channelId: channelData.c,
+          info: dataStructToNormalChannelInfo(channelData)
+        };
       }
 
       channelList.push(channel);
@@ -78,6 +87,13 @@ export class TalkClientSession implements ClientSession {
       success: true,
       result: {
         channelList: channelList,
+        lastChannelId: loginRes.lastChatId,
+        lastTokenId: loginRes.lastTokenId,
+        mcmRevision: loginRes.mcmRevision,
+        revision: loginRes.revision,
+        revisionInfo: loginRes.revisionInfo,
+        removedChannelIdList: loginRes.delChatIds,
+        minLogId: loginRes.minLogId,
         userId: loginRes.userId,
       },
     };

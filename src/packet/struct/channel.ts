@@ -50,6 +50,56 @@ export interface DisplayUserStruct {
 
 }
 
+export interface ChannelDataStruct {
+
+  /**
+   * Channel id
+   */
+  c: Long;
+
+  /**
+   * Channel type
+   */
+  t: string;
+
+  /**
+   * Active user count
+   */
+  a: number;
+
+  n: number;
+
+  /**
+   * Last seen log id
+   */
+  s: Long;
+
+  /**
+   * Last chatlog
+   */
+  l?: ChatlogStruct;
+
+  i?: Long[];
+  k?: string[];
+
+  m?: unknown;
+
+  mmr: unknown;
+
+  /**
+   * Last log id
+   */
+  ll: Long;
+  o: number;
+
+  jn: number;
+
+  p: boolean;
+
+  li?: Long;
+  otk?: number;
+}
+
 export interface ChannelInfoStruct extends Partial<NormalChannelInfoExtra>, Partial<OpenChannelInfoExtra> {
 
   /**

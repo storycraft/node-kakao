@@ -5,7 +5,7 @@
  */
 
 import { AsyncCommandResult, CommandResult, DefaultRes } from '../../request';
-import { Channel, ChannelMeta, NormalChannelInfo, SetChannelMeta } from '../../channel';
+import { Channel, NormalChannelData, ChannelMeta, NormalChannelInfo, SetChannelMeta } from '../../channel';
 import { ChannelUser, NormalChannelUserInfo } from '../../user';
 import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
 import { TalkChannelSession } from './talk-channel-session';
@@ -37,7 +37,8 @@ import { MediaUploadTemplate } from '../media/upload';
 import { initWatermarkMap, initNormalUserList, sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 
-export class TalkNormalChannel extends TypedEmitter<ChannelEvents> implements TalkChannel, Managed<ChannelEvents> {
+export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
+  implements TalkChannel, NormalChannelData, Managed<ChannelEvents> {
   private _info: NormalChannelInfo;
 
   private _channelSession: TalkChannelSession;

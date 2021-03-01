@@ -82,8 +82,7 @@ export class TalkClient
   get channelList(): TalkChannelList {
     if (!this.logon) throw new Error('Cannot access without logging in');
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this._channelList!;
+    return this._channelList;
   }
 
   get clientUser(): ChannelUser {

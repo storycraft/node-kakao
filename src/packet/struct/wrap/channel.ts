@@ -6,7 +6,8 @@
 
 import { ChannelInfo, ChannelMetaMap, NormalChannelInfo } from '../../../channel';
 import { OpenChannelInfo } from '../../../openlink';
-import { ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from '../channel';
+import { DisplayUserInfo } from '../../../user/channel-user-info';
+import { ChannelDataStruct, ChannelInfoStruct, NormalChannelInfoExtra, OpenChannelInfoExtra } from '../channel';
 import { structToChatlog } from './chat';
 
 export function structToChannelInfo(struct: ChannelInfoStruct): ChannelInfo {
@@ -60,4 +61,44 @@ export function structToOpenChannelInfo(struct: ChannelInfoStruct & OpenChannelI
     o: struct.o,
     directChannel: struct.directChat,
   };
+}
+
+export function dataStructToChannelInfo(channelData: ChannelDataStruct): ChannelInfo {
+  const commonInfo: Partial<ChannelInfo> = {
+    channelId: channelData.c,
+    type: channelData.t,
+    lastChatLogId: channelData.ll,
+    activeUserCount: channelData.a,
+    lastSeenLogId: channelData.s,
+    newChatCount: channelData.n,
+    pushAlert: channelData.p
+  };
+
+  if (channelData.l) {
+    commonInfo['lastChatLog'] = structToChatlog(channelData.l);
+  }
+
+  if (channelData.i && channelData.k) {
+    commonInfo['displayUserList']
+    const list: DisplayUserInfo[] = [];
+    const len = channelData.i.length;
+    for (let i = 0; i < len; i++) {
+      list.push({ userId: channelData.i[i], nickname: channelData.k[i], profileURL: '' });
+    }
+  }
+  return ChannelInfo.createPartial(commonInfo);
+}
+
+
+export function dataStructToNormalChannelInfo(channelData: ChannelDataStruct): NormalChannelInfo {
+  return NormalChannelInfo.createPartial(dataStructToChannelInfo(channelData));
+}
+
+
+export function dataStructToOpenChannelInfo(channelData: ChannelDataStruct): OpenChannelInfo {
+  return OpenChannelInfo.createPartial({
+    ...dataStructToChannelInfo(channelData),
+    linkId: channelData.li,
+    openToken: channelData.otk
+  });
 }
