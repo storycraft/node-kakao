@@ -7,6 +7,12 @@
   "plugins": [
     "@typescript-eslint"
   ],
+  "ignorePatterns": [
+    "examples/*.ts",
+    "dist/",
+    "dist_esm/",
+    "rollup.config.mjs"
+  ],
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "eslint:recommended",
