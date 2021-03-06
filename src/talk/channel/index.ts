@@ -26,11 +26,13 @@ import {
 import { Chatlog, ChatLogged, ChatType } from '../../chat';
 import { MediaUploadTemplate } from '../media';
 
+type TalkChannelEvents = ChannelEvents<TalkChannel, ChannelUserInfo>
+
 /**
  * TalkChannel interface includes managed methods and other methods that make it easier to use
  */
 export interface TalkChannel
-extends Channel, ChannelDataStore<ChannelInfo, ChannelUserInfo>, ChannelSession, TypedEmitter<ChannelEvents> {
+extends Channel, ChannelDataStore<ChannelInfo, ChannelUserInfo>, ChannelSession, TypedEmitter<TalkChannelEvents> {
 
   /**
    * Get client user

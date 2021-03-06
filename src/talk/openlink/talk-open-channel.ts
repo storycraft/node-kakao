@@ -54,10 +54,12 @@ import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import { MediaUploadTemplate } from '../media/upload';
 
+type TalkOpenChannelEvents = OpenChannelEvents<TalkOpenChannel, OpenChannelUserInfo>;
+
 export class TalkOpenChannel
-  extends TypedEmitter<OpenChannelEvents>
+  extends TypedEmitter<TalkOpenChannelEvents>
   implements OpenChannel, ChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>,
-  TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
+  TalkChannel, OpenChannelSession, Managed<TalkOpenChannelEvents> {
 
   private _channelSession: TalkChannelSession;
   private _openChannelSession: TalkOpenChannelSession;
@@ -454,7 +456,7 @@ export class TalkOpenChannel
   }
 
   // Called when broadcast packets are recevied.
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelEvents>): void {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents>): void {
     this._handler.pushReceived(method, data, parentCtx);
     this._openHandler.pushReceived(method, data, parentCtx);
   }

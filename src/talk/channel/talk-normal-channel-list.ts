@@ -15,13 +15,16 @@ import { TalkNormalChannel } from './talk-normal-channel';
 import { TalkChannelListHandler } from './talk-channel-handler';
 import { TalkChannelManageSession } from './talk-channel-session';
 import { TalkMemoryChannelDataStore } from './common';
+import { NormalChannelUserInfo } from '../../user';
+
+type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
 /**
  * Manage session channels
  */
 export class TalkNormalChannelList
-  extends TypedEmitter<NormalChannelListEvents>
-  implements ChannelList<TalkNormalChannel>, NormalChannelManageSession, Managed<NormalChannelListEvents> {
+  extends TypedEmitter<TalkNormalChannelListEvents>
+  implements ChannelList<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
   private _handler: TalkChannelListHandler;
 
   private _manageSession: TalkChannelManageSession;
@@ -116,8 +119,8 @@ export class TalkNormalChannelList
     return res;
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<NormalChannelListEvents>): void {
-    const ctx = new EventContext<NormalChannelListEvents>(this, parentCtx);
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkNormalChannelListEvents>): void {
+    const ctx = new EventContext<TalkNormalChannelListEvents>(this, parentCtx);
 
     for (const channel of this._map.values()) {
       channel.pushReceived(method, data, ctx);

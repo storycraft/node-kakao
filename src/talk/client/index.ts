@@ -5,7 +5,7 @@
  */
 
 import { CommandSession, LocoSession, SessionFactory } from '../../network';
-import { ChannelUser } from '../../user';
+import { ChannelUser, ChannelUserInfo } from '../../user';
 import { AsyncCommandResult, DefaultReq, DefaultRes } from '../../request';
 import { Managed } from '../managed';
 import { OAuthCredential } from '../../oauth';
@@ -20,6 +20,7 @@ import { TalkChannelList } from '../talk-channel-list';
 import { ClientEvents } from '../event';
 import { Long } from 'bson';
 import { TalkBlockSession } from '../block';
+import { TalkChannel } from '../channel';
 
 export * from './talk-client-session';
 
@@ -34,11 +35,13 @@ export interface TalkSession extends CommandSession {
 
 }
 
+type TalkClientEvents = ClientEvents<TalkChannel, ChannelUserInfo>;
+
 /**
  * Simple client implementation.
  */
 export class TalkClient
-  extends TypedEmitter<ClientEvents> implements CommandSession, ClientSession, Managed<ClientEvents> {
+  extends TypedEmitter<TalkClientEvents> implements CommandSession, ClientSession, Managed<TalkClientEvents> {
   private _session: LocoSession | null;
 
   /**
@@ -154,7 +157,7 @@ export class TalkClient
     this.session.close();
   }
 
-  pushReceived(method: string, data: DefaultRes, ctx: EventContext<ClientEvents>): void {
+  pushReceived(method: string, data: DefaultRes, ctx: EventContext<TalkClientEvents>): void {
 
     this._channelList.pushReceived(method, data, ctx);
 
@@ -219,7 +222,7 @@ export class TalkClient
     (async () => {
       for await (const { method, data, push } of this.session.listen()) {
         if (push) {
-          this.pushReceived(method, data, new EventContext<ClientEvents>(this));
+          this.pushReceived(method, data, new EventContext<TalkClientEvents>(this));
         }
       }
     })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));

@@ -34,13 +34,16 @@ import { TalkOpenChannelListHandler } from './talk-open-channel-handler';
 import { TalkOpenChannelManageSession } from './talk-open-channel-session';
 import { TalkOpenLinkSession } from './talk-open-link-session';
 import { OpenLinkUpdater, TalkOpenLinkHandler } from './talk-open-link-handler';
+import { OpenChannelUserInfo } from '../../user';
+
+type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
 /**
  * Manage open profile, channel.
  */
 export class TalkOpenChannelList
-  extends TypedEmitter<OpenChannelListEvents>
-  implements Managed<OpenChannelListEvents>, OpenChannelManageSession,
+  extends TypedEmitter<TalkOpenChannelListEvents>
+  implements Managed<TalkOpenChannelListEvents>, OpenChannelManageSession,
   ChannelList<TalkOpenChannel>, OpenLinkSession, OpenLinkService {
   private _handler: TalkChannelListHandler;
   private _openHandler: TalkOpenChannelListHandler;
@@ -272,8 +275,8 @@ export class TalkOpenChannelList
     return res;
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
-    const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelListEvents>): void {
+    const ctx = new EventContext<TalkOpenChannelListEvents>(this, parentCtx);
 
     for (const channel of this._map.values()) {
       channel.pushReceived(method, data, ctx);

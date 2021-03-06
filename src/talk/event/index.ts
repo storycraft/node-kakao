@@ -20,90 +20,87 @@ import {
 import { InformedOpenLink, OpenLink, OpenLinkChannelUserInfo } from '../../openlink';
 import { KickoutType } from '../../packet/chat';
 import { RelayEventType } from '../../relay';
-import { ChannelUserInfo, OpenChannelUserInfo } from '../../user';
-import { TalkChannel } from '../channel';
 import { TalkChatData } from '../chat';
-import { TalkOpenChannel } from '../openlink';
 
-export interface ChatEvent {
+export interface ChatEvent<T, U> {
 
   // 챗을 받을시 호출
-  'chat': (data: TalkChatData, channel: TalkChannel) => void;
+  'chat': (data: TalkChatData, channel: T) => void;
 
   // 유저가 챗 읽었을시 호출
-  'chat_read': (chat: Readonly<ChatLogged>, channel: TalkChannel, reader?: ChannelUserInfo) => void;
+  'chat_read': (chat: Readonly<ChatLogged>, channel: T, reader?: U) => void;
 
   // 쳇 삭제되었을시 호출
   'chat_deleted': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkChannel,
+    channel: T,
     feed: DeleteAllFeed
   ) => void;
 
 }
 
-export interface ChannelEvent {
+export interface ChannelEvent<T, U> {
 
   // 채널 meta 정보가 수정될때 호출
-  'meta_change': (channel: TalkChannel, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
+  'meta_change': (channel: T, type: ChannelMetaType, newMeta: SetChannelMeta) => void;
 
   // 유저가 방에 들어올시 호출
   'user_join': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkChannel,
-    user: ChannelUserInfo,
+    channel: T,
+    user: U,
     feed: ChatFeeds
   ) => void
 
   // 유저가 방에서 나갈시 호출 (킥 미포함)
   'user_left': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkChannel,
-    user: ChannelUserInfo,
+    channel: T,
+    user: U,
     feed: ChatFeeds
   ) => void;
 
 }
 
-export interface ChannelListEvent {
+export interface ChannelListEvent<T> {
 
   // 클라이언트가 채널 들어갔을시 호출
-  'channel_join': (channel: TalkChannel) => void;
+  'channel_join': (channel: T) => void;
 
   // 클라이언트가 채널 나갈시 호출
-  'channel_left': (channel: TalkChannel) => void;
+  'channel_left': (channel: T) => void;
 
 }
 
-export interface OpenChannelEvent {
+export interface OpenChannelEvent<T, U> {
 
   // 유저가 오픈프로필 변경시 호출
-  'profile_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenLinkChannelUserInfo) => void;
+  'profile_changed': (channel: T, lastInfo: U, user: OpenLinkChannelUserInfo) => void;
 
   // 오픈채팅 권한 변경시 호출
-  'perm_changed': (channel: TalkOpenChannel, lastInfo: OpenChannelUserInfo, user: OpenChannelUserInfo) => void;
+  'perm_changed': (channel: T, lastInfo: U, user: U) => void;
 
   // 오픈 채팅 방장이 바뀌었을시 호출
-  'host_handover': (channel: TalkOpenChannel, lastLink: OpenLink, link: OpenLink) => void;
+  'host_handover': (channel: T, lastLink: OpenLink, link: OpenLink) => void;
 
   // 채팅방 링크가 삭제 되었을시 호출
   'channel_link_deleted': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkOpenChannel,
+    channel: T,
     feed: OpenLinkDeletedFeed
   ) => void;
 
   // 메세지가 가려졌을시 호출
   'message_hidden': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkOpenChannel,
+    channel: T,
     feed: OpenRewriteFeed
   ) => void;
 
   // 채팅방 이벤트 (ex: 외치기 기능 하트 변화 시)
   'chat_event': (
-    channel: TalkOpenChannel,
-    author: OpenChannelUserInfo,
+    channel: T,
+    author: U,
     type: RelayEventType,
     count: number,
     chat: ChatLoggedType
@@ -111,12 +108,12 @@ export interface OpenChannelEvent {
 
 }
 
-export interface OpenChannelListEvent {
+export interface OpenChannelListEvent<T> {
 
   // 채널에서 킥 되었을시 호출
   'channel_kicked': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
-    channel: TalkOpenChannel,
+    channel: T,
     feed: OpenKickFeed
   ) => void;
 
@@ -145,11 +142,12 @@ export interface ClientEvent {
 
 }
 
-export type ClientEvents = ClientEvent & TalkChannelListEvents;
-export type TalkChannelListEvents = OpenChannelListEvents & NormalChannelListEvents;
+export type ClientEvents<T, U> = ClientEvent & TalkChannelListEvents<T, U>;
+export type TalkChannelListEvents<T, U> = OpenChannelListEvents<T, U> & NormalChannelListEvents<T, U>;
 
-export type NormalChannelListEvents = ChannelListEvent & ChannelEvents;
-export type OpenChannelListEvents = OpenLinkEvent & ChannelListEvent & OpenChannelEvents & OpenChannelListEvent;
+export type NormalChannelListEvents<T, U> = ChannelListEvent<T> & ChannelEvents<T, U>;
+export type OpenChannelListEvents<T, U>
+= OpenLinkEvent & ChannelListEvent<T> & OpenChannelEvents<T, U> & OpenChannelListEvent<T>;
 
-export type ChannelEvents = ChannelEvent & ChatEvent;
-export type OpenChannelEvents = ChannelEvents & OpenChannelEvent;
+export type ChannelEvents<T, U> = ChannelEvent<T, U> & ChatEvent<T, U>;
+export type OpenChannelEvents<T, U> = ChannelEvents<T, U> & OpenChannelEvent<T, U>;

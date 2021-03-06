@@ -44,8 +44,10 @@ import { MediaUploadTemplate } from '../media/upload';
 import { initWatermark, initNormalUserList, sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 
-export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
-  implements TalkChannel, ChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>, Managed<ChannelEvents> {
+type TalkChannelEvents = ChannelEvents<TalkNormalChannel, NormalChannelUserInfo>;
+
+export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
+  implements TalkChannel, ChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>, Managed<TalkChannelEvents> {
 
   private _channelSession: TalkChannelSession;
   private _handler: TalkChannelHandler;
@@ -60,7 +62,6 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     this._channelSession = new TalkChannelSession(this, session);
     this._handler = new TalkChannelHandler(this, this._store);
   }
-
 
   get clientUser(): Readonly<ChannelUser> {
     return this._channelSession.session.clientUser;
@@ -316,7 +317,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     return this.chatON();
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelEvents>): void {
     this._handler.pushReceived(method, data, parentCtx);
   }
 }
