@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChannelInfo } from '../channel';
+import { ChannelData, ChannelInfo } from '../channel';
 import { OpenChannel } from './open-channel';
 import { OpenLink, OpenTokenComponent } from '.';
 
@@ -44,5 +44,9 @@ export namespace OpenChannelInfo {
       o: Long.ZERO,
     }, info);
   }
+
+}
+
+export interface OpenChannelData extends OpenChannel, ChannelData<OpenChannelInfo> {
 
 }

@@ -12,74 +12,17 @@ import { ChannelEvents, ChannelListEvent } from '../event';
 import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes, SyncJoinRes } from '../../packet/chat';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 import { AsyncCommandResult, DefaultRes } from '../../request';
-import { ChannelUser, ChannelUserInfo } from '../../user';
+import { ChannelUserInfo } from '../../user';
 import { Managed } from '../managed';
 import { TalkChannel } from '.';
 import { TalkChatData } from '../chat';
-
-/**
- * Update channel info from handler
- */
-export interface ChannelInfoUpdater<T extends ChannelInfo, U extends ChannelUserInfo> {
-
-    /**
-     * Update channel info
-     *
-     * @param info
-     */
-    updateInfo(info: Partial<T>): void;
-
-    /**
-     * Update user info
-     *
-     * @param user
-     * @param info If not supplied the user get deleted
-     */
-    updateUserInfo(user: ChannelUser, info?: Partial<U>): void;
-
-    /**
-     * Update users joined
-     *
-     * @param user
-     */
-    addUsers(...user: ChannelUser[]): AsyncCommandResult<U[]>;
-
-    /**
-     * Update watermark
-     *
-     * @param readerId
-     * @param watermark
-     */
-    updateWatermark(readerId: Long, watermark: Long): void;
-
-}
-
-/**
- * Update channel list from handler
- */
-export interface ChannelListUpdater<T extends Channel> {
-
-    /**
-     * Add channel to manage
-     *
-     * @param channel
-     */
-    addChannel(channel: Channel): AsyncCommandResult<T>;
-
-    /**
-     * Remove channel from managing
-     *
-     * @param channel
-     */
-    removeChannel(channel: Channel): boolean;
-
-}
+import { ChannelDataUpdater } from '../../channel';
 
 /**
  * Capture and handle pushes coming to channel
  */
 export class TalkChannelHandler implements Managed<ChannelEvents> {
-  constructor(private _channel: TalkChannel, private _updater: ChannelInfoUpdater<ChannelInfo, ChannelUserInfo>) {
+  constructor(private _channel: TalkChannel, private _updater: ChannelDataUpdater<ChannelInfo, ChannelUserInfo>) {
 
   }
 
@@ -177,7 +120,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     const user = this._channel.getUserInfo(chatLog.sender);
     if (!user) return;
 
-    this._updater.updateUserInfo(chatLog.sender);
+    this._updater.removeUser(chatLog.sender);
 
     if (chatLog.type !== KnownChatType.FEED) return;
     const feed = feedFromChat(chatLog);
@@ -200,19 +143,22 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     const chatLog = structToChatlog(struct);
     if (chatLog.type !== KnownChatType.FEED) return;
 
-    this._updater.addUsers(chatLog.sender).then((usersRes) => {
+    this._channel.getLatestUserInfo(chatLog.sender).then((usersRes) => {
       if (!usersRes.success) return;
+      
+      for (const user of usersRes.result) {
+        this._updater.updateUserInfo(user, user);
+        const feed = feedFromChat(chatLog);
 
-      const feed = feedFromChat(chatLog);
-
-      this._callEvent(
-          parentCtx,
-          'user_join',
-          chatLog,
-          this._channel,
-          usersRes.result[0],
-          feed,
-      );
+        this._callEvent(
+            parentCtx,
+            'user_join',
+            chatLog,
+            this._channel,
+            user,
+            feed,
+        );
+      }
     });
   }
 
@@ -260,6 +206,29 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     }
   }
 }
+
+
+/**
+ * Update channel list
+ */
+export interface ChannelListUpdater<T> {
+
+  /**
+   * Add channel
+   *
+   * @param channel
+   */
+  addChannel(channel: Channel): AsyncCommandResult<T>;
+
+  /**
+   * Remove channel from managing
+   *
+   * @param channel
+   */
+  removeChannel(channel: Channel): boolean;
+
+}
+
 
 export class TalkChannelListHandler implements Managed<ChannelListEvent> {
   constructor(private _list: ChannelList<TalkChannel>, private _updater: ChannelListUpdater<TalkChannel>) {

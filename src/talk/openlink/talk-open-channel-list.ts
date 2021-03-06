@@ -11,6 +11,7 @@ import { EventContext, TypedEmitter } from '../../event';
 import {
   InformedOpenLink,
   OpenChannel,
+  OpenChannelInfo,
   OpenChannelManageSession,
   OpenLink,
   OpenLinkChannelTemplate,
@@ -25,7 +26,7 @@ import {
   OpenLinkUpdateTemplate,
 } from '../../openlink';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
-import { ChannelListUpdater, TalkChannelListHandler } from '../channel';
+import { ChannelListUpdater, TalkChannelListHandler, TalkMemoryChannelDataStore } from '../channel';
 import { OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
@@ -127,7 +128,11 @@ export class TalkOpenChannelList
     const last = this.get(channel.channelId);
     if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
 
-    const talkChannel = new TalkOpenChannel(channel, this._session);
+    const talkChannel = new TalkOpenChannel(
+      channel,
+      this._session,
+      new TalkMemoryChannelDataStore(OpenChannelInfo.createPartial({}))
+    );
 
     const res = await talkChannel.updateAll();
     if (!res.success) return res;

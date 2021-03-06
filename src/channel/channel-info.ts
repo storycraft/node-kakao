@@ -131,3 +131,19 @@ export namespace NormalChannelInfo {
   }
 
 }
+
+/**
+ * Channel with info data
+ */
+export interface ChannelData<T> {
+
+  /**
+   * Channel info snapshot.
+   */
+  readonly info: Readonly<T>;
+
+}
+
+export interface NormalChannelData extends Channel, ChannelData<NormalChannelInfo> {
+
+}

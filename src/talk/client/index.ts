@@ -154,8 +154,7 @@ export class TalkClient
     this.session.close();
   }
 
-  pushReceived(method: string, data: DefaultRes): void {
-    const ctx = new EventContext<ClientEvents>(this);
+  pushReceived(method: string, data: DefaultRes, ctx: EventContext<ClientEvents>): void {
 
     this._channelList.pushReceived(method, data, ctx);
 
@@ -220,7 +219,7 @@ export class TalkClient
     (async () => {
       for await (const { method, data, push } of this.session.listen()) {
         if (push) {
-          this.pushReceived(method, data);
+          this.pushReceived(method, data, new EventContext<ClientEvents>(this));
         }
       }
     })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));

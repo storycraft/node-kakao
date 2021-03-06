@@ -5,7 +5,14 @@
  */
 
 import { AsyncCommandResult, CommandResult, DefaultRes } from '../../request';
-import { Channel, NormalChannelData, ChannelMeta, NormalChannelInfo, SetChannelMeta } from '../../channel';
+import {
+  Channel,
+  ChannelDataStore,
+  ChannelMeta,
+  NormalChannelInfo,
+  SetChannelMeta,
+  UpdatableChannelDataStore
+} from '../../channel';
 import { ChannelUser, NormalChannelUserInfo } from '../../user';
 import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
 import { TalkChannelSession } from './talk-channel-session';
@@ -34,12 +41,11 @@ import {
 import { JsonUtil } from '../../util';
 import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaUploadTemplate } from '../media/upload';
-import { initWatermarkMap, initNormalUserList, sendMultiMedia } from './common';
+import { initWatermark, initNormalUserList, sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 
 export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
-  implements TalkChannel, NormalChannelData, Managed<ChannelEvents> {
-  private _info: NormalChannelInfo;
+  implements TalkChannel, ChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>, Managed<ChannelEvents> {
 
   private _channelSession: TalkChannelSession;
   private _handler: TalkChannelHandler;
@@ -47,36 +53,12 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
   constructor(
     private _channel: Channel,
     session: TalkSession,
-    info: Partial<NormalChannelInfo> = {},
-    private _userInfoMap: Map<string, NormalChannelUserInfo> = new Map(),
-    private _watermarkMap: Map<string, Long> = new Map(),
+    private _store: UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>
   ) {
     super();
 
     this._channelSession = new TalkChannelSession(this, session);
-    this._handler = new TalkChannelHandler(this, {
-      updateInfo: (info) => this._info = { ...this._info, ...info },
-
-      updateUserInfo: (user, info) => {
-        const strId = user.userId.toString();
-
-        if (!info) {
-          this._userInfoMap.delete(strId);
-        } else {
-          const lastInfo = this._userInfoMap.get(strId);
-
-          if (lastInfo) {
-            this._userInfoMap.set(strId, { ...lastInfo, ...info });
-          }
-        }
-      },
-
-      addUsers: (...user) => this.getLatestUserInfo(...user),
-
-      updateWatermark: (readerId, watermark) => this._watermarkMap.set(readerId.toString(), watermark),
-    });
-
-    this._info = NormalChannelInfo.createPartial(info);
+    this._handler = new TalkChannelHandler(this, this._store);
   }
 
 
@@ -89,56 +71,36 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
   }
 
   get info(): Readonly<NormalChannelInfo> {
-    return this._info;
+    return this._store.info;
   }
 
   get userCount(): number {
-    return this._userInfoMap.size;
+    return this._store.userCount;
   }
 
   getName(): string {
-    const nameMeta = this._info.metaMap[KnownChannelMetaType.TITLE];
+    const nameMeta = this.info.metaMap[KnownChannelMetaType.TITLE];
     return nameMeta && nameMeta.content || '';
   }
 
   getDisplayName(): string {
-    return this.getName() || this._info.displayUserList.map((user) => user.nickname).join(', ');
+    return this.getName() || this.info.displayUserList.map((user) => user.nickname).join(', ');
   }
 
   getUserInfo(user: ChannelUser): Readonly<NormalChannelUserInfo> | undefined {
-    return this._userInfoMap.get(user.userId.toString());
+    return this._store.getUserInfo(user);
   }
 
   getAllUserInfo(): IterableIterator<NormalChannelUserInfo> {
-    return this._userInfoMap.values();
+    return this._store.getAllUserInfo();
   }
 
   getReadCount(chat: ChatLogged): number {
-    let count = 0;
-
-    if (this.userCount >= 100) return 0;
-
-    for (const [strId] of this._userInfoMap) {
-      const watermark = this._watermarkMap.get(strId);
-
-      if (!watermark || watermark && watermark.greaterThanOrEqual(chat.logId)) count++;
-    }
-
-    return count;
+    return this._store.getReadCount(chat);
   }
 
   getReaders(chat: ChatLogged): Readonly<NormalChannelUserInfo>[] {
-    const list: NormalChannelUserInfo[] = [];
-
-    if (this.userCount >= 100) return [];
-
-    for (const [strId, userInfo] of this._userInfoMap) {
-      const watermark = this._watermarkMap.get(strId);
-
-      if (watermark && watermark.greaterThanOrEqual(chat.logId)) list.push(userInfo);
-    }
-
-    return list;
+    return this._store.getReaders(chat);
   }
 
   sendChat(chat: string | Chat): AsyncCommandResult<Chatlog> {
@@ -157,7 +119,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     const res = await this._channelSession.markRead(chat);
 
     if (res.success) {
-      this._watermarkMap.set(this.clientUser.userId.toString(), chat.logId);
+      this._store.updateWatermark(this.clientUser.userId, chat.logId);
     }
 
     return res;
@@ -167,7 +129,13 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     const res = await this._channelSession.setMeta(type, meta);
 
     if (res.success) {
-      this._info.metaMap[type] = res.result;
+      const lastInfoMap = this._store.info?.metaMap;
+      this._store.updateInfo({
+        metaMap: {
+          ...lastInfoMap,
+          [type]: res.result
+        }
+      });
     }
 
     return res;
@@ -209,7 +177,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     const res = await this._channelSession.setPushAlert(flag);
 
     if (res.success) {
-      this._info = { ...this._info, pushAlert: flag };
+      this._store.updateInfo({ pushAlert: flag });
     }
 
     return res;
@@ -239,44 +207,46 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     if (res.success) {
       const { result } = res;
 
-      if (this._info.type !== result.t || this._info.lastChatLogId !== result.l) {
-        this._info = { ...this._info, type: result.t, lastChatLogId: result.l };
+      if (this.info.type !== result.t || this.info.lastChatLogId !== result.l) {
+        this._store.updateInfo({ type: result.t, lastChatLogId: result.l });
       }
 
       if (result.a && result.w) {
-        this._watermarkMap = initWatermarkMap(result.a, result.w);
+        this._store.clearWatermark();
+        initWatermark(this._store, result.a, result.w);
       }
 
-      const userInfoMap = new Map();
       if (result.m) {
+        this._store.clearUserList();
+
         const structList = result.m as NormalMemberStruct[];
 
         for (const struct of structList) {
           const wrapped = structToChannelUserInfo(struct);
-          userInfoMap.set(wrapped.userId.toString(), wrapped);
+          this._store.updateUserInfo(wrapped, wrapped);
         }
       } else if (result.mi) {
+        this._store.clearUserList();
+
         const userInitres = await initNormalUserList(this._channelSession, result.mi);
   
         if (!userInitres.success) return userInitres;
   
         for (const info of userInitres.result) {
-          userInfoMap.set(info.userId.toString(), info);
+          this._store.updateUserInfo(info, info);
         }
 
         const channelSession = this._channelSession;
         const clientUser = channelSession.session.clientUser;
-        if (!userInfoMap.has(clientUser.userId.toString())) {
+        if (!this._store.getUserInfo(clientUser)) {
           const clientRes = await channelSession.getLatestUserInfo(clientUser);
           if (!clientRes.success) return clientRes;
   
           for (const user of clientRes.result) {
-            userInfoMap.set(user.userId.toString(), user);
+            this._store.updateUserInfo(user, user);
           }
         }
       }
-
-      if (userInfoMap.size > 0) this._userInfoMap = userInfoMap;
     }
 
     return res;
@@ -286,7 +256,7 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     const infoRes = await this._channelSession.getLatestChannelInfo();
 
     if (infoRes.success) {
-      this._info = NormalChannelInfo.createPartial(infoRes.result);
+      this._store.setInfo(NormalChannelInfo.createPartial(infoRes.result));
     }
 
     return infoRes;
@@ -298,7 +268,8 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     if (infoRes.success) {
       const result = infoRes.result as NormalChannelUserInfo[];
 
-      result.forEach((info) => this._userInfoMap.set(info.userId.toString(), info));
+      this._store.clearUserList();
+      result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
     return infoRes;
@@ -308,10 +279,8 @@ export class TalkNormalChannel extends TypedEmitter<ChannelEvents>
     const infoRes = await this._channelSession.getAllLatestUserInfo();
 
     if (infoRes.success) {
-      const userInfoMap = new Map();
-      infoRes.result.map((info) => userInfoMap.set(info.userId.toString(), info));
-
-      this._userInfoMap = userInfoMap;
+      this._store.clearUserList();
+      infoRes.result.map((info) => this._store.updateUserInfo(info, info));
     }
 
     return infoRes;

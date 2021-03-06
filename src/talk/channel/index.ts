@@ -10,7 +10,7 @@ export * from './talk-channel-session';
 export * from './talk-normal-channel';
 export * from './talk-normal-channel-list';
 
-import { Channel, ChannelData, ChannelSession } from '../../channel';
+import { Channel, ChannelDataStore, ChannelInfo, ChannelSession } from '../../channel';
 import { ChannelUser, ChannelUserInfo } from '../../user';
 import { AsyncCommandResult } from '../../request';
 import { TypedEmitter } from '../../event';
@@ -29,7 +29,8 @@ import { MediaUploadTemplate } from '../media';
 /**
  * TalkChannel interface includes managed methods and other methods that make it easier to use
  */
-export interface TalkChannel extends Channel, ChannelData, ChannelSession, TypedEmitter<ChannelEvents> {
+export interface TalkChannel
+extends Channel, ChannelDataStore<ChannelInfo, ChannelUserInfo>, ChannelSession, TypedEmitter<ChannelEvents> {
 
   /**
    * Get client user

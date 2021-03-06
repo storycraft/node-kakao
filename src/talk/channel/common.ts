@@ -5,11 +5,12 @@
  */
 
 import { Long } from 'bson';
-import { Chatlog, ChatType } from '../../chat';
+import { ChannelDataUpdater, UpdatableChannelDataStore } from '../../channel';
+import { Chatlog, ChatLogged, ChatType } from '../../chat';
 import { MediaKeyComponent } from '../../media';
 import { OpenChannelSession } from '../../openlink';
 import { AsyncCommandResult, CommandResultDone, KnownDataStatusCode } from '../../request';
-import { NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
+import { ChannelUser, NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
 import { MediaUploadTemplate } from '../media/upload';
 import { TalkChannelSession } from './talk-channel-session';
 
@@ -45,20 +46,20 @@ export async function sendMultiMedia(
   });
 }
 
-export function initWatermarkMap(
+export function initWatermark(
+  updater: ChannelDataUpdater<unknown, unknown>,
   idList: Long[],
   watermarkList: Long[]
-): Map<string, Long> {
-  const watermarkMap: Map<string, Long> = new Map();
+): void {
+  updater.clearWatermark();
+
   const userLen = idList.length;
   for (let i = 0; i < userLen; i++) {
     const userId = idList[i];
     const watermark = watermarkList[i];
 
-    watermarkMap.set(userId.toString(), watermark);
+    updater.updateWatermark(userId, watermark);
   }
-  
-  return watermarkMap;
 }
 
 export async function initNormalUserList(
@@ -109,4 +110,105 @@ export async function initOpenUserList(
     status: KnownDataStatusCode.SUCCESS,
     result: infoList
   };
+}
+
+/**
+ * Store channel data in memory
+ */
+export class TalkMemoryChannelDataStore<T, U>
+implements UpdatableChannelDataStore<T, U> {
+
+  constructor(
+    private _info: T,
+    private _userInfoMap: Map<string, U> = new Map(),
+    private _watermarkMap: Map<string, Long> = new Map()
+  ) {
+
+  }
+  
+  get info(): Readonly<T> {
+    return this._info;
+  }
+
+  get userCount(): number {
+    return this._userInfoMap.size;
+  }
+
+  getUserInfo(user: ChannelUser): Readonly<U> | undefined {
+    return this._userInfoMap.get(user.userId.toString());
+  }
+
+  getAllUserInfo(): IterableIterator<U> {
+    return this._userInfoMap.values();
+  }
+
+  clearUserList(): void {
+    this._userInfoMap.clear();
+  }
+
+  getReadCount(chat: ChatLogged): number {
+    let count = 0;
+
+    if (this.userCount >= 100) return 0;
+
+    for (const [strId] of this._userInfoMap) {
+      const watermark = this._watermarkMap.get(strId);
+
+      if (!watermark || watermark && watermark.greaterThanOrEqual(chat.logId)) count++;
+    }
+
+    return count;
+  }
+
+  getReaders(chat: ChatLogged): Readonly<U>[] {
+    const list: U[] = [];
+
+    if (this.userCount >= 100) return [];
+
+    for (const [strId, userInfo] of this._userInfoMap) {
+      const watermark = this._watermarkMap.get(strId);
+
+      if (watermark && watermark.greaterThanOrEqual(chat.logId)) list.push(userInfo);
+    }
+
+    return list;
+  }
+
+  updateInfo(info: Partial<T>): void {
+    this._info = { ...this._info, ...info }
+  }
+
+  setInfo(info: T): void {
+    this._info = info;
+  }
+
+  updateUserInfo(user: ChannelUser, info: Partial<U>): void {
+    const strId = user.userId.toString();
+
+    const lastInfo = this._userInfoMap.get(strId);
+
+    this._userInfoMap.set(strId, { ...lastInfo, ...info } as U);
+  }
+
+  removeUser(user: ChannelUser): boolean {
+    const strId = user.userId.toString();
+
+    const userInfoRes = this._userInfoMap.delete(strId);
+    const watermarkRes = this._watermarkMap.delete(strId);
+
+    return userInfoRes || watermarkRes;
+  }
+  
+  updateWatermark(readerId: Long, watermark: Long): void {
+    this._watermarkMap.set(readerId.toString(), watermark);
+  }
+
+  clearWatermark(): void {
+    this._watermarkMap.clear();
+  }
+  
+}
+
+export class TalkMemoryChannelListStore {
+
 }

@@ -17,11 +17,12 @@ import {
   structToOpenLinkChannelUserInfo,
 } from '../../packet/struct';
 import { OpenChannelUserInfo } from '../../user';
-import { ChannelInfoUpdater, ChannelListUpdater } from '../channel';
+import { ChannelDataUpdater } from '../../channel';
 import { OpenChannelEvents, OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
 import { TalkOpenChannelList } from './talk-open-channel-list';
+import { ChannelListUpdater } from '../channel/talk-channel-handler';
 
 /**
  * Capture and handle pushes coming to open channel
@@ -29,7 +30,7 @@ import { TalkOpenChannelList } from './talk-open-channel-list';
 export class TalkOpenChannelHandler implements Managed<OpenChannelEvents> {
   constructor(
     private _channel: TalkOpenChannel,
-    private _updater: ChannelInfoUpdater<OpenChannelInfo, OpenChannelUserInfo>,
+    private _updater: ChannelDataUpdater<OpenChannelInfo, OpenChannelUserInfo>,
   ) {
 
   }

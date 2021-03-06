@@ -4,31 +4,15 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { Long } from 'bson';
 import { TypedEmitter } from '../event';
 import { ChannelListEvent } from '../talk/event';
 import { Channel } from './channel';
+import { ChannelListStore } from './store';
 
 /**
  * ChannelList manage specific type of channels or child channel list.
  */
-export interface ChannelList<T extends Channel> extends TypedEmitter<ChannelListEvent> {
-
-  /**
-   * Try to get channel instance with channel id
-   *
-   * @param channelId
-   */
-  get(channelId: Long): T | undefined;
-
-  /**
-   * Iterate every channel list
-   */
-  all(): IterableIterator<T>;
-
-  /**
-   * Total channel count
-   */
-  readonly size: number;
-
+export interface ChannelList<T extends Channel>
+extends TypedEmitter<ChannelListEvent>, ChannelListStore<T> {
+  
 }

@@ -5,14 +5,13 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelMeta, SetChannelMeta } from '../../channel';
+import { Channel, ChannelDataStore, ChannelMeta, SetChannelMeta, UpdatableChannelDataStore } from '../../channel';
 import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatType } from '../../chat';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import { MediaKeyComponent } from '../../media';
 import {
   OpenChannel,
-  OpenChannelData,
   OpenChannelInfo,
   OpenChannelSession,
   OpenChannelUserPerm, OpenLink, OpenLinkChannelUserInfo, OpenLinkKickedUserInfo,
@@ -27,9 +26,8 @@ import {
 import { RelayEventType } from '../../relay';
 import { ChannelUser, OpenChannelUserInfo } from '../../user';
 import {
-  ChannelInfoUpdater,
-  initWatermarkMap,
   initOpenUserList,
+  initWatermark,
   sendMultiMedia,
   TalkChannel,
   TalkChannelHandler,
@@ -58,8 +56,8 @@ import { MediaUploadTemplate } from '../media/upload';
 
 export class TalkOpenChannel
   extends TypedEmitter<OpenChannelEvents>
-  implements OpenChannel, OpenChannelData, TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
-  private _info: OpenChannelInfo;
+  implements OpenChannel, ChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>,
+  TalkChannel, OpenChannelSession, Managed<OpenChannelEvents> {
 
   private _channelSession: TalkChannelSession;
   private _openChannelSession: TalkOpenChannelSession;
@@ -70,40 +68,15 @@ export class TalkOpenChannel
   constructor(
     private _channel: Channel,
     session: TalkSession,
-    info: Partial<OpenChannelInfo> = {},
-    private _userInfoMap: Map<string, OpenChannelUserInfo> = new Map(),
-    private _watermarkMap: Map<string, Long> = new Map(),
+    private _store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>
   ) {
     super();
 
-    this._info = OpenChannelInfo.createPartial(info);
     this._channelSession = new TalkChannelSession(this, session);
     this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-    const infoUpdater: ChannelInfoUpdater<OpenChannelInfo, OpenChannelUserInfo> = {
-      updateInfo: (info) => this._info = { ...this._info, ...info },
-
-      updateUserInfo: (user, info) => {
-        const strId = user.userId.toString();
-
-        if (!info) {
-          this._userInfoMap.delete(strId);
-        } else {
-          const lastInfo = this._userInfoMap.get(strId);
-
-          if (lastInfo) {
-            this._userInfoMap.set(strId, { ...lastInfo, ...info });
-          }
-        }
-      },
-
-      addUsers: (...user) => this.getLatestUserInfo(...user),
-
-      updateWatermark: (readerId, watermark) => this._watermarkMap.set(readerId.toString(), watermark),
-    };
-
-    this._handler = new TalkChannelHandler(this, infoUpdater);
-    this._openHandler = new TalkOpenChannelHandler(this, infoUpdater);
+    this._handler = new TalkChannelHandler(this, this._store);
+    this._openHandler = new TalkOpenChannelHandler(this, this._store);
   }
 
   get clientUser(): Readonly<ChannelUser> {
@@ -115,53 +88,40 @@ export class TalkOpenChannel
   }
 
   get linkId(): Long {
-    return this._info.linkId;
+    return this._store.info.linkId;
   }
 
   get info(): Readonly<OpenChannelInfo> {
-    return this._info;
+    return this._store.info;
   }
 
   get userCount(): number {
-    return this._userInfoMap.size;
+    return this._store.userCount;
   }
 
   getName(): string {
-    const nameMeta = this._info.metaMap[KnownChannelMetaType.TITLE];
+    const nameMeta = this.info.metaMap[KnownChannelMetaType.TITLE];
     return nameMeta && nameMeta.content || '';
   }
 
   getDisplayName(): string {
-    return this.getName() || this._info.openLink?.linkName || '';
+    return this.getName() || this.info.openLink?.linkName || '';
   }
 
   getUserInfo(user: ChannelUser): Readonly<OpenChannelUserInfo> | undefined {
-    return this._userInfoMap.get(user.userId.toString());
+    return this._store.getUserInfo(user);
   }
 
   getAllUserInfo(): IterableIterator<OpenChannelUserInfo> {
-    return this._userInfoMap.values();
+    return this._store.getAllUserInfo();
   }
 
   getReadCount(chat: ChatLogged): number {
-    let count = 0;
-    for (const watermark of this._watermarkMap.values()) {
-      if (watermark.greaterThanOrEqual(chat.logId)) count++;
-    }
-
-    return count;
+    return this._store.getReadCount(chat);
   }
 
   getReaders(chat: ChatLogged): Readonly<OpenChannelUserInfo>[] {
-    const list: Readonly<OpenChannelUserInfo>[] = [];
-
-    for (const [strId, userInfo] of this._userInfoMap) {
-      const watermark = this._watermarkMap.get(strId);
-
-      if (watermark && watermark.greaterThanOrEqual(chat.logId)) list.push(userInfo);
-    }
-
-    return list;
+    return this._store.getReaders(chat);
   }
 
   async sendChat(chat: string | Chat): Promise<CommandResult<Chatlog>> {
@@ -193,7 +153,7 @@ export class TalkOpenChannel
     const res = await this._openChannelSession.markRead(chat);
 
     if (res.success) {
-      this._watermarkMap.set(this.clientUser.userId.toString(), chat.logId);
+      this._store.updateWatermark(this.clientUser.userId, chat.logId);
     }
 
     return res;
@@ -203,7 +163,12 @@ export class TalkOpenChannel
     const res = await this._channelSession.setMeta(type, meta);
 
     if (res.success) {
-      this._info.metaMap[type] = res.result;
+      this._store.updateInfo({
+        metaMap: {
+          ...this._store.info.metaMap,
+          [type]: res.result
+        }
+      });
     }
 
     return res;
@@ -264,7 +229,7 @@ export class TalkOpenChannel
     const res = await this._channelSession.setPushAlert(flag);
 
     if (res.success) {
-      this._info = { ...this._info, pushAlert: flag };
+      this._store.updateInfo({ pushAlert: flag });
     }
 
     return res;
@@ -277,56 +242,56 @@ export class TalkOpenChannel
       const { result } = res;
 
       if (
-        this._info.type !== result.t ||
-        this._info.lastChatLogId !== result.l ||
-        this._info.openToken !== result.otk
+        this.info.type !== result.t ||
+        this.info.lastChatLogId !== result.l ||
+        this.info.openToken !== result.otk
       ) {
-        const newInfo = { ...this._info, type: result.t, lastChatLogId: result.l };
+        const newInfo: Partial<OpenChannelInfo> = { type: result.t, lastChatLogId: result.l };
         if (result.otk) {
           newInfo['openToken'] = result.otk;
         }
-        this._info = newInfo;
+        
+        this._store.updateInfo(newInfo);
       }
 
       if (result.a && result.w) {
-        this._watermarkMap = initWatermarkMap(result.a, result.w);
+        initWatermark(this._store, result.a, result.w);
       }
       
-      const userInfoMap = new Map();
       if (result.m) {
         const structList = result.m as OpenMemberStruct[];
         
+        this._store.clearUserList();
         for (const struct of structList) {
           const wrapped = structToOpenChannelUserInfo(struct);
-          userInfoMap.set(wrapped.userId.toString(), wrapped);
+          this._store.updateUserInfo(wrapped, wrapped);
         }
       } else if (result.mi) {
         const userInitres = await initOpenUserList(this._openChannelSession, result.mi);
   
         if (!userInitres.success) return userInitres;
   
+        this._store.clearUserList();
         for (const info of userInitres.result) {
-          userInfoMap.set(info.userId.toString(), info);
+          this._store.updateUserInfo(info, info);
         }
       }
 
       if (result.olu) {
         const wrapped = structToOpenLinkChannelUserInfo(result.olu);
-        userInfoMap.set(wrapped.userId.toString(), wrapped);
+        this._store.updateUserInfo(wrapped, wrapped);
       }
       
       const openChannelSession = this._openChannelSession;
       const clientUser = openChannelSession.session.clientUser;
-      if (!userInfoMap.has(clientUser.userId.toString())) {
+      if (!this._store.getUserInfo(clientUser)) {
         const clientRes = await openChannelSession.getLatestUserInfo(clientUser);
         if (!clientRes.success) return clientRes;
 
         for (const user of clientRes.result) {
-          userInfoMap.set(user.userId.toString(), user);
+          this._store.updateUserInfo(user, user);
         }
       }
-      
-      if (userInfoMap.size > 0) this._userInfoMap = userInfoMap;
     }
 
     return res;
@@ -336,7 +301,7 @@ export class TalkOpenChannel
     const infoRes = await this._openChannelSession.getLatestChannelInfo();
 
     if (infoRes.success) {
-      this._info = { ...this._info, ...infoRes.result };
+      this._store.updateInfo(infoRes.result);
     }
 
     return infoRes;
@@ -348,7 +313,8 @@ export class TalkOpenChannel
     if (infoRes.success) {
       const result = infoRes.result as OpenChannelUserInfo[];
 
-      result.forEach((info) => this._userInfoMap.set(info.userId.toString(), info));
+      this._store.clearUserList();
+      result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
     return infoRes;
@@ -358,10 +324,8 @@ export class TalkOpenChannel
     const infoRes = await this._openChannelSession.getAllLatestUserInfo();
 
     if (infoRes.success) {
-      const userInfoMap = new Map();
-      infoRes.result.map((info) => userInfoMap.set(info.userId.toString(), info));
-
-      this._userInfoMap = userInfoMap;
+      this._store.clearUserList();
+      infoRes.result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
     return infoRes;
@@ -371,7 +335,7 @@ export class TalkOpenChannel
     const res = await this._openChannelSession.getLatestOpenLink();
 
     if (res.success) {
-      this._info = { ...this._info, openLink: res.result };
+      this._store.updateInfo({ openLink: res.result });
     }
 
     return res;
@@ -399,7 +363,7 @@ export class TalkOpenChannel
     if (res.success) {
       const userInfo = this.getUserInfo(user);
       if (userInfo) {
-        this._userInfoMap.set(userInfo.userId.toString(), { ...userInfo, perm: perm });
+        this._store.updateUserInfo(userInfo, { ...userInfo, perm: perm });
       }
     }
 
@@ -412,7 +376,7 @@ export class TalkOpenChannel
     if (res.success) {
       const openlinkRes = await this.getLatestOpenLink();
       if (openlinkRes.success) {
-        this._info = { ...this._info, openLink: openlinkRes.result };
+        this._store.updateInfo({ openLink: openlinkRes.result });
       }
 
       await this.getLatestUserInfo(user, this._channelSession.session.clientUser);
@@ -425,9 +389,7 @@ export class TalkOpenChannel
     const res = await this._openChannelSession.kickUser(user);
 
     if (res.success) {
-      const strId = user.userId.toString();
-      this._userInfoMap.delete(strId);
-      this._watermarkMap.delete(strId);
+      this._store.removeUser(user);
     }
 
     return res;
@@ -448,8 +410,7 @@ export class TalkOpenChannel
   async changeProfile(profile: OpenLinkProfiles): Promise<CommandResult<Readonly<OpenLinkChannelUserInfo> | null>> {
     const res = await this._openChannelSession.changeProfile(profile);
     if (res.success && res.result) {
-      const strId = this._channelSession.session.clientUser.userId.toString();
-      this._userInfoMap.set(strId, res.result);
+      this._store.updateUserInfo(this.clientUser, res.result);
     }
 
     return res;

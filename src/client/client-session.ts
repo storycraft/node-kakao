@@ -5,10 +5,10 @@
  */
 
 import { Long } from 'bson';
-import { NormalChannelData } from '../channel/channel';
+import { NormalChannelData } from '../channel';
 import { ClientStatus } from '../client-status';
 import { OAuthCredential } from '../oauth';
-import { OpenChannelData } from '../openlink/open-channel';
+import { OpenChannelData } from '../openlink';
 import { AsyncCommandResult } from '../request';
 
 export interface LoginResult {
