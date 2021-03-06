@@ -14,7 +14,7 @@ import {
   UpdatableChannelDataStore
 } from '../../channel';
 import { ChannelUser, NormalChannelUserInfo } from '../../user';
-import { Chat, Chatlog, ChatLogged, ChatType } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatType, UpdatableChatListStore } from '../../chat';
 import { TalkNormalChannelSession } from './talk-normal-channel-session';
 import { Managed } from '../managed';
 import { EventContext, TypedEmitter } from '../../event';
@@ -37,7 +37,6 @@ import {
 import { JsonUtil } from '../../util';
 import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaUploadTemplate } from '../media/upload';
-import { sendMultiMedia } from './common';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import { TalkNormalChannelDataSession } from './talk-normal-channel-data-session';
 import { TalkChannelDataSession } from './talk-channel-data-session';
@@ -60,14 +59,16 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
   constructor(
     private _channel: Channel,
     session: TalkSession,
-    store: UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>
+    store: UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>,
+    private _chatListStore: UpdatableChatListStore
   ) {
     super();
 
     this._channelSession = new TalkChannelDataSession(
       session.clientUser,
       new TalkChannelSession(this, session),
-      store
+      store,
+      _chatListStore
     );
     this._normalChannelSession = new TalkNormalChannelDataSession(
       session.clientUser,
@@ -75,8 +76,14 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
       store
     );
 
-    this._handler = new TalkChannelHandler(this, this, store);
-    this._normalHandler = new TalkNormalChannelHandler(this, this._normalChannelSession, this, store);
+    this._handler = new TalkChannelHandler(this, this, store, _chatListStore);
+    this._normalHandler = new TalkNormalChannelHandler(
+      this,
+      this._normalChannelSession,
+      this,
+      store,
+      _chatListStore
+    );
   }
 
   get clientUser(): Readonly<ChannelUser> {
@@ -85,6 +92,10 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
 
   get channelId(): Long {
     return this._channel.channelId;
+  }
+
+  get chatListStore(): UpdatableChatListStore {
+    return this._chatListStore;
   }
 
   get store(): UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo> {
@@ -220,15 +231,12 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
     return this._channelSession.uploadMultiMedia(type, templates);
   }
 
-  async sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
-    const res = await this._channelSession.uploadMedia(type, template);
-    if (!res.success) return res;
-
-    return res.result.upload();
+  sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
+    return this._channelSession.sendMedia(type, template);
   }
 
-  async sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
-    return sendMultiMedia(this._channelSession, type, templates);
+  sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
+    return this._channelSession.sendMultiMedia(type, templates);
   }
 
   async updateAll(): AsyncCommandResult {

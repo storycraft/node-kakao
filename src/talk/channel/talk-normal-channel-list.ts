@@ -22,6 +22,7 @@ import { TalkChannelListHandler } from './talk-channel-handler';
 import { TalkMemoryChannelDataStore } from './common';
 import { NormalChannelUserInfo } from '../../user';
 import { TalkChannelManageSession } from './talk-channel-session';
+import { TalkMemoryChatListStore } from '../chat';
 
 type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
@@ -84,7 +85,8 @@ export class TalkNormalChannelList
     const talkChannel = new TalkNormalChannel(
       channel,
       this._session,
-      new TalkMemoryChannelDataStore(NormalChannelInfo.createPartial({}))
+      new TalkMemoryChannelDataStore(NormalChannelInfo.createPartial({})),
+      new TalkMemoryChatListStore(300)
     );
 
     const res = await talkChannel.updateAll();

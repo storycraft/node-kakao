@@ -5,7 +5,14 @@
  */
 
 import { Long } from 'bson';
-import { feedFromChat, KnownChatType, KnownFeedType, OpenKickFeed, OpenRewriteFeed } from '../../chat';
+import {
+  feedFromChat,
+  KnownChatType,
+  KnownFeedType,
+  OpenKickFeed,
+  OpenRewriteFeed,
+  UpdatableChatListStore
+} from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { OpenChannel, OpenChannelInfo, OpenChannelSession, OpenChannelUserPerm } from '../../openlink';
 import { DefaultRes } from '../../request';
@@ -33,14 +40,15 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     private _session: OpenChannelSession,
     private _emitter: TypedEmitter<TalkOpenChannelEvents<T>>,
     private _store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>,
+    private _chatListStore: UpdatableChatListStore
   ) {
 
   }
 
   private _callEvent<E extends keyof TalkOpenChannelEvents<T>>(
-      parentCtx: EventContext<TalkOpenChannelEvents<T>>,
-      event: E,
-      ...args: Parameters<TalkOpenChannelEvents<T>[E]>
+    parentCtx: EventContext<TalkOpenChannelEvents<T>>,
+    event: E,
+    ...args: Parameters<TalkOpenChannelEvents<T>[E]>
   ) {
     this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
@@ -79,7 +87,7 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
   private _profileChangedHandler(
     pfData: DefaultRes & SyncLinkPfRes,
     parentCtx: EventContext<TalkOpenChannelEvents<T>>
-) {
+  ) {
     if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) return;
 
     const updated = structToOpenLinkChannelUserInfo(pfData.olu);
@@ -89,11 +97,11 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     this._store.updateUserInfo(updated, updated);
 
     this._callEvent(
-        parentCtx,
-        'profile_changed',
-        this._channel,
-        last,
-        updated,
+      parentCtx,
+      'profile_changed',
+      this._channel,
+      last,
+      updated,
     );
   }
 
@@ -107,12 +115,14 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     if (feed.feedType !== KnownFeedType.OPENLINK_REWRITE_FEED) return;
 
     this._callEvent(
-        parentCtx,
-        'message_hidden',
-        chatLog,
-        this._channel,
-        feed as OpenRewriteFeed,
+      parentCtx,
+      'message_hidden',
+      chatLog,
+      this._channel,
+      feed as OpenRewriteFeed,
     );
+
+    this._chatListStore.addChat(chatLog).then();
   }
 
   private _chatEventHandler(
@@ -125,13 +135,13 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     if (!user) return;
 
     this._callEvent(
-        parentCtx,
-        'chat_event',
-        this._channel,
-        user,
-        syncEventData.et,
-        syncEventData.ec,
-        { logId: syncEventData.logId, type: syncEventData.t },
+      parentCtx,
+      'chat_event',
+      this._channel,
+      user,
+      syncEventData.et,
+      syncEventData.ec,
+      { logId: syncEventData.logId, type: syncEventData.t },
     );
   }
 
@@ -145,12 +155,14 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     if (feed.feedType !== KnownFeedType.OPENLINK_DELETE_LINK) return;
 
     this._callEvent(
-        parentCtx,
-        'channel_link_deleted',
-        chatLog,
-        this._channel,
-        feed,
+      parentCtx,
+      'channel_link_deleted',
+      chatLog,
+      this._channel,
+      feed,
     );
+
+    this._chatListStore.addChat(chatLog).then();
   }
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>): void {
@@ -177,16 +189,16 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
 export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Managed<OpenChannelListEvents<T, U>> {
   constructor(
     private _list: ChannelListStore<T>,
-    private _emitter: TypedEmitter<OpenChannelListEvents<T, U>>, 
+    private _emitter: TypedEmitter<OpenChannelListEvents<T, U>>,
     private _updater: ChannelListUpdater<T>
   ) {
 
   }
 
   private _callEvent<E extends keyof OpenChannelListEvents<T, U>>(
-      parentCtx: EventContext<OpenChannelListEvents<T, U>>,
-      event: E,
-      ...args: Parameters<OpenChannelListEvents<T, U>[E]>
+    parentCtx: EventContext<OpenChannelListEvents<T, U>>,
+    event: E,
+    ...args: Parameters<OpenChannelListEvents<T, U>[E]>
   ) {
     this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
@@ -202,9 +214,9 @@ export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Man
           if (!channelRes.success) return;
 
           this._callEvent(
-              parentCtx,
-              'channel_join',
-              channelRes.result as T,
+            parentCtx,
+            'channel_join',
+            channelRes.result as T,
           );
         });
 
@@ -223,11 +235,11 @@ export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Man
         if (feed.feedType !== KnownFeedType.OPENLINK_KICKED) return;
 
         this._callEvent(
-            parentCtx,
-            'channel_kicked',
-            chatLog,
-            kickedChannel,
-            feed as OpenKickFeed,
+          parentCtx,
+          'channel_kicked',
+          chatLog,
+          kickedChannel,
+          feed as OpenKickFeed,
         );
 
         break;
@@ -245,9 +257,9 @@ export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Man
 
         this._updater.removeChannel(channel);
         this._callEvent(
-            parentCtx,
-            'channel_left',
-            channel,
+          parentCtx,
+          'channel_left',
+          channel,
         );
       }
     }

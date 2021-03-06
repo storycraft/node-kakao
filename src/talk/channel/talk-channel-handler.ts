@@ -12,7 +12,14 @@ import {
   SetChannelMeta,
   UpdatableChannelDataStore
 } from '../../channel';
-import { DeleteAllFeed, feedFromChat, KnownChatType, KnownFeedType } from '../../chat';
+import {
+  DeleteAllFeed,
+  DELETED_MESSAGE_OFFSET,
+  feedFromChat,
+  KnownChatType,
+  KnownFeedType,
+  UpdatableChatListStore
+} from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { ChannelEvents, ChannelListEvent } from '../event';
 import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes, SyncJoinRes } from '../../packet/chat';
@@ -32,7 +39,8 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
   constructor(
     private _channel: T,
     private _emitter: TypedEmitter<ChannelEvents<T, ChannelUserInfo>>,
-    private _store: UpdatableChannelDataStore<ChannelInfo, ChannelUserInfo>
+    private _store: UpdatableChannelDataStore<ChannelInfo, ChannelUserInfo>,
+    private _chatListStore: UpdatableChatListStore
   ) {
 
   }
@@ -42,8 +50,8 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
   }
 
   private _callEvent<E extends keyof TalkChannelHandlerEvents<T>>(
-      parentCtx: EventContext<TalkChannelHandlerEvents<T>>,
-      event: E, ...args: Parameters<TalkChannelHandlerEvents<T>[E]>
+    parentCtx: EventContext<TalkChannelHandlerEvents<T>>,
+    event: E, ...args: Parameters<TalkChannelHandlerEvents<T>[E]>
   ) {
     this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
@@ -55,15 +63,17 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const chatLog = structToChatlog(msgData.chatLog);
 
     this._callEvent(
-        parentCtx,
-        'chat',
-        new TalkChatData(chatLog),
-        this._channel,
+      parentCtx,
+      'chat',
+      new TalkChatData(chatLog),
+      this._channel,
     );
 
-    this._store.updateInfo({
-      lastChatLogId: msgData.logId,
-      lastChatLog: chatLog,
+    this._chatListStore.addChat(chatLog).then(() => {
+      this._store.updateInfo({
+        lastChatLogId: msgData.logId,
+        lastChatLog: chatLog,
+      });
     });
   }
 
@@ -73,15 +83,17 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
 
     const chatLog = structToChatlog(data['chatLog'] as ChatlogStruct);
     this._callEvent(
-        parentCtx,
-        'chat',
-        new TalkChatData(chatLog),
-        this._channel,
+      parentCtx,
+      'chat',
+      new TalkChatData(chatLog),
+      this._channel,
     );
 
-    this._store.updateInfo({
-      lastChatLogId: chatLog.logId,
-      lastChatLog: chatLog,
+    this._chatListStore.addChat(chatLog).then(() => {
+      this._store.updateInfo({
+        lastChatLogId: chatLog.logId,
+        lastChatLog: chatLog,
+      });
     });
   }
 
@@ -93,11 +105,11 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     this._store.updateWatermark(readData.userId, readData.watermark);
 
     this._callEvent(
-        parentCtx,
-        'chat_read',
-        { logId: readData.watermark },
-        this._channel,
-        reader,
+      parentCtx,
+      'chat_read',
+      { logId: readData.watermark },
+      this._channel,
+      reader,
     );
   }
 
@@ -108,11 +120,11 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const meta = metaData.meta as SetChannelMeta;
 
     this._callEvent(
-        parentCtx,
-        'meta_change',
-        this._channel,
-        metaType,
-        meta,
+      parentCtx,
+      'meta_change',
+      this._channel,
+      metaType,
+      meta,
     );
 
     const metaMap = { ...this.info.metaMap };
@@ -137,13 +149,16 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const feed = feedFromChat(chatLog);
 
     this._callEvent(
-        parentCtx,
-        'user_left',
-        chatLog,
-        this._channel,
-        user,
-        feed,
+      parentCtx,
+      'user_left',
+      chatLog,
+      this._channel,
+      user,
+      feed,
     );
+
+    this._chatListStore.addChat(chatLog).then();
+
     return;
   }
 
@@ -156,13 +171,24 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const feed = feedFromChat(chatLog);
     if (feed.feedType !== KnownFeedType.DELETE_TO_ALL) return;
 
+    const delAllFeed = feed as DeleteAllFeed;
+
     this._callEvent(
-        parentCtx,
-        'chat_deleted',
-        chatLog,
-        this._channel,
-        feed as DeleteAllFeed,
+      parentCtx,
+      'chat_deleted',
+      chatLog,
+      this._channel,
+      delAllFeed,
     );
+
+    this._chatListStore.addChat(chatLog).then(async () => {
+      if (!delAllFeed.logId) return;
+
+      const chat = await this._chatListStore.get(delAllFeed.logId);
+      if (!chat) return;
+
+      await this._chatListStore.updateChat(delAllFeed.logId, { type: chat.type | DELETED_MESSAGE_OFFSET });
+    }).then();
   }
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>): void {
@@ -220,8 +246,8 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
   }
 
   private _callEvent<E extends keyof ChannelListEvent<T>>(
-      parentCtx: EventContext<ChannelListEvent<T>>,
-      event: E, ...args: Parameters<ChannelListEvent<T>[E]>
+    parentCtx: EventContext<ChannelListEvent<T>>,
+    event: E, ...args: Parameters<ChannelListEvent<T>[E]>
   ) {
     this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
@@ -238,9 +264,9 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
         this._updater.removeChannel(channel);
 
         this._callEvent(
-            parentCtx,
-            'channel_left',
-            channel,
+          parentCtx,
+          'channel_left',
+          channel,
         );
         break;
       }
@@ -252,9 +278,9 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
           if (!res.success) return;
 
           this._callEvent(
-              parentCtx,
-              'channel_join',
-              res.result as T,
+            parentCtx,
+            'channel_join',
+            res.result as T,
           );
         });
         break;

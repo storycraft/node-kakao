@@ -35,6 +35,7 @@ import { TalkOpenChannelManageSession } from './talk-open-channel-session';
 import { TalkOpenLinkSession } from './talk-open-link-session';
 import { OpenLinkUpdater, TalkOpenLinkHandler } from './talk-open-link-handler';
 import { OpenChannelUserInfo } from '../../user';
+import { TalkMemoryChatListStore } from '../chat';
 
 type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
@@ -134,7 +135,8 @@ export class TalkOpenChannelList
     const talkChannel = new TalkOpenChannel(
       channel,
       this._session,
-      new TalkMemoryChannelDataStore(OpenChannelInfo.createPartial({}))
+      new TalkMemoryChannelDataStore(OpenChannelInfo.createPartial({})),
+      new TalkMemoryChatListStore(300)
     );
 
     const res = await talkChannel.updateAll();

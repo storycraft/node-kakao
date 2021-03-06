@@ -6,7 +6,7 @@
 
 import { Long } from 'bson';
 import { Channel, ChannelDataStore, ChannelMeta, SetChannelMeta, UpdatableChannelDataStore } from '../../channel';
-import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatType } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatType, UpdatableChatListStore } from '../../chat';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import { MediaKeyComponent } from '../../media';
@@ -21,7 +21,6 @@ import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } fr
 import { RelayEventType } from '../../relay';
 import { ChannelUser, OpenChannelUserInfo } from '../../user';
 import {
-  sendMultiMedia,
   TalkChannel,
   TalkChannelHandler,
   TalkChannelSession,
@@ -65,14 +64,16 @@ export class TalkOpenChannel
   constructor(
     private _channel: Channel,
     session: TalkSession,
-    store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>
+    store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>,
+    private _chatListStore: UpdatableChatListStore
   ) {
     super();
 
     this._channelSession = new TalkChannelDataSession(
       session.clientUser,
       new TalkChannelSession(this, session),
-      store
+      store,
+      _chatListStore
     );
     this._openChannelSession = new TalkOpenChannelDataSession(
       session.clientUser,
@@ -80,8 +81,8 @@ export class TalkOpenChannel
       store
     );
 
-    this._handler = new TalkChannelHandler(this, this, store);
-    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, store);
+    this._handler = new TalkChannelHandler(this, this, store, _chatListStore);
+    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, store, _chatListStore);
   }
 
   get clientUser(): Readonly<ChannelUser> {
@@ -90,6 +91,10 @@ export class TalkOpenChannel
 
   get channelId(): Long {
     return this._channel.channelId;
+  }
+
+  get chatListStore(): UpdatableChatListStore {
+    return this._chatListStore;
   }
 
   get store(): UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo> {
@@ -247,7 +252,7 @@ export class TalkOpenChannel
     chat: ChatLoggedType,
     type: RelayEventType,
     count: number,
-  ): Promise<{ status: number, success: boolean }> {
+  ): AsyncCommandResult {
     return this._openChannelSession.createEvent(chat, type, count);
   }
 
@@ -263,7 +268,7 @@ export class TalkOpenChannel
     return this._openChannelSession.setUserPerm(user, perm);
   }
 
-  async handoverHost(user: ChannelUser): AsyncCommandResult {
+  handoverHost(user: ChannelUser): AsyncCommandResult {
     return this._openChannelSession.handoverHost(user);
   }
 
@@ -283,7 +288,7 @@ export class TalkOpenChannel
     return this._openChannelSession.getReaction();
   }
 
-  async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null> {
+  changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null> {
     return this._openChannelSession.changeProfile(profile);
   }
 
@@ -303,15 +308,12 @@ export class TalkOpenChannel
     return this._channelSession.uploadMultiMedia(type, templates);
   }
 
-  async sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
-    const res = await this._channelSession.uploadMedia(type, template);
-    if (!res.success) return res;
-
-    return res.result.upload();
+  sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
+    return this._channelSession.sendMedia(type, template);
   }
 
-  async sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
-    return sendMultiMedia(this._channelSession, type, templates);
+  sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
+    return this._channelSession.sendMultiMedia(type, templates);
   }
 
   async updateAll(): AsyncCommandResult {

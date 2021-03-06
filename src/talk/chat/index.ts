@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from './store';
+
 import { Chatlog, getOriginalType, isDeletedChat } from '../../chat';
 import { MentionStruct } from '../../chat/attachment';
 import { MediaKeyComponent } from '../../media';

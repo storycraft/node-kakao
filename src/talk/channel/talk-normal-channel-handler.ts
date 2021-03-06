@@ -10,7 +10,7 @@ import {
   NormalChannelSession,
   UpdatableChannelDataStore
 } from '../../channel';
-import { feedFromChat, KnownChatType } from '../../chat';
+import { feedFromChat, KnownChatType, UpdatableChatListStore } from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { ChannelEvents } from '../event';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
@@ -29,7 +29,8 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
     private _channel: T,
     private _session: NormalChannelSession,
     private _emitter: TypedEmitter<TalkNormalChannelEvents<T>>,
-    private _store: UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>
+    private _store: UpdatableChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>,
+    private _chatListStore: UpdatableChatListStore
   ) {
 
   }
@@ -66,6 +67,8 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
         );
       }
     });
+
+    this._chatListStore.addChat(chatLog).then();
   }
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkNormalChannelEvents<T>>): void {

@@ -207,7 +207,3 @@ implements UpdatableChannelDataStore<T, U> {
   }
   
 }
-
-export class TalkMemoryChannelListStore {
-
-}
