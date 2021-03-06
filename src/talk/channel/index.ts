@@ -7,8 +7,12 @@
 export * from './common';
 export * from './talk-channel-handler';
 export * from './talk-channel-session';
+export * from './talk-channel-data-session';
+export * from './talk-normal-channel-session';
+export * from './talk-normal-channel-handler';
 export * from './talk-normal-channel';
 export * from './talk-normal-channel-list';
+export * from './talk-normal-channel-data-session';
 
 import { Channel, ChannelDataStore, ChannelInfo, ChannelSession } from '../../channel';
 import { ChannelUser, ChannelUserInfo } from '../../user';

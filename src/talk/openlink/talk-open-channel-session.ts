@@ -19,7 +19,7 @@ import {
   OpenLinkProfiles,
   OpenLinkProfile,
 } from '../../openlink';
-import { ChatInfoRes, GetMemRes, MemberRes } from '../../packet/chat';
+import { ChatInfoRes, ChatOnRoomRes, GetMemRes, MemberRes } from '../../packet/chat';
 import { AsyncCommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
 import {
   ChannelInfoStruct,
@@ -34,7 +34,7 @@ import { ChannelUser, OpenChannelUserInfo } from '../../user';
 import { TalkOpenLinkSession } from './talk-open-link-session';
 import { RelayEventType } from '../../relay';
 import { Channel } from '../../channel';
-import { TalkChannelManageSession } from '../channel';
+import { TalkChannelManageSession, TalkNormalChannelSession } from '../channel';
 import { JoinLinkRes } from '../../packet/chat/join-link';
 import { Long } from 'bson';
 
@@ -46,17 +46,23 @@ export class TalkOpenChannelSession implements OpenChannelSession {
   private _channel: OpenChannel;
   private _session: TalkSession;
 
+  private _normalSession: TalkNormalChannelSession;
   private _linkSession: TalkOpenLinkSession;
 
   constructor(channel: OpenChannel, session: TalkSession) {
     this._channel = channel;
     this._session = session;
 
+    this._normalSession = new TalkNormalChannelSession(channel, session);
     this._linkSession = new TalkOpenLinkSession(session);
   }
 
   get session(): TalkSession {
     return this._session;
+  }
+  
+  chatON(): AsyncCommandResult<Readonly<ChatOnRoomRes>> {
+    return this._normalSession.chatON();
   }
 
   async markRead(chat: ChatLogged): Promise<{ success: boolean, status: number }> {

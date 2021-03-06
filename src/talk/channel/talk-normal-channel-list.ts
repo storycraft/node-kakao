@@ -14,14 +14,14 @@ import {
 } from '../../channel';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
-import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
+import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
 import { NormalChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkNormalChannel } from './talk-normal-channel';
 import { TalkChannelListHandler } from './talk-channel-handler';
-import { TalkChannelManageSession } from './talk-channel-session';
 import { TalkMemoryChannelDataStore } from './common';
 import { NormalChannelUserInfo } from '../../user';
+import { TalkChannelManageSession } from './talk-channel-session';
 
 type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
@@ -115,7 +115,7 @@ export class TalkNormalChannelList
     return this.addChannel(res.result);
   }
 
-  async leaveChannel(channel: Channel, block?: boolean): Promise<CommandResult<Long>> {
+  async leaveChannel(channel: Channel, block?: boolean): AsyncCommandResult<Long> {
     const res = await this._manageSession.leaveChannel(channel, block);
 
     if (res.success) {

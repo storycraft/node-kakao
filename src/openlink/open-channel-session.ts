@@ -17,12 +17,19 @@ import { OpenLinkChannelUserInfo, OpenLinkKickedUserInfo } from './open-link-use
 import { Channel } from '../channel';
 import { OpenLinkComponent } from '..';
 import { OpenChannel } from './open-channel';
+import { ChatOnRoomRes } from '../packet/chat';
 
 
 /**
  * Classes which provides openchannel session operations should implement this.
  */
 export interface OpenChannelSession {
+
+  /**
+   * Send CHATONROOM and get room infos.
+   * Official client sends this and update some infos before opening chatroom window.
+   */
+  chatON(): AsyncCommandResult<Readonly<ChatOnRoomRes>>;
 
   /**
    * Mark every chat as read until this chat.

@@ -7,11 +7,10 @@
 import { Long } from 'bson';
 import {
   Channel,
-  ChannelDataStore,
   ChannelInfo,
   ChannelListStore,
-  ChannelSession,
-  SetChannelMeta
+  SetChannelMeta,
+  UpdatableChannelDataStore
 } from '../../channel';
 import { DeleteAllFeed, feedFromChat, KnownChatType, KnownFeedType } from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
@@ -22,7 +21,6 @@ import { AsyncCommandResult, DefaultRes } from '../../request';
 import { ChannelUserInfo } from '../../user';
 import { Managed } from '../managed';
 import { TalkChatData } from '../chat';
-import { ChannelDataUpdater } from '../../channel';
 
 type TalkChannelHandlerEvents<T extends Channel> = ChannelEvents<T, ChannelUserInfo>;
 
@@ -33,10 +31,8 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
 
   constructor(
     private _channel: T,
-    private _session: ChannelSession,
     private _emitter: TypedEmitter<ChannelEvents<T, ChannelUserInfo>>,
-    private _store: ChannelDataStore<ChannelInfo, ChannelUserInfo>,
-    private _updater: ChannelDataUpdater<ChannelInfo, ChannelUserInfo>
+    private _store: UpdatableChannelDataStore<ChannelInfo, ChannelUserInfo>
   ) {
 
   }
@@ -65,7 +61,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
         this._channel,
     );
 
-    this._updater.updateInfo({
+    this._store.updateInfo({
       lastChatLogId: msgData.logId,
       lastChatLog: chatLog,
     });
@@ -83,7 +79,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
         this._channel,
     );
 
-    this._updater.updateInfo({
+    this._store.updateInfo({
       lastChatLogId: chatLog.logId,
       lastChatLog: chatLog,
     });
@@ -94,7 +90,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
 
     const reader = this._store.getUserInfo({ userId: readData.userId });
 
-    this._updater.updateWatermark(readData.userId, readData.watermark);
+    this._store.updateWatermark(readData.userId, readData.watermark);
 
     this._callEvent(
         parentCtx,
@@ -122,7 +118,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const metaMap = { ...this.info.metaMap };
     metaMap[metaType] = meta;
 
-    this._updater.updateInfo({
+    this._store.updateInfo({
       metaMap,
     });
   }
@@ -135,7 +131,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     const user = this._store.getUserInfo(chatLog.sender);
     if (!user) return;
 
-    this._updater.removeUser(chatLog.sender);
+    this._store.removeUser(chatLog.sender);
 
     if (chatLog.type !== KnownChatType.FEED) return;
     const feed = feedFromChat(chatLog);
@@ -149,32 +145,6 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
         feed,
     );
     return;
-  }
-
-  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
-    const struct = data['chatLog'] as ChatlogStruct;
-    if (!this._channel.channelId.eq(struct.chatId)) return;
-
-    const chatLog = structToChatlog(struct);
-    if (chatLog.type !== KnownChatType.FEED) return;
-
-    this._session.getLatestUserInfo(chatLog.sender).then((usersRes) => {
-      if (!usersRes.success) return;
-      
-      for (const user of usersRes.result) {
-        this._updater.updateUserInfo(user, user);
-        const feed = feedFromChat(chatLog);
-
-        this._callEvent(
-            parentCtx,
-            'user_join',
-            chatLog,
-            this._channel,
-            user,
-            feed,
-        );
-      }
-    });
   }
 
   private _msgDeleteHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
@@ -212,16 +182,12 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
       case 'DELMEM':
         this._userLeftHandler(data, parentCtx);
         break;
-      case 'NEWMEM':
-        this._userJoinHandler(data, parentCtx);
-        break;
       case 'SYNCDLMSG':
         this._msgDeleteHandler(data, parentCtx);
         break;
     }
   }
 }
-
 
 /**
  * Update channel list

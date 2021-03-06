@@ -5,9 +5,8 @@
  */
 
 import { SessionConfig } from '../config';
-import { DefaultReq, DefaultRes } from '../request';
+import { AsyncCommandResult, DefaultReq, DefaultRes } from '../request';
 import { BsonDataCodec, LocoPacket } from '../packet';
-import { CommandResult } from '../request';
 import { LocoPacketDispatcher } from './loco-packet-dispatcher';
 import { PacketAssembler } from './packet-assembler';
 import { BiStream } from '../stream';
@@ -47,7 +46,7 @@ export interface LocoSession extends CommandSession {
  */
 export interface SessionFactory {
 
-  createSession(config: SessionConfig): Promise<CommandResult<LocoSession>>;
+  createSession(config: SessionConfig): AsyncCommandResult<LocoSession>;
 
 }
 

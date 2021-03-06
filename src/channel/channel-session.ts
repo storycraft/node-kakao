@@ -8,8 +8,8 @@ import { Chat, Chatlog, ChatLogged, ChatType } from '../chat';
 import { Channel } from './channel';
 import { AsyncCommandResult, CommandResult } from '../request';
 import { Long } from '..';
-import { ChannelUser, ChannelUserInfo } from '../user';
-import { ChannelInfo, ChannelMeta, SetChannelMeta } from './channel-info';
+import { ChannelUser, NormalChannelUserInfo } from '../user';
+import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from './channel-info';
 import { ChatOnRoomRes } from '../packet/chat';
 import { MediaDownloader, MediaUploader, MultiMediaUploader, MediaUploadTemplate } from '../talk';
 import { MediaKeyComponent } from '../media';
@@ -34,7 +34,7 @@ export interface ChannelSession {
   * Perform WRITE command.
   *
   * @param chat
-   */
+  */
   sendChat(chat: Chat | string): AsyncCommandResult<Chatlog>;
 
   /**
@@ -62,12 +62,6 @@ export interface ChannelSession {
   markRead(chat: ChatLogged): AsyncCommandResult;
 
   /**
-   * Send CHATONROOM and get room infos.
-   * Official client sends this and update some infos before opening chatroom window.
-   */
-  chatON(): AsyncCommandResult<Readonly<ChatOnRoomRes>>;
-
-  /**
    * Set channel meta content
    *
    * @param type
@@ -76,37 +70,11 @@ export interface ChannelSession {
   setMeta(type: ChannelMetaType, meta: ChannelMeta | string): AsyncCommandResult<SetChannelMeta>;
 
   /**
-   * Get latest channel info
-   */
-  getLatestChannelInfo(): AsyncCommandResult<ChannelInfo>;
-
-  /**
-   * Get latest detailed user info.
-   *
-   * @param channelUsers
-   */
-  getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<ChannelUserInfo[]>;
-
-  /**
-   * Updates every user info to latest.
-   * The updated ChannelUserInfo may omit some detailed properties.
-   * @see getLatestUserInfo method for getting detailed info per user.
-   */
-  getAllLatestUserInfo(): AsyncCommandResult<ChannelUserInfo[]>;
-
-  /**
    * Set push alert settings
    *
    * @param flag true to enable
    */
   setPushAlert(flag: boolean): AsyncCommandResult;
-
-  /**
-   * Invite users to channel.
-   *
-   * @param userList
-   */
-  inviteUsers(userList: ChannelUser[]): AsyncCommandResult;
 
   /**
    * Get every chats between startLogId and endLogId.
@@ -149,6 +117,45 @@ export interface ChannelSession {
    * @param templates
    */
   uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]>;
+
+}
+
+/**
+ * Classes which provides normal channel session operations should implement this.
+ */
+export interface NormalChannelSession {
+
+  /**
+   * Send CHATONROOM and get room infos.
+   * Official client sends this and update some infos before opening chatroom window.
+   */
+  chatON(): AsyncCommandResult<Readonly<ChatOnRoomRes>>;
+
+  /**
+   * Get latest channel info
+   */
+  getLatestChannelInfo(): AsyncCommandResult<NormalChannelInfo>;
+
+  /**
+   * Get latest detailed user info.
+   *
+   * @param channelUsers
+   */
+  getLatestUserInfo(...channelUsers: ChannelUser[]): AsyncCommandResult<NormalChannelUserInfo[]>;
+
+  /**
+   * Updates every user info to latest.
+   * The updated ChannelUserInfo may omit some detailed properties.
+   * @see getLatestUserInfo method for getting detailed info per user.
+   */
+  getAllLatestUserInfo(): AsyncCommandResult<NormalChannelUserInfo[]>;
+
+  /**
+   * Invite users to channel.
+   *
+   * @param userList
+   */
+  inviteUsers(userList: ChannelUser[]): AsyncCommandResult;
 
 }
 

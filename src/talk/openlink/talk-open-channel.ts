@@ -18,20 +18,14 @@ import {
   OpenLinkProfiles,
 } from '../../openlink';
 import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
-import {
-  OpenMemberStruct,
-  structToOpenChannelUserInfo,
-  structToOpenLinkChannelUserInfo,
-} from '../../packet/struct';
 import { RelayEventType } from '../../relay';
 import { ChannelUser, OpenChannelUserInfo } from '../../user';
 import {
-  initOpenUserList,
-  initWatermark,
   sendMultiMedia,
   TalkChannel,
   TalkChannelHandler,
-  TalkChannelSession
+  TalkChannelSession,
+  TalkChannelDataSession
 } from '../channel';
 import { TalkOpenChannelSession } from './talk-open-channel-session';
 import { OpenChannelEvents } from '../event';
@@ -53,6 +47,7 @@ import {
 import { ChatOnRoomRes } from '../../packet/chat';
 import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import { MediaUploadTemplate } from '../media/upload';
+import { TalkOpenChannelDataSession } from './talk-open-channel-data-session';
 
 type TalkOpenChannelEvents = OpenChannelEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
@@ -61,44 +56,56 @@ export class TalkOpenChannel
   implements OpenChannel, ChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>,
   TalkChannel, OpenChannelSession, Managed<TalkOpenChannelEvents> {
 
-  private _channelSession: TalkChannelSession;
-  private _openChannelSession: TalkOpenChannelSession;
+  private _channelSession: TalkChannelDataSession;
+  private _openChannelSession: TalkOpenChannelDataSession;
 
   private _handler: TalkChannelHandler<TalkOpenChannel>;
-  private _openHandler: TalkOpenChannelHandler<TalkOpenChannel, OpenChannelUserInfo>;
+  private _openHandler: TalkOpenChannelHandler<TalkOpenChannel>;
 
   constructor(
     private _channel: Channel,
     session: TalkSession,
-    private _store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>
+    store: UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo>
   ) {
     super();
 
-    this._channelSession = new TalkChannelSession(this, session);
-    this._openChannelSession = new TalkOpenChannelSession(this, session);
+    this._channelSession = new TalkChannelDataSession(
+      session.clientUser,
+      new TalkChannelSession(this, session),
+      store
+    );
+    this._openChannelSession = new TalkOpenChannelDataSession(
+      session.clientUser,
+      new TalkOpenChannelSession(this, session),
+      store
+    );
 
-    this._handler = new TalkChannelHandler(this, this._channelSession, this, this._store, this._store);
-    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, this._store, this._store);
+    this._handler = new TalkChannelHandler(this, this, store);
+    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, store);
   }
 
   get clientUser(): Readonly<ChannelUser> {
-    return this._channelSession.session.clientUser;
+    return this._openChannelSession.clientUser;
   }
 
   get channelId(): Long {
     return this._channel.channelId;
   }
 
+  get store(): UpdatableChannelDataStore<OpenChannelInfo, OpenChannelUserInfo> {
+    return this._openChannelSession.store;
+  }
+
   get linkId(): Long {
-    return this._store.info.linkId;
+    return this.store.info.linkId;
   }
 
   get info(): Readonly<OpenChannelInfo> {
-    return this._store.info;
+    return this.store.info;
   }
 
   get userCount(): number {
-    return this._store.userCount;
+    return this.store.userCount;
   }
 
   getName(): string {
@@ -111,22 +118,22 @@ export class TalkOpenChannel
   }
 
   getUserInfo(user: ChannelUser): Readonly<OpenChannelUserInfo> | undefined {
-    return this._store.getUserInfo(user);
+    return this.store.getUserInfo(user);
   }
 
   getAllUserInfo(): IterableIterator<OpenChannelUserInfo> {
-    return this._store.getAllUserInfo();
+    return this.store.getAllUserInfo();
   }
 
   getReadCount(chat: ChatLogged): number {
-    return this._store.getReadCount(chat);
+    return this.store.getReadCount(chat);
   }
 
   getReaders(chat: ChatLogged): Readonly<OpenChannelUserInfo>[] {
-    return this._store.getReaders(chat);
+    return this.store.getReaders(chat);
   }
 
-  async sendChat(chat: string | Chat): Promise<CommandResult<Chatlog>> {
+  async sendChat(chat: string | Chat): AsyncCommandResult<Chatlog> {
     return await this._channelSession.sendChat(chat);
   }
 
@@ -151,36 +158,19 @@ export class TalkOpenChannel
     return this._channelSession.getChatListFrom(startLogId);
   }
 
-  async markRead(chat: ChatLogged): Promise<{ success: boolean, status: number }> {
-    const res = await this._openChannelSession.markRead(chat);
-
-    if (res.success) {
-      this._store.updateWatermark(this.clientUser.userId, chat.logId);
-    }
-
-    return res;
+  markRead(chat: ChatLogged): AsyncCommandResult {
+    return this._openChannelSession.markRead(chat);;
   }
 
-  async setMeta(type: ChannelMetaType, meta: string | ChannelMeta): Promise<CommandResult<SetChannelMeta>> {
-    const res = await this._channelSession.setMeta(type, meta);
-
-    if (res.success) {
-      this._store.updateInfo({
-        metaMap: {
-          ...this._store.info.metaMap,
-          [type]: res.result
-        }
-      });
-    }
-
-    return res;
+  setMeta(type: ChannelMetaType, meta: string | ChannelMeta): AsyncCommandResult<SetChannelMeta> {
+    return this._channelSession.setMeta(type, meta);
   }
 
-  async setTitleMeta(title: string): Promise<CommandResult<SetChannelMeta>> {
+  setTitleMeta(title: string): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.TITLE, title);
   }
 
-  async setNoticeMeta(notice: string): Promise<CommandResult<SetChannelMeta>> {
+  setNoticeMeta(notice: string): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.NOTICE, notice);
   }
 
@@ -189,32 +179,33 @@ export class TalkOpenChannel
    * Need to be owner of the channel to set.
    *
    * @param {PrivilegeMetaContent} content
+   * @return {AsyncCommandResult<SetChannelMeta>}
    */
-  async setPrivilegeMeta(content: PrivilegeMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setPrivilegeMeta(content: PrivilegeMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.PRIVILEGE, JsonUtil.stringifyLoseless(content));
   }
 
-  async setProfileMeta(content: ProfileMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setProfileMeta(content: ProfileMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.PROFILE, JsonUtil.stringifyLoseless(content));
   }
 
-  async setTvMeta(content: TvMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setTvMeta(content: TvMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.TV, JsonUtil.stringifyLoseless(content));
   }
 
-  async setTvLiveMeta(content: TvLiveMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setTvLiveMeta(content: TvLiveMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.TV_LIVE, JsonUtil.stringifyLoseless(content));
   }
 
-  async setLiveTalkInfoMeta(content: LiveTalkInfoMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setLiveTalkInfoMeta(content: LiveTalkInfoMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.LIVE_TALK_INFO, JsonUtil.stringifyLoseless(content));
   }
 
-  async setLiveTalkCountMeta(content: LiveTalkCountMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setLiveTalkCountMeta(content: LiveTalkCountMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.LIVE_TALK_COUNT, JsonUtil.stringifyLoseless(content));
   }
 
-  async setGroupMeta(content: GroupMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setGroupMeta(content: GroupMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.GROUP, JsonUtil.stringifyLoseless(content));
   }
 
@@ -222,125 +213,34 @@ export class TalkOpenChannel
    * Set bot meta
    *
    * @param {BotMetaContent} content
+   * @return {AsyncCommandResult<SetChannelMeta>}
    */
-  async setBotMeta(content: BotMetaContent): Promise<CommandResult<SetChannelMeta>> {
+  setBotMeta(content: BotMetaContent): AsyncCommandResult<SetChannelMeta> {
     return this.setMeta(KnownChannelMetaType.BOT, JsonUtil.stringifyLoseless(content));
   }
 
-  async setPushAlert(flag: boolean): Promise<CommandResult<void>> {
-    const res = await this._channelSession.setPushAlert(flag);
-
-    if (res.success) {
-      this._store.updateInfo({ pushAlert: flag });
-    }
-
-    return res;
+  setPushAlert(flag: boolean): AsyncCommandResult {
+    return this._channelSession.setPushAlert(flag);
   }
 
-  async chatON(): AsyncCommandResult<ChatOnRoomRes> {
-    const res = await this._channelSession.chatON();
-
-    if (res.success) {
-      const { result } = res;
-
-      if (
-        this.info.type !== result.t ||
-        this.info.lastChatLogId !== result.l ||
-        this.info.openToken !== result.otk
-      ) {
-        const newInfo: Partial<OpenChannelInfo> = { type: result.t, lastChatLogId: result.l };
-        if (result.otk) {
-          newInfo['openToken'] = result.otk;
-        }
-        
-        this._store.updateInfo(newInfo);
-      }
-
-      if (result.a && result.w) {
-        initWatermark(this._store, result.a, result.w);
-      }
-      
-      if (result.m) {
-        const structList = result.m as OpenMemberStruct[];
-        
-        this._store.clearUserList();
-        for (const struct of structList) {
-          const wrapped = structToOpenChannelUserInfo(struct);
-          this._store.updateUserInfo(wrapped, wrapped);
-        }
-      } else if (result.mi) {
-        const userInitres = await initOpenUserList(this._openChannelSession, result.mi);
-  
-        if (!userInitres.success) return userInitres;
-  
-        this._store.clearUserList();
-        for (const info of userInitres.result) {
-          this._store.updateUserInfo(info, info);
-        }
-      }
-
-      if (result.olu) {
-        const wrapped = structToOpenLinkChannelUserInfo(result.olu);
-        this._store.updateUserInfo(wrapped, wrapped);
-      }
-      
-      const openChannelSession = this._openChannelSession;
-      const clientUser = openChannelSession.session.clientUser;
-      if (!this._store.getUserInfo(clientUser)) {
-        const clientRes = await openChannelSession.getLatestUserInfo(clientUser);
-        if (!clientRes.success) return clientRes;
-
-        for (const user of clientRes.result) {
-          this._store.updateUserInfo(user, user);
-        }
-      }
-    }
-
-    return res;
+  chatON(): AsyncCommandResult<ChatOnRoomRes> {
+    return this._openChannelSession.chatON();
   }
 
-  async getLatestChannelInfo(): Promise<CommandResult<OpenChannelInfo>> {
-    const infoRes = await this._openChannelSession.getLatestChannelInfo();
-
-    if (infoRes.success) {
-      this._store.updateInfo(infoRes.result);
-    }
-
-    return infoRes;
+  getLatestChannelInfo(): AsyncCommandResult<OpenChannelInfo> {
+    return this._openChannelSession.getLatestChannelInfo();
   }
 
-  async getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
-    const infoRes = await this._openChannelSession.getLatestUserInfo(...users);
-
-    if (infoRes.success) {
-      const result = infoRes.result as OpenChannelUserInfo[];
-
-      this._store.clearUserList();
-      result.forEach((info) => this._store.updateUserInfo(info, info));
-    }
-
-    return infoRes;
+  getLatestUserInfo(...users: ChannelUser[]): AsyncCommandResult<OpenChannelUserInfo[]> {
+    return this._openChannelSession.getLatestUserInfo(...users);
   }
 
-  async getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
-    const infoRes = await this._openChannelSession.getAllLatestUserInfo();
-
-    if (infoRes.success) {
-      this._store.clearUserList();
-      infoRes.result.forEach((info) => this._store.updateUserInfo(info, info));
-    }
-
-    return infoRes;
+  getAllLatestUserInfo(): AsyncCommandResult<OpenChannelUserInfo[]> {
+    return this._openChannelSession.getAllLatestUserInfo();
   }
 
-  async getLatestOpenLink(): Promise<CommandResult<OpenLink>> {
-    const res = await this._openChannelSession.getLatestOpenLink();
-
-    if (res.success) {
-      this._store.updateInfo({ openLink: res.result });
-    }
-
-    return res;
+  getLatestOpenLink(): AsyncCommandResult<OpenLink> {
+    return this._openChannelSession.getLatestOpenLink();
   }
 
   createEvent(
@@ -359,49 +259,23 @@ export class TalkOpenChannel
     return this._openChannelSession.removeKicked(user);
   }
 
-  async setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): Promise<CommandResult> {
-    const res = await this._openChannelSession.setUserPerm(user, perm);
-
-    if (res.success) {
-      const userInfo = this.getUserInfo(user);
-      if (userInfo) {
-        this._store.updateUserInfo(userInfo, { ...userInfo, perm: perm });
-      }
-    }
-
-    return res;
+  setUserPerm(user: ChannelUser, perm: OpenChannelUserPerm): AsyncCommandResult {
+    return this._openChannelSession.setUserPerm(user, perm);
   }
 
-  async handoverHost(user: ChannelUser): Promise<CommandResult> {
-    const res = await this._openChannelSession.handoverHost(user);
-
-    if (res.success) {
-      const openlinkRes = await this.getLatestOpenLink();
-      if (openlinkRes.success) {
-        this._store.updateInfo({ openLink: openlinkRes.result });
-      }
-
-      await this.getLatestUserInfo(user, this._channelSession.session.clientUser);
-    }
-
-    return res;
+  async handoverHost(user: ChannelUser): AsyncCommandResult {
+    return this._openChannelSession.handoverHost(user);
   }
 
-  async kickUser(user: ChannelUser): Promise<CommandResult> {
-    const res = await this._openChannelSession.kickUser(user);
-
-    if (res.success) {
-      this._store.removeUser(user);
-    }
-
-    return res;
+  kickUser(user: ChannelUser): AsyncCommandResult {
+    return this._openChannelSession.kickUser(user);
   }
 
-  async blockUser(user: ChannelUser): Promise<CommandResult> {
+  blockUser(user: ChannelUser): AsyncCommandResult {
     return this._openChannelSession.blockUser(user);
   }
 
-  react(flag: boolean): Promise<{ status: number, success: boolean }> {
+  react(flag: boolean): AsyncCommandResult {
     return this._openChannelSession.react(flag);
   }
 
@@ -409,13 +283,8 @@ export class TalkOpenChannel
     return this._openChannelSession.getReaction();
   }
 
-  async changeProfile(profile: OpenLinkProfiles): Promise<CommandResult<Readonly<OpenLinkChannelUserInfo> | null>> {
-    const res = await this._openChannelSession.changeProfile(profile);
-    if (res.success && res.result) {
-      this._store.updateUserInfo(this.clientUser, res.result);
-    }
-
-    return res;
+  async changeProfile(profile: OpenLinkProfiles): AsyncCommandResult<Readonly<OpenLinkChannelUserInfo> | null> {
+    return this._openChannelSession.changeProfile(profile);
   }
 
   hideChat(chat: ChatLoggedType): AsyncCommandResult {

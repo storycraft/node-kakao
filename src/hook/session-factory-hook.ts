@@ -6,9 +6,8 @@
 
 import { SessionConfig } from '../config';
 import { LocoSession, PacketResData, SessionFactory } from '../network/request-session';
-import { DefaultRes, DefaultReq } from '../request';
+import { DefaultRes, DefaultReq, AsyncCommandResult } from '../request';
 import { LocoPacket } from '../packet';
-import { CommandResult } from '../request';
 
 /**
  * Hook incoming datas
@@ -42,7 +41,7 @@ export class HookedSessionFactory implements SessionFactory {
 
   }
 
-  async createSession(config: SessionConfig): Promise<CommandResult<LocoSession>> {
+  async createSession(config: SessionConfig): AsyncCommandResult<LocoSession> {
     const sessionRes = await this._factory.createSession(config);
     if (!sessionRes.success) return sessionRes;
 

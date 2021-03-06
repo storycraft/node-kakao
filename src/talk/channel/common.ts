@@ -5,21 +5,20 @@
  */
 
 import { Long } from 'bson';
-import { ChannelDataUpdater, UpdatableChannelDataStore } from '../../channel';
+import { ChannelDataUpdater, ChannelSession, NormalChannelSession, UpdatableChannelDataStore } from '../../channel';
 import { Chatlog, ChatLogged, ChatType } from '../../chat';
 import { MediaKeyComponent } from '../../media';
 import { OpenChannelSession } from '../../openlink';
 import { AsyncCommandResult, CommandResultDone, KnownDataStatusCode } from '../../request';
 import { ChannelUser, NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
 import { MediaUploadTemplate } from '../media/upload';
-import { TalkChannelSession } from './talk-channel-session';
 
 /*
  * Common complex channel methods
  */
 
 export async function sendMultiMedia(
-    channelSession: TalkChannelSession,
+    channelSession: ChannelSession,
     type: ChatType,
     templates: MediaUploadTemplate[],
 ): AsyncCommandResult<Chatlog> {
@@ -63,7 +62,7 @@ export function initWatermark(
 }
 
 export async function initNormalUserList(
-  session: TalkChannelSession,
+  session: NormalChannelSession,
   userIdList: Long[]
 ): AsyncCommandResult<NormalChannelUserInfo[]> {
   const userList = userIdList.map(userId => {
