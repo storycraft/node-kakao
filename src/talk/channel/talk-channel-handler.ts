@@ -5,40 +5,55 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelInfo, ChannelList, SetChannelMeta } from '../../channel';
+import {
+  Channel,
+  ChannelDataStore,
+  ChannelInfo,
+  ChannelListStore,
+  ChannelSession,
+  SetChannelMeta
+} from '../../channel';
 import { DeleteAllFeed, feedFromChat, KnownChatType, KnownFeedType } from '../../chat';
-import { EventContext } from '../../event';
+import { EventContext, TypedEmitter } from '../../event';
 import { ChannelEvents, ChannelListEvent } from '../event';
 import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes, SyncJoinRes } from '../../packet/chat';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 import { AsyncCommandResult, DefaultRes } from '../../request';
 import { ChannelUserInfo } from '../../user';
 import { Managed } from '../managed';
-import { TalkChannel } from '.';
 import { TalkChatData } from '../chat';
 import { ChannelDataUpdater } from '../../channel';
+
+type TalkChannelHandlerEvents<T extends Channel> = ChannelEvents<T, ChannelUserInfo>;
 
 /**
  * Capture and handle pushes coming to channel
  */
-export class TalkChannelHandler implements Managed<ChannelEvents> {
-  constructor(private _channel: TalkChannel, private _updater: ChannelDataUpdater<ChannelInfo, ChannelUserInfo>) {
+export class TalkChannelHandler<T extends Channel> implements Managed<TalkChannelHandlerEvents<T>> {
+
+  constructor(
+    private _channel: T,
+    private _session: ChannelSession,
+    private _emitter: TypedEmitter<ChannelEvents<T, ChannelUserInfo>>,
+    private _store: ChannelDataStore<ChannelInfo, ChannelUserInfo>,
+    private _updater: ChannelDataUpdater<ChannelInfo, ChannelUserInfo>
+  ) {
 
   }
 
   private get info() {
-    return this._channel.info;
+    return this._store.info;
   }
 
-  private _callEvent<U extends keyof ChannelEvents>(
-      parentCtx: EventContext<ChannelEvents>,
-      event: U, ...args: Parameters<ChannelEvents[U]>
+  private _callEvent<E extends keyof TalkChannelHandlerEvents<T>>(
+      parentCtx: EventContext<TalkChannelHandlerEvents<T>>,
+      event: E, ...args: Parameters<TalkChannelHandlerEvents<T>[E]>
   ) {
-    this._channel.emit(event, ...args);
+    this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  private _msgHandler(msgData: DefaultRes & MsgRes, parentCtx: EventContext<ChannelEvents>) {
+  private _msgHandler(msgData: DefaultRes & MsgRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     if (!this._channel.channelId.equals(msgData.chatId)) return;
 
     const chatLog = structToChatlog(msgData.chatLog);
@@ -56,7 +71,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     });
   }
 
-  private _feedHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+  private _feedHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     const channelId = data['c'] as Long;
     if (!this._channel.channelId.equals(channelId)) return;
 
@@ -74,10 +89,10 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     });
   }
 
-  private _chatReadHandler(readData: DefaultRes & DecunreadRes, parentCtx: EventContext<ChannelEvents>) {
+  private _chatReadHandler(readData: DefaultRes & DecunreadRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     if (!this._channel.channelId.equals(readData.chatId)) return;
 
-    const reader = this._channel.getUserInfo({ userId: readData.userId });
+    const reader = this._store.getUserInfo({ userId: readData.userId });
 
     this._updater.updateWatermark(readData.userId, readData.watermark);
 
@@ -90,7 +105,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     );
   }
 
-  private _metaChangeHandler(metaData: DefaultRes & ChgMetaRes, parentCtx: EventContext<ChannelEvents>) {
+  private _metaChangeHandler(metaData: DefaultRes & ChgMetaRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     if (!this._channel.channelId.equals(metaData.chatId)) return;
 
     const metaType = metaData.meta.type;
@@ -112,12 +127,12 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     });
   }
 
-  private _userLeftHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+  private _userLeftHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     const struct = data['chatLog'] as ChatlogStruct;
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
     const chatLog = structToChatlog(struct);
-    const user = this._channel.getUserInfo(chatLog.sender);
+    const user = this._store.getUserInfo(chatLog.sender);
     if (!user) return;
 
     this._updater.removeUser(chatLog.sender);
@@ -136,14 +151,14 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     return;
   }
 
-  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     const struct = data['chatLog'] as ChatlogStruct;
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
     const chatLog = structToChatlog(struct);
     if (chatLog.type !== KnownChatType.FEED) return;
 
-    this._channel.getLatestUserInfo(chatLog.sender).then((usersRes) => {
+    this._session.getLatestUserInfo(chatLog.sender).then((usersRes) => {
       if (!usersRes.success) return;
       
       for (const user of usersRes.result) {
@@ -162,7 +177,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     });
   }
 
-  private _msgDeleteHandler(data: DefaultRes, parentCtx: EventContext<ChannelEvents>) {
+  private _msgDeleteHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
     const struct = data['chatLog'] as ChatlogStruct;
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
@@ -180,7 +195,7 @@ export class TalkChannelHandler implements Managed<ChannelEvents> {
     );
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelEvents>): void {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>): void {
     switch (method) {
       case 'MSG':
         this._msgHandler(data as DefaultRes & MsgRes, parentCtx);
@@ -229,21 +244,24 @@ export interface ChannelListUpdater<T> {
 
 }
 
-
-export class TalkChannelListHandler implements Managed<ChannelListEvent> {
-  constructor(private _list: ChannelList<TalkChannel>, private _updater: ChannelListUpdater<TalkChannel>) {
+export class TalkChannelListHandler<T extends Channel> implements Managed<ChannelListEvent<T>> {
+  constructor(
+    private _list: ChannelListStore<T>,
+    private _emitter: TypedEmitter<ChannelListEvent<T>>,
+    private _updater: ChannelListUpdater<T>
+  ) {
 
   }
 
-  private _callEvent<U extends keyof ChannelListEvent>(
-      parentCtx: EventContext<ChannelListEvent>,
-      event: U, ...args: Parameters<ChannelListEvent[U]>
+  private _callEvent<E extends keyof ChannelListEvent<T>>(
+      parentCtx: EventContext<ChannelListEvent<T>>,
+      event: E, ...args: Parameters<ChannelListEvent<T>[E]>
   ) {
-    this._list.emit(event, ...args);
+    this._emitter.emit(event, ...args);
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent>): void {
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent<T>>): void {
     switch (method) {
       case 'LEFT': {
         const leftData = data as DefaultRes & LeftRes;
@@ -270,7 +288,7 @@ export class TalkChannelListHandler implements Managed<ChannelListEvent> {
           this._callEvent(
               parentCtx,
               'channel_join',
-              res.result,
+              res.result as T,
           );
         });
         break;

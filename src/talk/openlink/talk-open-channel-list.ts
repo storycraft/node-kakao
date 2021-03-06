@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelList } from '../../channel';
+import { Channel, ChannelListStore } from '../../channel';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import {
@@ -44,9 +44,9 @@ type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChan
 export class TalkOpenChannelList
   extends TypedEmitter<TalkOpenChannelListEvents>
   implements Managed<TalkOpenChannelListEvents>, OpenChannelManageSession,
-  ChannelList<TalkOpenChannel>, OpenLinkSession, OpenLinkService {
-  private _handler: TalkChannelListHandler;
-  private _openHandler: TalkOpenChannelListHandler;
+  ChannelListStore<TalkOpenChannel>, OpenLinkSession, OpenLinkService {
+  private _handler: TalkChannelListHandler<TalkOpenChannel>;
+  private _openHandler: TalkOpenChannelListHandler<TalkOpenChannel, OpenChannelUserInfo>;
   private _linkHandler: TalkOpenLinkHandler;
 
   private _linkSession: TalkOpenLinkSession;
@@ -72,8 +72,8 @@ export class TalkOpenChannelList
     this._manageSession = new TalkOpenChannelManageSession(_session);
     this._linkSession = new TalkOpenLinkSession(_session);
 
-    this._handler = new TalkChannelListHandler(this, infoUpdater);
-    this._openHandler = new TalkOpenChannelListHandler(this, infoUpdater);
+    this._handler = new TalkChannelListHandler(this, this, infoUpdater);
+    this._openHandler = new TalkOpenChannelListHandler(this, this, infoUpdater);
     this._linkHandler = new TalkOpenLinkHandler(this, infoUpdater);
 
     this._clientMap = new Map();

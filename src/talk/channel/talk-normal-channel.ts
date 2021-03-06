@@ -50,7 +50,7 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
   implements TalkChannel, ChannelDataStore<NormalChannelInfo, NormalChannelUserInfo>, Managed<TalkChannelEvents> {
 
   private _channelSession: TalkChannelSession;
-  private _handler: TalkChannelHandler;
+  private _handler: TalkChannelHandler<TalkNormalChannel>;
 
   constructor(
     private _channel: Channel,
@@ -60,7 +60,7 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
     super();
 
     this._channelSession = new TalkChannelSession(this, session);
-    this._handler = new TalkChannelHandler(this, this._store);
+    this._handler = new TalkChannelHandler(this, this._channelSession, this, this._store, this._store);
   }
 
   get clientUser(): Readonly<ChannelUser> {

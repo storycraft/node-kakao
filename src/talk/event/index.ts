@@ -142,8 +142,8 @@ export interface ClientEvent {
 
 }
 
-export type ClientEvents<T, U> = ClientEvent & TalkChannelListEvents<T, U>;
-export type TalkChannelListEvents<T, U> = OpenChannelListEvents<T, U> & NormalChannelListEvents<T, U>;
+export type ClientEvents<T, U> = ClientEvent & ChannelListEvents<T, U>;
+export type ChannelListEvents<T, U> = OpenChannelListEvents<T, U> & NormalChannelListEvents<T, U>;
 
 export type NormalChannelListEvents<T, U> = ChannelListEvent<T> & ChannelEvents<T, U>;
 export type OpenChannelListEvents<T, U>

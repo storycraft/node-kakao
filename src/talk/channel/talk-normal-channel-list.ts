@@ -5,7 +5,13 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelList, ChannelTemplate, NormalChannelInfo, NormalChannelManageSession } from '../../channel';
+import {
+  Channel,
+  ChannelListStore,
+  ChannelTemplate,
+  NormalChannelInfo,
+  NormalChannelManageSession
+} from '../../channel';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import { AsyncCommandResult, CommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
@@ -24,8 +30,8 @@ type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, No
  */
 export class TalkNormalChannelList
   extends TypedEmitter<TalkNormalChannelListEvents>
-  implements ChannelList<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
-  private _handler: TalkChannelListHandler;
+  implements ChannelListStore<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
+  private _handler: TalkChannelListHandler<TalkNormalChannel>;
 
   private _manageSession: TalkChannelManageSession;
 
@@ -42,7 +48,7 @@ export class TalkNormalChannelList
   ) {
     super();
 
-    this._handler = new TalkChannelListHandler(this, {
+    this._handler = new TalkChannelListHandler(this, this, {
       addChannel: (channel) => this.addChannel(channel),
       removeChannel: (channel) => this.delete(channel.channelId),
     });

@@ -5,7 +5,6 @@
  */
 
 export * from './channel-info';
-export * from './channel-list';
 export * from './channel-session';
 export * from './channel-type';
 export * from './channel';

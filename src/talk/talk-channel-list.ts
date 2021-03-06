@@ -5,22 +5,25 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelList } from '../channel';
+import { Channel, ChannelListStore } from '../channel';
 import { TalkSession } from './client';
 import { EventContext, TypedEmitter } from '../event';
 import { InformedOpenLink, OpenChannel } from '../openlink';
 import { DefaultRes } from '../request';
 import { ChainedIterator } from '../util';
-import { OpenChannelListEvents, TalkChannelListEvents } from './event';
+import { ChannelListEvents } from './event';
 import { Managed } from './managed';
 import { TalkOpenChannel, TalkOpenChannelList } from './openlink';
 import { TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
+import { ChannelUserInfo } from '../user';
+
+type TalkChannelListEvents = ChannelListEvents<TalkChannel, ChannelUserInfo>;
 
 /**
  * Manage normal channels and open channels
  */
 export class TalkChannelList
-  extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelList<TalkChannel> {
+  extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelListStore<TalkChannel> {
   private _normal: TalkNormalChannelList;
   private _open: TalkOpenChannelList;
 
@@ -72,8 +75,8 @@ export class TalkChannelList
     return new ChainedIterator<TalkChannel>(normalIter, openIter);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents>): void {
-    const ctx = new EventContext<OpenChannelListEvents>(this, parentCtx);
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelListEvents>): void {
+    const ctx = new EventContext<TalkChannelListEvents>(this, parentCtx);
 
     this._normal.pushReceived(method, data, ctx);
     this._open.pushReceived(method, data, ctx);

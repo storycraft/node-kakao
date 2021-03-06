@@ -64,8 +64,8 @@ export class TalkOpenChannel
   private _channelSession: TalkChannelSession;
   private _openChannelSession: TalkOpenChannelSession;
 
-  private _handler: TalkChannelHandler;
-  private _openHandler: TalkOpenChannelHandler;
+  private _handler: TalkChannelHandler<TalkOpenChannel>;
+  private _openHandler: TalkOpenChannelHandler<TalkOpenChannel, OpenChannelUserInfo>;
 
   constructor(
     private _channel: Channel,
@@ -77,8 +77,8 @@ export class TalkOpenChannel
     this._channelSession = new TalkChannelSession(this, session);
     this._openChannelSession = new TalkOpenChannelSession(this, session);
 
-    this._handler = new TalkChannelHandler(this, this._store);
-    this._openHandler = new TalkOpenChannelHandler(this, this._store);
+    this._handler = new TalkChannelHandler(this, this._channelSession, this, this._store, this._store);
+    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, this._store, this._store);
   }
 
   get clientUser(): Readonly<ChannelUser> {
