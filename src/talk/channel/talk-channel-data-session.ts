@@ -7,7 +7,7 @@
 import { Long } from 'bson';
 import { ChannelInfo, ChannelMeta, ChannelSession, SetChannelMeta, UpdatableChannelDataStore } from '../../channel';
 import { ChannelMetaType } from '../../channel/meta';
-import { Chat, Chatlog, ChatLogged, ChatType, UpdatableChatListStore } from '../../chat';
+import { Chat, Chatlog, ChatLogged, ChatType, DELETED_MESSAGE_OFFSET, UpdatableChatListStore } from '../../chat';
 import { MediaKeyComponent } from '../../media';
 import { AsyncCommandResult, CommandResult } from '../../request';
 import { ChannelUser, ChannelUserInfo } from '../../user';
@@ -37,9 +37,8 @@ export class TalkChannelDataSession implements ChannelSession {
     const res = await this._channelSession.sendChat(chat);
 
     if (res.success) {
-      this._chatListStore.addChat(res.result).then(() => {
-        this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
-      });
+      await this._chatListStore.addChat(res.result);
+      this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
     }
 
     return res;
@@ -49,16 +48,26 @@ export class TalkChannelDataSession implements ChannelSession {
     const res = await this._channelSession.forwardChat(chat);
 
     if (res.success) {
-      this._chatListStore.addChat(res.result).then(() => {
-        this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
-      });
+      await this._chatListStore.addChat(res.result);
+      this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
     }
     
     return res;
   }
 
-  deleteChat(chat: ChatLogged): AsyncCommandResult {
-    return this._channelSession.deleteChat(chat);
+  async deleteChat(chat: ChatLogged): AsyncCommandResult {
+    const res = await this._channelSession.deleteChat(chat);
+
+    if (res.success) {
+      const deleted = await this._chatListStore.get(chat.logId);
+      if (deleted) {
+        await this._chatListStore.updateChat(chat.logId, {
+          type: deleted.type | DELETED_MESSAGE_OFFSET
+        });
+      }
+    }
+
+    return res;
   }
 
   async markRead(chat: ChatLogged): AsyncCommandResult {
@@ -98,11 +107,34 @@ export class TalkChannelDataSession implements ChannelSession {
   }
 
   syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>> {
-    return this._channelSession.syncChatList(endLogId, startLogId);
+    const iterator = this._channelSession.syncChatList(endLogId, startLogId);
+
+    return {
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+
+      next: async () => {
+        const next = await iterator.next();
+        if (next.done || !next.value.success) return next;
+
+        const res = next.value.result;
+
+        this._chatListStore.addChat(...res);
+
+        return next;
+      }
+    }
   }
 
-  getChatListFrom(startLogId?: Long): AsyncCommandResult<Chatlog[]> {
-    return this._channelSession.getChatListFrom(startLogId);
+  async getChatListFrom(startLogId?: Long): AsyncCommandResult<Chatlog[]> {
+    const res = await this._channelSession.getChatListFrom(startLogId);
+
+    if (res.success) {
+      this._chatListStore.addChat(...res.result);
+    }
+
+    return res;
   }
 
   downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
@@ -124,9 +156,8 @@ export class TalkChannelDataSession implements ChannelSession {
     const uploadRes = await res.result.upload();
 
     if (uploadRes.success) {
-      this._chatListStore.addChat(uploadRes.result).then(() => {
-        this._store.updateInfo({ lastChatLogId: uploadRes.result.logId, lastChatLog: uploadRes.result });
-      });
+      await this._chatListStore.addChat(uploadRes.result);
+      this._store.updateInfo({ lastChatLogId: uploadRes.result.logId, lastChatLog: uploadRes.result });
     }
 
     return uploadRes;
@@ -136,9 +167,8 @@ export class TalkChannelDataSession implements ChannelSession {
     const res = await sendMultiMedia(this, type, templates);
 
     if (res.success) {
-      this._chatListStore.addChat(res.result).then(() => {
-        this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
-      });
+      await this._chatListStore.addChat(res.result);
+      this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
     }
 
     return res;

@@ -101,7 +101,7 @@ export class TalkMemoryChatListStore implements UpdatableChatListStore {
   since(time: number): AsyncIterableIterator<Chatlog> {
     const start = this._chatList.findIndex((value) => value.sendAt >= time);
     const slice = start < 0 ? [] : this._chatList.slice(start);
-    
+
     return this.makeIterator(slice);
   }
 
@@ -109,12 +109,16 @@ export class TalkMemoryChatListStore implements UpdatableChatListStore {
     return this.makeIterator(this._chatList.slice());
   }
 
-  async addChat(chat: Chatlog): Promise<void> {
+  async addChat(...chat: Chatlog[]): Promise<void> {
     if (this._chatList.length >= this.limit) {
       this._chatList = this._chatList.slice(this.limit - this._chatList.length + 1);
     }
 
-    this._chatList.push(chat);
+    this._chatList.push(...chat);
+
+    this._chatList.sort((a, b) => {
+      return a.logId.comp(b.logId);
+    });
   }
 
   async updateChat(logId: Long, chat: Partial<Chatlog>): Promise<void> {

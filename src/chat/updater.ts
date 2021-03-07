@@ -13,10 +13,10 @@ import { Chatlog } from './chat';
 export interface ChatListUpdater {
 
   /**
-   * Add chat
+   * Push chat
    * @param chat
    */
-  addChat(chat: Chatlog): Promise<void>;
+  addChat(...chat: Chatlog[]): Promise<void>;
 
   /**
    * Update existing chat

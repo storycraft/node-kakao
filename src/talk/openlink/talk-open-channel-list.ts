@@ -215,7 +215,7 @@ export class TalkOpenChannelList
     return res;
   }
 
-  react(link: OpenLinkComponent, flag: boolean): Promise<{ status: number, success: boolean }> {
+  react(link: OpenLinkComponent, flag: boolean): AsyncCommandResult {
     return this._linkSession.react(link, flag);
   }
 
