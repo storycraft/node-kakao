@@ -164,7 +164,7 @@ export class TalkOpenChannel
   }
 
   markRead(chat: ChatLogged): AsyncCommandResult {
-    return this._openChannelSession.markRead(chat);;
+    return this._openChannelSession.markRead(chat);
   }
 
   setMeta(type: ChannelMetaType, meta: string | ChannelMeta): AsyncCommandResult<SetChannelMeta> {
