@@ -150,7 +150,7 @@ export class TalkClient
    * @return {boolean} true if client user.
    */
   isClientUser(user: ChannelUser): boolean {
-    return user.userId.equals(this._clientUser.userId);
+    return this._clientUser.userId.equals(user.userId);
   }
 
   /**

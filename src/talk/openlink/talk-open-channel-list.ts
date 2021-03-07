@@ -146,9 +146,6 @@ export class TalkOpenChannelList
     if (infoStoreRes.shouldUpdate) {
       const res = await talkChannel.updateAll();
       if (!res.success) return res;
-    } else {
-      const res = await talkChannel.chatON();
-      if (!res.success) return res;
     }
 
     if (chatStoreRes.shouldUpdate) {
