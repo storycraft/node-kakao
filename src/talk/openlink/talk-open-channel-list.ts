@@ -5,13 +5,13 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelListStore } from '../../channel';
+import { Channel, ChannelListStore, LoginData } from '../../channel';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
 import {
   InformedOpenLink,
   OpenChannel,
-  OpenChannelInfo,
+  OpenChannelData,
   OpenChannelManageSession,
   OpenLink,
   OpenLinkChannelTemplate,
@@ -26,7 +26,7 @@ import {
   OpenLinkUpdateTemplate,
 } from '../../openlink';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
-import { ChannelListUpdater, TalkChannelListHandler, TalkMemoryChannelDataStore } from '../channel';
+import { ChannelListUpdater, TalkChannelListHandler } from '../channel';
 import { OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
@@ -35,7 +35,7 @@ import { TalkOpenChannelManageSession } from './talk-open-channel-session';
 import { TalkOpenLinkSession } from './talk-open-link-session';
 import { OpenLinkUpdater, TalkOpenLinkHandler } from './talk-open-link-handler';
 import { OpenChannelUserInfo } from '../../user';
-import { TalkMemoryChatListStore } from '../chat';
+import { ClientDataLoader } from '../../loader';
 
 type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
@@ -58,6 +58,7 @@ export class TalkOpenChannelList
 
   constructor(
     private _session: TalkSession,
+    private _loader: ClientDataLoader,
     list: TalkOpenChannel[],
     clientLinkList: InformedOpenLink[],
   ) {
@@ -128,23 +129,38 @@ export class TalkOpenChannelList
     return this.addOpenChannel({ ...channel, linkId: Long.ZERO });
   }
 
-  private async addOpenChannel(channel: OpenChannel): AsyncCommandResult<TalkOpenChannel> {
+  private async addOpenChannel(channel: OpenChannel, lastUpdate?: number): AsyncCommandResult<TalkOpenChannel> {
     const last = this.get(channel.channelId);
     if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
+
+    const infoStoreRes = await this._loader.loadOpenChannelStore(channel, lastUpdate);
+    const chatStoreRes = await this._loader.loadChatListStore(channel);
 
     const talkChannel = new TalkOpenChannel(
       channel,
       this._session,
-      new TalkMemoryChannelDataStore(OpenChannelInfo.createPartial({})),
-      new TalkMemoryChatListStore(300)
+      infoStoreRes.value,
+      chatStoreRes.value
     );
 
-    const res = await talkChannel.updateAll();
-    if (!res.success) return res;
+    if (infoStoreRes.shouldUpdate) {
+      const res = await talkChannel.updateAll();
+      if (!res.success) return res;
+    } else {
+      const res = await talkChannel.chatON();
+      if (!res.success) return res;
+    }
+
+    if (chatStoreRes.shouldUpdate) {
+      const startChat = await chatStoreRes.value.last();
+      const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat?.logId);
+
+      for (let next = await iter.next(); !next.done; next = await iter.next());
+    }
 
     this._map.set(channel.channelId.toString(), talkChannel);
 
-    return { success: true, status: res.status, result: talkChannel };
+    return { success: true, status: KnownDataStatusCode.SUCCESS, result: talkChannel };
   }
 
   private deleteChannel(channelId: Long) {
@@ -304,16 +320,16 @@ export class TalkOpenChannelList
   /**
    * Initialize TalkChannelList using channelList.
    * @param {TalkOpenChannelList} talkChannelList
-   * @param {OpenChannel[]} channelList
+   * @param {LoginData<OpenChannelData>[]} channelList
    */
   static async initialize(
     talkChannelList: TalkOpenChannelList,
-    channelList: OpenChannel[] = [],
+    channelList: LoginData<OpenChannelData>[] = [],
   ): Promise<TalkOpenChannelList> {
     talkChannelList._map.clear();
     talkChannelList._clientMap.clear();
 
-    await Promise.all(channelList.map((channel) => talkChannelList.addOpenChannel(channel)));
+    await Promise.all(channelList.map((data) => talkChannelList.addOpenChannel(data.channel, data.lastUpdate)));
     await talkChannelList.getLatestLinkList();
 
     return talkChannelList;

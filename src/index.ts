@@ -35,6 +35,7 @@ export { MediaUploadTemplate } from './talk/media';
 export * from './user';
 export * as util from './util';
 export * from './voip';
+export * from './loader';
 
 export { Long } from 'bson';
 

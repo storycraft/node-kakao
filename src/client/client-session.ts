@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { NormalChannelData } from '../channel';
+import { LoginData, NormalChannelData } from '../channel';
 import { ClientStatus } from '../client-status';
 import { OAuthCredential } from '../oauth';
 import { OpenChannelData } from '../openlink';
@@ -13,7 +13,7 @@ import { AsyncCommandResult } from '../request';
 
 export interface LoginResult {
 
-  channelList: (NormalChannelData | OpenChannelData)[];
+  channelList: (LoginData<NormalChannelData | OpenChannelData>)[];
 
   /**
    * Client user id

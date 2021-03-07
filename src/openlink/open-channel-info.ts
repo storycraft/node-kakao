@@ -19,11 +19,6 @@ export interface OpenChannelInfo extends ChannelInfo, OpenChannel, OpenTokenComp
    */
   directChannel: boolean;
 
-  /**
-   * Unknown
-   */
-  o: Long;
-
   openLink?: OpenLink;
 
 }
@@ -39,9 +34,7 @@ export namespace OpenChannelInfo {
 
       directChannel: false,
 
-      openLink: null,
-
-      o: Long.ZERO,
+      openLink: null
     }, info);
   }
 

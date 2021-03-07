@@ -23,6 +23,10 @@ export const EmptyChatListStore: UpdatableChatListStore = {
     return;
   },
 
+  async last(): Promise<Chatlog | undefined> {
+    return;
+  },
+
   before(): AsyncIterableIterator<Chatlog> {
     return EMPTY_ITERATOR as AsyncIterableIterator<Chatlog>;
   },
@@ -89,6 +93,12 @@ export class TalkMemoryChatListStore implements UpdatableChatListStore {
     if (i < 0) return;
 
     return this._chatList[i];
+  }
+
+  async last(): Promise<Chatlog | undefined> {
+    if (this._chatList.length < 0) return;
+
+    return this._chatList[this._chatList.length - 1];
   }
 
   before(logId: Long, maxCount: number = this._chatList.length): AsyncIterableIterator<Chatlog> {

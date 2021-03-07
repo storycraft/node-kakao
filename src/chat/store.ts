@@ -14,6 +14,11 @@ import { ChatListUpdater } from './updater';
 export interface ChatListStore {
 
   /**
+   * Get latest chatlog
+   */
+  last(): Promise<Chatlog | undefined>;
+
+  /**
    * Get chat with log id
    * @param logId
    */

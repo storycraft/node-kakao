@@ -21,6 +21,8 @@ import { ClientEvents } from '../event';
 import { Long } from 'bson';
 import { TalkBlockSession } from '../block';
 import { TalkChannel } from '../channel';
+import { ClientDataLoader } from '../../loader';
+import { TalkInMemoryDataLoader } from '../loader';
 
 export * from './talk-client-session';
 
@@ -59,6 +61,7 @@ export class TalkClient
 
   constructor(
     config: Partial<ClientConfig> = {},
+    loader: ClientDataLoader = TalkInMemoryDataLoader,
     private _sessionFactory: SessionFactory = new TalkSessionFactory(),
   ) {
     super();
@@ -69,7 +72,7 @@ export class TalkClient
     this._session = null;
     this._clientSession = new TalkClientSession(this.createSessionProxy(), { ...DefaultConfiguration, ...config });
 
-    this._channelList = new TalkChannelList(this.createSessionProxy());
+    this._channelList = new TalkChannelList(this.createSessionProxy(), loader);
     this._clientUser = { userId: Long.ZERO };
     this._blockList = new TalkBlockSession(this.createSessionProxy());
   }

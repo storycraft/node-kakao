@@ -58,7 +58,6 @@ export function structToOpenChannelInfo(struct: ChannelInfoStruct & OpenChannelI
     ...structToChannelInfo(struct),
     linkId: struct.li,
     openToken: struct.otk,
-    o: struct.o,
     directChannel: struct.directChat,
   };
 }

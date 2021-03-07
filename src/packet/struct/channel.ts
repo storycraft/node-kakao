@@ -90,6 +90,10 @@ export interface ChannelDataStruct {
    * Last log id
    */
   ll: Long;
+
+  /**
+   * Last update
+   */
   o: number;
 
   jn: number;
@@ -203,10 +207,5 @@ export interface OpenChannelInfoExtra {
    * true if channel is dm
    */
   directChat: boolean;
-
-  /**
-   * Unknown
-   */
-  o: Long;
 
 }

@@ -5,10 +5,10 @@
  */
 
 import { Long } from 'bson';
-import { Channel, ChannelListStore } from '../channel';
+import { ChannelListStore, LoginData, NormalChannelData } from '../channel';
 import { TalkSession } from './client';
 import { EventContext, TypedEmitter } from '../event';
-import { InformedOpenLink, OpenChannel } from '../openlink';
+import { InformedOpenLink, OpenChannelData } from '../openlink';
 import { DefaultRes } from '../request';
 import { ChainedIterator } from '../util';
 import { ChannelListEvents } from './event';
@@ -16,6 +16,7 @@ import { Managed } from './managed';
 import { TalkOpenChannel, TalkOpenChannelList } from './openlink';
 import { TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
 import { ChannelUserInfo } from '../user';
+import { ClientDataLoader } from '../loader';
 
 type TalkChannelListEvents = ChannelListEvents<TalkChannel, ChannelUserInfo>;
 
@@ -30,20 +31,22 @@ export class TalkChannelList
   /**
    * Construct managed channel list
    * @param {TalkSession} session
+   * @param {ClientDataLoader} loader
    * @param {TalkNormalChannel[]} normalList
    * @param {TalkOpenChannel[]} openList
    * @param {InformedOpenLink[]} clientLinkList
    */
   constructor(
     session: TalkSession,
+    loader: ClientDataLoader,
     normalList: TalkNormalChannel[] = [],
     openList: TalkOpenChannel[] = [],
     clientLinkList: InformedOpenLink[] = [],
   ) {
     super();
 
-    this._normal = new TalkNormalChannelList(session, normalList);
-    this._open = new TalkOpenChannelList(session, openList, clientLinkList);
+    this._normal = new TalkNormalChannelList(session, loader, normalList);
+    this._open = new TalkOpenChannelList(session, loader, openList, clientLinkList);
   }
 
   get size(): number {
@@ -85,11 +88,11 @@ export class TalkChannelList
   /**
    * Initialize TalkChannelList using channelList.
    * @param {TalkChannelList} talkChannelList
-   * @param {(Channel | OpenChannel)[]} channelList
+   * @param {LoginData<NormalChannelData | OpenChannelData>[]} channelList
    */
   static async initialize(
     talkChannelList: TalkChannelList,
-    channelList: (Channel | OpenChannel)[] = [],
+    channelList: LoginData<NormalChannelData | OpenChannelData>[] = [],
   ): Promise<TalkChannelList> {
     const [normalList, openList] = TalkChannelList.mapChannelList(channelList);
 
@@ -104,17 +107,20 @@ export class TalkChannelList
   /**
    * Split normal channel and open channel
    *
-   * @param {(Channel | OpenChannel)[]} channelList
-   * @return {[Channel[], OpenChannel[]]}
+   * @param {LoginData<NormalChannelData | OpenChannelData>[]} channelList
+   * @return {[LoginData<NormalChannelData>[], LoginData<OpenChannelData>[]]}
    */
-  static mapChannelList(channelList: (Channel | OpenChannel)[]): [Channel[], OpenChannel[]] {
-    const normalList: Channel[] = [];
-    const openList: OpenChannel[] = [];
-    channelList.forEach((channel) => {
-      if ('linkId' in channel) {
-        openList.push(channel);
+  static mapChannelList(
+    channelList: LoginData<NormalChannelData | OpenChannelData>[]
+  ): [LoginData<NormalChannelData>[], LoginData<OpenChannelData>[]] {
+    const normalList: LoginData<NormalChannelData>[] = [];
+    const openList: LoginData<OpenChannelData>[] = [];
+
+    channelList.forEach((data) => {
+      if ('linkId' in data.channel) {
+        openList.push(data as LoginData<OpenChannelData>);
       } else {
-        normalList.push(channel);
+        normalList.push(data as LoginData<NormalChannelData>);
       }
     });
 

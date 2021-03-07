@@ -144,6 +144,20 @@ export interface ChannelData<T> {
 
 }
 
+/**
+ * Channel data on login
+ */
+export interface LoginData<T> {
+
+  /**
+   * Info update time
+   */
+  lastUpdate: number;
+
+  channel: T;
+
+}
+
 export interface NormalChannelData extends Channel, ChannelData<NormalChannelInfo> {
 
 }

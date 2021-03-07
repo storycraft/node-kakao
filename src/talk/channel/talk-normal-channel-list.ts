@@ -9,7 +9,8 @@ import {
   Channel,
   ChannelListStore,
   ChannelTemplate,
-  NormalChannelInfo,
+  LoginData,
+  NormalChannelData,
   NormalChannelManageSession
 } from '../../channel';
 import { TalkSession } from '../client';
@@ -19,10 +20,9 @@ import { NormalChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkNormalChannel } from './talk-normal-channel';
 import { TalkChannelListHandler } from './talk-channel-handler';
-import { TalkMemoryChannelDataStore } from './common';
 import { NormalChannelUserInfo } from '../../user';
 import { TalkChannelManageSession } from './talk-channel-session';
-import { TalkMemoryChatListStore } from '../chat';
+import { ClientDataLoader } from '../../loader';
 
 type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
@@ -41,10 +41,12 @@ export class TalkNormalChannelList
   /**
    * Construct managed normal channel list
    * @param {TalkSession} _session
+   * @param {ClientDataLoader} _loader
    * @param {TalkNormalChannel[]} list
    */
   constructor(
     private _session: TalkSession,
+    private _loader: ClientDataLoader,
     list: TalkNormalChannel[],
   ) {
     super();
@@ -76,25 +78,40 @@ export class TalkNormalChannelList
     return this._map.values();
   }
 
-  private async addChannel(channel: Channel): AsyncCommandResult<TalkNormalChannel> {
+  private async addChannel(channel: Channel, lastUpdate?: number): AsyncCommandResult<TalkNormalChannel> {
     const last = this.get(channel.channelId);
     if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
 
     const strId = channel.channelId.toString();
 
+    const infoStoreRes = await this._loader.loadNormalChannelStore(channel, lastUpdate);
+    const chatStoreRes = await this._loader.loadChatListStore(channel);
+
     const talkChannel = new TalkNormalChannel(
       channel,
       this._session,
-      new TalkMemoryChannelDataStore(NormalChannelInfo.createPartial({})),
-      new TalkMemoryChatListStore(300)
+      infoStoreRes.value,
+      chatStoreRes.value
     );
 
-    const res = await talkChannel.updateAll();
-    if (!res.success) return res;
+    if (infoStoreRes.shouldUpdate) {
+      const res = await talkChannel.updateAll();
+      if (!res.success) return res;
+    } else {
+      const res = await talkChannel.chatON();
+      if (!res.success) return res;
+    }
+
+    if (chatStoreRes.shouldUpdate) {
+      const startChat = await chatStoreRes.value.last();
+      const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat?.logId);
+
+      for (let next = await iter.next(); !next.done; next = await iter.next());
+    }
 
     this._map.set(strId, talkChannel);
 
-    return { success: true, status: res.status, result: talkChannel };
+    return { success: true, status: KnownDataStatusCode.SUCCESS, result: talkChannel };
   }
 
   private delete(channelId: Long) {
@@ -140,14 +157,14 @@ export class TalkNormalChannelList
   /**
    * Initialize TalkChannelList using channelList.
    * @param {TalkNormalChannelList} talkChannelList
-   * @param {Channel[]} channelList
+   * @param {LoginData<NormalChannelData>[]} channelList
    */
   static async initialize(
     talkChannelList: TalkNormalChannelList,
-    channelList: Channel[] = [],
+    channelList: LoginData<NormalChannelData>[] = [],
   ): Promise<TalkNormalChannelList> {
     talkChannelList._map.clear();
-    await Promise.all(channelList.map((channel) => talkChannelList.addChannel(channel)));
+    await Promise.all(channelList.map((data) => talkChannelList.addChannel(data.channel, data.lastUpdate)));
 
     return talkChannelList;
   }

@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { NormalChannelData } from '../../channel';
+import { LoginData, NormalChannelData } from '../../channel';
 import { TalkSession } from './index';
 import { ClientStatus } from '../../client-status';
 import { ClientSession, LoginResult } from '../../client';
@@ -62,7 +62,7 @@ export class TalkClientSession implements ClientSession {
     this._lastTokenId = loginRes.lastTokenId;
     this._lastBlockTk = loginRes.lbk;
 
-    const channelList: (NormalChannelData | OpenChannelData)[] = [];
+    const channelList: LoginData<NormalChannelData | OpenChannelData>[] = [];
     for (const channelData of loginRes.chatDatas) {
       let channel: (NormalChannelData | OpenChannelData);
 
@@ -79,7 +79,10 @@ export class TalkClientSession implements ClientSession {
         };
       }
 
-      channelList.push(channel);
+      channelList.push({
+        lastUpdate: channelData.o,
+        channel
+      });
     }
 
     return {
