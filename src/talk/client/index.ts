@@ -161,7 +161,6 @@ export class TalkClient
   }
 
   pushReceived(method: string, data: DefaultRes, ctx: EventContext<TalkClientEvents>): void {
-
     this._channelList.pushReceived(method, data, ctx);
 
     switch (method) {

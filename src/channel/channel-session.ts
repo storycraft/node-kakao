@@ -83,7 +83,7 @@ export interface ChannelSession {
    * @param endLogId
    * @param startLogId Omit this param if you don't know start chat logId.
    *
-   * @returns Chatlog iterator which iterate chat chunks, excluding startLogId and endLogId chat.
+   * @returns Chatlog iterator which iterate chat chunks, including endLogId chat.
    */
   syncChatList(endLogId: Long, startLogId?: Long): AsyncIterableIterator<CommandResult<Chatlog[]>>;
 

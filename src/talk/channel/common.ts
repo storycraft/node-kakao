@@ -121,8 +121,6 @@ export async function updateChatList(
   if (lastChatlog && (!startChat || startChat.logId.lessThan(lastChatlog.logId))) {
     const iter = channel.syncChatList(lastChatlog.logId, startChat?.logId || Long.ZERO);
     for (let next = await iter.next(); !next.done; next = await iter.next());
-
-    if (startChat) channel.chatListStore.addChat(lastChatlog);
   }
 }
 
