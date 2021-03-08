@@ -5,6 +5,7 @@
  */
 
 import { Long } from 'bson';
+import { TalkChannel } from '.';
 import { ChannelDataUpdater, ChannelSession, NormalChannelSession, UpdatableChannelDataStore } from '../../channel';
 import { Chatlog, ChatLogged, ChatType } from '../../chat';
 import { MediaKeyComponent } from '../../media';
@@ -109,6 +110,20 @@ export async function initOpenUserList(
     status: KnownDataStatusCode.SUCCESS,
     result: infoList
   };
+}
+
+export async function updateChatList(
+  channel: TalkChannel
+): Promise<void> {
+  const startChat = await channel.chatListStore.last();
+  const lastChatlog = channel.info.lastChatLog;
+
+  if (lastChatlog && (!startChat || startChat.logId.lessThan(lastChatlog.logId))) {
+    const iter = channel.syncChatList(lastChatlog.logId, startChat?.logId || Long.ZERO);
+    for (let next = await iter.next(); !next.done; next = await iter.next());
+
+    if (startChat) channel.chatListStore.addChat(lastChatlog);
+  }
 }
 
 /**

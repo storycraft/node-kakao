@@ -26,7 +26,7 @@ import {
   OpenLinkUpdateTemplate,
 } from '../../openlink';
 import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../request';
-import { ChannelListUpdater, TalkChannelListHandler } from '../channel';
+import { ChannelListUpdater, TalkChannelListHandler, updateChatList } from '../channel';
 import { OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkOpenChannel } from './talk-open-channel';
@@ -149,11 +149,7 @@ export class TalkOpenChannelList
     }
 
     if (chatStoreRes.shouldUpdate) {
-      const startChat = await chatStoreRes.value.last();
-      if (startChat?.logId.le(talkChannel.info.lastChatLogId)) {
-        const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat.logId);
-        for (let next = await iter.next(); !next.done; next = await iter.next());
-      }
+      await updateChatList(talkChannel);
     }
 
     this._map.set(channel.channelId.toString(), talkChannel);

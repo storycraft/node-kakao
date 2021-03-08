@@ -23,6 +23,7 @@ import { TalkChannelListHandler } from './talk-channel-handler';
 import { NormalChannelUserInfo } from '../../user';
 import { TalkChannelManageSession } from './talk-channel-session';
 import { ClientDataLoader } from '../../loader';
+import { updateChatList } from './common';
 
 type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
@@ -100,11 +101,7 @@ export class TalkNormalChannelList
     }
 
     if (chatStoreRes.shouldUpdate) {
-      const startChat = await chatStoreRes.value.last();
-      if (startChat?.logId.le(talkChannel.info.lastChatLogId)) {
-        const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat.logId);
-        for (let next = await iter.next(); !next.done; next = await iter.next());
-      }
+      await updateChatList(talkChannel);
     }
 
     this._map.set(strId, talkChannel);
