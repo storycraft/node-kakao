@@ -150,9 +150,10 @@ export class TalkOpenChannelList
 
     if (chatStoreRes.shouldUpdate) {
       const startChat = await chatStoreRes.value.last();
-      const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat?.logId);
-
-      for (let next = await iter.next(); !next.done; next = await iter.next());
+      if (startChat?.logId.le(talkChannel.info.lastChatLogId)) {
+        const iter = talkChannel.syncChatList(talkChannel.info.lastChatLogId, startChat.logId);
+        for (let next = await iter.next(); !next.done; next = await iter.next());
+      }
     }
 
     this._map.set(channel.channelId.toString(), talkChannel);
