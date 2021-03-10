@@ -27,8 +27,10 @@ export class ChunkedArrayBufferList {
   }
 
   toBuffer(): Uint8Array {
-    const buffer = new ArrayBuffer(this._total);
-    const array = new Uint8Array(buffer);
+    if (this._list.length < 1) return new Uint8Array(0);
+    if (this._list.length < 2) return this._list[0];
+
+    const array = new Uint8Array(this._total);
 
     let offset = 0;
     for (const item of this._list) {
