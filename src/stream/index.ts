@@ -40,42 +40,96 @@ export interface ReadStream extends Stream {
 }
 
 /**
+ * Additional Readstream util
+ */
+export namespace ReadStreamUtil {
+
+  /**
+   * Create AsyncIterableIterator which read stream buffers up to size bytes.
+   *
+   * @param {ReadStream} stream
+   * @param {number} [size=65535] 
+   * @return {AsyncIterableIterator<Uint8Array>}
+   */
+  export function iter(stream: ReadStream, size = 65535): AsyncIterableIterator<Uint8Array> {
+    return {
+      [Symbol.asyncIterator](): AsyncIterableIterator<Uint8Array> {
+        return this;
+      },
+    
+      async next(): Promise<IteratorResult<Uint8Array>> {
+        const buffer = new Uint8Array(size);
+        const read = await stream.read(buffer);
+    
+        if (!read) return { done: true, value: null };
+    
+        return { done: false, value: buffer.subarray(0, read) };
+      }
+    };
+  }
+
+  /**
+   * Read every data to end of stream.
+   *
+   * @param {ReadStream} stream
+   */
+  export async function all(stream: ReadStream): Promise<Uint8Array> {
+    const bufferList: Uint8Array[] = [];
+    let total = 0;
+
+    for await (const buffer of iter(stream)) {
+      bufferList.push(buffer);
+      total += buffer.byteLength;
+    }
+
+    const data = new Uint8Array(total);
+
+    let offset = 0;
+    for (const buffer of bufferList) {
+      data.set(buffer, offset);
+
+      offset += buffer.byteLength;
+    }
+
+    return data;
+  }
+
+  /**
+   * Read exact size bytes into Uint8Array or null if the stream ends before to fill all.
+   *
+   * @param {ReadStream} stream
+   * @param {number} size
+   */
+  export async function exact(stream: ReadStream, size: number): Promise<Uint8Array | null> {
+    const data = new Uint8Array(size);
+    let read = await stream.read(data);
+    if (!read) return null;
+
+    while (read < size) {
+      const dataRead = await stream.read(data.subarray(read));
+      if (!dataRead) return null;
+
+      read += dataRead;
+    }
+
+    return data;
+  }
+
+}
+
+/**
  * Writable stream.
  * Data can be written to stream.
  */
 export interface WriteStream extends Stream {
 
   /**
-   * Write data
+   * Write data. Written size is always same as data.byteLength, unless the stream ends during writing.
    *
    * @param data
    * @return Written size
    */
    write(data: Uint8Array): Promise<number>;
-
-}
-
-/**
- * Fixed sized read iterator of ReadStream
- */
-export class ReadStreamIter implements AsyncIterable<Uint8Array>, AsyncIterableIterator<Uint8Array> {
-
-  constructor(private _stream: ReadStream, public size = 65535) {
-
-  }
-
-  [Symbol.asyncIterator](): AsyncIterableIterator<Uint8Array> {
-    return this;
-  }
-
-  async next(): Promise<IteratorResult<Uint8Array>> {
-    const buffer = new Uint8Array(this.size);
-    const read = await this._stream.read(buffer);
-
-    if (!read) return { done: true, value: null };
-
-    return { done: false, value: buffer.subarray(0, read) };
-  }
 
 }
 

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ReadStream, ReadStreamIter, WriteStream } from '.';
+import { ReadStream, WriteStream } from '.';
 
 interface FixedStream {
 
@@ -59,23 +59,6 @@ export class FixedReadStream implements ReadStream, FixedStream {
     if (read) this._read += read;
 
     return read;
-  }
-
-  /**
-   * Read every data into single Uint8Array
-   *
-   * @return {Uint8Array}
-   */
-  async all(): Promise<Uint8Array> {
-    const data = new Uint8Array(this._size);
-
-    let read = 0;
-    for await (const chunk of new ReadStreamIter(this._stream)) {
-      data.set(chunk, read);
-      read += chunk.byteLength;
-    }
-
-    return data;
   }
 
   get ended(): boolean {

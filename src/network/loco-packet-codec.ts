@@ -5,8 +5,7 @@
  */
 
 import { LocoPacket, LocoPacketHeader } from '../packet';
-import { ChunkedArrayBufferList } from './chunk';
-import { BiStream, ReadStreamIter } from '../stream';
+import { BiStream } from '../stream';
 
 /**
  * Write / Read loco packet to stream
