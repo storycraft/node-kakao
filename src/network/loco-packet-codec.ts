@@ -5,7 +5,7 @@
  */
 
 import { LocoPacket, LocoPacketHeader } from '../packet';
-import { BiStream } from '../stream';
+import { BiStream, ReadStreamUtil } from '../stream';
 
 /**
  * Write / Read loco packet to stream
@@ -49,8 +49,8 @@ export class LocoPacketCodec {
   }
 
   async read(): Promise<LocoPacket | undefined> {
-    const headerArray = new Uint8Array(22);
-    if (!await this._stream.read(headerArray)) return;
+    const headerArray = await ReadStreamUtil.exact(this._stream, 22);
+    if (!headerArray) return;
 
     const headerView = new DataView(headerArray.buffer);
 
@@ -63,13 +63,12 @@ export class LocoPacketCodec {
     const dataType = headerView.getUint8(17);
     const dataSize = headerView.getUint32(18, true);
 
-    const data = new Uint8Array(dataSize);
-    const r = await this._stream.read(data);
-    if (!r) return;
+    const data = await ReadStreamUtil.exact(this._stream, dataSize);
+    if (!data) return;
 
     return {
       header: header,
-      data: [dataType, data.slice(0, dataSize)],
+      data: [dataType, data],
     };
   }
 
