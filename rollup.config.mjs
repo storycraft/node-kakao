@@ -28,6 +28,7 @@ const opts = {
     // Excluded
     'axios',
     'form-data',
+    'promise-socket'
   ],
   shimMissingExports: true,
   output: [

@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { ReadStream, WriteStream } from '.';
+import { ReadStream, ReadStreamIter, WriteStream } from '.';
 
 interface FixedStream {
 
@@ -38,7 +38,7 @@ export class FixedReadStream implements ReadStream, FixedStream {
   /**
    * Read size
    */
-  get read(): number {
+  get readd(): number {
     return this._read;
   }
 
@@ -46,32 +46,36 @@ export class FixedReadStream implements ReadStream, FixedStream {
     return this._read >= this._size;
   }
 
-  iterate(): AsyncIterableIterator<Uint8Array> {
-    const iterable = this._stream.iterate();
-    return {
-      [Symbol.asyncIterator]() {
-        return this;
-      },
+  async read(buffer: Uint8Array): Promise<number | null> {
+    if (this.done) return 0;
 
-      next: async () => {
-        if (this.done) {
-          return { done: true, value: null };
-        }
+    let view: Uint8Array = buffer;
+    if (this._read + view.byteLength > this._size) {
+      view = buffer.subarray(0, Math.max(this._size - this._read, 0));
+    }
 
-        const next = await iterable.next();
-        if (next.done) {
-          return next;
-        }
+    const read = await this._stream.read(view);
 
-        this._read += next.value.byteLength;
+    if (read) this._read += read;
 
-        if (this._read > this._size) {
-          return { done: false, value: next.value.slice(0, this._read - this._size) };
-        }
+    return read;
+  }
 
-        return { done: false, value: next.value };
-      },
-    };
+  /**
+   * Read every data into single Uint8Array
+   *
+   * @return {Uint8Array}
+   */
+  async all(): Promise<Uint8Array> {
+    const data = new Uint8Array(this._size);
+
+    let read = 0;
+    for await (const chunk of new ReadStreamIter(this._stream)) {
+      data.set(chunk, read);
+      read += chunk.byteLength;
+    }
+
+    return data;
   }
 
   get ended(): boolean {
@@ -105,10 +109,14 @@ export class FixedWriteStream implements WriteStream, FixedStream {
     return this._written;
   }
 
-  async write(data: Uint8Array): Promise<void> {
-    if (this._written + data.byteLength > this._size) throw new Error('Write size exceeded');
-    await this._stream.write(data);
-    this._written += data.byteLength;
+  async write(data: Uint8Array): Promise<number> {
+    if (this.done) return 0;
+
+    const written = await this._stream.write(data);
+
+    this._written += written;
+
+    return written;
   }
 
   get ended(): boolean {

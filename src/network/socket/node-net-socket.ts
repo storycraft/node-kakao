@@ -8,47 +8,31 @@ import { BiStream } from '../../stream';
 import * as net from 'net';
 import * as tls from 'tls';
 import { NetSocketOptions } from '.';
+import { PromiseSocket } from 'promise-socket';
 
 export class NodeSocket implements BiStream {
-  private _socket: net.Socket;
+  private _socket: PromiseSocket<net.Socket>;
   private _ended: boolean;
 
   private constructor(socket: net.Socket) {
-    this._socket = socket;
+    this._socket = new PromiseSocket(socket);
     this._ended = false;
   }
 
-  iterate(): AsyncIterableIterator<Uint8Array> {
-    const iterator = this._socket[Symbol.asyncIterator]();
+  async read(buffer: Uint8Array): Promise<number | null> {
+    const chunk = await this._socket.read(buffer.byteLength) as Buffer;
+    
+    if (chunk) buffer.set(chunk, 0);
 
-    return {
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-
-      next: async () => {
-        const next = await iterator.next();
-        if (next.done) this._ended = true;
-
-        return next;
-      },
-    };
+    return chunk?.byteLength;
   }
 
   get ended(): boolean {
     return this._ended;
   }
 
-  write(data: Uint8Array): Promise<void> {
-    if (this._ended) throw new Error('Tried to send data from closed socket');
-
-    return new Promise(
-      (resolve, reject) => this._socket.write(
-        new Uint8Array(data),
-        (err) => {
-          if (err) reject(err); else resolve();
-        })
-      );
+  write(data: Uint8Array): Promise<number> {
+    return this._socket.write(Buffer.from(data));
   }
 
   close(): void {

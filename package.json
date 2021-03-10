@@ -73,6 +73,7 @@
     "form-data": "^4.0.0",
     "hash-wasm": "^4.4.1",
     "lossless-json": "^1.0.3",
-    "node-forge": "^0.10.0"
+    "node-forge": "^0.10.0",
+    "promise-socket": "^7.0.0"
   }
 }

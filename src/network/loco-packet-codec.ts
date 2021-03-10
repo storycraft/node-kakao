@@ -6,7 +6,7 @@
 
 import { LocoPacket, LocoPacketHeader } from '../packet';
 import { ChunkedArrayBufferList } from './chunk';
-import { BiStream } from '../stream';
+import { BiStream, ReadStreamIter } from '../stream';
 
 /**
  * Write / Read loco packet to stream
@@ -22,7 +22,7 @@ export class LocoPacketCodec {
     return this._stream;
   }
 
-  send(packet: LocoPacket): Promise<void> {
+  send(packet: LocoPacket): Promise<number> {
     const packetBuffer = new ArrayBuffer(22 + packet.data[1].byteLength);
     const packetArray = new Uint8Array(packetBuffer);
     const namebuffer = new Uint8Array(11);
@@ -49,81 +49,43 @@ export class LocoPacketCodec {
     return this._stream.write(packetArray);
   }
 
-  iterate(): { [Symbol.asyncIterator](): AsyncIterator<LocoPacket>, next(): Promise<IteratorResult<LocoPacket>> } {
-    const stream = this._stream;
+  async read(): Promise<LocoPacket | undefined> {
+    const headerArray = new Uint8Array(22);
+    if (!await this._stream.read(headerArray)) return;
 
-    const iterator = stream.iterate();
+    const headerView = new DataView(headerArray.buffer);
 
-    const headerBufferList = new ChunkedArrayBufferList();
-    const packetBufferList = new ChunkedArrayBufferList();
+    const header: LocoPacketHeader = {
+      id: headerView.getUint32(0, true),
+      status: headerView.getUint16(4, true),
+      method: String.fromCharCode(...headerArray.slice(6, 17)).replace(/\0/g, ''),
+    };
+
+    const dataType = headerView.getUint8(17);
+    const dataSize = headerView.getUint32(18, true);
+
+    const data = new Uint8Array(dataSize);
+    const r = await this._stream.read(data);
+    if (!r) return;
 
     return {
-      [Symbol.asyncIterator](): AsyncIterator<LocoPacket> {
+      header: header,
+      data: [dataType, data.slice(0, dataSize)],
+    };
+  }
+
+  iterate(): AsyncIterableIterator<LocoPacket> {
+    return {
+      [Symbol.asyncIterator](): AsyncIterableIterator<LocoPacket> {
         return this;
       },
 
-      async next(): Promise<IteratorResult<LocoPacket>> {
-        if (stream.ended) {
-          return { done: true, value: null };
-        }
+      next: async(): Promise<IteratorResult<LocoPacket>> => {
+        if (this._stream.ended) return { done: true, value: null }
 
-        if (headerBufferList.byteLength < 22) {
-          for await (const data of iterator) {
-            headerBufferList.append(data);
-
-            if (headerBufferList.byteLength >= 22) break;
-          }
-
-          if (stream.ended) {
-            return { done: true, value: null };
-          }
-        }
-
-        const headerBuffer = headerBufferList.toBuffer();
-        const headerArray = new Uint8Array(headerBuffer);
-        const headerView = new DataView(headerBuffer);
-
-        const header: LocoPacketHeader = {
-          id: headerView.getUint32(0, true),
-          status: headerView.getUint16(4, true),
-          method: String.fromCharCode(...headerArray.slice(6, 17)).replace(/\0/g, ''),
-        };
-
-        const dataType = headerView.getUint8(17);
-        const dataSize = headerView.getUint32(18, true);
-
-        if (headerBuffer.byteLength > 22) {
-          packetBufferList.append(headerBuffer.slice(22));
-        }
-        await headerBufferList.clear();
-
-        if (packetBufferList.byteLength < dataSize) {
-          for await (const data of iterator) {
-            packetBufferList.append(data);
-
-            if (packetBufferList.byteLength >= dataSize) break;
-          }
-
-          if (stream.ended && packetBufferList.byteLength < dataSize) {
-            return { done: true, value: null };
-          }
-        }
-
-        const dataBuffer = packetBufferList.toBuffer();
-        const data = new Uint8Array(dataBuffer);
-
-        if (dataBuffer.byteLength > dataSize) {
-          headerBufferList.append(dataBuffer.slice(dataSize));
-        }
-        packetBufferList.clear();
-
-        return {
-          done: false,
-          value: {
-            header: header,
-            data: [dataType, data.slice(0, dataSize)],
-          },
-        };
+        const read = await this.read();
+        if (!read) return { done: true, value: null };
+        return { done: false, value: read };
       },
     };
   }

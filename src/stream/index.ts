@@ -30,9 +30,12 @@ export interface Stream {
 export interface ReadStream extends Stream {
 
   /**
-   * Try to read data from stream
+   * Read data up to size bytes.
+   *
+   * @param buffer Read buffer
+   * @return Read size or null on ended
    */
-  iterate(): AsyncIterableIterator<Uint8Array>;
+   read(buffer: Uint8Array): Promise<number | null>;
 
 }
 
@@ -44,9 +47,35 @@ export interface WriteStream extends Stream {
 
   /**
    * Write data
+   *
    * @param data
+   * @return Written size
    */
-  write(data: Uint8Array): Promise<void>;
+   write(data: Uint8Array): Promise<number>;
+
+}
+
+/**
+ * Fixed sized read iterator of ReadStream
+ */
+export class ReadStreamIter implements AsyncIterable<Uint8Array>, AsyncIterableIterator<Uint8Array> {
+
+  constructor(private _stream: ReadStream, private _size = 65535) {
+
+  }
+
+  [Symbol.asyncIterator](): AsyncIterableIterator<Uint8Array> {
+    return this;
+  }
+
+  async next(): Promise<IteratorResult<Uint8Array>> {
+    const buffer = new Uint8Array(this._size);
+    const read = await this._stream.read(buffer);
+
+    if (!read) return { done: true, value: null };
+
+    return { done: false, value: buffer.subarray(0, read) };
+  }
 
 }
 

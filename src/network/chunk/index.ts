@@ -6,7 +6,7 @@
 
 export class ChunkedArrayBufferList {
   private _total: number;
-  private _list: ArrayBuffer[];
+  private _list: Uint8Array[];
 
   constructor() {
     this._list = [];
@@ -21,22 +21,22 @@ export class ChunkedArrayBufferList {
     return this._list.length;
   }
 
-  append(buf: ArrayBuffer): void {
+  append(buf: Uint8Array): void {
     this._total += buf.byteLength;
     this._list.push(buf);
   }
 
-  toBuffer(): ArrayBuffer {
+  toBuffer(): Uint8Array {
     const buffer = new ArrayBuffer(this._total);
     const array = new Uint8Array(buffer);
 
     let offset = 0;
     for (const item of this._list) {
-      array.set(new Uint8Array(item), offset);
+      array.set(item, offset);
       offset += item.byteLength;
     }
 
-    return buffer;
+    return array;
   }
 
   clear(): void {
