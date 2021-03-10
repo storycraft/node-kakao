@@ -95,7 +95,12 @@ export class FixedWriteStream implements WriteStream, FixedStream {
   async write(data: Uint8Array): Promise<number> {
     if (this.done) return 0;
 
-    const written = await this._stream.write(data);
+    let view: Uint8Array = data;
+    if (this._written + view.byteLength > this._size) {
+      view = data.subarray(0, Math.max(this._size - this._written, 0));
+    }
+
+    const written = await this._stream.write(view);
 
     this._written += written;
 
