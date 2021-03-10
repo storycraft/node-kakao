@@ -60,7 +60,7 @@ export interface WriteStream extends Stream {
  */
 export class ReadStreamIter implements AsyncIterable<Uint8Array>, AsyncIterableIterator<Uint8Array> {
 
-  constructor(private _stream: ReadStream, private _size = 65535) {
+  constructor(private _stream: ReadStream, public size = 65535) {
 
   }
 
@@ -69,7 +69,7 @@ export class ReadStreamIter implements AsyncIterable<Uint8Array>, AsyncIterableI
   }
 
   async next(): Promise<IteratorResult<Uint8Array>> {
-    const buffer = new Uint8Array(this._size);
+    const buffer = new Uint8Array(this.size);
     const read = await this._stream.read(buffer);
 
     if (!read) return { done: true, value: null };

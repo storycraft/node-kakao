@@ -38,7 +38,7 @@ export class FixedReadStream implements ReadStream, FixedStream {
   /**
    * Read size
    */
-  get readd(): number {
+  get readSize(): number {
     return this._read;
   }
 
