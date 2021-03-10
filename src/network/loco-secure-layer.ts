@@ -6,7 +6,7 @@
 
 import { CryptoStore } from '../crypto';
 import { ChunkedArrayBufferList } from './chunk';
-import { BiStream } from '../stream';
+import { BiStream, ReadStreamUtil } from '../stream';
 
 /**
  * Loco secure layer that encrypt outgoing packets
@@ -31,13 +31,14 @@ export class LocoSecureLayer implements BiStream {
     let readSize = buffer.byteLength - this._dataChunks.byteLength;
 
     while (readSize > 0) {
-      const headerBuffer = new Uint8Array(20);
-      if (!await this._stream.read(headerBuffer)) return 0;
+      const headerBuffer = await ReadStreamUtil.exact(this._stream, 20);
+      if (!headerBuffer) break;
       const dataSize = new DataView(headerBuffer.buffer).getUint32(0, true) - 16;
-      const iv = headerBuffer.slice(4, 20);
+      const iv = headerBuffer.subarray(4, 20);
 
-      const encryptedData = new Uint8Array(dataSize);
-      if (!await this._stream.read(encryptedData)) return 0;
+      const encryptedData = await ReadStreamUtil.exact(this._stream, dataSize);
+      if (!encryptedData) break;
+
       this._dataChunks.append(this._crypto.toAESDecrypted(encryptedData, iv));
 
       readSize = buffer.byteLength - this._dataChunks.byteLength;
