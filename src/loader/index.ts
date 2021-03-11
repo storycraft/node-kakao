@@ -1,7 +1,7 @@
 /*
- * Created on Sun Mar 07 2021
+ * Created on Fri Mar 12 2021
  *
- * Copyright (c) storycraft. Licensed under the GNU Lesser General Public License v3.
+ * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
 import { Channel, NormalChannelInfo, UpdatableChannelDataStore } from '../channel';
