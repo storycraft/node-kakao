@@ -28,33 +28,30 @@ export class LocoSecureLayer implements BiStream {
   }
 
   async read(buffer: Uint8Array): Promise<number | null> {
-    let readSize = buffer.byteLength - this._dataChunks.byteLength;
-
-    while (readSize > 0) {
+    if (this._dataChunks.byteLength <= 0) {
       const headerBuffer = await ReadStreamUtil.exact(this._stream, 20);
-      if (!headerBuffer) break;
+      if (!headerBuffer) return null;
       const dataSize = new DataView(headerBuffer.buffer).getUint32(0, true) - 16;
       const iv = headerBuffer.subarray(4, 20);
-
+  
       const encryptedData = await ReadStreamUtil.exact(this._stream, dataSize);
-      if (!encryptedData) break;
-
+      if (!encryptedData) return null;
+  
       this._dataChunks.append(this._crypto.toAESDecrypted(encryptedData, iv));
-
-      readSize = buffer.byteLength - this._dataChunks.byteLength;
     }
 
     const data = this._dataChunks.toBuffer();
     this._dataChunks.clear();
+    
+    const readSize = Math.min(data.byteLength, buffer.byteLength);
 
-    buffer.set(data.subarray(0, buffer.byteLength), 0);
+    buffer.set(data.subarray(0, readSize), 0);
 
-    const extraLeft = data.byteLength - buffer.byteLength;
-    if (extraLeft > 0) {
-      this._dataChunks.append(data.slice(buffer.byteLength, data.byteLength));
+    if (data.byteLength > buffer.byteLength) {
+      this._dataChunks.append(data.slice(buffer.byteLength));
     }
 
-    return buffer.byteLength;
+    return readSize;
   }
 
   get ended(): boolean {
