@@ -48,7 +48,7 @@ export class LocoSecureLayer implements BiStream {
     buffer.set(data.subarray(0, readSize), 0);
 
     if (data.byteLength > buffer.byteLength) {
-      this._dataChunks.append(data.slice(buffer.byteLength));
+      this._dataChunks.append(data.subarray(buffer.byteLength));
     }
 
     return readSize;

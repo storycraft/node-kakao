@@ -9,22 +9,40 @@ import * as net from 'net';
 import * as tls from 'tls';
 import { NetSocketOptions } from '.';
 import { PromiseSocket } from 'promise-socket';
+import { ChunkedArrayBufferList } from '../chunk';
 
 export class NodeSocket implements BiStream {
   private _socket: PromiseSocket<net.Socket>;
   private _ended: boolean;
 
+  private _chunks: ChunkedArrayBufferList;
+
   private constructor(socket: net.Socket) {
     this._socket = new PromiseSocket(socket);
     this._ended = false;
+
+    this._chunks = new ChunkedArrayBufferList();
   }
 
   async read(buffer: Uint8Array): Promise<number | null> {
-    const chunk = await this._socket.read(buffer.byteLength) as Buffer;
-    
-    if (chunk) buffer.set(chunk, 0);
+    if (this._chunks.byteLength < buffer.byteLength) {
+      const chunk = await this._socket.read() as Buffer | undefined;
+      if (!chunk) return null;
+      this._chunks.append(chunk);
+    }
 
-    return chunk?.byteLength;
+    const data = this._chunks.toBuffer();
+    this._chunks.clear();
+
+    let view = data;
+    if (data.byteLength > buffer.byteLength) {
+      this._chunks.append(data.subarray(buffer.byteLength));
+      view = data.subarray(0, buffer.byteLength);
+    }
+    
+    buffer.set(view, 0);
+
+    return view.byteLength;
   }
 
   get ended(): boolean {

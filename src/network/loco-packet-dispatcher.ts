@@ -45,42 +45,47 @@ export class LocoPacketDispatcher {
       this._packetMap.set(packet.header.id, [resolve, reject]);
     });
 
-    await this._codec.send(packet);
+    await this._codec.write(packet);
 
     return promise;
   }
 
   /**
-   * Listen and process incoming packets.
+   * Read one packet and process it.
+   */
+  async read(): Promise<PacketRes | undefined> {
+    const packet = await this._codec.read();
+    if (!packet) return;
+
+    if (this._packetMap.has(packet.header.id)) {
+      const resolver = this._packetMap.get(packet.header.id);
+      if (resolver) {
+        resolver[0](packet);
+        this._packetMap.delete(packet.header.id);
+      }
+      return { push: false, packet };
+    } else {
+      return { push: true, packet };
+    }
+  }
+
+  /**
+   * Listen and read incoming packets.
    *
    * @return {AsyncIterableIterator<PacketRes>}
    */
   listen(): AsyncIterableIterator<PacketRes> {
-    const packetMap = this._packetMap;
-    const iterator = this._codec.iterate();
-
     return {
       [Symbol.asyncIterator]() {
         return this;
       },
 
-      async next(): Promise<IteratorResult<PacketRes>> {
-        const next = await iterator.next();
+      next: async (): Promise<IteratorResult<PacketRes>> => {
+        const read = await this.read();
 
-        if (next.done) return { done: true, value: null };
-
-        const packet = next.value;
-
-        if (packetMap.has(packet.header.id)) {
-          const resolver = packetMap.get(packet.header.id);
-          if (resolver) {
-            resolver[0](packet);
-            packetMap.delete(packet.header.id);
-          }
-          return { done: false, value: { push: false, packet } };
-        } else {
-          return { done: false, value: { push: true, packet } };
-        }
+        if (!read) return { done: true, value: null };
+        
+        return { done: false, value: read };
       },
     };
   }

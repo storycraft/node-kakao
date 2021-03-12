@@ -4,13 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { NormalChannelInfo, UpdatableChannelDataStore } from '../../channel';
-import { UpdatableChatListStore } from '../../chat';
-import { AsyncClientDataLoadResult, ClientDataLoader } from '../../loader';
-import { OpenChannelInfo } from '../../openlink';
-import { NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
-import { TalkMemoryChannelDataStore } from '../channel';
-import { TalkMemoryChatListStore } from '../chat';
+import { NormalChannelInfo, UpdatableChannelDataStore } from '../channel';
+import { UpdatableChatListStore } from '../chat';
+import { AsyncClientDataLoadResult, ClientDataLoader } from '../loader';
+import { OpenChannelInfo } from '../openlink';
+import { NormalChannelUserInfo, OpenChannelUserInfo } from '../user';
+import { TalkMemoryChannelDataStore } from './channel';
+import { TalkMemoryChatListStore } from './chat';
 
 export const TalkInMemoryDataLoader: ClientDataLoader = {
 

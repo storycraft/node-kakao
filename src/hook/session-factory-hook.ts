@@ -5,9 +5,9 @@
  */
 
 import { SessionConfig } from '../config';
-import { LocoSession, PacketResData, SessionFactory } from '../network/request-session';
-import { DefaultRes, DefaultReq, AsyncCommandResult } from '../request';
-import { LocoPacket } from '../packet';
+import { ConnectionSession, PacketResData, SessionFactory } from '../network/request-session';
+import { DefaultReq, AsyncCommandResult, DefaultRes } from '../request';
+import { BiStream } from '../stream';
 
 /**
  * Hook incoming datas
@@ -24,11 +24,6 @@ export interface SessionHook {
    */
   onRequest: (method: string, data: DefaultReq) => void;
 
-  /**
-   * Hook loco packet
-   */
-  onSendPacket: (packet: LocoPacket) => void;
-
   onClose(): () => void;
 
 }
@@ -41,60 +36,51 @@ export class HookedSessionFactory implements SessionFactory {
 
   }
 
-  async createSession(config: SessionConfig): AsyncCommandResult<LocoSession> {
-    const sessionRes = await this._factory.createSession(config);
+  async connect(config: SessionConfig): AsyncCommandResult<ConnectionSession> {
+    const sessionRes = await this._factory.connect(config);
     if (!sessionRes.success) return sessionRes;
 
-    return { status: sessionRes.status, success: true, result: new HookedLocoSession(sessionRes.result, this._hook) };
+    return { status: sessionRes.status, success: true, result: new InspectSession(sessionRes.result, this._hook) };
   }
 }
 
-/**
- * Hook loco session
- */
-export class HookedLocoSession implements LocoSession {
-  constructor(private _session: LocoSession, public hook: Partial<SessionHook> = {}) {
+export class InspectSession implements ConnectionSession {
+
+  constructor(
+    private _session: ConnectionSession,
+    private _hook: Partial<SessionHook> = {}
+  ) {
 
   }
 
-  listen(): AsyncIterableIterator<PacketResData> {
-    const hook = this.hook;
-    const iterator = this._session.listen();
-
-    return {
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-
-      async next(): Promise<IteratorResult<PacketResData>> {
-        const next = await iterator.next();
-
-        if (!next.done && hook.onData) {
-          const { method, data, push } = next.value;
-
-          hook.onData(method, data, push);
-        }
-
-        return next;
-      },
-    };
+  get stream(): BiStream {
+    return this._session.stream;
   }
-
+  
   request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
-    if (this.hook.onRequest) this.hook.onRequest(method, data);
+    if (this._hook.onRequest) this._hook.onRequest(method, data);
 
     return this._session.request(method, data);
   }
 
-  sendPacket(packet: LocoPacket): Promise<LocoPacket> {
-    if (this.hook.onSendPacket) this.hook.onSendPacket(packet);
+  listen(): AsyncIterableIterator<PacketResData> {
+    const iterator = this._session.listen();
 
-    return this._session.sendPacket(packet);
+    return {
+      [Symbol.asyncIterator](): AsyncIterableIterator<PacketResData> {
+        return this;
+      },
+
+      next: async (): Promise<IteratorResult<PacketResData>> => {
+        const next = await iterator.next();
+
+        if (!next.done && this._hook.onData) {
+          this._hook.onData(next.value.method, next.value.data, next.value.push);
+        }
+
+        return next;
+      }
+    };
   }
 
-  close(): void {
-    if (this.hook.onClose) this.hook.onClose();
-
-    this._session.close();
-  }
 }

@@ -7,7 +7,7 @@
 import { BookingConfig, CheckinConfig, SessionConfig } from '../../config';
 import { newCryptoStore } from '../../crypto';
 import {
-  DefaultLocoSession,
+  ConnectionSession,
   getBookingData,
   getCheckinData,
   LocoSecureLayer,
@@ -59,7 +59,7 @@ export class TalkSessionFactory implements SessionFactory {
     return getCheckinData(checkinStream, config);
   }
 
-  async createSession(config: SessionConfig): AsyncCommandResult<LocoSession> {
+  async connect(config: SessionConfig): AsyncCommandResult<ConnectionSession> {
     const checkinRes = await this.getCheckin(config);
     if (!checkinRes.success) return checkinRes;
 
@@ -69,6 +69,6 @@ export class TalkSessionFactory implements SessionFactory {
       keepAlive: true,
     }), await newCryptoStore(config.locoPEMPublicKey));
 
-    return { status: KnownDataStatusCode.SUCCESS, success: true, result: new DefaultLocoSession(locoStream) };
+    return { status: KnownDataStatusCode.SUCCESS, success: true, result: new LocoSession(locoStream) };
   }
 }

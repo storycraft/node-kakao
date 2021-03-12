@@ -6,7 +6,7 @@
 
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
-import { DefaultLocoSession } from '../../network';
+import { LocoSession } from '../../network';
 import { BiStream } from '../../stream';
 import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import { ChatType } from '../../chat';
@@ -49,7 +49,7 @@ export class MultiMediaUploader {
   upload(): AsyncCommandResult<MediaKeyComponent> {
     if (!this._canUpload) throw new Error('Upload task already started');
 
-    const session = new DefaultLocoSession(this._stream);
+    const session = new LocoSession(this._stream);
     const clientConfig = this._talkSession.configuration;
 
     return new Promise((resolve, reject) => {

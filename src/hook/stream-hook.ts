@@ -10,15 +10,18 @@ export interface StreamHook {
 
   /**
    * Hook data write
-   * @param data
+   *
+   * @param data Write data
    */
   onWrite(data: Uint8Array): void;
 
   /**
    * Hook data read
-   * @param buf
+   *
+   * @param buf Read buffer
+   * @param read Read size
    */
-  onRead(buf: Uint8Array): void;
+  onRead(buf: Uint8Array, read: number | null): void;
 
   onClose(): void;
 
@@ -41,7 +44,8 @@ export class HookedStream implements BiStream {
 
   async read(buffer: Uint8Array): Promise<number | null> {
     const read = await this._stream.read(buffer);
-    if (this.hook.onRead) this.hook.onRead(buffer);
+
+    if (this.hook.onRead) this.hook.onRead(buffer, read);
 
     return read;
   }

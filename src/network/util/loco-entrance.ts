@@ -10,7 +10,7 @@ import { GetConfRes } from '../../packet/booking';
 import { CheckinRes } from '../../packet/checkin';
 import { DefaultReq, KnownDataStatusCode } from '../../request';
 import { AsyncCommandResult } from '../../request';
-import { DefaultLocoSession } from '../request-session';
+import { LocoSession } from '../request-session';
 import { BiStream } from '../../stream';
 
 /**
@@ -21,7 +21,7 @@ import { BiStream } from '../../stream';
  * @param {BookingConfig} config
  */
 export async function getBookingData(stream: BiStream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
-  const bookingSession = new DefaultLocoSession(stream);
+  const bookingSession = new LocoSession(stream);
 
   (async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
@@ -35,7 +35,7 @@ export async function getBookingData(stream: BiStream, config: BookingConfig): A
   };
 
   const res = await bookingSession.request<GetConfRes>('GETCONF', req);
-  bookingSession.close();
+  bookingSession.stream.close();
 
   return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res };
 }
@@ -53,7 +53,7 @@ export async function getCheckinData(
   config: CheckinConfig,
   userId?: Long,
 ): AsyncCommandResult<CheckinRes> {
-  const checkinSession = new DefaultLocoSession(stream);
+  const checkinSession = new LocoSession(stream);
 
   (async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
@@ -75,7 +75,7 @@ export async function getCheckinData(
   }
 
   const res = await checkinSession.request<CheckinRes>('CHECKIN', req);
-  checkinSession.close();
+  checkinSession.stream.close();
 
   return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS, result: res };
 }

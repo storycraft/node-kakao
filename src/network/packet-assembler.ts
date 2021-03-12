@@ -43,6 +43,7 @@ export class PacketAssembler<T, R> {
    * Deconstruct LocoPacket into data.
    * This method can throw error if the type is not supported by codec.
    *
+   * @template R
    * @param {LocoPacket} packet
    * @return {R}
    */

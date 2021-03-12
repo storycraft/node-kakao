@@ -7,7 +7,7 @@
 import { Channel } from '../../channel';
 import { TalkSession } from '../client';
 import { MediaKeyComponent } from '../../media';
-import { DefaultLocoSession } from '../../network';
+import { LocoSession } from '../../network';
 import { BiStream, FixedReadStream } from '../../stream';
 import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 
@@ -38,7 +38,7 @@ export class MediaDownloader {
   async download(offset = 0): AsyncCommandResult<FixedReadStream> {
     if (this._used) throw new Error('Download stream already created');
 
-    const session = new DefaultLocoSession(this._stream);
+    const session = new LocoSession(this._stream);
     const clientConfig = this._talkSession.configuration;
 
     session.request('DOWN', {
@@ -83,7 +83,7 @@ export class MediaDownloader {
     if (this._stream.ended) throw new Error('Cannot download using finished downloader');
     this._used = true;
 
-    const session = new DefaultLocoSession(this._stream);
+    const session = new LocoSession(this._stream);
     const clientConfig = this._talkSession.configuration;
 
     session.request('MINI', {

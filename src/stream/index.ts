@@ -48,7 +48,7 @@ export namespace ReadStreamUtil {
    * Create AsyncIterableIterator which read stream buffers up to size bytes.
    *
    * @param {ReadStream} stream
-   * @param {number} [size=65535] 
+   * @param {number} [size=65535]
    * @return {AsyncIterableIterator<Uint8Array>}
    */
   export function iter(stream: ReadStream, size = 65535): AsyncIterableIterator<Uint8Array> {

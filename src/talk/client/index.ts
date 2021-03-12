@@ -4,7 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-import { CommandSession, LocoSession, SessionFactory } from '../../network';
+import { CommandSession, ConnectionSession, SessionFactory } from '../../network';
 import { ChannelUser, ChannelUserInfo } from '../../user';
 import { AsyncCommandResult, DefaultReq, DefaultRes } from '../../request';
 import { Managed } from '../managed';
@@ -44,7 +44,7 @@ type TalkClientEvents = ClientEvents<TalkChannel, ChannelUserInfo>;
  */
 export class TalkClient
   extends TypedEmitter<TalkClientEvents> implements CommandSession, ClientSession, Managed<TalkClientEvents> {
-  private _session: LocoSession | null;
+  private _session: ConnectionSession | null;
 
   /**
    * Ping request interval. (Default = 300000 (5 min))
@@ -119,8 +119,8 @@ export class TalkClient
   async login(credential: OAuthCredential): AsyncCommandResult<LoginResult> {
     if (this.logon) this.close();
 
-    // Create session
-    const sessionRes = await this._sessionFactory.createSession(this.configuration);
+    // Create session stream
+    const sessionRes = await this._sessionFactory.connect(this.configuration);
     if (!sessionRes.success) return sessionRes;
     this._session = sessionRes.result;
     this.listen();
@@ -157,7 +157,7 @@ export class TalkClient
    * End session
    */
   close(): void {
-    this.session.close();
+    this.session.stream.close();
   }
 
   pushReceived(method: string, data: DefaultRes, ctx: EventContext<TalkClientEvents>): void {
