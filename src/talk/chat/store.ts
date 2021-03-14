@@ -70,7 +70,7 @@ export class TalkMemoryChatListStore implements UpdatableChatListStore {
   }
 
   private makeIterator(slice: Chatlog[]): AsyncIterableIterator<Chatlog> {
-    let i = 0;
+    const iter = slice[Symbol.iterator]();
 
     return {
       [Symbol.asyncIterator]() {
@@ -78,12 +78,7 @@ export class TalkMemoryChatListStore implements UpdatableChatListStore {
       },
 
       next: async () => {
-        if (i >= slice.length) return { done: true, value: null };
-
-        const item = slice[i++];
-        if (!item) return { done: true, value: null };
-
-        return { done: false, value: item };
+        return iter.next();
       }
     };
   }
