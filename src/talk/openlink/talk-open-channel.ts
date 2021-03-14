@@ -9,7 +9,7 @@ import { Channel, ChannelDataStore, ChannelMeta, SetChannelMeta, UpdatableChanne
 import { Chat, Chatlog, ChatLogged, ChatLoggedType, ChatType, UpdatableChatListStore } from '../../chat';
 import { TalkSession } from '../client';
 import { EventContext, TypedEmitter } from '../../event';
-import { MediaKeyComponent } from '../../media';
+import { MediaKeyComponent, MediaMultiPost, MediaPost, MediaUploadForm } from '../../media';
 import {
   OpenChannel,
   OpenChannelInfo,
@@ -24,7 +24,9 @@ import {
   TalkChannel,
   TalkChannelHandler,
   TalkChannelSession,
-  TalkChannelDataSession
+  TalkChannelDataSession,
+  sendMedia,
+  sendMultiMedia
 } from '../channel';
 import { TalkOpenChannelSession } from './talk-open-channel-session';
 import { OpenChannelEvents } from '../event';
@@ -44,9 +46,9 @@ import {
   TvMetaContent,
 } from '../../channel/meta';
 import { ChatOnRoomRes } from '../../packet/chat';
-import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
 import { MediaUploadTemplate } from '../media/upload';
 import { TalkOpenChannelDataSession } from './talk-open-channel-data-session';
+import { FixedReadStream } from '../../stream';
 
 type TalkOpenChannelEvents = OpenChannelEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
@@ -296,24 +298,28 @@ export class TalkOpenChannel
     return this._openChannelSession.hideChat(chat);
   }
 
-  downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
-    return this._channelSession.downloadMedia(media, type);
+  downloadMedia(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream> {
+    return this._channelSession.downloadMedia(media, type, offset);
   }
 
-  uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {
-    return this._channelSession.uploadMedia(type, template);
+  downloadMediaThumb(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream> {
+    return this._channelSession.downloadMediaThumb(media, type, offset);
   }
 
-  uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]> {
-    return this._channelSession.uploadMultiMedia(type, templates);
+  uploadMedia(type: ChatType, form: MediaUploadForm): AsyncCommandResult<MediaPost> {
+    return this._channelSession.uploadMedia(type, form);
+  }
+
+  uploadMultiMedia(type: ChatType, forms: MediaUploadForm[]): AsyncCommandResult<MediaMultiPost> {
+    return this._channelSession.uploadMultiMedia(type, forms);
   }
 
   sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
-    return this._channelSession.sendMedia(type, template);
+    return sendMedia(this._channelSession, type, template);
   }
 
   sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
-    return this._channelSession.sendMultiMedia(type, templates);
+    return sendMultiMedia(this._channelSession, type, templates);
   }
 
   async updateAll(): AsyncCommandResult {

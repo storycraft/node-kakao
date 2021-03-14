@@ -23,7 +23,7 @@ import {
   structToChatlog,
   structToOpenLinkChannelUserInfo,
 } from '../../packet/struct';
-import { ChannelListStore, UpdatableChannelDataStore } from '../../channel';
+import { ChannelStore, UpdatableChannelDataStore } from '../../channel';
 import { OpenChannelEvents, OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { ChannelListUpdater } from '../channel/talk-channel-handler';
@@ -188,7 +188,7 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
 
 export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Managed<OpenChannelListEvents<T, U>> {
   constructor(
-    private _list: ChannelListStore<T>,
+    private _list: ChannelStore<T>,
     private _emitter: TypedEmitter<OpenChannelListEvents<T, U>>,
     private _updater: ChannelListUpdater<T>
   ) {

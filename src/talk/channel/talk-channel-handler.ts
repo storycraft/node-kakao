@@ -8,7 +8,7 @@ import { Long } from 'bson';
 import {
   Channel,
   ChannelInfo,
-  ChannelListStore,
+  ChannelStore,
   SetChannelMeta,
   UpdatableChannelDataStore
 } from '../../channel';
@@ -238,7 +238,7 @@ export interface ChannelListUpdater<T> {
 
 export class TalkChannelListHandler<T extends Channel> implements Managed<ChannelListEvent<T>> {
   constructor(
-    private _list: ChannelListStore<T>,
+    private _list: ChannelStore<T>,
     private _emitter: TypedEmitter<ChannelListEvent<T>>,
     private _updater: ChannelListUpdater<T>
   ) {

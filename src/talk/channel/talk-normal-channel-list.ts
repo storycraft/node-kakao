@@ -7,7 +7,7 @@
 import { Long } from 'bson';
 import {
   Channel,
-  ChannelListStore,
+  ChannelStore,
   ChannelTemplate,
   LoginData,
   NormalChannelData,
@@ -32,7 +32,7 @@ type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, No
  */
 export class TalkNormalChannelList
   extends TypedEmitter<TalkNormalChannelListEvents>
-  implements ChannelListStore<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
+  implements ChannelStore<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
   private _handler: TalkChannelListHandler<TalkNormalChannel>;
 
   private _manageSession: TalkChannelManageSession;

@@ -8,11 +8,10 @@ import { Long } from 'bson';
 import { ChannelInfo, ChannelMeta, ChannelSession, SetChannelMeta, UpdatableChannelDataStore } from '../../channel';
 import { ChannelMetaType } from '../../channel/meta';
 import { Chat, Chatlog, ChatLogged, ChatType, DELETED_MESSAGE_OFFSET, UpdatableChatListStore } from '../../chat';
-import { MediaKeyComponent } from '../../media';
+import { MediaKeyComponent, MediaMultiPost, MediaPost, MediaUploadForm } from '../../media';
 import { AsyncCommandResult, CommandResult } from '../../request';
+import { FixedReadStream } from '../../stream';
 import { ChannelUser, ChannelUserInfo } from '../../user';
-import { MediaDownloader, MediaUploader, MediaUploadTemplate, MultiMediaUploader } from '../media';
-import { sendMultiMedia } from './common';
 
 export class TalkChannelDataSession implements ChannelSession {
 
@@ -137,41 +136,61 @@ export class TalkChannelDataSession implements ChannelSession {
     return res;
   }
 
-  downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
-    return this._channelSession.downloadMedia(media, type);
+  downloadMedia(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream> {
+    return this._channelSession.downloadMedia(media, type, offset);
   }
 
-  uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {
-    return this._channelSession.uploadMedia(type, template);
+  downloadMediaThumb(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream> {
+    return this._channelSession.downloadMediaThumb(media, type, offset);
   }
 
-  uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]> {
-    return this._channelSession.uploadMultiMedia(type, templates);
-  }
+  async uploadMedia(type: ChatType, form: MediaUploadForm): AsyncCommandResult<MediaPost> {
+    const res = await this._channelSession.uploadMedia(type, form);
 
-  async sendMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<Chatlog> {
-    const res = await this._channelSession.uploadMedia(type, template);
     if (!res.success) return res;
 
-    const uploadRes = await res.result.upload();
+    return {
+      status: res.status,
+      success: true,
+      result: {
+        offset: res.result.offset,
+        stream: res.result.stream,
 
-    if (uploadRes.success) {
-      await this._chatListStore.addChat(uploadRes.result);
-      this._store.updateInfo({ lastChatLogId: uploadRes.result.logId, lastChatLog: uploadRes.result });
-    }
+        finish: async () => {
+          const chatlogRes = await res.result.finish();
 
-    return uploadRes;
+          if (chatlogRes.success) {
+            this._chatListStore.addChat(chatlogRes.result);
+          }
+
+          return chatlogRes;
+        }
+      }
+    };
   }
 
-  async sendMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<Chatlog> {
-    const res = await sendMultiMedia(this, type, templates);
+  async uploadMultiMedia(type: ChatType, forms: MediaUploadForm[]): AsyncCommandResult<MediaMultiPost> {
+    const res = await this._channelSession.uploadMultiMedia(type, forms);
 
-    if (res.success) {
-      await this._chatListStore.addChat(res.result);
-      this._store.updateInfo({ lastChatLogId: res.result.logId, lastChatLog: res.result });
-    }
+    if (!res.success) return res;
 
-    return res;
+    return {
+      status: res.status,
+      success: true,
+      result: {
+        entries: res.result.entries,
+
+        finish: async () => {
+          const chatlogRes = await res.result.finish();
+
+          if (chatlogRes.success) {
+            this._chatListStore.addChat(chatlogRes.result);
+          }
+
+          return chatlogRes;
+        }
+      }
+    };
   }
 
 }

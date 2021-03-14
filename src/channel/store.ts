@@ -54,7 +54,7 @@ export interface UpdatableChannelDataStore<T, U> extends ChannelDataStore<T, U>,
   
 }
 
-export interface ChannelListStore<T> {
+export interface ChannelStore<T> {
 
   /**
    * Try to get channel instance with channel id

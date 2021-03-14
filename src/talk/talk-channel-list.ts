@@ -5,7 +5,7 @@
  */
 
 import { Long } from 'bson';
-import { ChannelListStore, LoginData, NormalChannelData } from '../channel';
+import { ChannelStore, LoginData, NormalChannelData } from '../channel';
 import { TalkSession } from './client';
 import { EventContext, TypedEmitter } from '../event';
 import { InformedOpenLink, OpenChannelData } from '../openlink';
@@ -24,7 +24,7 @@ type TalkChannelListEvents = ChannelListEvents<TalkChannel, ChannelUserInfo>;
  * Manage normal channels and open channels
  */
 export class TalkChannelList
-  extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelListStore<TalkChannel> {
+  extends TypedEmitter<TalkChannelListEvents> implements Managed<TalkChannelListEvents>, ChannelStore<TalkChannel> {
   private _normal: TalkNormalChannelList;
   private _open: TalkOpenChannelList;
 

@@ -9,9 +9,9 @@ import { Chatlog } from './chat';
 import { ChatListUpdater } from './updater';
 
 /**
- * Store chat list
+ * Store chats
  */
-export interface ChatListStore {
+export interface ChatStore {
 
   /**
    * Get latest chatlog
@@ -44,6 +44,6 @@ export interface ChatListStore {
 
 }
 
-export interface UpdatableChatListStore extends ChatListStore, ChatListUpdater {
+export interface UpdatableChatListStore extends ChatStore, ChatListUpdater {
   
 }

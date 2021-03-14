@@ -11,9 +11,9 @@ import { Long } from '..';
 import { ChannelUser, NormalChannelUserInfo } from '../user';
 import { ChannelMeta, NormalChannelInfo, SetChannelMeta } from './channel-info';
 import { ChatOnRoomRes } from '../packet/chat';
-import { MediaDownloader, MediaUploader, MultiMediaUploader, MediaUploadTemplate } from '../talk';
-import { MediaKeyComponent } from '../media';
 import { ChannelMetaType } from './meta';
+import { MediaKeyComponent, MediaMultiPost, MediaPost, MediaUploadForm } from '../media';
+import { FixedReadStream } from '../stream';
 
 export interface ChannelTemplate {
 
@@ -95,28 +95,38 @@ export interface ChannelSession {
   getChatListFrom(startLogId?: Long): AsyncCommandResult<Chatlog[]>;
 
   /**
-   * Create media downloader
+   * Create media download stream
    *
    * @param media
    * @param type
+   * @param {number} [offset=0] Download start position
    */
-  downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader>;
+  downloadMedia(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream>;
 
   /**
-   * Create media uploader.
+   * Create media thumbnail download stream
+   *
+   * @param media
+   * @param type
+   * @param {number} [offset=0] Download start position
+   */
+  downloadMediaThumb(media: MediaKeyComponent, type: ChatType, offset?: number): AsyncCommandResult<FixedReadStream>;
+
+  /**
+   * Upload media.
    *
    * @param type Media type. Supports PHOTO, VIDEO, TEXT, FILE type.
-   * @param template
+   * @param form
    */
-  uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader>;
+  uploadMedia(type: ChatType, form: MediaUploadForm): AsyncCommandResult<MediaPost>;
 
   /**
-   * Create multi media uploader.
+   * Upload multi media.
    *
    * @param type Media type. Currently works only with MULTIPHOTO.
-   * @param templates
+   * @param forms
    */
-  uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]>;
+  uploadMultiMedia(type: ChatType, forms: MediaUploadForm[]): AsyncCommandResult<MediaMultiPost>;
 
 }
 

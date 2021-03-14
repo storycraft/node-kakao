@@ -15,7 +15,6 @@ import {
 } from '../../channel';
 import { Chat, Chatlog, ChatLogged, ChatType, KnownChatType } from '../../chat';
 import { TalkSession } from '../client';
-import { MediaKeyComponent } from '../../media';
 import { AsyncCommandResult, CommandResult, DefaultReq, KnownDataStatusCode } from '../../request';
 import {
   CreateRes,
@@ -28,18 +27,15 @@ import {
   SyncMsgRes,
   WriteRes,
 } from '../../packet/chat';
-import {
-  structToChatlog,
-} from '../../packet/struct';
+import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 import { ChannelUser } from '../../user';
 import { JsonUtil } from '../../util';
-import { MediaDownloader, MediaUploader, MultiMediaUploader } from '../media';
-import * as NetSocket from '../../network/socket';
-import { LocoSecureLayer } from '../../network';
-import { newCryptoStore } from '../../crypto';
-import { MediaUploadTemplate } from '../media/upload';
-import { sha1 } from 'hash-wasm';
 import { ChannelMetaType } from '../../channel/meta';
+import { MediaKeyComponent, MediaMultiPost, MediaMultiPostEntry, MediaPost, MediaUploadForm } from '../../media';
+import { ConnectionSession, LocoSecureLayer, LocoSession } from '../../network';
+import { FixedReadStream, FixedWriteStream } from '../../stream';
+import { newCryptoStore } from '../../crypto';
+import * as NetSocket from '../../network/socket';
 
 /**
  * Default ChannelSession implementation
@@ -261,7 +257,7 @@ export class TalkChannelSession implements ChannelSession {
     return { status: res.status, success: true, result: res.chatLogs.map(structToChatlog) };
   }
 
-  async downloadMedia(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<MediaDownloader> {
+  async createTrailerSession(media: MediaKeyComponent, type: ChatType): AsyncCommandResult<ConnectionSession> {
     const res = await this._session.request<GetTrailerRes>(
       'GETTRAILER',
       {
@@ -272,81 +268,298 @@ export class TalkChannelSession implements ChannelSession {
 
     if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
 
-    const socket = new LocoSecureLayer(
-      await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
-      await newCryptoStore(this._session.configuration.locoPEMPublicKey));
-
     return {
-      status: res.status,
       success: true,
-      result: new MediaDownloader(socket, this._session, this._channel, media),
+      status: res.status,
+      result: new LocoSession(
+        new LocoSecureLayer(
+          await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
+          await newCryptoStore(this._session.configuration.locoPEMPublicKey)
+        )
+      )
     };
   }
 
-  async uploadMedia(type: ChatType, template: MediaUploadTemplate): AsyncCommandResult<MediaUploader> {
+  async downloadMedia(media: MediaKeyComponent, type: ChatType, offset = 0): AsyncCommandResult<FixedReadStream> {
+    const res = await this.createTrailerSession(media, type);
+    if (!res.success) return res;
+
+    const session = res.result;
+    const clientConfig = this._session.configuration;
+
+    session.request('DOWN', {
+      'k': media.key,
+      'c': this._channel.channelId,
+      'o': offset,
+      'rt': true,
+
+      'u': this._session.clientUser.userId,
+      'os': clientConfig.agent,
+      'av': clientConfig.appVersion,
+      'nt': clientConfig.netType,
+      'mm': clientConfig.mccmnc,
+    });
+
+    const next = await session.listen().next();
+    if (!next) return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
+
+    const { method, data } = next.value;
+    if (method !== 'DOWN' || data.status !== KnownDataStatusCode.SUCCESS) {
+      return { success: false, status: data.status };
+    }
+
+    const size = data['s'] as number;
+
+    return {
+      status: KnownDataStatusCode.SUCCESS,
+      success: true,
+      result: new FixedReadStream(session.stream, size),
+    };
+  }
+
+  async downloadMediaThumb(media: MediaKeyComponent, type: ChatType, offset = 0): AsyncCommandResult<FixedReadStream> {
+    const res = await this.createTrailerSession(media, type);
+    if (!res.success) return res;
+
+    const session = res.result;
+    const clientConfig = this._session.configuration;
+
+    session.request('MINI', {
+      'k': media.key,
+      'c': this._channel.channelId,
+      'o': offset,
+
+      // These should be actual dimension of media.
+      // Seems like server doesn't care about it.
+      'w': 0,
+      'h': 0,
+
+      'u': this._session.clientUser.userId,
+      'os': clientConfig.agent,
+      'av': clientConfig.appVersion,
+      'nt': clientConfig.netType,
+      'mm': clientConfig.mccmnc,
+    });
+
+    const next = await session.listen().next();
+    if (!next) return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
+
+    const { method, data } = next.value;
+    if (method !== 'MINI' || data.status !== KnownDataStatusCode.SUCCESS) {
+      return { success: false, status: data.status };
+    }
+
+    const size = data['s'] as number;
+
+    return {
+      status: KnownDataStatusCode.SUCCESS,
+      success: true,
+      result: new FixedReadStream(session.stream, size),
+    };
+  }
+
+  async shipMedia(type: ChatType, form: MediaUploadForm): AsyncCommandResult<ShipRes> {
     const res = await this._session.request<ShipRes>(
       'SHIP',
       {
         'c': this._channel.channelId,
         't': type,
-        's': Long.fromNumber(template.data.byteLength),
-        'cs': await sha1(new Uint8Array(template.data)),
-        'e': template.ext || '',
+        's': form.size,
+        'cs': form.checksum,
+        'e': form.metadata.ext || '',
       },
     );
 
-    if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
-
-    return {
-      success: true,
-      status: res.status,
-      result: new MediaUploader(
-        { key: res.k },
-        type,
-        template,
-        this._session,
-        this._channel,
-        new LocoSecureLayer(
-          await NetSocket.createTCPSocket({ host: res.vh, port: res.p, keepAlive: true }),
-          await newCryptoStore(this._session.configuration.locoPEMPublicKey),
-        ),
-      ),
-    };
+    return { success: res.status === KnownDataStatusCode.SUCCESS, status: res.status, result: res };
   }
 
-  async uploadMultiMedia(type: ChatType, templates: MediaUploadTemplate[]): AsyncCommandResult<MultiMediaUploader[]> {
+  async shipMultiMedia(type: ChatType, forms: MediaUploadForm[]): AsyncCommandResult<MShipRes> {
     const res = await this._session.request<MShipRes>(
       'MSHIP',
       {
         'c': this._channel.channelId,
         't': type,
-        'sl': templates.map((template) => template.data.byteLength),
-        'csl': await Promise.all(templates.map((template) => sha1(new Uint8Array(template.data)))),
-        'el': templates.map((template) => template.ext || ''),
+        'sl': forms.map((form) => form.size),
+        'csl': forms.map((form) => form.checksum),
+        'el': forms.map((form) => form.metadata.ext || ''),
       },
     );
 
-    if (res.status !== KnownDataStatusCode.SUCCESS) return { success: false, status: res.status };
+    return { success: res.status === KnownDataStatusCode.SUCCESS, status: res.status, result: res };
+  }
 
-    const len = res.kl.length;
-    const list: MultiMediaUploader[] = [];
-    for (let i = 0; i < len; i++) {
-      const key = res.kl[i];
-      list.push(
-        new MultiMediaUploader(
-          { key },
-          type,
-          templates[i],
-          this._session,
-          new LocoSecureLayer(
-            await NetSocket.createTCPSocket({ host: res.vhl[i], port: res.pl[i], keepAlive: true }),
-            await newCryptoStore(this._session.configuration.locoPEMPublicKey),
-          ),
-        ),
-      );
+  async uploadMedia(type: ChatType, form: MediaUploadForm): AsyncCommandResult<MediaPost> {
+    const shipRes = await this.shipMedia(type, form);
+
+    if (!shipRes.success) return shipRes;
+
+    const mediaStream = new LocoSecureLayer(
+      await NetSocket.createTCPSocket({ host: shipRes.result.vh, port: shipRes.result.p, keepAlive: true }),
+      await newCryptoStore(this._session.configuration.locoPEMPublicKey),
+    );
+    const session = new LocoSession(mediaStream);
+    
+    const clientConfig = this._session.configuration;
+
+    const reqData: DefaultReq = {
+      'k': shipRes.result.k,
+      's': form.size,
+      'f': form.metadata.name,
+      't': type,
+
+      'c': this._channel.channelId,
+      'mid': Long.ONE,
+      'ns': true,
+
+      'u': this._session.clientUser.userId,
+      'os': clientConfig.agent,
+      'av': clientConfig.appVersion,
+      'nt': clientConfig.netType,
+      'mm': clientConfig.mccmnc,
+    };
+
+    if (form.metadata.width) reqData['w'] = form.metadata.width;
+    if (form.metadata.height) reqData['h'] = form.metadata.height;
+
+    session.request('POST', reqData).then();
+    const postRes = await session.listen().next();
+    if (postRes.done || postRes.value.data.status !== KnownDataStatusCode.SUCCESS) {
+      return { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
     }
 
-    return { success: true, status: res.status, result: list };
+    const offset = postRes.value.data['o'] as number;
+
+    return {
+      status: shipRes.status,
+      success: true,
+      result: {
+        stream: new FixedWriteStream(mediaStream, form.size),
+        offset,
+
+        async finish() {
+          for await (const { method, data } of session.listen()) {
+            if (method === 'COMPLETE') {
+              const chatlog = structToChatlog(data['chatLog'] as ChatlogStruct);
+              mediaStream.close();
+              return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
+            }
+          }
+
+          if (!mediaStream.ended) mediaStream.close();
+
+          return { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
+        }
+      }
+    };
+  }
+
+  async uploadMultiMedia(type: ChatType, forms: MediaUploadForm[]): AsyncCommandResult<MediaMultiPost> {
+    const shipRes = await this.shipMultiMedia(type, forms);
+
+    if (!shipRes.success) return shipRes;
+
+    const res = shipRes.result;
+
+    const formIter = forms[Symbol.iterator]();
+    let i = 0;
+
+    const entryList: MediaMultiPostEntry[] = [];
+    
+    const clientConfig = this._session.configuration;
+
+    const entries: AsyncIterableIterator<CommandResult<MediaMultiPostEntry>> = {
+      [Symbol.asyncIterator]() {
+        return this;
+      },
+
+      next: async (): Promise<IteratorResult<CommandResult<MediaMultiPostEntry>>> => {
+        const nextForm = formIter.next();
+        if (nextForm.done) return { done: true, value: null };
+        const form = nextForm.value;
+
+        const mediaStream = new LocoSecureLayer(
+          await NetSocket.createTCPSocket({ host: res.vhl[i], port: res.pl[i], keepAlive: true }),
+          await newCryptoStore(this._session.configuration.locoPEMPublicKey),
+        );
+        const session = new LocoSession(mediaStream);
+
+        session.request('MPOST', {
+          'k': res.kl[i],
+          's': form.size,
+          't': type,
+  
+          'u': this._session.clientUser.userId,
+          'os': clientConfig.agent,
+          'av': clientConfig.appVersion,
+          'nt': clientConfig.netType,
+          'mm': clientConfig.mccmnc,
+        }).then();
+        const postRes = await session.listen().next();
+
+        if (postRes.done || postRes.value.data.status !== KnownDataStatusCode.SUCCESS) {
+          return {
+            done: false,
+            value: { status: KnownDataStatusCode.OPERATION_DENIED, success: false }
+          };
+        }
+
+        const result = {
+          offset: postRes.value.data['o'] as number,
+          stream: new FixedWriteStream(mediaStream, form.size),
+
+          async finish(): AsyncCommandResult {
+            for await (const { method, data } of session.listen()) {
+              if (method === 'COMPLETE') {
+                mediaStream.close();
+                return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS };
+              }
+            }
+  
+            if (!mediaStream.ended) mediaStream.close();
+
+            return { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
+          }
+        };
+
+        i++;
+        return {
+          done: false,
+          value: {
+            status: postRes.value.data.status,
+            success: true,
+            result
+          }
+        }
+      }
+    };
+    
+    return {
+      status: shipRes.status,
+      success: true,
+      result: {
+        entries,
+
+        finish: async () => {
+          for (const entry of entryList) {
+            if (!entry.stream.ended) entry.stream.close();
+          }
+
+          return this.forwardChat({
+            text: '',
+            type,
+            attachment: {
+              kl: res.kl,
+              wl: forms.map((form) => form.metadata.width || 0),
+              hl: forms.map((form) => form.metadata.height || 0),
+              mtl: forms.map((form) => form.metadata.ext || ''),
+              sl: forms.map((form) => form.size),
+              imageUrls: [], thumbnailUrls: [],
+              thumbnailWidths: [], thumbnailHeights: [],
+            },
+          });
+        }
+      }
+    }
   }
 }
 

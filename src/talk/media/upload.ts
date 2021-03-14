@@ -4,31 +4,13 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-export interface MediaUploadTemplate {
+import { MediaMetadata } from '../../media';
 
-  /**
-   * Name of the file
-   */
-  name: string;
+export interface MediaUploadTemplate extends MediaMetadata {
 
   /**
    * File data
    */
   data: Uint8Array;
-
-  /**
-   * Media width (only photo, video)
-   */
-  width?: number;
-
-  /**
-   * Media height (only photo, video)
-   */
-  height?: number;
-
-  /**
-   * File extension (Optional. Required when sending file)
-   */
-  ext?: string;
 
 }

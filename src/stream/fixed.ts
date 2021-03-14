@@ -51,7 +51,7 @@ export class FixedReadStream implements ReadStream, FixedStream {
 
     let view: Uint8Array = buffer;
     if (this._read + view.byteLength > this._size) {
-      view = buffer.subarray(0, Math.max(this._size - this._read, 0));
+      view = buffer.subarray(0, this._size - this._read);
     }
 
     const read = await this._stream.read(view);

@@ -5,12 +5,13 @@
  */
 
 import { Long } from 'bson';
+import { sha1 } from 'hash-wasm';
 import { TalkChannel } from '.';
 import { ChannelDataUpdater, ChannelSession, NormalChannelSession, UpdatableChannelDataStore } from '../../channel';
 import { Chatlog, ChatLogged, ChatType } from '../../chat';
-import { MediaKeyComponent } from '../../media';
+import { MediaUploadForm } from '../../media';
 import { OpenChannelSession } from '../../openlink';
-import { AsyncCommandResult, CommandResultDone, KnownDataStatusCode } from '../../request';
+import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import { ChannelUser, NormalChannelUserInfo, OpenChannelUserInfo } from '../../user';
 import { MediaUploadTemplate } from '../media/upload';
 
@@ -18,32 +19,60 @@ import { MediaUploadTemplate } from '../media/upload';
  * Common complex channel methods
  */
 
+export async function mediaTemplateToForm(template: MediaUploadTemplate): Promise<MediaUploadForm> {
+  return {
+    size: template.data.byteLength,
+    checksum: await sha1(template.data),
+    metadata: {
+      name: template.name,
+      width: template.width,
+      height: template.height,
+      ext: template.ext
+    }
+  };
+}
+
 export async function sendMultiMedia(
-    channelSession: ChannelSession,
-    type: ChatType,
-    templates: MediaUploadTemplate[],
+  channelSession: ChannelSession,
+  type: ChatType,
+  templates: MediaUploadTemplate[],
 ): AsyncCommandResult<Chatlog> {
-  const res = await channelSession.uploadMultiMedia(type, templates);
+  const res = await channelSession.uploadMultiMedia(
+    type,
+    await Promise.all(templates.map(mediaTemplateToForm))
+  );
   if (!res.success) return res;
 
-  const keyResList = await Promise.all(res.result.map((uploader) => uploader.upload()));
-  const failed = keyResList.find((uploadRes) => !uploadRes.success);
-  if (failed && !failed.success) return failed;
-  const keyList = keyResList as CommandResultDone<MediaKeyComponent>[];
+  let i = 0;
+  for await (const entryRes of res.result.entries) {
+    if (!entryRes.success) return entryRes;
+    const entry = entryRes.result;
+    const data = templates[i].data;
 
-  return channelSession.forwardChat({
-    text: '',
-    type,
-    attachment: {
-      kl: keyList.map((uploadRes) => uploadRes.result.key),
-      wl: templates.map((template) => template.width || 0),
-      hl: templates.map((template) => template.height || 0),
-      mtl: templates.map((template) => template.ext || ''),
-      sl: templates.map((template) => template.data.byteLength),
-      imageUrls: [], thumbnailUrls: [],
-      thumbnailWidths: [], thumbnailHeights: [],
-    },
-  });
+    await entry.stream.write(data.subarray(Math.min(entry.offset, data.byteLength)));
+
+    const finishRes = await entry.finish();
+    if (!finishRes.success) return finishRes;
+
+    i++;
+  }
+
+  return res.result.finish();
+}
+
+export async function sendMedia(
+  channelSession: ChannelSession,
+  type: ChatType,
+  template: MediaUploadTemplate
+): AsyncCommandResult<Chatlog> {
+  const res = await channelSession.uploadMedia(type, await mediaTemplateToForm(template));
+  if (!res.success) return res;
+
+  const data = template.data;
+
+  await res.result.stream.write(data);
+
+  return res.result.finish();
 }
 
 export function initWatermark(
@@ -128,7 +157,7 @@ export async function updateChatList(
  * Store channel data in memory
  */
 export class TalkMemoryChannelDataStore<T, U>
-implements UpdatableChannelDataStore<T, U> {
+  implements UpdatableChannelDataStore<T, U> {
 
   constructor(
     private _info: T,
@@ -137,7 +166,7 @@ implements UpdatableChannelDataStore<T, U> {
   ) {
 
   }
-  
+
   get info(): Readonly<T> {
     return this._info;
   }
@@ -210,7 +239,7 @@ implements UpdatableChannelDataStore<T, U> {
 
     return userInfoRes || watermarkRes;
   }
-  
+
   updateWatermark(readerId: Long, watermark: Long): void {
     this._watermarkMap.set(readerId.toString(), watermark);
   }
@@ -218,5 +247,5 @@ implements UpdatableChannelDataStore<T, U> {
   clearWatermark(): void {
     this._watermarkMap.clear();
   }
-  
+
 }

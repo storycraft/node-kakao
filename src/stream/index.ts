@@ -115,6 +115,24 @@ export namespace ReadStreamUtil {
     return data;
   }
 
+  /**
+   * Write every read data from ReadStream to WriteStream.
+   *
+   * @param {ReadStream} read Stream to be read
+   * @param {WriteStream} write Stream to be written
+   * @return {Promise<number>} Bytes written.
+   */
+  export async function copy(read: ReadStream, write: WriteStream): Promise<number> {
+    let written = 0;
+
+    for await (const data of iter(read)) {
+      if (write.ended) break;
+      written += await write.write(data);
+    }
+
+    return written;
+  }
+
 }
 
 /**

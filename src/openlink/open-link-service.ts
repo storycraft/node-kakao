@@ -6,10 +6,8 @@
 
 import { Long } from 'bson';
 import { InformedOpenLink } from '..';
-import { TypedEmitter } from '../event/typed';
-import { OpenLinkEvent } from '../talk/event';
 
-export interface OpenLinkService extends TypedEmitter<OpenLinkEvent> {
+export interface OpenLinkService {
 
   /**
    * Get all client link as iterator

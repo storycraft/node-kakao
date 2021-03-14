@@ -4,6 +4,8 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+export * from './upload';
+
 export interface MediaKeyComponent {
 
   key: string;
