@@ -70,7 +70,7 @@ export async function sendMedia(
 
   const data = template.data;
 
-  await res.result.stream.write(data);
+  await res.result.stream.write(data.subarray(Math.min(res.result.offset, data.byteLength)));
 
   return res.result.finish();
 }
