@@ -13,7 +13,6 @@
   "files": [
     "dist",
     "dist_esm",
-    "lib",
     "readme.md",
     "LICENSE"
   ],
