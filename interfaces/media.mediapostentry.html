@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>WebApiConfig | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>MediaPostEntry | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,16 +50,16 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
-					<a href="../modules/config.html">config</a>
+					<a href="../modules/media.html">media</a>
 				</li>
 				<li>
-					<a href="config.webapiconfig.html">WebApiConfig</a>
+					<a href="media.mediapostentry.html">MediaPostEntry</a>
 				</li>
 			</ul>
-			<h1>Interface WebApiConfig</h1>
+			<h1>Interface MediaPostEntry</h1>
 		</div>
 	</div>
 </header>
@@ -70,19 +70,13 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">WebApiConfig</span>
+						<span class="target">MediaPostEntry</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="config.clientconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientConfig</a>
+								<a href="media.mediamultipostentry.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaMultiPostEntry</a>
 							</li>
 							<li>
-								<a href="config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a>
-							</li>
-							<li>
-								<a href="index.clientconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientConfig</a>
-							</li>
-							<li>
-								<a href="index.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a>
+								<a href="media.mediapost.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaPost</a>
 							</li>
 						</ul>
 					</li>
@@ -95,11 +89,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="config.webapiconfig.html#agent" class="tsd-kind-icon">agent</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="config.webapiconfig.html#devicemodel" class="tsd-kind-icon">device<wbr>Model</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="config.webapiconfig.html#language" class="tsd-kind-icon">language</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="config.webapiconfig.html#osversion" class="tsd-kind-icon">os<wbr>Version</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="config.webapiconfig.html#version" class="tsd-kind-icon">version</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="media.mediapostentry.html#offset" class="tsd-kind-icon">offset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="media.mediapostentry.html#stream" class="tsd-kind-icon">stream</a></li>
 							</ul>
 						</section>
 					</div>
@@ -108,54 +99,34 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="agent" class="tsd-anchor"></a>
-					<h3>agent</h3>
-					<div class="tsd-signature tsd-kind-icon">agent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="offset" class="tsd-anchor"></a>
+					<h3>offset</h3>
+					<div class="tsd-signature tsd-kind-icon">offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L69">config/index.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/media/upload.ts#L59">media/upload.ts:59</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Start offset of media data.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="devicemodel" class="tsd-anchor"></a>
-					<h3>device<wbr>Model</h3>
-					<div class="tsd-signature tsd-kind-icon">device<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="stream" class="tsd-anchor"></a>
+					<h3>stream</h3>
+					<div class="tsd-signature tsd-kind-icon">stream<span class="tsd-signature-symbol">:</span> <a href="../classes/stream.fixedwritestream.html" class="tsd-signature-type" data-tsd-kind="Class">FixedWriteStream</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L76">config/index.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/media/upload.ts#L64">media/upload.ts:64</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="language" class="tsd-anchor"></a>
-					<h3>language</h3>
-					<div class="tsd-signature tsd-kind-icon">language<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L74">config/index.ts:74</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="osversion" class="tsd-anchor"></a>
-					<h3>os<wbr>Version</h3>
-					<div class="tsd-signature tsd-kind-icon">os<wbr>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L72">config/index.ts:72</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="version" class="tsd-anchor"></a>
-					<h3>version</h3>
-					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L71">config/index.ts:71</a></li>
-						</ul>
-					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Write stream</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -166,53 +137,47 @@
 						<a href="../modules.html">Exports</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/config.html">config</a>
+						<a href="../modules/media.html">media</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="config.bookingconfig.html" class="tsd-kind-icon">Booking<wbr>Config</a>
+						<a href="media.mediakeycomponent.html" class="tsd-kind-icon">Media<wbr>Key<wbr>Component</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="config.checkinconfig.html" class="tsd-kind-icon">Checkin<wbr>Config</a>
+						<a href="media.mediametadata.html" class="tsd-kind-icon">Media<wbr>Metadata</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="config.clientconfig.html" class="tsd-kind-icon">Client<wbr>Config</a>
+						<a href="media.mediamultipost.html" class="tsd-kind-icon">Media<wbr>Multi<wbr>Post</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="config.oauthloginconfig.html" class="tsd-kind-icon">OAuth<wbr>Login<wbr>Config</a>
+						<a href="media.mediamultipostentry.html" class="tsd-kind-icon">Media<wbr>Multi<wbr>Post<wbr>Entry</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="media.mediapost.html" class="tsd-kind-icon">Media<wbr>Post</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="config.webapiconfig.html" class="tsd-kind-icon">Web<wbr>Api<wbr>Config</a>
+						<a href="media.mediapostentry.html" class="tsd-kind-icon">Media<wbr>Post<wbr>Entry</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="config.webapiconfig.html#agent" class="tsd-kind-icon">agent</a>
+								<a href="media.mediapostentry.html#offset" class="tsd-kind-icon">offset</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="config.webapiconfig.html#devicemodel" class="tsd-kind-icon">device<wbr>Model</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="config.webapiconfig.html#language" class="tsd-kind-icon">language</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="config.webapiconfig.html#osversion" class="tsd-kind-icon">os<wbr>Version</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="config.webapiconfig.html#version" class="tsd-kind-icon">version</a>
+								<a href="media.mediapostentry.html#stream" class="tsd-kind-icon">stream</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/config.html#sessionconfig" class="tsd-kind-icon">Session<wbr>Config</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="media.mediauploadform.html" class="tsd-kind-icon">Media<wbr>Upload<wbr>Form</a>
 					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/config.html#defaultconfiguration" class="tsd-kind-icon">Default<wbr>Configuration</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="media.sizedmediacomponent.html" class="tsd-kind-icon">Sized<wbr>Media<wbr>Component</a>
 					</li>
 				</ul>
 			</nav>

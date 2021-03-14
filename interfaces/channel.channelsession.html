@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ChannelSession | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>ChannelSession | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
 					<a href="../modules/channel.html">channel</a>
@@ -92,6 +92,8 @@
 			<section class="tsd-panel">
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
+					<li><a href="../classes/talk_channel.talkchanneldatasession.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelDataSession</a></li>
+					<li><a href="../classes/talk.talkchanneldatasession.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelDataSession</a></li>
 					<li><a href="../classes/talk_channel.talkchannelsession.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelSession</a></li>
 					<li><a href="../classes/talk.talkchannelsession.html" class="tsd-signature-type" data-tsd-kind="Class">TalkChannelSession</a></li>
 				</ul>
@@ -103,15 +105,11 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#chaton" class="tsd-kind-icon">chatON</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#deletechat" class="tsd-kind-icon">delete<wbr>Chat</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#downloadmedia" class="tsd-kind-icon">download<wbr>Media</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#downloadmediathumb" class="tsd-kind-icon">download<wbr>Media<wbr>Thumb</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#forwardchat" class="tsd-kind-icon">forward<wbr>Chat</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#getalllatestuserinfo" class="tsd-kind-icon">get<wbr>All<wbr>Latest<wbr>User<wbr>Info</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#getchatlistfrom" class="tsd-kind-icon">get<wbr>Chat<wbr>List<wbr>From</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#getlatestchannelinfo" class="tsd-kind-icon">get<wbr>Latest<wbr>Channel<wbr>Info</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#getlatestuserinfo" class="tsd-kind-icon">get<wbr>Latest<wbr>User<wbr>Info</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#inviteusers" class="tsd-kind-icon">invite<wbr>Users</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#markread" class="tsd-kind-icon">mark<wbr>Read</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#sendchat" class="tsd-kind-icon">send<wbr>Chat</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="channel.channelsession.html#setmeta" class="tsd-kind-icon">set<wbr>Meta</a></li>
@@ -127,29 +125,6 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="chaton" class="tsd-anchor"></a>
-					<h3>chatON</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">chatON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="packet_chat.chatonroomres.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatOnRoomRes</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L68">channel/channel-session.ts:68</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Send CHATONROOM and get room infos.
-									Official client sends this and update some infos before opening chatroom window.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="packet_chat.chatonroomres.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatOnRoomRes</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="deletechat" class="tsd-anchor"></a>
 					<h3>delete<wbr>Chat</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -159,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L56">channel/channel-session.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L56">channel/channel-session.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -185,18 +160,18 @@
 					<a name="downloadmedia" class="tsd-anchor"></a>
 					<h3>download<wbr>Media</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">download<wbr>Media<span class="tsd-signature-symbol">(</span>media<span class="tsd-signature-symbol">: </span><a href="media.mediakeycomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaKeyComponent</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.mediadownloader.html" class="tsd-signature-type" data-tsd-kind="Class">MediaDownloader</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">download<wbr>Media<span class="tsd-signature-symbol">(</span>media<span class="tsd-signature-symbol">: </span><a href="media.mediakeycomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaKeyComponent</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/stream.fixedreadstream.html" class="tsd-signature-type" data-tsd-kind="Class">FixedReadStream</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L135">channel/channel-session.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L104">channel/channel-session.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create media downloader</p>
+									<p>Create media download stream</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -206,11 +181,46 @@
 								</li>
 								<li>
 									<h5>type: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> offset: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.mediadownloader.html" class="tsd-signature-type" data-tsd-kind="Class">MediaDownloader</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/stream.fixedreadstream.html" class="tsd-signature-type" data-tsd-kind="Class">FixedReadStream</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="downloadmediathumb" class="tsd-anchor"></a>
+					<h3>download<wbr>Media<wbr>Thumb</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">download<wbr>Media<wbr>Thumb<span class="tsd-signature-symbol">(</span>media<span class="tsd-signature-symbol">: </span><a href="media.mediakeycomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaKeyComponent</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/stream.fixedreadstream.html" class="tsd-signature-type" data-tsd-kind="Class">FixedReadStream</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L113">channel/channel-session.ts:113</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create media thumbnail download stream</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>media: <a href="media.mediakeycomponent.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaKeyComponent</a></h5>
+								</li>
+								<li>
+									<h5>type: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> offset: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/stream.fixedreadstream.html" class="tsd-signature-type" data-tsd-kind="Class">FixedReadStream</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -224,7 +234,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L48">channel/channel-session.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L48">channel/channel-session.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,34 +257,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getalllatestuserinfo" class="tsd-anchor"></a>
-					<h3>get<wbr>All<wbr>Latest<wbr>User<wbr>Info</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>All<wbr>Latest<wbr>User<wbr>Info<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="index.channeluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUserInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L95">channel/channel-session.ts:95</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Updates every user info to latest.
-									The updated ChannelUserInfo may omit some detailed properties.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>see</dt>
-									<dd><p>getLatestUserInfo method for getting detailed info per user.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="index.channeluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUserInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="getchatlistfrom" class="tsd-anchor"></a>
 					<h3>get<wbr>Chat<wbr>List<wbr>From</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -284,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L127">channel/channel-session.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L95">channel/channel-session.ts:95</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -306,88 +288,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getlatestchannelinfo" class="tsd-anchor"></a>
-					<h3>get<wbr>Latest<wbr>Channel<wbr>Info</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Latest<wbr>Channel<wbr>Info<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="channel.channelinfo-1.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L81">channel/channel-session.ts:81</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get latest channel info</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="channel.channelinfo-1.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="getlatestuserinfo" class="tsd-anchor"></a>
-					<h3>get<wbr>Latest<wbr>User<wbr>Info</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Latest<wbr>User<wbr>Info<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>channelUsers<span class="tsd-signature-symbol">: </span><a href="index.channeluser.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUser</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="index.channeluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUserInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L88">channel/channel-session.ts:88</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get latest detailed user info.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>channelUsers: <a href="index.channeluser.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUser</a><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="index.channeluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUserInfo</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="inviteusers" class="tsd-anchor"></a>
-					<h3>invite<wbr>Users</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">invite<wbr>Users<span class="tsd-signature-symbol">(</span>userList<span class="tsd-signature-symbol">: </span><a href="index.channeluser.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUser</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L109">channel/channel-session.ts:109</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Invite users to channel.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>userList: <a href="index.channeluser.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelUser</a><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="markread" class="tsd-anchor"></a>
 					<h3>mark<wbr>Read</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -397,7 +297,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L62">channel/channel-session.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L62">channel/channel-session.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -427,7 +327,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L38">channel/channel-session.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L38">channel/channel-session.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -458,7 +358,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L76">channel/channel-session.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L70">channel/channel-session.ts:70</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -491,7 +391,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L102">channel/channel-session.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L77">channel/channel-session.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -522,7 +422,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L120">channel/channel-session.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L88">channel/channel-session.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -544,7 +444,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/request.html#commandresult" class="tsd-signature-type" data-tsd-kind="Type alias">CommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="chat.chatlog.html" class="tsd-signature-type" data-tsd-kind="Interface">Chatlog</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>Chatlog iterator which iterate chat chunks, excluding startLogId and endLogId chat.</p>
+							<p>Chatlog iterator which iterate chat chunks, including endLogId chat.</p>
 						</li>
 					</ul>
 				</section>
@@ -552,18 +452,18 @@
 					<a name="uploadmedia" class="tsd-anchor"></a>
 					<h3>upload<wbr>Media</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">upload<wbr>Media<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, template<span class="tsd-signature-symbol">: </span><a href="index.mediauploadtemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadTemplate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.mediauploader.html" class="tsd-signature-type" data-tsd-kind="Class">MediaUploader</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">upload<wbr>Media<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, form<span class="tsd-signature-symbol">: </span><a href="media.mediauploadform.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadForm</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="media.mediapost.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaPost</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L143">channel/channel-session.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L121">channel/channel-session.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create media uploader.</p>
+									<p>Upload media.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -575,12 +475,12 @@
 									</div>
 								</li>
 								<li>
-									<h5>template: <a href="index.mediauploadtemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadTemplate</a></h5>
+									<h5>form: <a href="media.mediauploadform.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadForm</a></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.mediauploader.html" class="tsd-signature-type" data-tsd-kind="Class">MediaUploader</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="media.mediapost.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaPost</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -588,18 +488,18 @@
 					<a name="uploadmultimedia" class="tsd-anchor"></a>
 					<h3>upload<wbr>Multi<wbr>Media</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">upload<wbr>Multi<wbr>Media<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, templates<span class="tsd-signature-symbol">: </span><a href="index.mediauploadtemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadTemplate</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.multimediauploader.html" class="tsd-signature-type" data-tsd-kind="Class">MultiMediaUploader</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">upload<wbr>Multi<wbr>Media<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, forms<span class="tsd-signature-symbol">: </span><a href="media.mediauploadform.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadForm</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="media.mediamultipost.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaMultiPost</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/channel/channel-session.ts#L151">channel/channel-session.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/channel/channel-session.ts#L129">channel/channel-session.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create multi media uploader.</p>
+									<p>Upload multi media.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -611,12 +511,12 @@
 									</div>
 								</li>
 								<li>
-									<h5>templates: <a href="index.mediauploadtemplate.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadTemplate</a><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>forms: <a href="media.mediauploadform.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaUploadForm</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/talk.multimediauploader.html" class="tsd-signature-type" data-tsd-kind="Class">MultiMediaUploader</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><a href="media.mediamultipost.html" class="tsd-signature-type" data-tsd-kind="Interface">MediaMultiPost</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -646,14 +546,17 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.channel-1.html" class="tsd-kind-icon">Channel</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="channel.channeldata.html" class="tsd-kind-icon">Channel<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="channel.channeldatastore.html" class="tsd-kind-icon">Channel<wbr>Data<wbr>Store</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="channel.channeldataupdater.html" class="tsd-kind-icon">Channel<wbr>Data<wbr>Updater</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.channelinfo-1.html" class="tsd-kind-icon">Channel<wbr>Info</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="channel.channellist.html" class="tsd-kind-icon">Channel<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.channelmanagesession.html" class="tsd-kind-icon">Channel<wbr>Manage<wbr>Session</a>
@@ -667,31 +570,19 @@
 						<a href="channel.channelsession.html" class="tsd-kind-icon">Channel<wbr>Session</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="channel.channelsession.html#chaton" class="tsd-kind-icon">chatON</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="channel.channelsession.html#deletechat" class="tsd-kind-icon">delete<wbr>Chat</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="channel.channelsession.html#downloadmedia" class="tsd-kind-icon">download<wbr>Media</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="channel.channelsession.html#downloadmediathumb" class="tsd-kind-icon">download<wbr>Media<wbr>Thumb</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="channel.channelsession.html#forwardchat" class="tsd-kind-icon">forward<wbr>Chat</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="channel.channelsession.html#getalllatestuserinfo" class="tsd-kind-icon">get<wbr>All<wbr>Latest<wbr>User<wbr>Info</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="channel.channelsession.html#getchatlistfrom" class="tsd-kind-icon">get<wbr>Chat<wbr>List<wbr>From</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="channel.channelsession.html#getlatestchannelinfo" class="tsd-kind-icon">get<wbr>Latest<wbr>Channel<wbr>Info</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="channel.channelsession.html#getlatestuserinfo" class="tsd-kind-icon">get<wbr>Latest<wbr>User<wbr>Info</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="channel.channelsession.html#inviteusers" class="tsd-kind-icon">invite<wbr>Users</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="channel.channelsession.html#markread" class="tsd-kind-icon">mark<wbr>Read</a>
@@ -718,8 +609,14 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="channel.channelstore.html" class="tsd-kind-icon">Channel<wbr>Store</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.channeltemplate.html" class="tsd-kind-icon">Channel<wbr>Template</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="channel.logindata.html" class="tsd-kind-icon">Login<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.normalchanneldata.html" class="tsd-kind-icon">Normal<wbr>Channel<wbr>Data</a>
@@ -731,7 +628,13 @@
 						<a href="channel.normalchannelmanagesession.html" class="tsd-kind-icon">Normal<wbr>Channel<wbr>Manage<wbr>Session</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="channel.normalchannelsession.html" class="tsd-kind-icon">Normal<wbr>Channel<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="channel.setchannelmeta.html" class="tsd-kind-icon">Set<wbr>Channel<wbr>Meta</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="channel.updatablechanneldatastore.html" class="tsd-kind-icon">Updatable<wbr>Channel<wbr>Data<wbr>Store</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../modules/channel.html#channelmetamap" class="tsd-kind-icon">Channel<wbr>Meta<wbr>Map</a>

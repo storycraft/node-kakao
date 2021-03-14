@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>config | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>loader | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,13 +50,13 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
-					<a href="config.html">config</a>
+					<a href="loader.html">loader</a>
 				</li>
 			</ul>
-			<h1>Module config</h1>
+			<h1>Module loader</h1>
 		</div>
 	</div>
 </header>
@@ -70,23 +70,14 @@
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/config.bookingconfig.html" class="tsd-kind-icon">Booking<wbr>Config</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/config.checkinconfig.html" class="tsd-kind-icon">Checkin<wbr>Config</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/config.clientconfig.html" class="tsd-kind-icon">Client<wbr>Config</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/config.oauthloginconfig.html" class="tsd-kind-icon">OAuth<wbr>Login<wbr>Config</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/config.webapiconfig.html" class="tsd-kind-icon">Web<wbr>Api<wbr>Config</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/loader.clientdataloadresult.html" class="tsd-kind-icon">Client<wbr>Data<wbr>Load<wbr>Result</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/loader.clientdataloader.html" class="tsd-kind-icon">Client<wbr>Data<wbr>Loader</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="config.html#sessionconfig" class="tsd-kind-icon">Session<wbr>Config</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Variables</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="config.html#defaultconfiguration" class="tsd-kind-icon">Default<wbr>Configuration</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="loader.html#asyncclientdataloadresult" class="tsd-kind-icon">Async<wbr>Client<wbr>Data<wbr>Load<wbr>Result</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,28 +85,21 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="sessionconfig" class="tsd-anchor"></a>
-					<h3>Session<wbr>Config</h3>
-					<div class="tsd-signature tsd-kind-icon">Session<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/config.checkinconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">CheckinConfig</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="asyncclientdataloadresult" class="tsd-anchor"></a>
+					<h3>Async<wbr>Client<wbr>Data<wbr>Load<wbr>Result</h3>
+					<div class="tsd-signature tsd-kind-icon">Async<wbr>Client<wbr>Data<wbr>Load<wbr>Result&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/loader.clientdataloadresult.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientDataLoadResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L80">config/index.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/loader/index.ts#L23">loader/index.ts:23</a></li>
 						</ul>
 					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
-					<a name="defaultconfiguration" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> Default<wbr>Configuration</h3>
-					<div class="tsd-signature tsd-kind-icon">Default<wbr>Configuration<span class="tsd-signature-symbol">:</span> <a href="../interfaces/config.oauthloginconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthLoginConfig</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/config.clientconfig.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientConfig</a><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/config/index.ts#L7">config/index.ts:7</a></li>
-						</ul>
-					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -126,32 +110,20 @@
 						<a href="../modules.html">Exports</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="config.html">config</a>
+						<a href="loader.html">loader</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/config.bookingconfig.html" class="tsd-kind-icon">Booking<wbr>Config</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../interfaces/loader.clientdataloadresult.html" class="tsd-kind-icon">Client<wbr>Data<wbr>Load<wbr>Result</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/config.checkinconfig.html" class="tsd-kind-icon">Checkin<wbr>Config</a>
+						<a href="../interfaces/loader.clientdataloader.html" class="tsd-kind-icon">Client<wbr>Data<wbr>Loader</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/config.clientconfig.html" class="tsd-kind-icon">Client<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/config.oauthloginconfig.html" class="tsd-kind-icon">OAuth<wbr>Login<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/config.webapiconfig.html" class="tsd-kind-icon">Web<wbr>Api<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="config.html#sessionconfig" class="tsd-kind-icon">Session<wbr>Config</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="config.html#defaultconfiguration" class="tsd-kind-icon">Default<wbr>Configuration</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="loader.html#asyncclientdataloadresult" class="tsd-kind-icon">Async<wbr>Client<wbr>Data<wbr>Load<wbr>Result</a>
 					</li>
 				</ul>
 			</nav>

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkOpenLinkHandler | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>TalkOpenLinkHandler | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
 					<a href="../modules/talk_openlink.html">talk/openlink</a>
@@ -105,19 +105,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Open<wbr>Link<wbr>Handler<span class="tsd-signature-symbol">(</span>_service<span class="tsd-signature-symbol">: </span><a href="../interfaces/index.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkService</a>, _updater<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk.openlinkupdater.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdater</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.talkopenlinkhandler.html" class="tsd-signature-type" data-tsd-kind="Class">TalkOpenLinkHandler</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Open<wbr>Link<wbr>Handler<span class="tsd-signature-symbol">(</span>_service<span class="tsd-signature-symbol">: </span><a href="../interfaces/index.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkService</a>, _emitter<span class="tsd-signature-symbol">: </span><a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span>, _updater<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk.openlinkupdater.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdater</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk.talkopenlinkhandler.html" class="tsd-signature-type" data-tsd-kind="Class">TalkOpenLinkHandler</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/openlink/talk-open-link-handler.ts#L22">talk/openlink/talk-open-link-handler.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/openlink/talk-open-link-handler.ts#L22">talk/openlink/talk-open-link-handler.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>_service: <a href="../interfaces/index.openlinkservice.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkService</a></h5>
+								</li>
+								<li>
+									<h5>_emitter: <a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/talk_event.openlinkevent.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkEvent</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5>_updater: <a href="../interfaces/talk.openlinkupdater.html" class="tsd-signature-type" data-tsd-kind="Interface">OpenLinkUpdater</a></h5>
@@ -141,7 +144,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/talk.managed.html">Managed</a>.<a href="../interfaces/talk.managed.html#pushreceived">pushReceived</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/openlink/talk-open-link-handler.ts#L39">talk/openlink/talk-open-link-handler.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/openlink/talk-open-link-handler.ts#L40">talk/openlink/talk-open-link-handler.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -184,12 +187,15 @@
 						<a href="talk_openlink.talkopenchannel.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk_openlink.talkopenchanneldatasession.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel<wbr>Data<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="talk_openlink.talkopenchannelhandler.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk_openlink.talkopenchannellist.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel<wbr>List</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="talk_openlink.talkopenchannellisthandler.html" class="tsd-kind-icon">Talk<wbr>Open<wbr>Channel<wbr>List<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">

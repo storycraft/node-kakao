@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HookedLocoSession | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>InspectSession | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,41 +50,34 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
 					<a href="../modules/index.html">index</a>
 				</li>
 				<li>
-					<a href="index.hookedlocosession.html">HookedLocoSession</a>
+					<a href="index.inspectsession.html">InspectSession</a>
 				</li>
 			</ul>
-			<h1>Class HookedLocoSession</h1>
+			<h1>Class InspectSession</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Hook loco session</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">HookedLocoSession</span>
+						<span class="target">InspectSession</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/network.locosession.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoSession</a></li>
+					<li><a href="../interfaces/network.connectionsession.html" class="tsd-signature-type" data-tsd-kind="Interface">ConnectionSession</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -94,22 +87,20 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="index.hookedlocosession.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="index.inspectsession.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="index.hookedlocosession.html#hook" class="tsd-kind-icon">hook</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="index.inspectsession.html#stream" class="tsd-kind-icon">stream</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.hookedlocosession.html#close" class="tsd-kind-icon">close</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.hookedlocosession.html#listen" class="tsd-kind-icon">listen</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="index.hookedlocosession.html#request" class="tsd-kind-icon">request</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.hookedlocosession.html#sendpacket" class="tsd-kind-icon">send<wbr>Packet</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="index.inspectsession.html#listen" class="tsd-kind-icon">listen</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="index.inspectsession.html#request" class="tsd-kind-icon">request</a></li>
 							</ul>
 						</section>
 					</div>
@@ -121,59 +112,57 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Hooked<wbr>Loco<wbr>Session<span class="tsd-signature-symbol">(</span>_session<span class="tsd-signature-symbol">: </span><a href="../interfaces/network.locosession.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoSession</a>, hook<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/hook.sessionhook.html" class="tsd-signature-type" data-tsd-kind="Interface">SessionHook</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="hook.hookedlocosession.html" class="tsd-signature-type" data-tsd-kind="Class">HookedLocoSession</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Inspect<wbr>Session<span class="tsd-signature-symbol">(</span>_session<span class="tsd-signature-symbol">: </span><a href="../interfaces/network.connectionsession.html" class="tsd-signature-type" data-tsd-kind="Interface">ConnectionSession</a>, _hook<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/hook.sessionhook.html" class="tsd-signature-type" data-tsd-kind="Interface">SessionHook</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="hook.inspectsession.html" class="tsd-signature-type" data-tsd-kind="Class">InspectSession</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/hook/session-factory-hook.ts#L56">hook/session-factory-hook.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/hook/session-factory-hook.ts#L47">hook/session-factory-hook.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>_session: <a href="../interfaces/network.locosession.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoSession</a></h5>
+									<h5>_session: <a href="../interfaces/network.connectionsession.html" class="tsd-signature-type" data-tsd-kind="Interface">ConnectionSession</a></h5>
 								</li>
 								<li>
-									<h5>hook: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/hook.sessionhook.html" class="tsd-signature-type" data-tsd-kind="Interface">SessionHook</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>_hook: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/hook.sessionhook.html" class="tsd-signature-type" data-tsd-kind="Interface">SessionHook</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="hook.hookedlocosession.html" class="tsd-signature-type" data-tsd-kind="Class">HookedLocoSession</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="hook.inspectsession.html" class="tsd-signature-type" data-tsd-kind="Class">InspectSession</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="hook" class="tsd-anchor"></a>
-					<h3>hook</h3>
-					<div class="tsd-signature tsd-kind-icon">hook<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/hook.sessionhook.html" class="tsd-signature-type" data-tsd-kind="Interface">SessionHook</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-					</aside>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="close" class="tsd-anchor"></a>
-					<h3>close</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">close<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="stream" class="tsd-anchor"></a>
+					<h3>stream</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> stream<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/stream.bistream.html" class="tsd-signature-type" data-tsd-kind="Interface">BiStream</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/network.locosession.html">LocoSession</a>.<a href="../interfaces/network.locosession.html#close">close</a></p>
+								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#stream">stream</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/hook/session-factory-hook.ts#L96">hook/session-factory-hook.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/hook/session-factory-hook.ts#L56">hook/session-factory-hook.ts:56</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Connection stream</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/stream.bistream.html" class="tsd-signature-type" data-tsd-kind="Interface">BiStream</a></h4>
 						</li>
 					</ul>
 				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="listen" class="tsd-anchor"></a>
 					<h3>listen</h3>
@@ -183,11 +172,16 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/network.locosession.html">LocoSession</a>.<a href="../interfaces/network.locosession.html#listen">listen</a></p>
+								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#listen">listen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/hook/session-factory-hook.ts#L61">hook/session-factory-hook.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/hook/session-factory-hook.ts#L66">hook/session-factory-hook.ts:66</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Listen incoming packets</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/network.packetresdata.html" class="tsd-signature-type" data-tsd-kind="Interface">PacketResData</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -201,9 +195,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/network.locosession.html">LocoSession</a>.<a href="../interfaces/network.locosession.html#request">request</a></p>
+								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/hook/session-factory-hook.ts#L84">hook/session-factory-hook.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/hook/session-factory-hook.ts#L60">hook/session-factory-hook.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -227,30 +221,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="sendpacket" class="tsd-anchor"></a>
-					<h3>send<wbr>Packet</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">send<wbr>Packet<span class="tsd-signature-symbol">(</span>packet<span class="tsd-signature-symbol">: </span><a href="../interfaces/packet.locopacket.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoPacket</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/packet.locopacket.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoPacket</a><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/network.locosession.html">LocoSession</a>.<a href="../interfaces/network.locosession.html#sendpacket">sendPacket</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/hook/session-factory-hook.ts#L90">hook/session-factory-hook.ts:90</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>packet: <a href="../interfaces/packet.locopacket.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoPacket</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/packet.locopacket.html" class="tsd-signature-type" data-tsd-kind="Interface">LocoPacket</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -292,25 +262,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="index.hookedlocosession.html" class="tsd-kind-icon">Hooked<wbr>Loco<wbr>Session</a>
+						<a href="index.inspectsession.html" class="tsd-kind-icon">Inspect<wbr>Session</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="index.hookedlocosession.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="index.inspectsession.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="index.hookedlocosession.html#hook" class="tsd-kind-icon">hook</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="index.hookedlocosession.html#close" class="tsd-kind-icon">close</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="index.inspectsession.html#stream" class="tsd-kind-icon">stream</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="index.hookedlocosession.html#listen" class="tsd-kind-icon">listen</a>
+								<a href="index.inspectsession.html#listen" class="tsd-kind-icon">listen</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-								<a href="index.hookedlocosession.html#request" class="tsd-kind-icon">request</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="index.hookedlocosession.html#sendpacket" class="tsd-kind-icon">send<wbr>Packet</a>
+								<a href="index.inspectsession.html#request" class="tsd-kind-icon">request</a>
 							</li>
 						</ul>
 					</li>
@@ -336,7 +300,6 @@
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

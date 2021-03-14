@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TalkNormalChannelList | NodeKakao - v4.0.6</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.0.6">
+	<title>TalkNormalChannelList | NodeKakao - v4.1.0</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.0.6</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.0.6</a>
+					<a href="../modules.html">NodeKakao - v4.1.0</a>
 				</li>
 				<li>
 					<a href="../modules/talk_channel.html">talk/channel</a>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="event.typedemitter.html" class="tsd-signature-type" data-tsd-kind="Class">TypedEmitter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">TalkNormalChannelList</span>
@@ -89,9 +89,9 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/channel.channellist.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelList</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/channel.channelstore.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelStore</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><a href="../interfaces/channel.normalchannelmanagesession.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelManageSession</a></li>
-					<li><a href="../interfaces/talk.managed.html" class="tsd-signature-type" data-tsd-kind="Interface">Managed</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/talk.managed.html" class="tsd-signature-type" data-tsd-kind="Interface">Managed</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -141,14 +141,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Normal<wbr>Channel<wbr>List<span class="tsd-signature-symbol">(</span>_session<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a>, list<span class="tsd-signature-symbol">: </span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Talk<wbr>Normal<wbr>Channel<wbr>List<span class="tsd-signature-symbol">(</span>_session<span class="tsd-signature-symbol">: </span><a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a>, _loader<span class="tsd-signature-symbol">: </span><a href="../interfaces/loader.clientdataloader.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientDataLoader</a>, list<span class="tsd-signature-symbol">: </span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L28">talk/channel/talk-normal-channel-list.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L40">talk/channel/talk-normal-channel-list.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -160,6 +160,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>_session: <a href="../interfaces/talk_client.talksession.html" class="tsd-signature-type" data-tsd-kind="Interface">TalkSession</a></h5>
+								</li>
+								<li>
+									<h5>_loader: <a href="../interfaces/loader.clientdataloader.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientDataLoader</a></h5>
 								</li>
 								<li>
 									<h5>list: <a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -183,9 +186,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#size">size</a></p>
+								<p>Implementation of <a href="../interfaces/channel.channelstore.html">ChannelStore</a>.<a href="../interfaces/channel.channelstore.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L54">talk/channel/talk-normal-channel-list.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L68">talk/channel/talk-normal-channel-list.ts:68</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,20 +207,20 @@
 					<a name="addlistener" class="tsd-anchor"></a>
 					<h3>add<wbr>Listener</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L18">event/typed.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L18">event/typed.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -226,7 +229,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -242,9 +245,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#all">all</a></p>
+								<p>Implementation of <a href="../interfaces/channel.channelstore.html">ChannelStore</a>.<a href="../interfaces/channel.channelstore.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L64">talk/channel/talk-normal-channel-list.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L78">talk/channel/talk-normal-channel-list.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,7 +270,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/channel.normalchannelmanagesession.html">NormalChannelManageSession</a>.<a href="../interfaces/channel.normalchannelmanagesession.html#createchannel">createChannel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L90">talk/channel/talk-normal-channel-list.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L118">talk/channel/talk-normal-channel-list.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -297,7 +300,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/channel.normalchannelmanagesession.html">NormalChannelManageSession</a>.<a href="../interfaces/channel.normalchannelmanagesession.html#creatememochannel">createMemoChannel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L97">talk/channel/talk-normal-channel-list.ts:97</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L125">talk/channel/talk-normal-channel-list.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -314,21 +317,20 @@
 					<a name="emit" class="tsd-anchor"></a>
 					<h3>emit</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">emit&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">emit&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#emit">emit</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L24">event/typed.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L24">event/typed.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -337,7 +339,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -353,16 +355,15 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#eventnames">eventNames</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L25">event/typed.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L25">event/typed.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -378,9 +379,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#get">get</a></p>
+								<p>Implementation of <a href="../interfaces/channel.channelstore.html">ChannelStore</a>.<a href="../interfaces/channel.channelstore.html#get">get</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L58">talk/channel/talk-normal-channel-list.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L72">talk/channel/talk-normal-channel-list.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -402,14 +403,14 @@
 					<a name="leavechannel" class="tsd-anchor"></a>
 					<h3>leave<wbr>Channel</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">leave<wbr>Channel<span class="tsd-signature-symbol">(</span>channel<span class="tsd-signature-symbol">: </span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a>, block<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/request.html#commandresult" class="tsd-signature-type" data-tsd-kind="Type alias">CommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">leave<wbr>Channel<span class="tsd-signature-symbol">(</span>channel<span class="tsd-signature-symbol">: </span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a>, block<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/channel.normalchannelmanagesession.html">NormalChannelManageSession</a>.<a href="../interfaces/channel.normalchannelmanagesession.html#leavechannel">leaveChannel</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L104">talk/channel/talk-normal-channel-list.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L132">talk/channel/talk-normal-channel-list.ts:132</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -427,7 +428,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> block: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/request.html#commandresult" class="tsd-signature-type" data-tsd-kind="Type alias">CommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/request.html#asynccommandresult" class="tsd-signature-type" data-tsd-kind="Type alias">AsyncCommandResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Long</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>last channel token on success.</p>
 						</li>
 					</ul>
@@ -436,20 +437,20 @@
 					<a name="listenercount" class="tsd-anchor"></a>
 					<h3>listener<wbr>Count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">listener<wbr>Count<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">listener<wbr>Count<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listenercount">listenerCount</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L26">event/typed.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L26">event/typed.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>type: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h5>
+									<h5>type: <span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -460,21 +461,20 @@
 					<a name="listeners" class="tsd-anchor"></a>
 					<h3>listeners</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">listeners&lt;U&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/channel.channellist.html">ChannelList</a>.<a href="../interfaces/channel.channellist.html#listeners">listeners</a></p>
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#listeners">listeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L27">event/typed.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L27">event/typed.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -483,7 +483,7 @@
 									<h5>type: <span class="tsd-signature-type">U</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -491,20 +491,20 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">off&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">off&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L23">event/typed.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L23">event/typed.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -513,7 +513,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -524,20 +524,20 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">on&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L22">event/typed.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L22">event/typed.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -546,7 +546,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -557,20 +557,20 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">once&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">once&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L21">event/typed.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L21">event/typed.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -579,7 +579,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -590,14 +590,14 @@
 					<a name="pushreceived" class="tsd-anchor"></a>
 					<h3>push<wbr>Received</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">push<wbr>Received<span class="tsd-signature-symbol">(</span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a>, parentCtx<span class="tsd-signature-symbol">: </span><a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">push<wbr>Received<span class="tsd-signature-symbol">(</span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a>, parentCtx<span class="tsd-signature-symbol">: </span><a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/talk.managed.html">Managed</a>.<a href="../interfaces/talk.managed.html#pushreceived">pushReceived</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L114">talk/channel/talk-normal-channel-list.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L142">talk/channel/talk-normal-channel-list.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -614,7 +614,7 @@
 									<h5>data: <a href="../interfaces/request.defaultres.html" class="tsd-signature-type" data-tsd-kind="Interface">DefaultRes</a></h5>
 								</li>
 								<li>
-									<h5>parentCtx: <a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>parentCtx: <a href="event.eventcontext.html" class="tsd-signature-type" data-tsd-kind="Class">EventContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -625,20 +625,20 @@
 					<a name="removealllisteners" class="tsd-anchor"></a>
 					<h3>remove<wbr>All<wbr>Listeners</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>All<wbr>Listeners<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>All<wbr>Listeners<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removealllisteners">removeAllListeners</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L20">event/typed.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L20">event/typed.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> event: <span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -649,20 +649,20 @@
 					<a name="removelistener" class="tsd-anchor"></a>
 					<h3>remove<wbr>Listener</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, listener<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="event.typedemitter.html">TypedEmitter</a>.<a href="event.typedemitter.html#removelistener">removeListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/event/typed.ts#L19">event/typed.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/event/typed.ts#L19">event/typed.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;meta_change&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;user_left&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_read&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;chat_deleted&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_join&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;channel_left&quot;</span></h4>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channelevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/index.normalchanneluserinfo.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelUserInfo</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">keyof </span><a href="../interfaces/talk_event.channellistevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChannelListEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="index.talknormalchannel.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannel</a><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -671,7 +671,7 @@
 									<h5>event: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>listener: <a href="../modules/talk_event.html#normalchannellistevents" class="tsd-signature-type" data-tsd-kind="Type alias">NormalChannelListEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+									<h5>listener: <span class="tsd-signature-type">TalkNormalChannelListEvents</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h4>
@@ -682,13 +682,13 @@
 					<a name="initialize" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> initialize</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>talkChannelList<span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a>, channelList<span class="tsd-signature-symbol">?: </span><a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>talkChannelList<span class="tsd-signature-symbol">: </span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a>, channelList<span class="tsd-signature-symbol">?: </span><a href="../interfaces/channel.logindata.html" class="tsd-signature-type" data-tsd-kind="Interface">LoginData</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/channel.normalchanneldata.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/7f5798b/src/talk/channel/talk-normal-channel-list.ts#L129">talk/channel/talk-normal-channel-list.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/talk/channel/talk-normal-channel-list.ts#L157">talk/channel/talk-normal-channel-list.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -702,7 +702,7 @@
 									<h5>talkChannelList: <a href="talk_channel.talknormalchannellist.html" class="tsd-signature-type" data-tsd-kind="Class">TalkNormalChannelList</a></h5>
 								</li>
 								<li>
-									<h5>channelList: <a href="../interfaces/channel.channel-1.html" class="tsd-signature-type" data-tsd-kind="Interface">Channel</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>channelList: <a href="../interfaces/channel.logindata.html" class="tsd-signature-type" data-tsd-kind="Interface">LoginData</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/channel.normalchanneldata.html" class="tsd-signature-type" data-tsd-kind="Interface">NormalChannelData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -727,9 +727,12 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk_channel.talkchanneldatasession.html" class="tsd-kind-icon">Talk<wbr>Channel<wbr>Data<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="talk_channel.talkchannelhandler.html" class="tsd-kind-icon">Talk<wbr>Channel<wbr>Handler</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="talk_channel.talkchannellisthandler.html" class="tsd-kind-icon">Talk<wbr>Channel<wbr>List<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
@@ -738,8 +741,17 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk_channel.talkchannelsession.html" class="tsd-kind-icon">Talk<wbr>Channel<wbr>Session</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="talk_channel.talkmemorychanneldatastore.html" class="tsd-kind-icon">Talk<wbr>Memory<wbr>Channel<wbr>Data<wbr>Store</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="talk_channel.talknormalchannel.html" class="tsd-kind-icon">Talk<wbr>Normal<wbr>Channel</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk_channel.talknormalchanneldatasession.html" class="tsd-kind-icon">Talk<wbr>Normal<wbr>Channel<wbr>Data<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="talk_channel.talknormalchannelhandler.html" class="tsd-kind-icon">Talk<wbr>Normal<wbr>Channel<wbr>Handler</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -807,8 +819,8 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../interfaces/talk_channel.channelinfoupdater.html" class="tsd-kind-icon">Channel<wbr>Info<wbr>Updater</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="talk_channel.talknormalchannelsession.html" class="tsd-kind-icon">Talk<wbr>Normal<wbr>Channel<wbr>Session</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/talk_channel.channellistupdater.html" class="tsd-kind-icon">Channel<wbr>List<wbr>Updater</a>
@@ -823,10 +835,19 @@
 						<a href="../modules/talk_channel.html#initopenuserlist" class="tsd-kind-icon">init<wbr>Open<wbr>User<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
-						<a href="../modules/talk_channel.html#initwatermarkmap" class="tsd-kind-icon">init<wbr>Watermark<wbr>Map</a>
+						<a href="../modules/talk_channel.html#initwatermark" class="tsd-kind-icon">init<wbr>Watermark</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/talk_channel.html#mediatemplatetoform" class="tsd-kind-icon">media<wbr>Template<wbr>ToForm</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/talk_channel.html#sendmedia" class="tsd-kind-icon">send<wbr>Media</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/talk_channel.html#sendmultimedia" class="tsd-kind-icon">send<wbr>Multi<wbr>Media</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/talk_channel.html#updatechatlist" class="tsd-kind-icon">update<wbr>Chat<wbr>List</a>
 					</li>
 				</ul>
 			</nav>
