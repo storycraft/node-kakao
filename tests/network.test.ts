@@ -11,8 +11,8 @@ describe('Network', () => {
   it('Create loco session', async () => {
     const factory = new TalkSessionFactory();
 
-    const res = await factory.createSession(DefaultConfiguration);
+    const res = await factory.connect(DefaultConfiguration);
     if (!res.success) throw new Error(`Session creation failed with status: ${res.status}`);
-    res.result.close();
+    res.result.stream.close();
   });
 });
