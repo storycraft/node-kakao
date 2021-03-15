@@ -190,12 +190,10 @@ export class TalkMemoryChannelDataStore<T, U>
   getReadCount(chat: ChatLogged): number {
     let count = 0;
 
-    if (this.userCount >= 100) return 0;
-
     for (const [strId] of this._userInfoMap) {
       const watermark = this._watermarkMap.get(strId);
 
-      if (!watermark || watermark && watermark.greaterThanOrEqual(chat.logId)) count++;
+      if (watermark && watermark.greaterThanOrEqual(chat.logId)) count++;
     }
 
     return count;
@@ -203,8 +201,6 @@ export class TalkMemoryChannelDataStore<T, U>
 
   getReaders(chat: ChatLogged): Readonly<U>[] {
     const list: U[] = [];
-
-    if (this.userCount >= 100) return [];
 
     for (const [strId, userInfo] of this._userInfoMap) {
       const watermark = this._watermarkMap.get(strId);
