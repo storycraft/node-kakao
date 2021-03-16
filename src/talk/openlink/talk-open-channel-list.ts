@@ -96,6 +96,7 @@ export class TalkOpenChannelList
   /**
    * Find open channel using linkId
    *
+   * @deprecated
    * @param {Long} linkId
    * @return {TalkOpenChannel | undefined}
    */
@@ -103,6 +104,22 @@ export class TalkOpenChannelList
     for (const channel of this.all()) {
       if (channel.linkId.eq(linkId)) return channel;
     }
+  }
+
+  /**
+   * Find all open channel using same linkId
+   *
+   * @param {Long} linkId
+   * @return {TalkOpenChannel[]}
+   */
+  getLinkChannelList(linkId: Long): TalkOpenChannel[] {
+    const list: TalkOpenChannel[] = [];
+
+    for (const channel of this.all()) {
+      if (channel.linkId.eq(linkId)) list.push(channel);
+    }
+
+    return list;
   }
 
   get size(): number {
