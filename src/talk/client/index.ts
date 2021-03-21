@@ -224,7 +224,11 @@ export class TalkClient
     (async () => {
       for await (const { method, data, push } of this.session.listen()) {
         if (push) {
-          this.pushReceived(method, data, new EventContext<TalkClientEvents>(this));
+          try {
+            this.pushReceived(method, data, new EventContext<TalkClientEvents>(this));
+          } catch (err) {
+            this.onError(err);
+          }
         }
       }
     })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
