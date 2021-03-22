@@ -23,11 +23,6 @@ import { BiStream } from '../../stream';
 export async function getBookingData(stream: BiStream, config: BookingConfig): AsyncCommandResult<GetConfRes> {
   const bookingSession = new LocoSession(stream);
 
-  (async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
-    for await (const _ of bookingSession.listen()) { }
-  })();
-
   const req = {
     'MCCMNC': config.mccmnc,
     'model': config.deviceModel,
@@ -54,11 +49,6 @@ export async function getCheckinData(
   userId?: Long,
 ): AsyncCommandResult<CheckinRes> {
   const checkinSession = new LocoSession(stream);
-
-  (async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
-    for await (const _ of checkinSession.listen()) { }
-  })();
 
   const req: DefaultReq = {
     'MCCMNC': config.mccmnc,

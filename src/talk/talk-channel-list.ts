@@ -14,9 +14,10 @@ import { ChainedIterator } from '../util';
 import { ChannelListEvents } from './event';
 import { Managed } from './managed';
 import { TalkOpenChannel, TalkOpenChannelList } from './openlink';
-import { TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
+import { ChannelListUpdater, TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
 import { ChannelUserInfo } from '../user';
 import { ClientDataLoader } from '../loader';
+import { MsgRes } from '../packet/chat';
 
 type TalkChannelListEvents = ChannelListEvents<TalkChannel, ChannelUserInfo>;
 
@@ -80,6 +81,29 @@ export class TalkChannelList
 
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelListEvents>): void {
     const ctx = new EventContext<TalkChannelListEvents>(this, parentCtx);
+
+    if (method === 'MSG') {
+      const msgData = data as DefaultRes & MsgRes;
+      if (!this.get(msgData.chatId)) {
+        let list: ChannelListUpdater<TalkChannel>;
+        if ('li' in msgData) {
+          list = this._open;
+        } else {
+          list = this._normal;
+        }
+
+        list.addChannel({ channelId: msgData.chatId }).then((res) => {
+          if (!res.success) return;
+
+          ctx.emit('channel_added', res.result);
+
+          this._normal.pushReceived(method, data, ctx);
+          this._open.pushReceived(method, data, ctx);
+        });
+
+        return;
+      }
+    }
 
     this._normal.pushReceived(method, data, ctx);
     this._open.pushReceived(method, data, ctx);

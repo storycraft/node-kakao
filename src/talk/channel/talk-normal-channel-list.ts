@@ -19,7 +19,7 @@ import { AsyncCommandResult, DefaultRes, KnownDataStatusCode } from '../../reque
 import { NormalChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { TalkNormalChannel } from './talk-normal-channel';
-import { TalkChannelListHandler } from './talk-channel-handler';
+import { ChannelListUpdater, TalkChannelListHandler } from './talk-channel-handler';
 import { NormalChannelUserInfo } from '../../user';
 import { TalkChannelManageSession } from './talk-channel-session';
 import { ClientDataLoader } from '../../loader';
@@ -32,7 +32,9 @@ type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, No
  */
 export class TalkNormalChannelList
   extends TypedEmitter<TalkNormalChannelListEvents>
-  implements ChannelStore<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents> {
+  implements ChannelStore<TalkNormalChannel>, NormalChannelManageSession, Managed<TalkNormalChannelListEvents>,
+  ChannelListUpdater<TalkNormalChannel> {
+
   private _handler: TalkChannelListHandler<TalkNormalChannel>;
 
   private _manageSession: TalkChannelManageSession;
@@ -52,10 +54,7 @@ export class TalkNormalChannelList
   ) {
     super();
 
-    this._handler = new TalkChannelListHandler(this, this, {
-      addChannel: (channel) => this.addChannel(channel),
-      removeChannel: (channel) => this.delete(channel.channelId),
-    });
+    this._handler = new TalkChannelListHandler(this, this, this);
 
     this._manageSession = new TalkChannelManageSession(_session);
 
@@ -79,7 +78,7 @@ export class TalkNormalChannelList
     return this._map.values();
   }
 
-  private async addChannel(channel: Channel, lastUpdate?: number): AsyncCommandResult<TalkNormalChannel> {
+  async addChannel(channel: Channel, lastUpdate?: number): AsyncCommandResult<TalkNormalChannel> {
     const last = this.get(channel.channelId);
     if (last) return { success: true, status: KnownDataStatusCode.SUCCESS, result: last };
 
@@ -109,10 +108,8 @@ export class TalkNormalChannelList
     return { success: true, status: KnownDataStatusCode.SUCCESS, result: talkChannel };
   }
 
-  private delete(channelId: Long) {
-    const strId = channelId.toString();
-
-    return this._map.delete(strId);
+  removeChannel(channel: Channel): boolean {
+    return this._map.delete(channel.channelId.toString());
   }
 
   async createChannel(template: ChannelTemplate): AsyncCommandResult<TalkNormalChannel> {
@@ -133,7 +130,7 @@ export class TalkNormalChannelList
     const res = await this._manageSession.leaveChannel(channel, block);
 
     if (res.success) {
-      this.delete(channel.channelId);
+      this.removeChannel(channel);
     }
 
     return res;

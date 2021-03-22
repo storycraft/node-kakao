@@ -6,7 +6,6 @@
 
 export * from './chunk';
 export * from './loco-packet-codec';
-export * from './loco-packet-dispatcher';
 export * from './loco-secure-layer';
 export * from './packet-assembler';
 export * from './request-session';

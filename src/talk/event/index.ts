@@ -67,11 +67,15 @@ export interface ChannelListEvent<T> {
   // 클라이언트가 채널 들어갔을시 호출
   'channel_join': (channel: T) => void;
 
-  // 클라이언트에 채널 초기화 또는 비활성 채널 활성화로 인한 채널 추가시 호출
-  'channel_added': (channel: T) => void;
-
   // 클라이언트가 채널 나갈시 호출
   'channel_left': (channel: T) => void;
+
+}
+
+export interface RootChannelListEvent<T> {
+  
+  // 클라이언트의 비활성 채널 활성화로 인한 채널 추가시 호출
+  'channel_added': (channel: T) => void;
 
 }
 
@@ -146,11 +150,17 @@ export interface ClientEvent {
 }
 
 export type ClientEvents<T, U> = ClientEvent & ChannelListEvents<T, U>;
-export type ChannelListEvents<T, U> = OpenChannelListEvents<T, U> & NormalChannelListEvents<T, U>;
+export type ChannelListEvents<T, U> = OpenChannelListEvents<T, U>
+ & NormalChannelListEvents<T, U>
+ & RootChannelListEvent<T>;
 
 export type NormalChannelListEvents<T, U> = ChannelListEvent<T> & ChannelEvents<T, U>;
-export type OpenChannelListEvents<T, U>
-= OpenLinkEvent & ChannelListEvent<T> & OpenChannelEvents<T, U> & OpenChannelListEvent<T>;
+export type OpenChannelListEvents<T, U> = OpenLinkListEvents
+ & ChannelListEvent<T>
+ & OpenChannelEvents<T, U>
+ & OpenChannelListEvent<T>;
+
+export type OpenLinkListEvents = OpenLinkEvent;
 
 export type ChannelEvents<T, U> = ChannelEvent<T, U> & ChatEvent<T, U>;
 export type OpenChannelEvents<T, U> = ChannelEvents<T, U> & OpenChannelEvent<T, U>;
