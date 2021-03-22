@@ -60,9 +60,9 @@ export class LocoSession implements ConnectionSession {
  
   private _codec: LocoPacketCodec;
 
-  private _nextPromise: Promise<PacketResData | undefined> | null;
+  private _nextPromise: Promise<boolean> | null;
 
-  private _pushBufferMap: Map<number, PacketResData>;
+  private _packetBuffer: PacketResData[];
 
   constructor(stream: BiStream) {
     this._assembler = new PacketAssembler(BsonDataCodec);
@@ -71,17 +71,21 @@ export class LocoSession implements ConnectionSession {
 
     this._nextPromise = null;
 
-    this._pushBufferMap = new Map();
+    this._packetBuffer = [];
   }
 
   get stream(): BiStream {
     return this._codec.stream;
   }
 
-  private async _readInner(): Promise<PacketResData | undefined> {
+  private _lastBufRes(): PacketResData | undefined {
+    if (this._packetBuffer.length > 0) return this._packetBuffer[this._packetBuffer.length - 1];
+  }
+
+  private async _readInner(): Promise<boolean> {
     const read = await this._codec.read();
 
-    if (!read) return;
+    if (!read) return false;
 
     const res = {
       id: read.header.id,
@@ -90,10 +94,12 @@ export class LocoSession implements ConnectionSession {
       data: this._assembler.deconstruct(read)
     };
 
-    return res;
+    this._packetBuffer.push(res);
+
+    return true;
   }
 
-  private _readQueued(): Promise<PacketResData | undefined> {
+  private _readQueued(): Promise<boolean> {
     if (this._nextPromise) return this._nextPromise;
 
     this._nextPromise = this._readInner();
@@ -103,21 +109,21 @@ export class LocoSession implements ConnectionSession {
   }
 
   async read(): Promise<PacketResData | undefined> {
-    for (const buffered of this._pushBufferMap.values()) {
-      this._pushBufferMap.delete(buffered.id);
-      return buffered;
+    while (this._packetBuffer.length < 1) {
+      await this._readQueued();
     }
 
-    return this._readQueued();
+    const first = this._packetBuffer.shift();
+
+    return first;
   }
 
   private async _readId(id: number): Promise<PacketResData | undefined> {
-    let read;
-    while (read = await this._readQueued()) {
-      if (read.id === id) {
+    while (await this._readQueued()) {
+      const read = this._lastBufRes();
+      if (read && read.id === id) {
+        this._packetBuffer.pop();
         return read;
-      } else if (read.push && !this._pushBufferMap.has(read.id)) {
-        this._pushBufferMap.set(read.id, read);
       }
     }
   }
