@@ -109,9 +109,7 @@ export class LocoSession implements ConnectionSession {
   }
 
   async read(): Promise<PacketResData | undefined> {
-    while (this._packetBuffer.length < 1) {
-      await this._readQueued();
-    }
+    while (this._packetBuffer.length < 1 && await this._readQueued());
 
     const first = this._packetBuffer.shift();
 
