@@ -7,6 +7,10 @@
     ".": {
       "require": "./dist/index.js",
       "import": "./dist_esm/index.js"
+    },
+    "./*": {
+      "require": "./dist/*/index.js",
+      "import": "./dist_esm/*/index.js"
     }
   },
   "types": "./dist/index.d.ts",
