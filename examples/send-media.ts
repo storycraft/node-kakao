@@ -9,7 +9,7 @@
  */
 
 import { readFileSync } from 'fs';
-import { KnownChatType, TalkClient } from '../src';
+import { KnownChatType, TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
