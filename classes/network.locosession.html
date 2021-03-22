@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LocoSession | NodeKakao - v4.1.0</title>
-	<meta name="description" content="Documentation for NodeKakao - v4.1.0">
+	<title>LocoSession | NodeKakao - v4.1.1</title>
+	<meta name="description" content="Documentation for NodeKakao - v4.1.1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">NodeKakao - v4.1.0</a>
+					<a href="../index.html" class="title">NodeKakao - v4.1.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">NodeKakao - v4.1.0</a>
+					<a href="../modules.html">NodeKakao - v4.1.1</a>
 				</li>
 				<li>
 					<a href="../modules/network.html">network</a>
@@ -100,6 +100,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="network.locosession.html#listen" class="tsd-kind-icon">listen</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="network.locosession.html#read" class="tsd-kind-icon">read</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="network.locosession.html#request" class="tsd-kind-icon">request</a></li>
 							</ul>
 						</section>
@@ -118,7 +119,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/network/request-session.ts#L59">network/request-session.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/e0f55b8/src/network/request-session.ts#L65">network/request-session.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -145,7 +146,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#stream">stream</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/network/request-session.ts#L66">network/request-session.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/e0f55b8/src/network/request-session.ts#L77">network/request-session.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -171,7 +172,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#listen">listen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/network/request-session.ts#L70">network/request-session.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/e0f55b8/src/network/request-session.ts#L129">network/request-session.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -180,6 +181,23 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/network.packetresdata.html" class="tsd-signature-type" data-tsd-kind="Interface">PacketResData</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="read" class="tsd-anchor"></a>
+					<h3>read</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/network.packetresdata.html" class="tsd-signature-type" data-tsd-kind="Interface">PacketResData</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/e0f55b8/src/network/request-session.ts#L111">network/request-session.ts:111</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/network.packetresdata.html" class="tsd-signature-type" data-tsd-kind="Interface">PacketResData</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -194,7 +212,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/network.connectionsession.html">ConnectionSession</a>.<a href="../interfaces/network.connectionsession.html#request">request</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/8a2c5af/src/network/request-session.ts#L90">network/request-session.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/storycraft/node-kakao/blob/e0f55b8/src/network/request-session.ts#L145">network/request-session.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -243,9 +261,6 @@
 						<a href="network.locopacketcodec.html" class="tsd-kind-icon">Loco<wbr>Packet<wbr>Codec</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="network.locopacketdispatcher.html" class="tsd-kind-icon">Loco<wbr>Packet<wbr>Dispatcher</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="network.locosecurelayer.html" class="tsd-kind-icon">Loco<wbr>Secure<wbr>Layer</a>
 					</li>
 				</ul>
@@ -261,6 +276,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="network.locosession.html#listen" class="tsd-kind-icon">listen</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="network.locosession.html#read" class="tsd-kind-icon">read</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="network.locosession.html#request" class="tsd-kind-icon">request</a>
@@ -280,9 +298,6 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/network.netsocketoptions.html" class="tsd-kind-icon">Net<wbr>Socket<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/network.packetres.html" class="tsd-kind-icon">Packet<wbr>Res</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/network.packetresdata.html" class="tsd-kind-icon">Packet<wbr>Res<wbr>Data</a>
