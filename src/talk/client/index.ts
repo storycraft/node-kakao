@@ -123,15 +123,16 @@ export class TalkClient
     const sessionRes = await this._sessionFactory.connect(this.configuration);
     if (!sessionRes.success) return sessionRes;
     this._session = sessionRes.result;
-    this.listen();
 
     const loginRes = await this._clientSession.login(credential);
     if (!loginRes.success) return loginRes;
 
-    this.addPingHandler();
     this._clientUser = { userId: loginRes.result.userId };
 
     await TalkChannelList.initialize(this._channelList, loginRes.result.channelList);
+
+    this.addPingHandler();
+    this.listen();
 
     return { status: loginRes.status, success: true, result: loginRes.result };
   }

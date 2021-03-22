@@ -94,8 +94,14 @@ export class TalkChannelList
 
         list.addChannel({ channelId: msgData.chatId }).then((res) => {
           if (!res.success) return;
+
           ctx.emit('channel_added', res.result);
+
+          this._normal.pushReceived(method, data, ctx);
+          this._open.pushReceived(method, data, ctx);
         });
+
+        return;
       }
     }
 

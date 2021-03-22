@@ -287,7 +287,7 @@ export class TalkChannelSession implements ChannelSession {
     const session = res.result;
     const clientConfig = this._session.configuration;
 
-    session.request('DOWN', {
+    const data = await session.request('DOWN', {
       'k': media.key,
       'c': this._channel.channelId,
       'o': offset,
@@ -299,15 +299,7 @@ export class TalkChannelSession implements ChannelSession {
       'nt': clientConfig.netType,
       'mm': clientConfig.mccmnc,
     });
-
-    const next = await session.listen().next();
-    if (!next) return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
-
-    const { method, data } = next.value;
-    if (method !== 'DOWN' || data.status !== KnownDataStatusCode.SUCCESS) {
-      return { success: false, status: data.status };
-    }
-
+    
     const size = data['s'] as number;
 
     return {
@@ -324,7 +316,7 @@ export class TalkChannelSession implements ChannelSession {
     const session = res.result;
     const clientConfig = this._session.configuration;
 
-    session.request('MINI', {
+    const data = await session.request('MINI', {
       'k': media.key,
       'c': this._channel.channelId,
       'o': offset,
@@ -340,14 +332,6 @@ export class TalkChannelSession implements ChannelSession {
       'nt': clientConfig.netType,
       'mm': clientConfig.mccmnc,
     });
-
-    const next = await session.listen().next();
-    if (!next) return { success: false, status: KnownDataStatusCode.OPERATION_DENIED };
-
-    const { method, data } = next.value;
-    if (method !== 'MINI' || data.status !== KnownDataStatusCode.SUCCESS) {
-      return { success: false, status: data.status };
-    }
 
     const size = data['s'] as number;
 
@@ -421,13 +405,8 @@ export class TalkChannelSession implements ChannelSession {
     if (form.metadata.width) reqData['w'] = form.metadata.width;
     if (form.metadata.height) reqData['h'] = form.metadata.height;
 
-    session.request('POST', reqData).then();
-    const postRes = await session.listen().next();
-    if (postRes.done || postRes.value.data.status !== KnownDataStatusCode.SUCCESS) {
-      return { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
-    }
-
-    const offset = postRes.value.data['o'] as number;
+    const postRes = await session.request('POST', reqData);
+    const offset = postRes['o'] as number;
 
     return {
       status: shipRes.status,
@@ -483,7 +462,7 @@ export class TalkChannelSession implements ChannelSession {
         );
         const session = new LocoSession(mediaStream);
 
-        session.request('MPOST', {
+        const postRes = await session.request('MPOST', {
           'k': res.kl[i],
           's': form.size,
           't': type,
@@ -493,18 +472,10 @@ export class TalkChannelSession implements ChannelSession {
           'av': clientConfig.appVersion,
           'nt': clientConfig.netType,
           'mm': clientConfig.mccmnc,
-        }).then();
-        const postRes = await session.listen().next();
-
-        if (postRes.done || postRes.value.data.status !== KnownDataStatusCode.SUCCESS) {
-          return {
-            done: false,
-            value: { status: KnownDataStatusCode.OPERATION_DENIED, success: false }
-          };
-        }
+        });
 
         const result = {
-          offset: postRes.value.data['o'] as number,
+          offset: postRes['o'] as number,
           stream: new FixedWriteStream(mediaStream, form.size),
 
           async finish(): AsyncCommandResult {
@@ -525,7 +496,7 @@ export class TalkChannelSession implements ChannelSession {
         return {
           done: false,
           value: {
-            status: postRes.value.data.status,
+            status: postRes.status,
             success: true,
             result
           }

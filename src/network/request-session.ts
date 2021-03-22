@@ -7,9 +7,9 @@
 import { SessionConfig } from '../config';
 import { AsyncCommandResult, DefaultReq, DefaultRes } from '../request';
 import { BsonDataCodec } from '../packet';
-import { LocoPacketDispatcher } from './loco-packet-dispatcher';
 import { PacketAssembler } from './packet-assembler';
 import { BiStream } from '../stream';
+import { LocoPacketCodec } from './loco-packet-codec';
 
 export interface CommandSession {
 
@@ -39,6 +39,7 @@ export interface ConnectionSession extends CommandSession {
 
 export interface PacketResData {
 
+  id: number;
   method: string;
   data: DefaultRes;
   push: boolean;
@@ -56,39 +57,93 @@ export interface SessionFactory {
 
 export class LocoSession implements ConnectionSession {
   private _assembler: PacketAssembler<DefaultReq, DefaultRes>;
-  private _dispatcher: LocoPacketDispatcher;
+ 
+  private _codec: LocoPacketCodec;
+
+  private _nextPromise: Promise<PacketResData | undefined> | null;
+
+  private _pushBufferMap: Map<number, PacketResData>;
 
   constructor(stream: BiStream) {
     this._assembler = new PacketAssembler(BsonDataCodec);
-    this._dispatcher = new LocoPacketDispatcher(stream);
+
+    this._codec = new LocoPacketCodec(stream);
+
+    this._nextPromise = null;
+
+    this._pushBufferMap = new Map();
   }
 
   get stream(): BiStream {
-    return this._dispatcher.stream;
+    return this._codec.stream;
+  }
+
+  private async _readInner(): Promise<PacketResData | undefined> {
+    const read = await this._codec.read();
+
+    if (!read) return;
+
+    const res = {
+      id: read.header.id,
+      push: read.data[0] == 8,
+      method: read.header.method,
+      data: this._assembler.deconstruct(read)
+    };
+
+    return res;
+  }
+
+  private _readQueued(): Promise<PacketResData | undefined> {
+    if (this._nextPromise) return this._nextPromise;
+
+    this._nextPromise = this._readInner();
+    this._nextPromise.finally(() => this._nextPromise = null);
+
+    return this._nextPromise;
+  }
+
+  async read(): Promise<PacketResData | undefined> {
+    for (const buffered of this._pushBufferMap.values()) {
+      this._pushBufferMap.delete(buffered.id);
+      return buffered;
+    }
+
+    return this._readQueued();
+  }
+
+  private async _readId(id: number): Promise<PacketResData | undefined> {
+    let read;
+    while (read = await this._readQueued()) {
+      if (read.id === id) {
+        return read;
+      } else if (read.push && !this._pushBufferMap.has(read.id)) {
+        this._pushBufferMap.set(read.id, read);
+      }
+    }
   }
 
   listen(): AsyncIterableIterator<PacketResData> {
-    const iterator = this._dispatcher.listen();
-    const assembler = this._assembler;
-
     return {
       [Symbol.asyncIterator](): AsyncIterableIterator<PacketResData> {
         return this;
       },
 
-      async next(): Promise<IteratorResult<PacketResData>> {
-        const next = await iterator.next();
+      next: async (): Promise<IteratorResult<PacketResData>> => {
+        const next = await this.read();
 
-        if (next.done) return { done: true, value: null };
-        const { push, packet } = next.value;
+        if (!next) return { done: true, value: null };
 
-        return { done: false, value: { push, method: packet.header.method, data: assembler.deconstruct(packet) } };
+        return { done: false, value: next };
       }
     };
   }
 
   async request<T = DefaultRes>(method: string, data: DefaultReq): Promise<DefaultRes & T> {
-    const res = await this._dispatcher.sendPacket(this._assembler.construct(method, data));
-    return this._assembler.deconstruct(res) as DefaultRes & T;
+    const req = this._assembler.construct(method, data);
+    await this._codec.write(req);
+    const res = await this._readId(req.header.id);
+    if (!res) throw new Error(`Session closed before response #${req.header.id}`);
+
+    return res.data as DefaultRes & T;
   }
 }
