@@ -91,7 +91,7 @@ export class LocoSession implements ConnectionSession {
 
     const res = {
       id: read.header.id,
-      push: read.data[0] == 8,
+      push: !this._requestSet.has(read.header.id),
       method: read.header.method,
       data: this._assembler.deconstruct(read)
     };
@@ -115,7 +115,7 @@ export class LocoSession implements ConnectionSession {
 
     const first = this._packetBuffer[0];
 
-    if (!this._requestSet.has(first.id)) this._packetBuffer.shift();
+    if (first.push) this._packetBuffer.shift();
 
     return first;
   }
