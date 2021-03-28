@@ -63,6 +63,7 @@ export class LocoSession implements ConnectionSession {
   private _nextPromise: Promise<boolean> | null;
 
   private _packetBuffer: PacketResData[];
+  private _requestSet: Set<number>;
 
   constructor(stream: BiStream) {
     this._assembler = new PacketAssembler(BsonDataCodec);
@@ -72,6 +73,7 @@ export class LocoSession implements ConnectionSession {
     this._nextPromise = null;
 
     this._packetBuffer = [];
+    this._requestSet = new Set();
   }
 
   get stream(): BiStream {
@@ -89,7 +91,7 @@ export class LocoSession implements ConnectionSession {
 
     const res = {
       id: read.header.id,
-      push: read.data[0] == 8,
+      push: !this._requestSet.has(read.header.id),
       method: read.header.method,
       data: this._assembler.deconstruct(read)
     };
@@ -111,15 +113,21 @@ export class LocoSession implements ConnectionSession {
   async read(): Promise<PacketResData | undefined> {
     while (this._packetBuffer.length < 1 && await this._readQueued());
 
-    const first = this._packetBuffer.shift();
+    const first = this._packetBuffer[0];
+
+    if (first.push) this._packetBuffer.shift();
 
     return first;
   }
 
   private async _readId(id: number): Promise<PacketResData | undefined> {
+    if (this._requestSet.has(id)) throw new Error(`Packet id collision #${id}`);
+    this._requestSet.add(id);
+
     while (await this._readQueued()) {
       const read = this._lastBufRes();
-      if (read && read.id === id) {
+      if (read && read.id === id && this._requestSet.has(id)) {
+        this._requestSet.delete(id);
         this._packetBuffer.pop();
         return read;
       }
