@@ -17,7 +17,7 @@ export interface SessionHook {
   /**
    * Hook incoming data
    */
-  onData: (method: string, data: DefaultReq, push: boolean) => void;
+  onData: (method: string, data: DefaultRes, push: boolean) => void;
 
   /**
    * Hook command requests

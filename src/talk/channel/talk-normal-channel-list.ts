@@ -94,6 +94,8 @@ export class TalkNormalChannelList
       chatStoreRes.value
     );
 
+    this._map.set(strId, talkChannel);
+
     if (infoStoreRes.shouldUpdate) {
       const res = await talkChannel.updateAll();
       if (!res.success) return res;
@@ -102,8 +104,6 @@ export class TalkNormalChannelList
     if (chatStoreRes.shouldUpdate) {
       await updateChatList(talkChannel);
     }
-
-    this._map.set(strId, talkChannel);
 
     return { success: true, status: KnownDataStatusCode.SUCCESS, result: talkChannel };
   }

@@ -184,6 +184,8 @@ export class TalkOpenChannelList
       chatStoreRes.value
     );
 
+    this._map.set(channel.channelId.toString(), talkChannel);
+
     if (infoStoreRes.shouldUpdate) {
       const res = await talkChannel.updateAll();
       if (!res.success) return res;
@@ -192,8 +194,6 @@ export class TalkOpenChannelList
     if (chatStoreRes.shouldUpdate) {
       await updateChatList(talkChannel);
     }
-
-    this._map.set(channel.channelId.toString(), talkChannel);
 
     return { success: true, status: KnownDataStatusCode.SUCCESS, result: talkChannel };
   }
