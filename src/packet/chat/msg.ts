@@ -35,13 +35,13 @@ export interface MsgRes {
   noSeen: boolean;
 
   /**
-   * Sender nickname
+   * Sender nickname (Only openchat)
    */
-  authorNickname: string;
+  authorNickname?: string;
 
   /**
-   * true if notification read(?)
+   * true if notification read(?) (Only openchat)
    */
-  notiRead: boolean;
+  notiRead?: boolean;
 
 }
