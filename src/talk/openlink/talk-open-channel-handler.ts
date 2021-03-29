@@ -72,13 +72,13 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
       if (lastInfo && info) {
         if (perm === OpenChannelUserPerm.OWNER) {
           const lastLink = this._store.info.openLink;
-          if (lastLink) {
-            this._session.getLatestOpenLink().then((res) => {
-              if (!res.success) return;
+          this._session.getLatestOpenLink().then((res) => {
+            if (!res.success) return;
 
-              this._callEvent(parentCtx, 'host_handover', this._channel, lastLink, res.result);
-            });
-          }
+            this._store.updateInfo({ openLink: res.result });
+
+            this._callEvent(parentCtx, 'host_handover', this._channel, lastLink || res.result, res.result);
+          });
         }
 
         this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);

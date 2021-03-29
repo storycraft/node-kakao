@@ -52,7 +52,7 @@ export interface ChannelEvent<T, U> {
     feed: ChatFeeds
   ) => void
 
-  // 유저가 방에서 나갈시 호출 (킥 미포함)
+  // 유저가 방에서 나갈시 호출
   'user_left': (
     feedChatlog: Readonly<TypedChatlog<KnownChatType.FEED>>,
     channel: T,
