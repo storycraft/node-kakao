@@ -6,6 +6,8 @@
 
 import { Long } from 'bson';
 import {
+  ChatFeed,
+  FeedFragment,
   feedFromChat,
   KnownChatType,
   KnownFeedType,
@@ -27,7 +29,7 @@ import { ChannelStore, UpdatableChannelDataStore } from '../../channel';
 import { OpenChannelEvents, OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { ChannelListUpdater } from '../channel/talk-channel-handler';
-import { OpenChannelUserInfo } from '../../user';
+import { ChannelUser, OpenChannelUserInfo } from '../../user';
 
 type TalkOpenChannelEvents<T> = OpenChannelEvents<T, OpenChannelUserInfo>;
 
@@ -70,13 +72,13 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
       if (lastInfo && info) {
         if (perm === OpenChannelUserPerm.OWNER) {
           const lastLink = this._store.info.openLink;
-          if (lastLink) {
-            this._session.getLatestOpenLink().then((res) => {
-              if (!res.success) return;
+          this._session.getLatestOpenLink().then((res) => {
+            if (!res.success) return;
 
-              this._callEvent(parentCtx, 'host_handover', this._channel, lastLink, res.result);
-            });
-          }
+            this._store.updateInfo({ openLink: res.result });
+
+            this._callEvent(parentCtx, 'host_handover', this._channel, lastLink || res.result, res.result);
+          });
         }
 
         this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
@@ -165,6 +167,46 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     this._chatListStore.addChat(chatLog).then();
   }
 
+  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>) {
+    const struct = data['chatLog'] as ChatlogStruct;
+    if (!this._channel.channelId.eq(struct.chatId)) return;
+
+    const chatLog = structToChatlog(struct);
+
+    // TODO: The event should be called whatever the chat is valid or not.
+    if (chatLog.type === KnownChatType.FEED) {
+      const feed = feedFromChat(chatLog);
+
+      let userList: ChannelUser[];
+      if ('member' in feed) {
+        userList = [ (feed as ChatFeed & FeedFragment.Member).member ];
+      } else if ('members' in feed) {
+        userList = (feed as ChatFeed & FeedFragment.MemberList).members;
+      } else {
+        userList = [];
+      }
+
+      this._session.getLatestUserInfo(...userList).then((usersRes) => {
+        if (!usersRes.success) return;
+
+        for (const user of usersRes.result) {
+          this._store.updateUserInfo(user, user);
+
+          this._callEvent(
+              parentCtx,
+              'user_join',
+              chatLog,
+              this._channel,
+              user,
+              feed,
+          );
+        }
+      });
+    }
+
+    this._chatListStore.addChat(chatLog).then();
+  }
+
   pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>): void {
     switch (method) {
       case 'SYNCMEMT':
@@ -178,6 +220,9 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
         break;
       case 'SYNCEVENT':
         this._chatEventHandler(data as DefaultRes & SyncEventRes, parentCtx);
+        break;
+      case 'NEWMEM':
+        this._userJoinHandler(data, parentCtx);
         break;
       case 'LNKDELETED':
         this._channelLinkDeletedHandler(data, parentCtx);

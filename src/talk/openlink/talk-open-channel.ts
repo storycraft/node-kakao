@@ -77,14 +77,16 @@ export class TalkOpenChannel
       store,
       _chatListStore
     );
+
+    const openSession = new TalkOpenChannelSession(this, session);
     this._openChannelSession = new TalkOpenChannelDataSession(
       session.clientUser,
-      new TalkOpenChannelSession(this, session),
+      openSession,
       store
     );
 
     this._handler = new TalkChannelHandler(this, this, store, _chatListStore);
-    this._openHandler = new TalkOpenChannelHandler(this, this._openChannelSession, this, store, _chatListStore);
+    this._openHandler = new TalkOpenChannelHandler(this, openSession, this, store, _chatListStore);
   }
 
   get clientUser(): Readonly<ChannelUser> {

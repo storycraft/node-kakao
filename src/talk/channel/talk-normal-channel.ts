@@ -71,16 +71,18 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
       store,
       _chatListStore
     );
+
+    const normalSession = new TalkNormalChannelSession(this, session);
     this._normalChannelSession = new TalkNormalChannelDataSession(
       session.clientUser,
-      new TalkNormalChannelSession(this, session),
+      normalSession,
       store
     );
 
     this._handler = new TalkChannelHandler(this, this, store, _chatListStore);
     this._normalHandler = new TalkNormalChannelHandler(
       this,
-      this._normalChannelSession,
+      normalSession,
       this,
       store,
       _chatListStore

@@ -13,8 +13,10 @@ import {
   UpdatableChannelDataStore
 } from '../../channel';
 import {
+  ChatFeed,
   DeleteAllFeed,
   DELETED_MESSAGE_OFFSET,
+  FeedFragment,
   feedFromChat,
   KnownChatType,
   KnownFeedType,
@@ -61,6 +63,13 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     if (!this._channel.channelId.equals(msgData.chatId)) return;
 
     const chatLog = structToChatlog(msgData.chatLog);
+
+    if (msgData.authorNickname) {
+      const userInfo = this._store.getUserInfo(chatLog.sender);
+      if (userInfo && userInfo.nickname !== msgData.authorNickname) {
+        this._store.updateUserInfo(chatLog.sender, { nickname: msgData.authorNickname });
+      }
+    }
 
     this._callEvent(
       parentCtx,
@@ -140,22 +149,30 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
     const chatLog = structToChatlog(struct);
-    const user = this._store.getUserInfo(chatLog.sender);
-    if (!user) return;
 
-    this._store.removeUser(chatLog.sender);
+    // TODO: The event should be called whatever the chat is valid or not.
+    if (chatLog.type === KnownChatType.FEED) {
+      const feed = feedFromChat(chatLog);
 
-    if (chatLog.type !== KnownChatType.FEED) return;
-    const feed = feedFromChat(chatLog);
-
-    this._callEvent(
-      parentCtx,
-      'user_left',
-      chatLog,
-      this._channel,
-      user,
-      feed,
-    );
+      if ('member' in feed) {
+        const memberFeed = feed as ChatFeed & FeedFragment.Member;
+  
+        const user = this._store.getUserInfo(memberFeed.member);
+    
+        if (user) {
+          this._store.removeUser(user);
+  
+          this._callEvent(
+            parentCtx,
+            'user_left',
+            chatLog,
+            this._channel,
+            user,
+            feed,
+          );
+        }
+      }
+    }
 
     this._chatListStore.addChat(chatLog).then();
 
