@@ -29,7 +29,7 @@ import { ChannelStore, UpdatableChannelDataStore } from '../../channel';
 import { OpenChannelEvents, OpenChannelListEvents } from '../event';
 import { Managed } from '../managed';
 import { ChannelListUpdater } from '../channel/talk-channel-handler';
-import { OpenChannelUserInfo } from '../../user';
+import { ChannelUser, OpenChannelUserInfo } from '../../user';
 
 type TalkOpenChannelEvents<T> = OpenChannelEvents<T, OpenChannelUserInfo>;
 
@@ -177,24 +177,31 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     if (chatLog.type === KnownChatType.FEED) {
       const feed = feedFromChat(chatLog);
 
+      let userList: ChannelUser[];
       if ('member' in feed) {
-        this._session.getLatestUserInfo((feed as ChatFeed & FeedFragment.Member).member).then((usersRes) => {
-          if (!usersRes.success) return;
-          
-          for (const user of usersRes.result) {
-            this._store.updateUserInfo(user, user);
-    
-            this._callEvent(
-                parentCtx,
-                'user_join',
-                chatLog,
-                this._channel,
-                user,
-                feed,
-            );
-          }
-        });
+        userList = [ (feed as ChatFeed & FeedFragment.Member).member ];
+      } else if ('members' in feed) {
+        userList = (feed as ChatFeed & FeedFragment.MemberList).members;
+      } else {
+        userList = [];
       }
+
+      this._session.getLatestUserInfo(...userList).then((usersRes) => {
+        if (!usersRes.success) return;
+
+        for (const user of usersRes.result) {
+          this._store.updateUserInfo(user, user);
+
+          this._callEvent(
+              parentCtx,
+              'user_join',
+              chatLog,
+              this._channel,
+              user,
+              feed,
+          );
+        }
+      });
     }
 
     this._chatListStore.addChat(chatLog).then();
