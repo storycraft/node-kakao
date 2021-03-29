@@ -10,12 +10,12 @@ import {
   NormalChannelSession,
   UpdatableChannelDataStore
 } from '../../channel';
-import { feedFromChat, KnownChatType, UpdatableChatListStore } from '../../chat';
+import { ChatFeed, FeedFragment, feedFromChat, KnownChatType, UpdatableChatListStore } from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { ChannelEvents } from '../event';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 import { DefaultRes } from '../../request';
-import { NormalChannelUserInfo } from '../../user';
+import { ChannelUser, NormalChannelUserInfo } from '../../user';
 import { Managed } from '../managed';
 
 type TalkNormalChannelEvents<T extends Channel> = ChannelEvents<T, NormalChannelUserInfo>;
@@ -48,25 +48,37 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
     const chatLog = structToChatlog(struct);
-    if (chatLog.type !== KnownChatType.FEED) return;
 
-    this._session.getLatestUserInfo(chatLog.sender).then((usersRes) => {
-      if (!usersRes.success) return;
-      
-      for (const user of usersRes.result) {
-        this._store.updateUserInfo(user, user);
-        const feed = feedFromChat(chatLog);
+    // TODO: The event should be called whatever the chat is valid or not.
+    if (chatLog.type === KnownChatType.FEED) {
+      const feed = feedFromChat(chatLog);
 
-        this._callEvent(
-            parentCtx,
-            'user_join',
-            chatLog,
-            this._channel,
-            user,
-            feed,
-        );
+      let userList: ChannelUser[];
+      if ('member' in feed) {
+        userList = [ (feed as ChatFeed & FeedFragment.Member).member ];
+      } else if ('members' in feed) {
+        userList = (feed as ChatFeed & FeedFragment.MemberList).members;
+      } else {
+        userList = [];
       }
-    });
+
+      this._session.getLatestUserInfo(...userList).then((usersRes) => {
+        if (!usersRes.success) return;
+        
+        for (const user of usersRes.result) {
+          this._store.updateUserInfo(user, user);
+  
+          this._callEvent(
+              parentCtx,
+              'user_join',
+              chatLog,
+              this._channel,
+              user,
+              feed,
+          );
+        }
+      });
+    }
 
     this._chatListStore.addChat(chatLog).then();
   }

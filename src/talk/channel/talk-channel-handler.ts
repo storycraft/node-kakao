@@ -150,7 +150,7 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
 
     const chatLog = structToChatlog(struct);
 
-    // TODO: The event should be called whaatever the chat is valid or not.
+    // TODO: The event should be called whatever the chat is valid or not.
     if (chatLog.type === KnownChatType.FEED) {
       const feed = feedFromChat(chatLog);
 
