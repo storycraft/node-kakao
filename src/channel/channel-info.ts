@@ -9,6 +9,7 @@ import { Chatlog } from '../chat';
 import { DisplayUserInfo } from '../user';
 import { Channel } from './channel';
 import { ChannelType } from './channel-type';
+import { ChannelMetaType } from './meta';
 
 export interface ChannelMeta {
 
@@ -26,7 +27,7 @@ export interface SetChannelMeta extends ChannelMeta {
 
 }
 
-export type ChannelMetaMap = Record<ChannelType, SetChannelMeta>
+export type ChannelMetaMap = Record<ChannelMetaType, SetChannelMeta>
 
 /**
  * Common channel info
