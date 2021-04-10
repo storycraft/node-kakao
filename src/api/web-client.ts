@@ -14,7 +14,7 @@ import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './hea
 
 export type RequestHeader = Record<string, string>;
 export type RequestMethod = 'GET' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'POST' | 'PUT' | 'PATCH' | 'LINK' | 'UNLINK';
-export type FileRequestData = { value: ArrayBuffer, options: { filename: string, contentType?: string } };
+export type FileRequestData = { value: Uint8Array, options: { filename: string, contentType?: string } };
 export type RequestForm = { [key: string]: FileRequestData | number | string | undefined | null | boolean | Long };
 
 /**
