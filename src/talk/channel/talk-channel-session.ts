@@ -416,17 +416,21 @@ export class TalkChannelSession implements ChannelSession {
         offset,
 
         async finish() {
+          let result: CommandResult<Chatlog> = { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
           for await (const { method, data } of session.listen()) {
             if (method === 'COMPLETE') {
-              const chatlog = structToChatlog(data['chatLog'] as ChatlogStruct);
-              mediaStream.close();
-              return { status: data.status, success: data.status === KnownDataStatusCode.SUCCESS, result: chatlog };
+              if (data.status === KnownDataStatusCode.SUCCESS) {
+                const chatlog = structToChatlog(data['chatLog'] as ChatlogStruct);
+                result = { status: data.status, success: true, result: chatlog };
+              }
+
+              break;
             }
           }
 
           if (!mediaStream.ended) mediaStream.close();
 
-          return { status: KnownDataStatusCode.OPERATION_DENIED, success: false };
+          return result;
         }
       }
     };
