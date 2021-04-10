@@ -57,7 +57,7 @@ export class TalkChannelSession implements ChannelSession {
     return this._session;
   }
 
-  async sendChat(chat: Chat | string): AsyncCommandResult<Chatlog> {
+  async sendChat(chat: Chat | string, noSeen = true): AsyncCommandResult<Chatlog> {
     if (typeof chat === 'string') {
       chat = { type: KnownChatType.TEXT, text: chat } as Chat;
     }
@@ -66,7 +66,7 @@ export class TalkChannelSession implements ChannelSession {
       'chatId': this._channel.channelId,
       'msgId': ++this.currentMsgId,
       'type': chat.type,
-      'noSeen': true,
+      'noSeen': noSeen,
     };
 
     if (chat.text) {
@@ -99,12 +99,12 @@ export class TalkChannelSession implements ChannelSession {
     }
   }
 
-  async forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
+  async forwardChat(chat: Chat, noSeen = true): AsyncCommandResult<Chatlog> {
     const data: DefaultReq = {
       'chatId': this._channel.channelId,
       'msgId': ++this.currentMsgId,
       'type': chat.type,
-      'noSeen': true,
+      'noSeen': noSeen,
     };
 
     if (chat.text) {

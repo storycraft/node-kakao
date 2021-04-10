@@ -34,8 +34,9 @@ export interface ChannelSession {
   * Perform WRITE command.
   *
   * @param chat
+  * @param {boolean} [noSeen=true] true if chat should be send without read
   */
-  sendChat(chat: Chat | string): AsyncCommandResult<Chatlog>;
+  sendChat(chat: Chat | string, noSeen?: boolean): AsyncCommandResult<Chatlog>;
 
   /**
    * Forward media chat to channel.
@@ -44,8 +45,9 @@ export interface ChannelSession {
    * Perform FORWARD command.
    *
    * @param chat
+   * @param {boolean} [noSeen=true] true if chat should be send without read
    */
-  forwardChat(chat: Chat): AsyncCommandResult<Chatlog>;
+  forwardChat(chat: Chat, noSeen?: boolean): AsyncCommandResult<Chatlog>;
 
   /**
    * Delete chat from server.
