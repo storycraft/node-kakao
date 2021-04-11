@@ -86,8 +86,6 @@ export class TalkClient
   }
 
   get channelList(): TalkChannelList {
-    if (!this.logon) throw new Error('Cannot access without logging in');
-
     return this._channelList;
   }
 
@@ -98,8 +96,6 @@ export class TalkClient
   }
 
   get blockList(): TalkBlockSession {
-    if (!this.logon) throw new Error('Cannot access without logging in');
-
     return this._blockList;
   }
 
