@@ -5,18 +5,9 @@
  */
 
 import { Long } from 'bson';
-import { ChannelDataStruct } from '../struct/channel';
+import { LChatListRes } from './lchat-list';
 
-export interface LoginListRes {
-  chatDatas: ChannelDataStruct[];
-  lastChatId: Long;
-  lastTokenId: Long;
-  mcmRevision: number;
-  delChatIds: Long[];
-  kc: unknown[];
-  ltk: Long;
-  lbk: number;
-  eof: boolean;
+export interface LoginListRes extends LChatListRes {
   userId: Long;
   revision: number;
   revisionInfo: string;
