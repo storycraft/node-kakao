@@ -172,6 +172,8 @@ export class TalkClient
         break;
       }
     }
+
+    super.emit('push_packet', method, data);
   }
 
   /**

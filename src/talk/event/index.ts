@@ -20,6 +20,7 @@ import {
 import { InformedOpenLink, OpenLink, OpenLinkChannelUserInfo } from '../../openlink';
 import { KickoutType } from '../../packet/chat';
 import { RelayEventType } from '../../relay';
+import { DefaultRes } from '../../request';
 import { TalkChatData } from '../chat';
 
 export interface ChatEvent<T, U> {
@@ -142,6 +143,9 @@ export interface ClientEvent {
 
   // 서버에 의해 연결이 끊어졌을시 호출 (서버 변경 포함)
   'disconnected': (reason: KickoutType) => void;
+  
+  // 클라이언트가 푸시 패킷들을 받을 시 호출
+  'push_packet': (method: string, data: DefaultRes) => void;
 
   // 클라이언트 처리 에러.
   // 핸들링 되지 않을시 클라이언트 세션이 종료됨.
