@@ -19,11 +19,11 @@ const PASSWORD = process.env['accountPwd'] as string;
 
 const CLIENT = new TalkClient();
 
-// It usually triggered in 1 ~ 2 days depend on the server.
+// It is usually triggered in 1 ~ 2 days depend on the server.
 // So if you want to keep your bot or program running,
 // you should handle this event or the client will get disconnected after awhile.
 CLIENT.on('switch_server', () => {
-  // Refresh credential and login client.
+  // Refresh credential and relogin client.
   login().then(() => {
     console.log('Server switched!');
   });
