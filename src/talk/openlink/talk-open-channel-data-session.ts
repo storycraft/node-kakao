@@ -130,7 +130,6 @@ export class TalkOpenChannelDataSession implements OpenChannelSession {
     if (infoRes.success) {
       const result = infoRes.result as OpenChannelUserInfo[];
 
-      this._store.clearUserList();
       result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
@@ -141,7 +140,6 @@ export class TalkOpenChannelDataSession implements OpenChannelSession {
     const infoRes = await this._channelSession.getAllLatestUserInfo();
 
     if (infoRes.success) {
-      this._store.clearUserList();
       infoRes.result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
