@@ -35,3 +35,4 @@ export * from './write';
 export * from './invoice';
 export * from './create-openlink';
 export * from './update-openlink';
+export * from './lchat-list';

@@ -32,8 +32,8 @@ export class TalkChannelDataSession implements ChannelSession {
     return this._store;
   }
 
-  async sendChat(chat: string | Chat): AsyncCommandResult<Chatlog> {
-    const res = await this._channelSession.sendChat(chat);
+  async sendChat(chat: string | Chat, noSeen?: boolean): AsyncCommandResult<Chatlog> {
+    const res = await this._channelSession.sendChat(chat, noSeen);
 
     if (res.success) {
       await this._chatListStore.addChat(res.result);
@@ -43,8 +43,8 @@ export class TalkChannelDataSession implements ChannelSession {
     return res;
   }
 
-  async forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
-    const res = await this._channelSession.forwardChat(chat);
+  async forwardChat(chat: Chat, noSeen?: boolean): AsyncCommandResult<Chatlog> {
+    const res = await this._channelSession.forwardChat(chat, noSeen);
 
     if (res.success) {
       await this._chatListStore.addChat(res.result);

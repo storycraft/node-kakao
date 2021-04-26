@@ -113,7 +113,6 @@ export class TalkNormalChannelDataSession implements NormalChannelSession {
     if (infoRes.success) {
       const result = infoRes.result as NormalChannelUserInfo[];
 
-      this._store.clearUserList();
       result.forEach((info) => this._store.updateUserInfo(info, info));
     }
 
@@ -124,7 +123,6 @@ export class TalkNormalChannelDataSession implements NormalChannelSession {
     const infoRes = await this._channelSession.getAllLatestUserInfo();
 
     if (infoRes.success) {
-      this._store.clearUserList();
       infoRes.result.map((info) => this._store.updateUserInfo(info, info));
     }
 

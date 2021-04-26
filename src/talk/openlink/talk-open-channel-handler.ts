@@ -90,13 +90,17 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     pfData: DefaultRes & SyncLinkPfRes,
     parentCtx: EventContext<TalkOpenChannelEvents<T>>
   ) {
-    if (!this._channel.channelId.eq(pfData.c) && !this._channel.linkId.eq(pfData.li)) return;
+    if (
+      pfData.c && !this._channel.channelId.eq(pfData.c) ||
+      pfData.li && !this._channel.linkId.eq(pfData.li)
+    ) return;
 
-    const updated = structToOpenLinkChannelUserInfo(pfData.olu);
-    const last = this._store.getUserInfo(updated);
+    const last = this._store.getUserInfo(pfData.olu);
     if (!last) return;
 
-    this._store.updateUserInfo(updated, updated);
+    const updated = structToOpenLinkChannelUserInfo(pfData.olu);
+
+    this._store.updateUserInfo(last, updated);
 
     this._callEvent(
       parentCtx,

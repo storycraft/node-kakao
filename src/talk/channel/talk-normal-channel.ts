@@ -138,12 +138,12 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
     return this.store.getReaders(chat);
   }
 
-  sendChat(chat: string | Chat): AsyncCommandResult<Chatlog> {
-    return this._channelSession.sendChat(chat);
+  sendChat(chat: string | Chat, noSeen?: boolean): AsyncCommandResult<Chatlog> {
+    return this._channelSession.sendChat(chat, noSeen);
   }
 
-  forwardChat(chat: Chat): AsyncCommandResult<Chatlog> {
-    return this._channelSession.forwardChat(chat);
+  forwardChat(chat: Chat, noSeen?: boolean): AsyncCommandResult<Chatlog> {
+    return this._channelSession.forwardChat(chat, noSeen);
   }
 
   deleteChat(chat: ChatLogged): AsyncCommandResult {

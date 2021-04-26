@@ -12,12 +12,12 @@ export interface SyncLinkPfRes {
   /**
    * Channel id
    */
-  c: Long;
+  c?: Long;
 
   /**
    * Link id
    */
-  li: Long;
+  li?: Long;
 
   /**
    * Updated open link user
