@@ -15,7 +15,7 @@ npm i --save node-kakao
 > this implemention can stop working anytime.
 
 ## Warning
-Client can act differently unlike official client. Abusing this client can cause permanent service restriction.
+Abusing this client can cause permanent service restriction.
 
 ## Example
 Check `examples` folder. Examples are written in typescript.
