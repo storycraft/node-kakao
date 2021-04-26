@@ -8,7 +8,7 @@
  * This example relogin to keep session when the server request to switch server.
  */
 
-import { AuthApiClient, TalkClient, api } from '../src';
+import { AuthApiClient, TalkClient, api } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
