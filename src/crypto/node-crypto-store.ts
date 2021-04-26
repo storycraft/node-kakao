@@ -4,12 +4,6 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
-/*
- * Created on Thu Jan 28 2021
- *
- * Copyright (c) storycraft. Licensed under the MIT Licence.
- */
-
 import * as crypto from 'crypto';
 import { CryptoStore } from '.';
 
