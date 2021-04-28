@@ -114,8 +114,7 @@ export class LocoSession implements ConnectionSession {
     while (this._packetBuffer.length < 1 && await this._readQueued());
 
     const first = this._packetBuffer[0];
-
-    if (first.push) this._packetBuffer.shift();
+    if (first && first.push) this._packetBuffer.shift();
 
     return first;
   }
