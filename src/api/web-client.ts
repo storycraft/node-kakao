@@ -8,7 +8,7 @@ import { Long } from 'bson';
 import { WebApiConfig } from '../config';
 import { OAuthCredential } from '../oauth';
 import { DefaultRes } from '../request';
-import { JsonUtil } from '../util';
+import { TextDecoder, JsonUtil } from '../util';
 import { isNode, isDeno, isBrowser } from '../util/platform';
 import { fillAHeader, fillBaseHeader, fillCredential, getUserAgent } from './header-util';
 
