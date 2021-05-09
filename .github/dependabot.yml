@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  target-branch: dev
+  ignore:
+  - dependency-name: rollup
+    versions:
+    - 2.39.0
+    - 2.43.1
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.15.0
