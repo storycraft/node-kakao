@@ -42,7 +42,7 @@ export interface AccessDataStruct {
 
 export function structToLoginData(struct: AccessDataStruct, deviceUUID: string): LoginData {
   return {
-    userId: struct.userId,
+    userId: Long.fromValue(struct.userId),
 
     countryIso: struct.countryIso,
     countryCode: struct.countryCode,
