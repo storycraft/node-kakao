@@ -14,6 +14,7 @@ import { LChatListRes, LoginListRes } from '../../packet/chat';
 import { AsyncCommandResult, DefaultReq, DefaultRes, KnownDataStatusCode } from '../../request';
 import { ClientConfig } from '../../config';
 import { dataStructToNormalChannelInfo, dataStructToOpenChannelInfo } from '../../packet/struct'
+import { Long } from 'bson';
 
 export class TalkClientSession implements ClientSession {
   private _lastLoginRev: number;
@@ -41,6 +42,8 @@ export class TalkClientSession implements ClientSession {
       'ntype': config.netType,
       'MCCMNC': config.mccmnc,
       'revision': this._lastLoginRev,
+      'lastTokenId': Long.ZERO,
+      'lbk': 0,
       'rp': null,
       'bg': false,
     };
