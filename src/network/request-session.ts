@@ -10,6 +10,7 @@ import { BsonDataCodec } from '../packet';
 import { PacketAssembler } from './packet-assembler';
 import { BiStream } from '../stream';
 import { LocoPacketCodec } from './loco-packet-codec';
+import { Long } from 'bson';
 
 export interface CommandSession {
 
@@ -51,7 +52,7 @@ export interface PacketResData {
  */
 export interface SessionFactory {
 
-  connect(config: SessionConfig): AsyncCommandResult<ConnectionSession>;
+  connect(userId: Long, config: SessionConfig): AsyncCommandResult<ConnectionSession>;
 
 }
 

@@ -21,7 +21,7 @@ export interface LoginData extends OAuthCredential {
   /**
    * User id
    */
-  userId: number | Long;
+  userId: Long;
 
   /**
    * Country iso

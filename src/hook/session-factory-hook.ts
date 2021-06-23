@@ -4,6 +4,7 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from 'bson';
 import { SessionConfig } from '../config';
 import { ConnectionSession, PacketResData, SessionFactory } from '../network/request-session';
 import { DefaultReq, AsyncCommandResult, DefaultRes } from '../request';
@@ -36,8 +37,8 @@ export class HookedSessionFactory implements SessionFactory {
 
   }
 
-  async connect(config: SessionConfig): AsyncCommandResult<ConnectionSession> {
-    const sessionRes = await this._factory.connect(config);
+  async connect(userId: Long, config: SessionConfig): AsyncCommandResult<ConnectionSession> {
+    const sessionRes = await this._factory.connect(userId, config);
     if (!sessionRes.success) return sessionRes;
 
     return { status: sessionRes.status, success: true, result: new InspectSession(sessionRes.result, this._hook) };

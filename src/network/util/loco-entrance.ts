@@ -46,7 +46,7 @@ export async function getBookingData(stream: BiStream, config: BookingConfig): A
 export async function getCheckinData(
   stream: BiStream,
   config: CheckinConfig,
-  userId?: Long,
+  userId: Long,
 ): AsyncCommandResult<CheckinRes> {
   const checkinSession = new LocoSession(stream);
 
@@ -58,11 +58,8 @@ export async function getCheckinData(
     'ntype': config.netType,
     'useSub': config.subDevice,
     'os': config.agent,
+    userId
   };
-
-  if (userId) {
-    req['userId'] = userId;
-  }
 
   const res = await checkinSession.request<CheckinRes>('CHECKIN', req);
   checkinSession.stream.close();

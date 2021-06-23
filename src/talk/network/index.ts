@@ -18,6 +18,7 @@ import { AsyncCommandResult, KnownDataStatusCode } from '../../request';
 import * as NetSocket from '../../network/socket';
 import { GetConfRes } from '../../packet/booking';
 import { CheckinRes } from '../../packet/checkin';
+import { Long } from 'bson';
 
 /**
  * Create loco stream by performing booking and checkin.
@@ -33,7 +34,7 @@ export class TalkSessionFactory implements SessionFactory {
     return getBookingData(bookingStream, config);
   }
 
-  async getCheckin(config: CheckinConfig): AsyncCommandResult<CheckinRes> {
+  async getCheckin(userId: Long, config: CheckinConfig): AsyncCommandResult<CheckinRes> {
     let checkinStream;
     const checkinCrypto = await newCryptoStore(config.locoPEMPublicKey);
     try {
@@ -56,11 +57,11 @@ export class TalkSessionFactory implements SessionFactory {
       }), checkinCrypto);
     }
 
-    return getCheckinData(checkinStream, config);
+    return getCheckinData(checkinStream, config, userId);
   }
 
-  async connect(config: SessionConfig): AsyncCommandResult<ConnectionSession> {
-    const checkinRes = await this.getCheckin(config);
+  async connect(userId: Long, config: SessionConfig): AsyncCommandResult<ConnectionSession> {
+    const checkinRes = await this.getCheckin(userId, config);
     if (!checkinRes.success) return checkinRes;
 
     const locoStream = new LocoSecureLayer(await NetSocket.createTCPSocket({

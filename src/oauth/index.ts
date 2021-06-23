@@ -4,7 +4,11 @@
  * Copyright (c) storycraft. Licensed under the MIT Licence.
  */
 
+import { Long } from "bson";
+
 export interface OAuthCredential {
+
+  readonly userId: Long;
 
   readonly deviceUUID: string;
 

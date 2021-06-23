@@ -59,6 +59,7 @@ export class OAuthApiClient {
       result: {
         type: res['token_type'] as string,
         credential: {
+          userId: credential.userId,
           deviceUUID: credential.deviceUUID,
           accessToken: res['access_token'] as string,
           refreshToken: res['refresh_token'] as string

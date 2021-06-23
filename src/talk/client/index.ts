@@ -116,7 +116,7 @@ export class TalkClient
     if (this.logon) this.close();
 
     // Create session stream
-    const sessionRes = await this._sessionFactory.connect(this.configuration);
+    const sessionRes = await this._sessionFactory.connect(credential.userId, this.configuration);
     if (!sessionRes.success) return sessionRes;
     this._session = sessionRes.result;
 
