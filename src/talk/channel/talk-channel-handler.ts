@@ -145,8 +145,8 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
   }
 
   private _userLeftHandler(data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>) {
-    const struct = data['chatLog'] as ChatlogStruct;
-    if (!this._channel.channelId.eq(struct.chatId)) return;
+    const struct = data['chatLog'] as ChatlogStruct | undefined;
+    if (!struct || !this._channel.channelId.eq(struct.chatId)) return;
 
     const chatLog = structToChatlog(struct);
 
