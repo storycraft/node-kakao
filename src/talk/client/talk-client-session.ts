@@ -42,6 +42,8 @@ export class TalkClientSession implements ClientSession {
       'ntype': config.netType,
       'MCCMNC': config.mccmnc,
       'revision': this._lastLoginRev,
+      'chatIds': [],
+      'maxIds': [],
       'lastTokenId': Long.ZERO,
       'lbk': 0,
       'rp': null,
