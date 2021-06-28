@@ -7,25 +7,18 @@
 import { Long } from "bson";
 
 export interface OAuthCredential {
-
-  readonly userId: Long;
-
+  readonly userId: Pick<Long, "low" | "high" | "unsigned">;
   readonly deviceUUID: string;
-
   readonly accessToken: string;
   readonly refreshToken: string;
-
 }
 
 export interface OAuthInfo {
-
   /**
    * Token type
    */
   type: string;
-
   credential: OAuthCredential;
-
   /**
    * OAuth token expires (secs)
    */
@@ -36,7 +29,5 @@ export interface OAuthInfo {
  * Provides oauth credential data
  */
 export interface CredentialProvider {
-
   getCredential(): OAuthCredential;
-
 }
