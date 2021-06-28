@@ -17,7 +17,6 @@ import { Win32XVCProvider, XVCProvider } from './xvc';
  * Login data
  */
 export interface LoginData extends OAuthCredential {
-
   /**
    * User id
    */
@@ -52,7 +51,12 @@ export interface LoginData extends OAuthCredential {
    * Story URL
    */
   storyURL: string;
-
+  accessToken: string;
+  refreshToken: string;
+  /**
+   * UUID for identifying device the account is logged in 
+   */
+  deviceUUID: string;
   /**
    * OAuth token type
    */
