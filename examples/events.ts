@@ -7,13 +7,16 @@
 /*
  * This example contains listening various type of events.
  */
-
+import { Long } from "bson";
 import { TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
 const ACCESS_TOKEN = process.env['accessToken'] as string;
 const REFRESH_TOKEN = process.env['refreshToken'] as string;
+// Assume the env var $userId is stringified json like an example below.
+// '{"low":153460796,"high":0,"unsigned":false}'
+const USER_ID = Long.fromValue(JSON.parse(process.env["userId"] as string)); 
 
 const CLIENT = new TalkClient();
 
@@ -94,9 +97,10 @@ CLIENT.on('chat_event', (channel, author, type, count, chat) => {
 
 async function main() {
   const res = await CLIENT.login({
+    userId: USER_ID,
     deviceUUID: DEVICE_UUID,
     accessToken: ACCESS_TOKEN,
-    refreshToken: REFRESH_TOKEN
+    refreshToken: REFRESH_TOKEN,
   });
   if (!res.success) throw new Error(`Login failed with status: ${res.status}`);
 
