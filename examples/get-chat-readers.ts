@@ -17,7 +17,7 @@ const ACCESS_TOKEN = process.env['accessToken'] as string;
 const REFRESH_TOKEN = process.env['refreshToken'] as string;
 // Assume the env var $userId is stringified json like an example below.
 // '{"low":153460796,"high":0,"unsigned":false}'
-const USER_ID = Long.fromValue(JSON.parse(process.env.['userId'] as string)) 
+const USER_ID = Long.fromValue(JSON.parse(process.env.['userId'] as string)); 
 
 const CLIENT = new TalkClient();
 
