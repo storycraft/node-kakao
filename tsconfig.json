@@ -8,20 +8,16 @@
     "moduleResolution": "node",
     "target": "ES2018",
     "noImplicitAny": true,
+    "declaration": true,
     "removeComments": false,
     "strict": true,
     "pretty": false,
     "sourceMap": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.spec.ts",
-    "**/node_modules/*"
-  ]
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "node-kakao": ["src"]
+    },
+  }
 }

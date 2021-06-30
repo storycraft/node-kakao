@@ -21,13 +21,13 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
+    "test": "mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "node -r ts-node/register loco-test.ts",
     "build": "npm run build:node & npm run build:esm",
-    "build:node": "./node_modules/.bin/tsc --outDir dist --declarationDir dist --declaration true",
-    "build:esm": "./node_modules/.bin/rollup -c",
-    "docs": "./node_modules/.bin/typedoc src",
-    "fix": "./node_modules/.bin/eslint --fix ./src/**/*",
+    "build:node": "tsc -p tsconfig.build.json --outDir dist --declarationDir dist",
+    "build:esm": "rollup -c",
+    "docs": "typedoc src",
+    "fix": "eslint --fix ./src/**/*",
     "prepublishOnly": "npm run fix && npm run test && npm run build"
   },
   "keywords": [

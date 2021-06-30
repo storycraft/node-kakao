@@ -8,27 +8,14 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 
-const plugins = [
-  nodeResolve({
-    preferBuiltins: true,
-    browser: true
-  }),
-  commonjs(),
-  typescript({
-    module: 'ESNext',
-    declaration: false,
-    removeComments: true,
-  }),
-];
-
 /** @type {import('rollup').InputOptions} */
 const opts = {
   input: 'src/index.ts',
   external: [
-    // Excluded
+    // list of modules to exclude
     'axios',
     'form-data',
-    'promise-socket'
+    'promise-socket',
   ],
   shimMissingExports: true,
   output: [
@@ -37,10 +24,22 @@ const opts = {
       format: 'esm',
       sourcemap: true,
       preserveModules: true,
-      preserveModulesRoot: 'src'
+      preserveModulesRoot: 'src',
     },
   ],
-  plugins,
+  plugins: [
+    nodeResolve({
+      preferBuiltins: true,
+      browser: true,
+    }),
+    commonjs(),
+    typescript({
+      tsconfig: './tsconfig.build.json',
+      module: 'ESNext',
+      declaration: false,
+      removeComments: true,
+    }),
+  ],
 };
 
 export default opts;
