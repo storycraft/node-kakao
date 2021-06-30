@@ -46,6 +46,8 @@
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.0",
+    "@swc/core": "^1.2.62",
+    "@swc/helpers": "^0.2.12",
     "@types/bson": "^4.0.0",
     "@types/chai": "^4.2.3",
     "@types/lossless-json": "^1.0.0",
@@ -61,6 +63,7 @@
     "mocha": "^9.0.0",
     "rollup": "^2.38.1",
     "ts-node": "^10.0.0",
+    "tsconfig-paths": "^3.9.0",
     "tslib": "^2.1.0",
     "typedoc": "^0.21.0",
     "typescript": "^4.1.3"
@@ -78,5 +81,12 @@
     "lossless-json": "^1.0.3",
     "node-forge": "^0.10.0",
     "promise-socket": "^7.0.0"
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc-experimental",
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }
