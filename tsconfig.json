@@ -19,5 +19,12 @@
     "paths": {
       "node-kakao": ["src"]
     },
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc-experimental",
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }

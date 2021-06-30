@@ -81,12 +81,5 @@
     "lossless-json": "^1.0.3",
     "node-forge": "^0.10.0",
     "promise-socket": "^7.0.0"
-  },
-  "ts-node": {
-    "transpileOnly": true,
-    "transpiler": "ts-node/transpilers/swc-experimental",
-    "require": [
-      "tsconfig-paths/register"
-    ]
-  }
+  }  
 }
