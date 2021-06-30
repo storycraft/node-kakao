@@ -16,7 +16,9 @@ const PASSWORD = process.env['accountPwd'] as string;
 // You can use util module and call randomDeviceUUID function to generate random device uuid
 //
 // import { util } from '../node-kakao';
-// const randomUUID = util.randomDeviceUUID();
+// const randomUUID = util.randomAndroidSubDeviceUUID();
+// or
+// const randomUUID = util.randomWin32DeviceUUID();
 const DEVICE_UUID = process.env['deviceUUID'] as string;
 
 // This can be changed and official client will show latest name used.
