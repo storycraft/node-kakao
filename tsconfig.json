@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "node-kakao": ["src"]
+      "node-kakao": ["src"],
+      "node-kakao/*": ["src/*"],
     },
   },
   "ts-node": {
