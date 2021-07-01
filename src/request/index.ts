@@ -81,14 +81,14 @@ export interface CommandResultFailed extends RootCommandResult {
 
 }
 
-interface CommandResultDoneValue<T> extends RootCommandResult {
+export interface CommandResultDoneValue<T> extends RootCommandResult {
 
   readonly success: true;
   readonly result: T;
 
 }
 
-interface CommandResultDoneVoid extends RootCommandResult {
+export interface CommandResultDoneVoid extends RootCommandResult {
 
   readonly success: true;
 
