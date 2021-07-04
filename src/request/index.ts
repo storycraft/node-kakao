@@ -52,26 +52,28 @@ export enum KnownDataStatusCode {
 
 export type DataStatusCode = KnownDataStatusCode | number;
 
+export interface ResponseState {
+
+  status: DataStatusCode;
+
+}
+
 export interface DefaultReq {
 
   [key: string]: unknown;
 
 }
 
-export interface DefaultRes {
-
-  status: DataStatusCode;
-  [key: string]: unknown;
+export interface DefaultRes extends DefaultReq, ResponseState {
 
 }
 
 /**
  * Wrapped request response.
  */
-interface RootCommandResult {
+interface RootCommandResult extends ResponseState {
 
   readonly success: boolean;
-  readonly status: DataStatusCode;
 
 }
 
@@ -94,6 +96,6 @@ interface CommandResultDoneVoid extends RootCommandResult {
 
 }
 
-export type CommandResultDone<T> = (T extends void ? CommandResultDoneVoid : CommandResultDoneValue<T>);
+export type CommandResultDone<T = void> = (T extends void ? CommandResultDoneVoid : CommandResultDoneValue<T>);
 export type CommandResult<T = void> = CommandResultFailed | CommandResultDone<T>;
 export type AsyncCommandResult<T = void> = Promise<CommandResult<T>>;

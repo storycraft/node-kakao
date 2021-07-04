@@ -43,7 +43,7 @@ export class TalkOpenChannelDataSession implements OpenChannelSession {
     return this._store;
   }
 
-  async markRead(chat: ChatLogged): Promise<{ success: boolean, status: number }> {
+  async markRead(chat: ChatLogged): AsyncCommandResult {
     const res = await this._channelSession.markRead(chat);
 
     if (res.success) {
@@ -160,7 +160,7 @@ export class TalkOpenChannelDataSession implements OpenChannelSession {
     chat: ChatLoggedType,
     type: RelayEventType,
     count: number,
-  ): Promise<{ status: number, success: boolean }> {
+  ): AsyncCommandResult {
     return this._channelSession.createEvent(chat, type, count);
   }
 
@@ -214,7 +214,7 @@ export class TalkOpenChannelDataSession implements OpenChannelSession {
     return this._channelSession.blockUser(user);
   }
 
-  react(flag: boolean): Promise<{ status: number, success: boolean }> {
+  react(flag: boolean): AsyncCommandResult {
     return this._channelSession.react(flag);
   }
 

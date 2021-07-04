@@ -150,7 +150,7 @@ export class TalkOpenChannel
     return this._channelSession.forwardChat(chat, noSeen);
   }
 
-  deleteChat(chat: ChatLogged): Promise<{ success: boolean, status: number }> {
+  deleteChat(chat: ChatLogged): AsyncCommandResult {
     return this._channelSession.deleteChat(chat);
   }
 
