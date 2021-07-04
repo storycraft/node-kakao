@@ -8,20 +8,24 @@
     "moduleResolution": "node",
     "target": "ES2018",
     "noImplicitAny": true,
+    "declaration": true,
     "removeComments": false,
     "strict": true,
     "pretty": false,
     "sourceMap": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "node-kakao": ["src"],
+      "node-kakao/*": ["src/*"],
+    },
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.spec.ts",
-    "**/node_modules/*"
-  ]
+  "ts-node": {
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc-experimental",
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  }
 }
