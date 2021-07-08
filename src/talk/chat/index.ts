@@ -6,10 +6,11 @@
 
 export * from './store';
 
+import { ChannelDataStore } from '../../channel/store';
 import { Chatlog, getOriginalType, isDeletedChat } from '../../chat';
 import { MentionStruct } from '../../chat/attachment';
 import { MediaKeyComponent } from '../../media';
-import { ChannelUser, ChannelUserInfo } from '../../user';
+import { ChannelUser } from '../../user';
 import { TalkChannel } from '../channel';
 
 /**
@@ -118,10 +119,12 @@ export class TalkChatData {
    * Get channel user info from channel.
    * this is equivalent of calling channel.getUserInfo(data.chat.sender);
    *
-   * @param {TalkChannel} channel
-   * @return {ChannelUserInfo | undefined}
+   * @template T
+   * @template U
+   * @param {ChannelDataStore<T, U>} channel
+   * @return {U | undefined}
    */
-  getSenderInfo(channel: TalkChannel): ChannelUserInfo | undefined {
+  getSenderInfo<T, U>(channel: ChannelDataStore<T, U>): U | undefined {
     return channel.getUserInfo(this._chat.sender);
   }
 
