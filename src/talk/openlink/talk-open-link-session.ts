@@ -128,7 +128,7 @@ export class TalkOpenLinkSession implements OpenLinkSession {
     return { status: res.status, success: res.status === KnownDataStatusCode.SUCCESS };
   }
 
-  async react(link: OpenLinkComponent, flag: boolean): Promise<{ status: number, success: boolean }> {
+  async react(link: OpenLinkComponent, flag: boolean): AsyncCommandResult {
     const res = await this._session.request<JoinInfoRes>(
       'REACT',
       {

@@ -10,12 +10,14 @@
  */
 
 import { readFileSync } from 'fs';
+import { Long } from 'bson';
 import { AttachmentApi, AudioAttachment, ChatBuilder, ContactAttachment, KnownChatType, TalkClient } from 'node-kakao';
 
 // Supply env variables or replace to value.
 const DEVICE_UUID = process.env['deviceUUID'] as string;
 const ACCESS_TOKEN = process.env['accessToken'] as string;
 const REFRESH_TOKEN = process.env['refreshToken'] as string;
+const USER_ID = Long.fromValue(process.env['userId'] as string);
 
 const CLIENT = new TalkClient();
 
@@ -71,9 +73,10 @@ CLIENT.on('chat', async (data, channel) => {
 
 async function main() {
   const res = await CLIENT.login({
+    userId: USER_ID,
     deviceUUID: DEVICE_UUID,
     accessToken: ACCESS_TOKEN,
-    refreshToken: REFRESH_TOKEN
+    refreshToken: REFRESH_TOKEN,
   });
   if (!res.success) throw new Error(`Login failed with status: ${res.status}`);
 

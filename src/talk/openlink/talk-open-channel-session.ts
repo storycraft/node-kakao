@@ -143,7 +143,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
     return this._linkSession.removeKicked(this._channel, { ...user, kickedChannelId: this._channel.channelId });
   }
 
-  react(flag: boolean): Promise<{ status: number, success: boolean }> {
+  react(flag: boolean): AsyncCommandResult {
     return this._linkSession.react(this._channel, flag);
   }
 
@@ -179,7 +179,7 @@ export class TalkOpenChannelSession implements OpenChannelSession {
     chat: ChatLoggedType,
     type: RelayEventType,
     count: number,
-  ): Promise<{ status: number, success: boolean }> {
+  ): AsyncCommandResult {
     const res = await this._session.request(
       'RELAYEVENT',
       {

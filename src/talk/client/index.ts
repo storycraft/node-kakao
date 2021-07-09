@@ -232,14 +232,14 @@ export class TalkClient
           }
         }
       }
-    })().then(this.listenEnd.bind(this)).catch(this.onError.bind(this));
+    })().then(() => this.listenEnd()).catch((err) => this.onError(err));
   }
 
   private addPingHandler() {
     const pingHandler = () => {
       if (!this.logon) return;
 
-      this.session.request('PING', {});
+      this.session.request('PING', {}).catch((err) => this.onError(err));
       // Fix weird nodejs typing
       this._pingTask = setTimeout(pingHandler, this.pingInterval) as unknown as number;
     };
