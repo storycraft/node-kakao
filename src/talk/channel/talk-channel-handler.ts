@@ -208,25 +208,29 @@ export class TalkChannelHandler<T extends Channel> implements Managed<TalkChanne
     }).then();
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelHandlerEvents<T>>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<TalkChannelHandlerEvents<T>>
+  ): Promise<void> {
     switch (method) {
       case 'MSG':
-        this._msgHandler(data as DefaultRes & MsgRes, parentCtx);
+        await this._msgHandler(data as DefaultRes & MsgRes, parentCtx);
         break;
       case 'FEED':
-        this._feedHandler(data, parentCtx);
+        await this._feedHandler(data, parentCtx);
         break;
       case 'DECUNREAD':
-        this._chatReadHandler(data as DefaultRes & DecunreadRes, parentCtx);
+        await this._chatReadHandler(data as DefaultRes & DecunreadRes, parentCtx);
         break;
       case 'CHGMETA':
-        this._metaChangeHandler(data as DefaultRes & ChgMetaRes, parentCtx);
+        await this._metaChangeHandler(data as DefaultRes & ChgMetaRes, parentCtx);
         break;
       case 'DELMEM':
-        this._userLeftHandler(data, parentCtx);
+        await this._userLeftHandler(data, parentCtx);
         break;
       case 'SYNCDLMSG':
-        this._msgDeleteHandler(data, parentCtx);
+        await this._msgDeleteHandler(data, parentCtx);
         break;
     }
   }
@@ -270,7 +274,11 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<ChannelListEvent<T>>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<ChannelListEvent<T>>
+  ): Promise<void> {
     switch (method) {
       case 'LEFT': {
         const leftData = data as DefaultRes & LeftRes;
@@ -291,15 +299,15 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
       case 'SYNCJOIN': {
         const joinData = data as DefaultRes & SyncJoinRes;
 
-        this._updater.addChannel({ channelId: joinData.c }).then((res) => {
-          if (!res.success) return;
-
+        const res = await this._updater.addChannel({ channelId: joinData.c });
+        if (res.success) {
           this._callEvent(
             parentCtx,
             'channel_join',
             res.result as T,
           );
-        });
+        }
+
         break;
       }
 

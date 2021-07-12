@@ -43,7 +43,7 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
     parentCtx.emit(event, ...args);
   }
 
-  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkNormalChannelEvents<T>>) {
+  private async _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkNormalChannelEvents<T>>) {
     const struct = data['chatLog'] as ChatlogStruct;
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
@@ -62,9 +62,9 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
         userList = [];
       }
 
-      this._session.getLatestUserInfo(...userList).then((usersRes) => {
-        if (!usersRes.success) return;
-        
+      const usersRes = await this._session.getLatestUserInfo(...userList);
+      
+      if (usersRes.success) {
         for (const user of usersRes.result) {
           this._store.updateUserInfo(user, user);
   
@@ -77,16 +77,20 @@ export class TalkNormalChannelHandler<T extends Channel> implements Managed<Talk
               feed,
           );
         }
-      });
+      }
     }
 
     this._chatListStore.addChat(chatLog).then();
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkNormalChannelEvents<T>>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<TalkNormalChannelEvents<T>>
+  ): Promise<void> {
     switch (method) {
       case 'NEWMEM':
-        this._userJoinHandler(data, parentCtx);
+        await this._userJoinHandler(data, parentCtx);
         break;
     }
   }

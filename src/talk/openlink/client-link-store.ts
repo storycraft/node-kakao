@@ -171,8 +171,8 @@ export class TalkClientLinkStore extends TypedEmitter<OpenLinkListEvents> implem
     return this._map.size;
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>): void {
-    this._linkHandler.pushReceived(method, data, parentCtx);
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>): Promise<void> {
+    return this._linkHandler.pushReceived(method, data, parentCtx);
   }
   
 }

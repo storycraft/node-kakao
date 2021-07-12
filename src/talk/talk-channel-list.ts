@@ -79,7 +79,7 @@ export class TalkChannelList
     return new ChainedIterator<TalkChannel>(normalIter, openIter);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelListEvents>): void {
+  async pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelListEvents>): Promise<void> {
     const ctx = new EventContext<TalkChannelListEvents>(this, parentCtx);
 
     if (method === 'MSG') {
@@ -92,21 +92,16 @@ export class TalkChannelList
           list = this._normal;
         }
 
-        list.addChannel({ channelId: msgData.chatId }).then((res) => {
-          if (!res.success) return;
+        const res = await list.addChannel({ channelId: msgData.chatId });
 
+        if (res.success) {
           ctx.emit('channel_added', res.result);
-
-          this._normal.pushReceived(method, data, ctx);
-          this._open.pushReceived(method, data, ctx);
-        });
-
-        return;
+        }
       }
     }
 
-    this._normal.pushReceived(method, data, ctx);
-    this._open.pushReceived(method, data, ctx);
+    await this._normal.pushReceived(method, data, ctx);
+    await this._open.pushReceived(method, data, ctx);
   }
 
   /**

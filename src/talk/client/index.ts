@@ -159,8 +159,8 @@ export class TalkClient
     }
   }
 
-  pushReceived(method: string, data: DefaultRes, ctx: EventContext<TalkClientEvents>): void {
-    this._channelList.pushReceived(method, data, ctx);
+  async pushReceived(method: string, data: DefaultRes, ctx: EventContext<TalkClientEvents>): Promise<void> {
+    await this._channelList.pushReceived(method, data, ctx);
 
     switch (method) {
       case 'KICKOUT': {
@@ -226,7 +226,7 @@ export class TalkClient
       for await (const { method, data, push } of this.session.listen()) {
         if (push) {
           try {
-            this.pushReceived(method, data, new EventContext<TalkClientEvents>(this));
+            await this.pushReceived(method, data, new EventContext<TalkClientEvents>(this));
           } catch (err) {
             this.onError(err);
           }
