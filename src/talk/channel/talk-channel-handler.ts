@@ -296,6 +296,7 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
         break;
       }
 
+      // TODO: Move SYNCJOIN handling to TalkChannelList
       case 'SYNCJOIN': {
         const joinData = data as DefaultRes & SyncJoinRes;
 
