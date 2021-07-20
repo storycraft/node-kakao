@@ -25,7 +25,7 @@ import { TalkChannelManageSession } from './talk-channel-session';
 import { ClientDataLoader } from '../../loader';
 import { updateChatList } from './common';
 
-type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
+export type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
 /**
  * Manage session channels

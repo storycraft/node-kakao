@@ -5,19 +5,27 @@
  */
 
 import { Long } from 'bson';
-import { ChannelStore, LoginData, NormalChannelData } from '../channel';
+import { Channel, ChannelStore, LoginData, NormalChannelData } from '../channel';
 import { TalkSession } from './client';
 import { EventContext, TypedEmitter } from '../event';
 import { InformedOpenLink, OpenChannelData } from '../openlink';
 import { DefaultRes } from '../request';
-import { ChainedIterator } from '../util';
+import { ChainedIterator, JsonUtil } from '../util';
 import { ChannelListEvents } from './event';
 import { Managed } from './managed';
-import { TalkOpenChannel, TalkOpenChannelList } from './openlink';
-import { ChannelListUpdater, TalkChannel, TalkNormalChannel, TalkNormalChannelList } from './channel';
+import { TalkOpenChannel, TalkOpenChannelList, TalkOpenChannelListEvents } from './openlink';
+import {
+  ChannelListUpdater,
+  TalkChannel,
+  TalkNormalChannel,
+  TalkNormalChannelList,
+  TalkNormalChannelListEvents
+} from './channel';
 import { ChannelUserInfo } from '../user';
 import { ClientDataLoader } from '../loader';
-import { MsgRes } from '../packet/chat';
+import { MsgRes, SyncJoinRes } from '../packet/chat';
+import { structToChatlog } from '../packet/struct';
+import { KnownChatType, KnownFeedType } from '../chat';
 
 type TalkChannelListEvents = ChannelListEvents<TalkChannel, ChannelUserInfo>;
 
@@ -96,6 +104,40 @@ export class TalkChannelList
 
         if (res.success) {
           ctx.emit('channel_added', res.result);
+        }
+      }
+    } else if (method === 'SYNCJOIN') {
+      const joinData = data as DefaultRes & SyncJoinRes;
+      
+      if (joinData.chatLog) {
+        const chat = structToChatlog(joinData.chatLog);
+        
+        if (chat.type === KnownChatType.FEED && chat.text) {
+          const content = JsonUtil.parseLoseless(chat.text);
+
+          const channel: Channel = { channelId: joinData.c };
+
+          if (content['feedType'] === KnownFeedType.OPENLINK_JOIN) {
+            const openRes = await this._open.addChannel(channel);
+
+            if (openRes.success) {
+              const childCtx = new EventContext<TalkOpenChannelListEvents>(this._open, ctx);
+              childCtx.emit(
+                'channel_join',
+                openRes.result,
+              );
+            }
+          } else {
+            const normalRes = await this._normal.addChannel(channel);
+
+            if (normalRes.success) {
+              const childCtx = new EventContext<TalkNormalChannelListEvents>(this._normal, ctx);
+              childCtx.emit(
+                'channel_join',
+                normalRes.result,
+              );
+            }
+          }
         }
       }
     }

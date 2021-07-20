@@ -24,7 +24,7 @@ import {
 } from '../../chat';
 import { EventContext, TypedEmitter } from '../../event';
 import { ChannelEvents, ChannelListEvent } from '../event';
-import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes, SyncJoinRes } from '../../packet/chat';
+import { ChgMetaRes, DecunreadRes, LeftRes, MsgRes } from '../../packet/chat';
 import { ChatlogStruct, structToChatlog } from '../../packet/struct';
 import { AsyncCommandResult, DefaultRes } from '../../request';
 import { ChannelUserInfo } from '../../user';
@@ -293,22 +293,6 @@ export class TalkChannelListHandler<T extends Channel> implements Managed<Channe
           'channel_left',
           channel,
         );
-        break;
-      }
-
-      // TODO: Move SYNCJOIN handling to TalkChannelList
-      case 'SYNCJOIN': {
-        const joinData = data as DefaultRes & SyncJoinRes;
-
-        const res = await this._updater.addChannel({ channelId: joinData.c });
-        if (res.success) {
-          this._callEvent(
-            parentCtx,
-            'channel_join',
-            res.result as T,
-          );
-        }
-
         break;
       }
 
