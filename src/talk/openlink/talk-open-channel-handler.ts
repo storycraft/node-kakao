@@ -56,7 +56,10 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     parentCtx.emit(event, ...args);
   }
 
-  private _hostHandoverHandler(memTData: DefaultRes & SyncMemTRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>) {
+  private async _hostHandoverHandler(
+    memTData: DefaultRes & SyncMemTRes,
+    parentCtx: EventContext<TalkOpenChannelEvents<T>>
+  ) {
     if (!this._channel.channelId.eq(memTData.c) && !this._channel.linkId.eq(memTData.li)) return;
 
     const len = memTData.mids.length;
@@ -72,13 +75,13 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
       if (lastInfo && info) {
         if (perm === OpenChannelUserPerm.OWNER) {
           const lastLink = this._store.info.openLink;
-          this._session.getLatestOpenLink().then((res) => {
-            if (!res.success) return;
+          const res = await this._session.getLatestOpenLink();
 
+          if (res.success) {
             this._store.updateInfo({ openLink: res.result });
 
             this._callEvent(parentCtx, 'host_handover', this._channel, lastLink || res.result, res.result);
-          });
+          }
         }
 
         this._callEvent(parentCtx, 'perm_changed', this._channel, lastInfo, info);
@@ -171,7 +174,7 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
     this._chatListStore.addChat(chatLog).then();
   }
 
-  private _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>) {
+  private async _userJoinHandler(data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>) {
     const struct = data['chatLog'] as ChatlogStruct;
     if (!this._channel.channelId.eq(struct.chatId)) return;
 
@@ -183,38 +186,42 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
 
       let userList: ChannelUser[];
       if ('member' in feed) {
-        userList = [ (feed as ChatFeed & FeedFragment.Member).member ];
+        userList = [(feed as ChatFeed & FeedFragment.Member).member];
       } else if ('members' in feed) {
         userList = (feed as ChatFeed & FeedFragment.MemberList).members;
       } else {
         userList = [];
       }
 
-      this._session.getLatestUserInfo(...userList).then((usersRes) => {
-        if (!usersRes.success) return;
+      const usersRes = await this._session.getLatestUserInfo(...userList);
 
+      if (usersRes.success) {
         for (const user of usersRes.result) {
           this._store.updateUserInfo(user, user);
 
           this._callEvent(
-              parentCtx,
-              'user_join',
-              chatLog,
-              this._channel,
-              user,
-              feed,
+            parentCtx,
+            'user_join',
+            chatLog,
+            this._channel,
+            user,
+            feed,
           );
         }
-      });
+      };
     }
 
     this._chatListStore.addChat(chatLog).then();
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelEvents<T>>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<TalkOpenChannelEvents<T>>
+  ): Promise<void> {
     switch (method) {
       case 'SYNCMEMT':
-        this._hostHandoverHandler(data as DefaultRes & SyncMemTRes, parentCtx);
+        await this._hostHandoverHandler(data as DefaultRes & SyncMemTRes, parentCtx);
         break;
       case 'SYNCLINKPF':
         this._profileChangedHandler(data as DefaultRes & SyncLinkPfRes, parentCtx);
@@ -226,7 +233,7 @@ export class TalkOpenChannelHandler<T extends OpenChannel> implements Managed<Ta
         this._chatEventHandler(data as DefaultRes & SyncEventRes, parentCtx);
         break;
       case 'NEWMEM':
-        this._userJoinHandler(data, parentCtx);
+        await this._userJoinHandler(data, parentCtx);
         break;
       case 'LNKDELETED':
         this._channelLinkDeletedHandler(data, parentCtx);
@@ -253,21 +260,25 @@ export class TalkOpenChannelListHandler<T extends OpenChannel, U> implements Man
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenChannelListEvents<T, U>>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<OpenChannelListEvents<T, U>>
+  ): Promise<void> {
     switch (method) {
       case 'SYNCLINKCR': {
         const chatRoom = data['chatRoom'] as ChannelInfoStruct;
         if (!chatRoom) break;
 
-        this._updater.addChannel({ channelId: chatRoom.chatId }).then((channelRes) => {
-          if (!channelRes.success) return;
+        const channelRes = await this._updater.addChannel({ channelId: chatRoom.chatId });
 
+        if (channelRes.success) {
           this._callEvent(
             parentCtx,
             'channel_join',
             channelRes.result as T,
           );
-        });
+        }
 
         break;
       }

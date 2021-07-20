@@ -25,7 +25,7 @@ import { TalkChannelManageSession } from './talk-channel-session';
 import { ClientDataLoader } from '../../loader';
 import { updateChatList } from './common';
 
-type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
+export type TalkNormalChannelListEvents = NormalChannelListEvents<TalkNormalChannel, NormalChannelUserInfo>;
 
 /**
  * Manage session channels
@@ -136,14 +136,16 @@ export class TalkNormalChannelList
     return res;
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkNormalChannelListEvents>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<TalkNormalChannelListEvents>
+  ): Promise<void> {
     const ctx = new EventContext<TalkNormalChannelListEvents>(this, parentCtx);
 
-    for (const channel of this._map.values()) {
-      channel.pushReceived(method, data, ctx);
-    }
+    await Promise.all(Array.from(this._map.values()).map((channel) => channel.pushReceived(method, data, ctx)));
 
-    this._handler.pushReceived(method, data, parentCtx);
+    await this._handler.pushReceived(method, data, parentCtx);
   }
 
   /**

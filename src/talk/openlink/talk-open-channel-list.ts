@@ -37,7 +37,7 @@ import { OpenChannelUserInfo } from '../../user';
 import { ClientDataLoader } from '../../loader';
 import { TalkClientLinkStore } from './client-link-store';
 
-type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChannelUserInfo>;
+export type TalkOpenChannelListEvents = OpenChannelListEvents<TalkOpenChannel, OpenChannelUserInfo>;
 
 /**
  * Manage open profile, channel.
@@ -287,16 +287,18 @@ export class TalkOpenChannelList
     return this._linkStore.updateOpenLink(link, settings);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkOpenChannelListEvents>): void {
+  async pushReceived(
+    method: string,
+    data: DefaultRes,
+    parentCtx: EventContext<TalkOpenChannelListEvents>
+  ): Promise<void> {
     const ctx = new EventContext<TalkOpenChannelListEvents>(this, parentCtx);
 
-    for (const channel of this._map.values()) {
-      channel.pushReceived(method, data, ctx);
-    }
+    await Promise.all(Array.from(this._map.values()).map((channel) => channel.pushReceived(method, data, ctx)));
 
-    this._handler.pushReceived(method, data, parentCtx);
-    this._openHandler.pushReceived(method, data, parentCtx);
-    this._linkStore.pushReceived(method, data, parentCtx);
+    await this._handler.pushReceived(method, data, parentCtx);
+    await this._openHandler.pushReceived(method, data, parentCtx);
+    await this._linkStore.pushReceived(method, data, parentCtx);
   }
 
   async joinChannel(

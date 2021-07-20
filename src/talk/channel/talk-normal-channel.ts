@@ -253,8 +253,8 @@ export class TalkNormalChannel extends TypedEmitter<TalkChannelEvents>
     return this.chatON();
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelEvents>): void {
-    this._handler.pushReceived(method, data, parentCtx);
-    this._normalHandler.pushReceived(method, data, parentCtx);
+  async pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<TalkChannelEvents>): Promise<void> {
+    await this._handler.pushReceived(method, data, parentCtx);
+    await this._normalHandler.pushReceived(method, data, parentCtx);
   }
 }

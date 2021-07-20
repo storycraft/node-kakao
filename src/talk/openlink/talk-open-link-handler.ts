@@ -37,7 +37,7 @@ export class TalkOpenLinkHandler implements Managed<OpenLinkEvent> {
     parentCtx.emit(event, ...args);
   }
 
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>): void {
+  async pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<OpenLinkEvent>): Promise<void> {
     switch (method) {
       case 'SYNCLINKCR': {
         const linkStruct = data['ol'] as InformedOpenLinkStruct;

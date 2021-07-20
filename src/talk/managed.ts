@@ -12,10 +12,10 @@ export interface Managed<T extends TypedListeners<T>> {
   /**
    * Called when broadcast packets are recevied
    *
-   * @param method
-   * @param data
-   * @param parentCtx
+   * @param {string} method
+   * @param {DefaultRes} data
+   * @param {EventContext<T>} parentCtx
    */
-  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<T>): void;
+  pushReceived(method: string, data: DefaultRes, parentCtx: EventContext<T>): Promise<void>;
 
 }
