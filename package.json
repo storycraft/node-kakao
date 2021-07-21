@@ -1,17 +1,11 @@
 {
   "name": "node-kakao",
-  "version": "4.3.2",
+  "version": "4.4.0",
   "description": "Loco protocol compatible library",
   "main": "./dist/index.js",
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist_esm/index.js"
-    },
-    "./*": {
-      "require": "./dist/*/index.js",
-      "import": "./dist_esm/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./*": "./dist/*/index.js"
   },
   "types": "./dist/index.d.ts",
   "files": [
@@ -23,9 +17,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha -r ts-node/register ./tests/*.test.ts",
     "locotest": "node -r ts-node/register loco-test.ts",
-    "build": "npm run build:node & npm run build:esm",
+    "build": "npm run build:node",
     "build:node": "./node_modules/.bin/tsc --outDir dist --declarationDir dist --declaration true",
-    "build:esm": "./node_modules/.bin/rollup -c",
     "docs": "./node_modules/.bin/typedoc src",
     "fix": "./node_modules/.bin/eslint --fix ./src/**/*",
     "prepublishOnly": "npm run fix && npm run test && npm run build"
@@ -43,9 +36,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^19.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.2",
-    "@rollup/plugin-typescript": "^8.2.3",
     "@types/bson": "^4.0.4",
     "@types/chai": "^4.2.21",
     "@types/lossless-json": "^1.0.1",
@@ -59,9 +49,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.0.0",
     "mocha": "^9.0.2",
-    "rollup": "^2.53.2",
     "ts-node": "^10.1.0",
-    "tslib": "^2.1.0",
     "typedoc": "^0.21.4",
     "typescript": "^4.3.5"
   },

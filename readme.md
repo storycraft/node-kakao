@@ -2,7 +2,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/storycraft/node-kakao/badge)](https://www.codefactor.io/repository/github/storycraft/node-kakao)
 # NodeKakao - Loco protocol compatible library
 
-ES Module & Deno
+~~ES Module & Deno~~  
+Supporting dropped for now.
 ```typescript
 import * as NodeKakao from "https://cdn.skypack.dev/node-kakao?dts";
 ```
