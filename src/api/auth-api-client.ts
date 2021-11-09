@@ -84,8 +84,6 @@ export interface LoginForm {
   email: string;
   password: string;
 
-  forced?: boolean;
-
 }
 
 export interface TokenLoginForm extends LoginForm {
@@ -193,12 +191,13 @@ export class AuthApiClient {
    * Login using given data.
    *
    * @param {LoginForm} form
+   * @param {boolean} [forced=false] If true, force login even other devices are login
    */
-  async login(form: LoginForm): AsyncCommandResult<LoginData> {
+  async login(form: LoginForm, forced: boolean = false): AsyncCommandResult<LoginData> {
     const res = await this._client.requestData(
       'POST',
       this.getApiPath('login.json'),
-      this.fillAuthForm({ ...form }),
+      this.fillAuthForm({ ...form, forced }),
       await this.createAuthHeader(form),
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
@@ -214,12 +213,13 @@ export class AuthApiClient {
    * Login using token.
    *
    * @param {TokenLoginForm} form
+   * @param {boolean} [forced=false] If true, force login even other devices are login
    */
-  async loginToken(form: TokenLoginForm): AsyncCommandResult<LoginData> {
+  async loginToken(form: TokenLoginForm, forced: boolean = false): AsyncCommandResult<LoginData> {
     const res = await this._client.requestData(
       'POST',
       this.getApiPath('login.json'),
-      this.fillAuthForm({ ...form, auto_login: true }),
+      this.fillAuthForm({ ...form, auto_login: true, forced }),
       await this.createAuthHeader(form),
     );
     if (res.status !== KnownDataStatusCode.SUCCESS) return { status: res.status, success: false };
