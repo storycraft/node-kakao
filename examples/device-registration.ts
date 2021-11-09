@@ -27,11 +27,14 @@ const DEVICE_NAME = process.env['deviceName'] as string;
 async function main() {
   const form = {
     email: EMAIL,
-    password: PASSWORD
+    password: PASSWORD,
+ 
+    // This option force login even other devices are logon
+    forced: true,
   };
 
   const api = await AuthApiClient.create(DEVICE_NAME, DEVICE_UUID);
-  const loginRes = await api.login(form, true);
+  const loginRes = await api.login(form);
   if (loginRes.success) throw new Error('Device already registered!');
   if (loginRes.status !== KnownAuthStatusCode.DEVICE_NOT_REGISTERED) {
     throw new Error(`Web login failed with status: ${loginRes.status}`);
@@ -54,7 +57,7 @@ async function main() {
   console.log(`Device ${DEVICE_UUID} has been registered`);
 
   // Login after registering devices
-  const loginAfterRes = await api.login(form, true);
+  const loginAfterRes = await api.login(form);
   if (!loginAfterRes.success) throw new Error(`Web login failed with status: ${loginAfterRes.status}`);
   console.log(`Client logon successfully`);
 }
