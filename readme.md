@@ -1,9 +1,10 @@
 [![npm version](https://badge.fury.io/js/node-kakao.svg)](https://www.npmjs.com/package/node-kakao)
 [![CodeFactor](https://www.codefactor.io/repository/github/storycraft/node-kakao/badge)](https://www.codefactor.io/repository/github/storycraft/node-kakao)
+[![Inactively Maintained](https://img.shields.io/badge/Maintenance%20Level-Inactively%20Maintained-yellowgreen.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 # NodeKakao - Loco protocol compatible library
 
 ~~ES Module & Deno~~  
-Supporting dropped for now.
+Supporting dropped.
 ```typescript
 import * as NodeKakao from "https://cdn.skypack.dev/node-kakao?dts";
 ```
@@ -13,13 +14,13 @@ Node
 npm i --save node-kakao
 ```
 
-> this implemention can stop working anytime.
+> This implemention can stop working anytime.
 
 ## Warning
 Abusing this client can cause permanent service restriction.
 
 ## Example
-Check `examples` folder. Examples are written in typescript.
+See `examples` folder. Examples are written in typescript.
 
 ## Documentation
 [TypeDoc](https://storycraft.github.io/node-kakao/)
