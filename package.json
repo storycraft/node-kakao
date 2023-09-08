@@ -39,7 +39,7 @@
     "@types/bson": "^4.0.4",
     "@types/chai": "^4.2.21",
     "@types/lossless-json": "^1.0.1",
-    "@types/mocha": "^9.0.0",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^16.3.3",
     "@types/node-forge": "^0.10.2",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
@@ -48,7 +48,7 @@
     "eslint": "^7.31.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.0.0",
-    "mocha": "^9.1.3",
+    "mocha": "^10.2.0",
     "ts-node": "^10.1.0",
     "typedoc": "^0.22.3",
     "typescript": "^4.3.5"
