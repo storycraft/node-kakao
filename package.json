@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
-    "bson": "^4.4.1",
+    "bson": "^6.1.0",
     "eventemitter3": "^4.0.7",
     "form-data": "^4.0.0",
     "hash-wasm": "^4.8.0",
