@@ -104,7 +104,7 @@ export class LocoSecureLayer implements BiStream {
     const view = new DataView(handshakeBuffer);
 
     view.setUint32(0, encryptedKey.byteLength, true);
-    view.setUint32(4, 12, true); // RSA OAEP SHA1 MGF1 SHA1
+    view.setUint32(4, 15, true); // RSA Key ver.15
     view.setUint32(8, 2, true); // AES_CFB128 NOPADDING
     handshakePacket.set(encryptedKey, 12);
 
