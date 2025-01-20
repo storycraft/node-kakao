@@ -66,7 +66,7 @@ export class TalkClientSession implements ClientSession {
         'lastChatId': lastRes.lastChatId
       });
 
-      if (loginRes.status !== KnownDataStatusCode.SUCCESS) {
+      if (res.status !== KnownDataStatusCode.SUCCESS) {
         status = KnownDataStatusCode.LOGINLIST_CHATLIST_FAILED;
         break;
       }
